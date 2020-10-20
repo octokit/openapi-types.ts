@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "version": "1.1.1",
+    "version": "1.1.3",
     "title": "GitHub v3 REST API",
     "description": "GitHub's v3 REST API.",
     "license": {
@@ -24999,7 +24999,7 @@
                       },
                       "secret": {
                         "type": "string",
-                        "description": "If provided, the `secret` will be used as the `key` to generate the HMAC hex digest value in the [`X-Hub-Signature`](https://developer.github.com/webhooks/event-payloads/#delivery-headers) header."
+                        "description": "If provided, the `secret` will be used as the `key` to generate the HMAC hex digest value for [delivery signature headers](https://developer.github.com/webhooks/event-payloads/#delivery-headers)."
                       },
                       "insecure_ssl": {
                         "type": "string",
@@ -25177,7 +25177,7 @@
                       },
                       "secret": {
                         "type": "string",
-                        "description": "If provided, the `secret` will be used as the `key` to generate the HMAC hex digest value in the [`X-Hub-Signature`](https://developer.github.com/webhooks/event-payloads/#delivery-headers) header."
+                        "description": "If provided, the `secret` will be used as the `key` to generate the HMAC hex digest value for [delivery signature headers](https://developer.github.com/webhooks/event-payloads/#delivery-headers)."
                       },
                       "insecure_ssl": {
                         "type": "string",
@@ -43642,7 +43642,7 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
+          "enabledForGitHubApps": false,
           "previews": [
             {
               "required": true,
@@ -53524,7 +53524,6 @@
         "nullable": true,
         "type": "array",
         "items": {
-          "type": "object",
           "properties": {
             "ref": {
               "$ref": "#/components/schemas/code-scanning-alert-ref"
@@ -69323,13 +69322,13 @@
             {
               "ref": "refs/heads/codeql-analysis-yml",
               "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
-              "environment": {},
+              "environment": "",
               "state": "fixed"
             },
             {
               "ref": "refs/pull/3740/head",
               "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
-              "environment": {},
+              "environment": "",
               "state": "fixed"
             }
           ],
@@ -69377,13 +69376,13 @@
             {
               "ref": "refs/heads/codeql-analysis-yml",
               "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
-              "environment": {},
+              "environment": "",
               "state": "dismissed"
             },
             {
               "ref": "refs/pull/3740/head",
               "analysis_key": ".github/workflows/codeql-analysis.yml:CodeQL-Build",
-              "environment": {},
+              "environment": "",
               "state": "dismissed"
             }
           ],
