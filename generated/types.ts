@@ -99,6 +99,46 @@ export interface paths {
       };
     };
   };
+  "/app/hook/config": {
+    /**
+     * Returns the webhook configuration for a GitHub App. For more information about configuring a webhook for your app, see "[Creating a GitHub App](/developers/apps/creating-a-github-app)."
+     *
+     * You must use a [JWT](https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+     */
+    get: {
+      responses: {
+        /**
+         * Default response
+         */
+        "200": {
+          "application/json": components["schemas"]["webhook-config"];
+        };
+      };
+    };
+    /**
+     * Updates the webhook configuration for a GitHub App. For more information about configuring a webhook for your app, see "[Creating a GitHub App](/developers/apps/creating-a-github-app)."
+     *
+     * You must use a [JWT](https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+     */
+    patch: {
+      requestBody: {
+        "application/json": {
+          url?: components["schemas"]["webhook-config-url"];
+          content_type?: components["schemas"]["webhook-config-content-type"];
+          secret?: components["schemas"]["webhook-config-secret"];
+          insecure_ssl?: components["schemas"]["webhook-config-insecure-ssl"];
+        };
+      };
+      responses: {
+        /**
+         * Default response
+         */
+        "200": {
+          "application/json": components["schemas"]["webhook-config"];
+        };
+      };
+    };
+  };
   "/app/installations": {
     /**
      * You must use a [JWT](https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
@@ -2832,7 +2872,7 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          since: components["parameters"]["since"];
+          since: components["parameters"]["since-org"];
           per_page: components["parameters"]["per_page"];
         };
       };
@@ -4182,22 +4222,10 @@ export interface paths {
            * Key/value pairs to provide settings for this webhook. [These are defined below](https://developer.github.com/v3/orgs/hooks/#create-hook-config-params).
            */
           config: {
-            /**
-             * The URL to which the payloads will be delivered.
-             */
-            url: string;
-            /**
-             * The media type used to serialize the payloads. Supported values include `json` and `form`. The default is `form`.
-             */
-            content_type?: string;
-            /**
-             * If provided, the `secret` will be used as the `key` to generate the HMAC hex digest value in the [`X-Hub-Signature`](https://developer.github.com/webhooks/event-payloads/#delivery-headers) header.
-             */
-            secret?: string;
-            /**
-             * Determines whether the SSL certificate of the host for `url` will be verified when delivering payloads. Supported values include `0` (verification is performed) and `1` (verification is not performed). The default is `0`. **We strongly recommend not setting this to `1` as you are subject to man-in-the-middle and other attacks.**
-             */
-            insecure_ssl?: string;
+            url: components["schemas"]["webhook-config-url"];
+            content_type?: components["schemas"]["webhook-config-content-type"];
+            secret?: components["schemas"]["webhook-config-secret"];
+            insecure_ssl?: components["schemas"]["webhook-config-insecure-ssl"];
             username?: string;
             password?: string;
           };
@@ -4224,6 +4252,9 @@ export interface paths {
     };
   };
   "/orgs/{org}/hooks/{hook_id}": {
+    /**
+     * Returns a webhook configured in an organization. To get only the webhook `config` properties, see "[Get a webhook configuration for an organization](/rest/reference/orgs#get-a-webhook-configuration-for-an-organization)."
+     */
     get: {
       parameters: {
         path: {
@@ -4241,6 +4272,9 @@ export interface paths {
         "404": unknown;
       };
     };
+    /**
+     * Updates a webhook configured in an organization. When you update a webhook, the `secret` will be overwritten. If you previously had a `secret` set, you must provide the same `secret` or set a new `secret` or the secret will be removed. If you are only updating individual webhook `config` properties, use "[Update a webhook configuration for an organization](/rest/reference/orgs#update-a-webhook-configuration-for-an-organization)."
+     */
     patch: {
       parameters: {
         path: {
@@ -4254,22 +4288,10 @@ export interface paths {
            * Key/value pairs to provide settings for this webhook. [These are defined below](https://developer.github.com/v3/orgs/hooks/#update-hook-config-params).
            */
           config?: {
-            /**
-             * The URL to which the payloads will be delivered.
-             */
-            url: string;
-            /**
-             * The media type used to serialize the payloads. Supported values include `json` and `form`. The default is `form`.
-             */
-            content_type?: string;
-            /**
-             * If provided, the `secret` will be used as the `key` to generate the HMAC hex digest value in the [`X-Hub-Signature`](https://developer.github.com/webhooks/event-payloads/#delivery-headers) header.
-             */
-            secret?: string;
-            /**
-             * Determines whether the SSL certificate of the host for `url` will be verified when delivering payloads. Supported values include `0` (verification is performed) and `1` (verification is not performed). The default is `0`. **We strongly recommend not setting this to `1` as you are subject to man-in-the-middle and other attacks.**
-             */
-            insecure_ssl?: string;
+            url: components["schemas"]["webhook-config-url"];
+            content_type?: components["schemas"]["webhook-config-content-type"];
+            secret?: components["schemas"]["webhook-config-secret"];
+            insecure_ssl?: components["schemas"]["webhook-config-insecure-ssl"];
           };
           /**
            * Determines what [events](https://developer.github.com/webhooks/event-payloads) the hook is triggered for.
@@ -4306,6 +4328,58 @@ export interface paths {
          */
         "204": never;
         "404": unknown;
+      };
+    };
+  };
+  "/orgs/{org}/hooks/{hook_id}/config": {
+    /**
+     * Returns the webhook configuration for an organization. To get more information about the webhook, including the `active` state and `events`, use "[Get an organization webhook ](/rest/reference/orgs#get-an-organization-webhook)."
+     *
+     * Access tokens must have the `admin:org_hook` scope, and GitHub Apps must have the `organization_hooks:read` permission.
+     */
+    get: {
+      parameters: {
+        path: {
+          org: components["parameters"]["org"];
+          hook_id: components["parameters"]["hook-id"];
+        };
+      };
+      responses: {
+        /**
+         * Default response
+         */
+        "200": {
+          "application/json": components["schemas"]["webhook-config"];
+        };
+      };
+    };
+    /**
+     * Updates the webhook configuration for an organization. To update more information about the webhook, including the `active` state and `events`, use "[Update an organization webhook ](/rest/reference/orgs#update-an-organization-webhook)."
+     *
+     * Access tokens must have the `admin:org_hook` scope, and GitHub Apps must have the `organization_hooks:write` permission.
+     */
+    patch: {
+      parameters: {
+        path: {
+          org: components["parameters"]["org"];
+          hook_id: components["parameters"]["hook-id"];
+        };
+      };
+      requestBody: {
+        "application/json": {
+          url?: components["schemas"]["webhook-config-url"];
+          content_type?: components["schemas"]["webhook-config-content-type"];
+          secret?: components["schemas"]["webhook-config-secret"];
+          insecure_ssl?: components["schemas"]["webhook-config-insecure-ssl"];
+        };
+      };
+      responses: {
+        /**
+         * Default response
+         */
+        "200": {
+          "application/json": components["schemas"]["webhook-config"];
+        };
       };
     };
   };
@@ -8300,7 +8374,7 @@ export interface paths {
       requestBody: {
         "application/json": {
           /**
-           * The reference of the workflow run. The reference can be a branch, tag, or a commit SHA.
+           * The git reference for the workflow. The reference can be a branch or tag name.
            */
           ref: string;
           /**
@@ -12391,22 +12465,10 @@ export interface paths {
            * Key/value pairs to provide settings for this webhook. [These are defined below](https://developer.github.com/v3/repos/hooks/#create-hook-config-params).
            */
           config: {
-            /**
-             * The URL to which the payloads will be delivered.
-             */
-            url: string;
-            /**
-             * The media type used to serialize the payloads. Supported values include `json` and `form`. The default is `form`.
-             */
-            content_type?: string;
-            /**
-             * If provided, the `secret` will be used as the `key` to generate the HMAC hex digest value for [delivery signature headers](https://developer.github.com/webhooks/event-payloads/#delivery-headers).
-             */
-            secret?: string;
-            /**
-             * Determines whether the SSL certificate of the host for `url` will be verified when delivering payloads. Supported values include `0` (verification is performed) and `1` (verification is not performed). The default is `0`. **We strongly recommend not setting this to `1` as you are subject to man-in-the-middle and other attacks.**
-             */
-            insecure_ssl?: string;
+            url: components["schemas"]["webhook-config-url"];
+            content_type?: components["schemas"]["webhook-config-content-type"];
+            secret?: components["schemas"]["webhook-config-secret"];
+            insecure_ssl?: components["schemas"]["webhook-config-insecure-ssl"];
             token?: string;
             digest?: string;
           };
@@ -12434,6 +12496,9 @@ export interface paths {
     };
   };
   "/repos/{owner}/{repo}/hooks/{hook_id}": {
+    /**
+     * Returns a webhook configured in a repository. To get only the webhook `config` properties, see "[Get a webhook configuration for a repository](/rest/reference/repos#get-a-webhook-configuration-for-a-repository)."
+     */
     get: {
       parameters: {
         path: {
@@ -12452,6 +12517,9 @@ export interface paths {
         "404": unknown;
       };
     };
+    /**
+     * Updates a webhook configured in a repository. If you previously had a `secret` set, you must provide the same `secret` or set a new `secret` or the secret will be removed. If you are only updating individual webhook `config` properties, use "[Update a webhook configuration for a repository](/rest/reference/repos#update-a-webhook-configuration-for-a-repository)."
+     */
     patch: {
       parameters: {
         path: {
@@ -12466,22 +12534,10 @@ export interface paths {
            * Key/value pairs to provide settings for this webhook. [These are defined below](https://developer.github.com/v3/repos/hooks/#create-hook-config-params).
            */
           config?: {
-            /**
-             * The URL to which the payloads will be delivered.
-             */
-            url: string;
-            /**
-             * The media type used to serialize the payloads. Supported values include `json` and `form`. The default is `form`.
-             */
-            content_type?: string;
-            /**
-             * If provided, the `secret` will be used as the `key` to generate the HMAC hex digest value for [delivery signature headers](https://developer.github.com/webhooks/event-payloads/#delivery-headers).
-             */
-            secret?: string;
-            /**
-             * Determines whether the SSL certificate of the host for `url` will be verified when delivering payloads. Supported values include `0` (verification is performed) and `1` (verification is not performed). The default is `0`. **We strongly recommend not setting this to `1` as you are subject to man-in-the-middle and other attacks.**
-             */
-            insecure_ssl?: string;
+            url: components["schemas"]["webhook-config-url"];
+            content_type?: components["schemas"]["webhook-config-content-type"];
+            secret?: components["schemas"]["webhook-config-secret"];
+            insecure_ssl?: components["schemas"]["webhook-config-insecure-ssl"];
             address?: string;
             room?: string;
           };
@@ -12528,6 +12584,60 @@ export interface paths {
          */
         "204": never;
         "404": unknown;
+      };
+    };
+  };
+  "/repos/{owner}/{repo}/hooks/{hook_id}/config": {
+    /**
+     * Returns the webhook configuration for a repository. To get more information about the webhook, including the `active` state and `events`, use "[Get a repository webhook](/rest/reference/orgs#get-a-repository-webhook)."
+     *
+     * Access tokens must have the `read:repo_hook` or `repo` scope, and GitHub Apps must have the `repository_hooks:read` permission.
+     */
+    get: {
+      parameters: {
+        path: {
+          owner: components["parameters"]["owner"];
+          repo: components["parameters"]["repo"];
+          hook_id: components["parameters"]["hook-id"];
+        };
+      };
+      responses: {
+        /**
+         * Default response
+         */
+        "200": {
+          "application/json": components["schemas"]["webhook-config"];
+        };
+      };
+    };
+    /**
+     * Updates the webhook configuration for a repository. To update more information about the webhook, including the `active` state and `events`, use "[Update a repository webhook](/rest/reference/orgs#update-a-repository-webhook)."
+     *
+     * Access tokens must have the `write:repo_hook` or `repo` scope, and GitHub Apps must have the `repository_hooks:write` permission.
+     */
+    patch: {
+      parameters: {
+        path: {
+          owner: components["parameters"]["owner"];
+          repo: components["parameters"]["repo"];
+          hook_id: components["parameters"]["hook-id"];
+        };
+      };
+      requestBody: {
+        "application/json": {
+          url?: components["schemas"]["webhook-config-url"];
+          content_type?: components["schemas"]["webhook-config-content-type"];
+          secret?: components["schemas"]["webhook-config-secret"];
+          insecure_ssl?: components["schemas"]["webhook-config-insecure-ssl"];
+        };
+      };
+      responses: {
+        /**
+         * Default response
+         */
+        "200": {
+          "application/json": components["schemas"]["webhook-config"];
+        };
       };
     };
   };
@@ -12739,7 +12849,7 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          since: components["parameters"]["since"];
+          since: components["parameters"]["since-user"];
         };
       };
       responses: {
@@ -20608,7 +20718,7 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          since: components["parameters"]["since"];
+          since: components["parameters"]["since-user"];
           per_page: components["parameters"]["per_page"];
         };
       };
@@ -21296,6 +21406,10 @@ export interface components {
      * thread_id parameter
      */
     thread_id: number;
+    /**
+     * An organization ID. Only return organizations with an ID greater than this ID.
+     */
+    "since-org": number;
     org: string;
     repository_id: number;
     /**
@@ -21393,6 +21507,10 @@ export interface components {
      * deployment_id parameter
      */
     deployment_id: number;
+    /**
+     * A user ID. Only return users with an ID greater than this ID.
+     */
+    "since-user": number;
     /**
      * issue_number parameter
      */
@@ -21532,6 +21650,31 @@ export interface components {
       message: string;
       documentation_url: string;
       errors?: string[];
+    };
+    /**
+     * The URL to which the payloads will be delivered.
+     */
+    "webhook-config-url": string;
+    /**
+     * The media type used to serialize the payloads. Supported values include `json` and `form`. The default is `form`.
+     */
+    "webhook-config-content-type": string;
+    /**
+     * If provided, the `secret` will be used as the `key` to generate the HMAC hex digest value for [delivery signature headers](https://developer.github.com/webhooks/event-payloads/#delivery-headers).
+     */
+    "webhook-config-secret": string;
+    /**
+     * Determines whether the SSL certificate of the host for `url` will be verified when delivering payloads. Supported values include `0` (verification is performed) and `1` (verification is not performed). The default is `0`. **We strongly recommend not setting this to `1` as you are subject to man-in-the-middle and other attacks.**
+     */
+    "webhook-config-insecure-ssl": string;
+    /**
+     * Configuration object of the webhook
+     */
+    "webhook-config": {
+      url?: components["schemas"]["webhook-config-url"];
+      content_type?: components["schemas"]["webhook-config-content-type"];
+      secret?: components["schemas"]["webhook-config-secret"];
+      insecure_ssl?: components["schemas"]["webhook-config-insecure-ssl"];
     };
     /**
      * An enterprise account
@@ -24871,7 +25014,7 @@ export interface components {
       statuses_url: string;
       repository_url: string;
       /**
-       * Specifies if the given environment is will no longer exist at some point in hte future. Default: false.
+       * Specifies if the given environment is will no longer exist at some point in the future. Default: false.
        */
       transient_environment?: boolean;
       /**
@@ -25100,11 +25243,11 @@ export interface components {
         password?: string;
         room?: string;
         subdomain?: string;
-        url?: string;
-        insecure_ssl?: string;
-        content_type?: string;
+        url?: components["schemas"]["webhook-config-url"];
+        insecure_ssl?: components["schemas"]["webhook-config-insecure-ssl"];
+        content_type?: components["schemas"]["webhook-config-content-type"];
         digest?: string;
-        secret?: string;
+        secret?: components["schemas"]["webhook-config-secret"];
         token?: string;
       };
       updated_at: string;

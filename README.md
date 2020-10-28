@@ -1,4 +1,4 @@
-# github-openapi-types
+# openapi-types.ts
 
 > Generated TypeScript definitions based on GitHub's OpenAPI spec
 
