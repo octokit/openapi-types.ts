@@ -1,6 +1,4 @@
-# Work in progress: [#1](https://github.com/gr2m/github-openapi-types/pull/1)
-
-# github-openapi-types
+# openapi-types.ts
 
 > Generated TypeScript definitions based on GitHub's OpenAPI spec
 
