@@ -15,7 +15,7 @@
     "generate-types": "npx openapi-typescript cache/openapi-schema.json -o generated/types.ts"
   },
   "devDependencies": {
-    "openapi-typescript": "^2.3.0"
+    "openapi-typescript": "^2.3.1"
   },
   "release": {
     "branches": "main"
