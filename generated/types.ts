@@ -148,9 +148,9 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
-          since: components["parameters"]["since"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
+          since?: components["parameters"]["since"];
           outdated?: string;
         };
       };
@@ -310,8 +310,8 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -601,8 +601,8 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -1037,8 +1037,8 @@ export interface paths {
           enterprise: components["parameters"]["enterprise"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -1175,8 +1175,8 @@ export interface paths {
           enterprise: components["parameters"]["enterprise"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -1320,8 +1320,8 @@ export interface paths {
           runner_group_id: components["parameters"]["runner_group_id"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -1419,8 +1419,8 @@ export interface paths {
           runner_group_id: components["parameters"]["runner_group_id"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -1518,8 +1518,8 @@ export interface paths {
           enterprise: components["parameters"]["enterprise"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -1739,8 +1739,8 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -1789,9 +1789,9 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          since: components["parameters"]["since"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          since?: components["parameters"]["since"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -1855,9 +1855,9 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          since: components["parameters"]["since"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          since?: components["parameters"]["since"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -1880,9 +1880,9 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          since: components["parameters"]["since"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          since?: components["parameters"]["since"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -1965,8 +1965,8 @@ export interface paths {
           gist_id: components["parameters"]["gist_id"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -2078,8 +2078,8 @@ export interface paths {
           gist_id: components["parameters"]["gist_id"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -2102,8 +2102,8 @@ export interface paths {
           gist_id: components["parameters"]["gist_id"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -2268,8 +2268,8 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -2336,19 +2336,19 @@ export interface paths {
            * Indicates the state of the issues to return. Can be either `open`, `closed`, or `all`.
            */
           state?: "open" | "closed" | "all";
-          labels: components["parameters"]["labels"];
+          labels?: components["parameters"]["labels"];
           /**
            * What to sort results by. Can be either `created`, `updated`, `comments`.
            */
           sort?: "created" | "updated" | "comments";
-          direction: components["parameters"]["direction"];
-          since: components["parameters"]["since"];
+          direction?: components["parameters"]["direction"];
+          since?: components["parameters"]["since"];
           collab?: boolean;
           orgs?: boolean;
           owned?: boolean;
           pulls?: boolean;
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -2369,7 +2369,7 @@ export interface paths {
       parameters: {
         query: {
           featured?: boolean;
-          per_page: components["parameters"]["per_page"];
+          per_page?: components["parameters"]["per_page"];
         };
       };
       responses: {
@@ -2490,8 +2490,8 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -2518,13 +2518,13 @@ export interface paths {
           plan_id: components["parameters"]["plan_id"];
         };
         query: {
-          sort: components["parameters"]["sort"];
+          sort?: components["parameters"]["sort"];
           /**
            * To return the oldest accounts first, set to `asc`. Can be one of `asc` or `desc`. Ignored without the `sort` parameter.
            */
           direction?: "asc" | "desc";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -2576,8 +2576,8 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -2603,13 +2603,13 @@ export interface paths {
           plan_id: components["parameters"]["plan_id"];
         };
         query: {
-          sort: components["parameters"]["sort"];
+          sort?: components["parameters"]["sort"];
           /**
            * To return the oldest accounts first, set to `asc`. Can be one of `asc` or `desc`. Ignored without the `sort` parameter.
            */
           direction?: "asc" | "desc";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -2648,8 +2648,8 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -2673,12 +2673,12 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          all: components["parameters"]["all"];
-          participating: components["parameters"]["participating"];
-          since: components["parameters"]["since"];
-          before: components["parameters"]["before"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          all?: components["parameters"]["all"];
+          participating?: components["parameters"]["participating"];
+          since?: components["parameters"]["since"];
+          before?: components["parameters"]["before"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -2872,8 +2872,8 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          since: components["parameters"]["since-org"];
-          per_page: components["parameters"]["per_page"];
+          since?: components["parameters"]["since-org"];
+          per_page?: components["parameters"]["per_page"];
         };
       };
       responses: {
@@ -3093,8 +3093,8 @@ export interface paths {
           org: components["parameters"]["org"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -3237,8 +3237,8 @@ export interface paths {
           org: components["parameters"]["org"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -3498,8 +3498,8 @@ export interface paths {
           runner_group_id: components["parameters"]["runner_group_id"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -3605,8 +3605,8 @@ export interface paths {
           org: components["parameters"]["org"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -3757,8 +3757,8 @@ export interface paths {
           org: components["parameters"]["org"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -4168,8 +4168,8 @@ export interface paths {
           org: components["parameters"]["org"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -4189,8 +4189,8 @@ export interface paths {
           org: components["parameters"]["org"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -4435,8 +4435,8 @@ export interface paths {
           org: components["parameters"]["org"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -4525,8 +4525,8 @@ export interface paths {
           org: components["parameters"]["org"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -4596,8 +4596,8 @@ export interface paths {
           invitation_id: components["parameters"]["invitation_id"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -4639,15 +4639,15 @@ export interface paths {
            * Indicates the state of the issues to return. Can be either `open`, `closed`, or `all`.
            */
           state?: "open" | "closed" | "all";
-          labels: components["parameters"]["labels"];
+          labels?: components["parameters"]["labels"];
           /**
            * What to sort results by. Can be either `created`, `updated`, `comments`.
            */
           sort?: "created" | "updated" | "comments";
-          direction: components["parameters"]["direction"];
-          since: components["parameters"]["since"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          direction?: components["parameters"]["direction"];
+          since?: components["parameters"]["since"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -4684,8 +4684,8 @@ export interface paths {
            * \* `member` - Non-owner organization members.
            */
           role?: "all" | "admin" | "member";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -4841,8 +4841,8 @@ export interface paths {
           org: components["parameters"]["org"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -4994,8 +4994,8 @@ export interface paths {
           migration_id: components["parameters"]["migration_id"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -5025,8 +5025,8 @@ export interface paths {
            * \* `all`: All outside collaborators.
            */
           filter?: "2fa_disabled" | "all";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -5106,8 +5106,8 @@ export interface paths {
            * Indicates the state of the projects to return. Can be either `open`, `closed`, or `all`.
            */
           state?: "open" | "closed" | "all";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -5166,8 +5166,8 @@ export interface paths {
           org: components["parameters"]["org"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -5263,8 +5263,8 @@ export interface paths {
            * Can be one of `asc` or `desc`. Default: when using `full_name`: `asc`, otherwise `desc`
            */
           direction?: "asc" | "desc";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -5463,8 +5463,8 @@ export interface paths {
           org: components["parameters"]["org"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -5487,8 +5487,8 @@ export interface paths {
           org: components["parameters"]["org"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -5677,9 +5677,9 @@ export interface paths {
           team_slug: components["parameters"]["team_slug"];
         };
         query: {
-          direction: components["parameters"]["direction"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          direction?: components["parameters"]["direction"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -5823,9 +5823,9 @@ export interface paths {
           discussion_number: components["parameters"]["discussion-number"];
         };
         query: {
-          direction: components["parameters"]["direction"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          direction?: components["parameters"]["direction"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -5974,8 +5974,8 @@ export interface paths {
             | "hooray"
             | "rocket"
             | "eyes";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -6077,8 +6077,8 @@ export interface paths {
             | "hooray"
             | "rocket"
             | "eyes";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -6165,8 +6165,8 @@ export interface paths {
           team_slug: components["parameters"]["team_slug"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -6199,8 +6199,8 @@ export interface paths {
            * \* `all` - all members of the team.
            */
           role?: "member" | "maintainer" | "all";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -6339,8 +6339,8 @@ export interface paths {
           team_slug: components["parameters"]["team_slug"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -6452,8 +6452,8 @@ export interface paths {
           team_slug: components["parameters"]["team_slug"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -6644,8 +6644,8 @@ export interface paths {
           team_slug: components["parameters"]["team_slug"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -6869,8 +6869,8 @@ export interface paths {
            * Filters the project cards that are returned by the card's state. Can be one of `all`,`archived`, or `not_archived`.
            */
           archived_state?: "all" | "archived" | "not_archived";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -7106,8 +7106,8 @@ export interface paths {
            * \* `all`: All collaborators the authenticated user can see.
            */
           affiliation?: "outside" | "direct" | "all";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -7216,8 +7216,8 @@ export interface paths {
           project_id: components["parameters"]["project-id"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -7456,8 +7456,8 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -7693,8 +7693,8 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -7852,12 +7852,12 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          actor: components["parameters"]["actor"];
-          branch: components["parameters"]["workflow-run-branch"];
-          event: components["parameters"]["event"];
-          status: components["parameters"]["workflow-run-status"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          actor?: components["parameters"]["actor"];
+          branch?: components["parameters"]["workflow-run-branch"];
+          event?: components["parameters"]["event"];
+          status?: components["parameters"]["workflow-run-status"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -7927,8 +7927,8 @@ export interface paths {
           run_id: components["parameters"]["run-id"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -7982,8 +7982,8 @@ export interface paths {
            * \* `all`: Returns all jobs for a workflow run, including from old executions of the workflow run.
            */
           filter?: "latest" | "all";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -8097,8 +8097,8 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -8294,8 +8294,8 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -8427,12 +8427,12 @@ export interface paths {
           workflow_id: components["parameters"]["workflow-id"];
         };
         query: {
-          actor: components["parameters"]["actor"];
-          branch: components["parameters"]["workflow-run-branch"];
-          event: components["parameters"]["event"];
-          status: components["parameters"]["workflow-run-status"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          actor?: components["parameters"]["actor"];
+          branch?: components["parameters"]["workflow-run-branch"];
+          event?: components["parameters"]["event"];
+          status?: components["parameters"]["workflow-run-status"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -8485,8 +8485,8 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -8578,8 +8578,8 @@ export interface paths {
            * Setting to `true` returns only protected branches. When set to `false`, only unprotected branches are returned. Omitting this parameter returns all branches.
            */
           protected?: boolean;
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -9916,8 +9916,8 @@ export interface paths {
           check_run_id: components["parameters"]["check_run_id"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -10037,14 +10037,14 @@ export interface paths {
           check_suite_id: components["parameters"]["check_suite_id"];
         };
         query: {
-          check_name: components["parameters"]["check_name"];
-          status: components["parameters"]["status"];
+          check_name?: components["parameters"]["check_name"];
+          status?: components["parameters"]["status"];
           /**
            * Filters check runs by their `completed_at` timestamp. Can be one of `latest` (returning the most recent check runs) or `all`.
            */
           filter?: "latest" | "all";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -10275,8 +10275,8 @@ export interface paths {
            * \* `all`: All collaborators the authenticated user can see.
            */
           affiliation?: "outside" | "direct" | "all";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -10417,8 +10417,8 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -10517,8 +10517,8 @@ export interface paths {
             | "hooray"
             | "rocket"
             | "eyes";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -10650,13 +10650,13 @@ export interface paths {
            * GitHub login or email address by which to filter by commit author.
            */
           author?: string;
-          since: components["parameters"]["since"];
+          since?: components["parameters"]["since"];
           /**
            * Only commits before this date will be returned. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
            */
           until?: string;
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -10711,8 +10711,8 @@ export interface paths {
           commit_sha: components["parameters"]["commit_sha"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -10781,8 +10781,8 @@ export interface paths {
           commit_sha: components["parameters"]["commit_sha"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -10876,14 +10876,14 @@ export interface paths {
           ref: string;
         };
         query: {
-          check_name: components["parameters"]["check_name"];
-          status: components["parameters"]["status"];
+          check_name?: components["parameters"]["check_name"];
+          status?: components["parameters"]["status"];
           /**
            * Filters check runs by their `completed_at` timestamp. Can be one of `latest` (returning the most recent check runs) or `all`.
            */
           filter?: "latest" | "all";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -10920,9 +10920,9 @@ export interface paths {
            * Filters check suites by GitHub App `id`.
            */
           app_id?: number;
-          check_name: components["parameters"]["check_name"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          check_name?: components["parameters"]["check_name"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -10989,8 +10989,8 @@ export interface paths {
           ref: string;
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -11353,8 +11353,8 @@ export interface paths {
            * Set to `1` or `true` to include anonymous contributors in results.
            */
           anon?: string;
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -11400,8 +11400,8 @@ export interface paths {
            * The name of the environment that was deployed to (e.g., `staging` or `production`).
            */
           environment?: string;
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -11592,8 +11592,8 @@ export interface paths {
           deployment_id: components["parameters"]["deployment_id"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -11744,8 +11744,8 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -11770,8 +11770,8 @@ export interface paths {
            * The sort order. Can be either `newest`, `oldest`, or `stargazers`.
            */
           sort?: "newest" | "oldest" | "stargazers";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -12058,8 +12058,8 @@ export interface paths {
           ref: string;
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -12430,8 +12430,8 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -12849,7 +12849,7 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          since: components["parameters"]["since-user"];
+          since?: components["parameters"]["since-user"];
         };
       };
       responses: {
@@ -13052,8 +13052,8 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -13144,15 +13144,15 @@ export interface paths {
            * A user that's mentioned in the issue.
            */
           mentioned?: string;
-          labels: components["parameters"]["labels"];
+          labels?: components["parameters"]["labels"];
           /**
            * What to sort results by. Can be either `created`, `updated`, `comments`.
            */
           sort?: "created" | "updated" | "comments";
-          direction: components["parameters"]["direction"];
-          since: components["parameters"]["since"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          direction?: components["parameters"]["direction"];
+          since?: components["parameters"]["since"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -13241,14 +13241,14 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          sort: components["parameters"]["sort"];
+          sort?: components["parameters"]["sort"];
           /**
            * Either `asc` or `desc`. Ignored without the `sort` parameter.
            */
           direction?: "asc" | "desc";
-          since: components["parameters"]["since"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          since?: components["parameters"]["since"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -13348,8 +13348,8 @@ export interface paths {
             | "hooray"
             | "rocket"
             | "eyes";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -13439,8 +13439,8 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -13648,9 +13648,9 @@ export interface paths {
           issue_number: components["parameters"]["issue_number"];
         };
         query: {
-          since: components["parameters"]["since"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          since?: components["parameters"]["since"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -13706,8 +13706,8 @@ export interface paths {
           issue_number: components["parameters"]["issue_number"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -13730,8 +13730,8 @@ export interface paths {
           issue_number: components["parameters"]["issue_number"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -13925,8 +13925,8 @@ export interface paths {
             | "hooray"
             | "rocket"
             | "eyes";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -14012,8 +14012,8 @@ export interface paths {
           issue_number: components["parameters"]["issue_number"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -14037,8 +14037,8 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -14135,8 +14135,8 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -14364,8 +14364,8 @@ export interface paths {
            * The direction of the sort. Either `asc` or `desc`.
            */
           direction?: "asc" | "desc";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -14499,8 +14499,8 @@ export interface paths {
           milestone_number: components["parameters"]["milestone_number"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -14524,12 +14524,12 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          all: components["parameters"]["all"];
-          participating: components["parameters"]["participating"];
-          since: components["parameters"]["since"];
-          before: components["parameters"]["before"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          all?: components["parameters"]["all"];
+          participating?: components["parameters"]["participating"];
+          since?: components["parameters"]["since"];
+          before?: components["parameters"]["before"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -14688,8 +14688,8 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -14775,8 +14775,8 @@ export interface paths {
            * Indicates the state of the projects to return. Can be either `open`, `closed`, or `all`.
            */
           state?: "open" | "closed" | "all";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -14861,8 +14861,8 @@ export interface paths {
            * The direction of the sort. Can be either `asc` or `desc`. Default: `desc` when sort is `created` or sort is not specified, otherwise `asc`.
            */
           direction?: "asc" | "desc";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -14964,14 +14964,14 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          sort: components["parameters"]["sort"];
+          sort?: components["parameters"]["sort"];
           /**
            * Can be either `asc` or `desc`. Ignored without `sort` parameter.
            */
           direction?: "asc" | "desc";
-          since: components["parameters"]["since"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          since?: components["parameters"]["since"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -15116,8 +15116,8 @@ export interface paths {
             | "hooray"
             | "rocket"
             | "eyes";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -15318,14 +15318,14 @@ export interface paths {
           pull_number: components["parameters"]["pull-number"];
         };
         query: {
-          sort: components["parameters"]["sort"];
+          sort?: components["parameters"]["sort"];
           /**
            * Can be either `asc` or `desc`. Ignored without `sort` parameter.
            */
           direction?: "asc" | "desc";
-          since: components["parameters"]["since"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          since?: components["parameters"]["since"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -15467,8 +15467,8 @@ export interface paths {
           pull_number: components["parameters"]["pull-number"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -15493,8 +15493,8 @@ export interface paths {
           pull_number: components["parameters"]["pull-number"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -15594,8 +15594,8 @@ export interface paths {
           pull_number: components["parameters"]["pull-number"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -15685,8 +15685,8 @@ export interface paths {
           pull_number: components["parameters"]["pull-number"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -15848,8 +15848,8 @@ export interface paths {
           review_id: components["parameters"]["review_id"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -16009,8 +16009,8 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -16294,8 +16294,8 @@ export interface paths {
           release_id: components["parameters"]["release_id"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -16365,8 +16365,8 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -16560,8 +16560,8 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -16653,8 +16653,8 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -16698,8 +16698,8 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -16770,7 +16770,7 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          per: components["parameters"]["per"];
+          per?: components["parameters"]["per"];
         };
       };
       responses: {
@@ -16839,7 +16839,7 @@ export interface paths {
           repo: components["parameters"]["repo"];
         };
         query: {
-          per: components["parameters"]["per"];
+          per?: components["parameters"]["per"];
         };
       };
       responses: {
@@ -17023,8 +17023,8 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          per_page: components["parameters"]["per_page"];
-          since: components["parameters"]["since"];
+          per_page?: components["parameters"]["per_page"];
+          since?: components["parameters"]["since"];
           visibility?: string;
         };
       };
@@ -17050,8 +17050,8 @@ export interface paths {
           enterprise: components["parameters"]["enterprise"];
         };
         query: {
-          startIndex: components["parameters"]["start_index"];
-          count: components["parameters"]["count"];
+          startIndex?: components["parameters"]["start_index"];
+          count?: components["parameters"]["count"];
         };
       };
       responses: {
@@ -17239,8 +17239,8 @@ export interface paths {
           enterprise: components["parameters"]["enterprise"];
         };
         query: {
-          startIndex: components["parameters"]["start_index"];
-          count: components["parameters"]["count"];
+          startIndex?: components["parameters"]["start_index"];
+          count?: components["parameters"]["count"];
         };
       };
       responses: {
@@ -17759,9 +17759,9 @@ export interface paths {
            * Sorts the results of your query. Can only be `indexed`, which indicates how recently a file has been indexed by the GitHub search infrastructure. Default: [best match](https://developer.github.com/v3/search/#ranking-search-results)
            */
           sort?: "indexed";
-          order: components["parameters"]["order"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          order?: components["parameters"]["order"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -17804,9 +17804,9 @@ export interface paths {
            * Sorts the results of your query by `author-date` or `committer-date`. Default: [best match](https://developer.github.com/v3/search/#ranking-search-results)
            */
           sort?: "author-date" | "committer-date";
-          order: components["parameters"]["order"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          order?: components["parameters"]["order"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -17860,9 +17860,9 @@ export interface paths {
             | "interactions"
             | "created"
             | "updated";
-          order: components["parameters"]["order"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          order?: components["parameters"]["order"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -17910,7 +17910,7 @@ export interface paths {
            * Sorts the results of your query by when the label was `created` or `updated`. Default: [best match](https://developer.github.com/v3/search/#ranking-search-results)
            */
           sort?: "created" | "updated";
-          order: components["parameters"]["order"];
+          order?: components["parameters"]["order"];
         };
       };
       responses: {
@@ -17958,9 +17958,9 @@ export interface paths {
            * Sorts the results of your query by number of `stars`, `forks`, or `help-wanted-issues` or how recently the items were `updated`. Default: [best match](https://developer.github.com/v3/search/#ranking-search-results)
            */
           sort?: "stars" | "forks" | "help-wanted-issues" | "updated";
-          order: components["parameters"]["order"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          order?: components["parameters"]["order"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -18040,9 +18040,9 @@ export interface paths {
            * Sorts the results of your query by number of `followers` or `repositories`, or when the person `joined` GitHub. Default: [best match](https://developer.github.com/v3/search/#ranking-search-results)
            */
           sort?: "followers" | "repositories" | "joined";
-          order: components["parameters"]["order"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          order?: components["parameters"]["order"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -18174,9 +18174,9 @@ export interface paths {
           team_id: components["parameters"]["team-id"];
         };
         query: {
-          direction: components["parameters"]["direction"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          direction?: components["parameters"]["direction"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -18315,9 +18315,9 @@ export interface paths {
           discussion_number: components["parameters"]["discussion-number"];
         };
         query: {
-          direction: components["parameters"]["direction"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          direction?: components["parameters"]["direction"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -18461,8 +18461,8 @@ export interface paths {
             | "hooray"
             | "rocket"
             | "eyes";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -18538,8 +18538,8 @@ export interface paths {
             | "hooray"
             | "rocket"
             | "eyes";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -18601,8 +18601,8 @@ export interface paths {
           team_id: components["parameters"]["team-id"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -18634,8 +18634,8 @@ export interface paths {
            * \* `all` - all members of the team.
            */
           role?: "member" | "maintainer" | "all";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -18868,8 +18868,8 @@ export interface paths {
           team_id: components["parameters"]["team-id"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -18984,8 +18984,8 @@ export interface paths {
           team_id: components["parameters"]["team-id"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -19175,8 +19175,8 @@ export interface paths {
           team_id: components["parameters"]["team-id"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -19395,8 +19395,8 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -19478,8 +19478,8 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -19502,8 +19502,8 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -19592,8 +19592,8 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -19695,8 +19695,8 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -19732,8 +19732,8 @@ export interface paths {
           installation_id: components["parameters"]["installation_id"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -19824,15 +19824,15 @@ export interface paths {
            * Indicates the state of the issues to return. Can be either `open`, `closed`, or `all`.
            */
           state?: "open" | "closed" | "all";
-          labels: components["parameters"]["labels"];
+          labels?: components["parameters"]["labels"];
           /**
            * What to sort results by. Can be either `created`, `updated`, `comments`.
            */
           sort?: "created" | "updated" | "comments";
-          direction: components["parameters"]["direction"];
-          since: components["parameters"]["since"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          direction?: components["parameters"]["direction"];
+          since?: components["parameters"]["since"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -19854,8 +19854,8 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -19954,8 +19954,8 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -19978,8 +19978,8 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -20002,8 +20002,8 @@ export interface paths {
            * Indicates the state of the memberships to return. Can be either `active` or `pending`. If not specified, the API returns both active and pending memberships.
            */
           state?: "active" | "pending";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -20072,8 +20072,8 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -20252,8 +20252,8 @@ export interface paths {
           migration_id: components["parameters"]["migration_id"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -20278,8 +20278,8 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -20332,8 +20332,8 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -20384,10 +20384,10 @@ export interface paths {
            * Can be one of `asc` or `desc`. Default: `asc` when using `full_name`, otherwise `desc`
            */
           direction?: "asc" | "desc";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
-          since: components["parameters"]["since"];
-          before: components["parameters"]["before"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
+          since?: components["parameters"]["since"];
+          before?: components["parameters"]["before"];
         };
       };
       responses: {
@@ -20514,8 +20514,8 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -20577,10 +20577,10 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          sort: components["parameters"]["sort"];
-          direction: components["parameters"]["direction"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          sort?: components["parameters"]["sort"];
+          direction?: components["parameters"]["direction"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -20668,8 +20668,8 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -20692,8 +20692,8 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -20718,8 +20718,8 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          since: components["parameters"]["since-user"];
-          per_page: components["parameters"]["per_page"];
+          since?: components["parameters"]["since-user"];
+          per_page?: components["parameters"]["per_page"];
         };
       };
       responses: {
@@ -20772,8 +20772,8 @@ export interface paths {
           username: components["parameters"]["username"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -20797,8 +20797,8 @@ export interface paths {
           org: components["parameters"]["org"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -20818,8 +20818,8 @@ export interface paths {
           username: components["parameters"]["username"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -20842,8 +20842,8 @@ export interface paths {
           username: components["parameters"]["username"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -20866,8 +20866,8 @@ export interface paths {
           username: components["parameters"]["username"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -20910,9 +20910,9 @@ export interface paths {
           username: components["parameters"]["username"];
         };
         query: {
-          since: components["parameters"]["since"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          since?: components["parameters"]["since"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -20936,8 +20936,8 @@ export interface paths {
           username: components["parameters"]["username"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -21025,8 +21025,8 @@ export interface paths {
           username: components["parameters"]["username"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -21051,8 +21051,8 @@ export interface paths {
           username: components["parameters"]["username"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -21076,8 +21076,8 @@ export interface paths {
            * Indicates the state of the projects to return. Can be either `open`, `closed`, or `all`.
            */
           state?: "open" | "closed" | "all";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -21102,8 +21102,8 @@ export interface paths {
           username: components["parameters"]["username"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -21123,8 +21123,8 @@ export interface paths {
           username: components["parameters"]["username"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -21159,8 +21159,8 @@ export interface paths {
            * Can be one of `asc` or `desc`. Default: `asc` when using `full_name`, otherwise `desc`
            */
           direction?: "asc" | "desc";
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -21257,10 +21257,10 @@ export interface paths {
           username: components["parameters"]["username"];
         };
         query: {
-          sort: components["parameters"]["sort"];
-          direction: components["parameters"]["direction"];
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          sort?: components["parameters"]["sort"];
+          direction?: components["parameters"]["direction"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
@@ -21284,8 +21284,8 @@ export interface paths {
           username: components["parameters"]["username"];
         };
         query: {
-          per_page: components["parameters"]["per_page"];
-          page: components["parameters"]["page"];
+          per_page?: components["parameters"]["per_page"];
+          page?: components["parameters"]["page"];
         };
       };
       responses: {
