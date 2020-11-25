@@ -1437,6 +1437,11 @@ export interface paths {
     put: operations["apps/add-repo-to-installation"];
     delete: operations["apps/remove-repo-from-installation"];
   };
+  "/user/interaction-limits": {
+    get: operations["interactions/get-restrictions-for-your-public-repos"];
+    put: operations["interactions/set-restrictions-for-your-public-repos"];
+    delete: operations["interactions/remove-restrictions-for-your-public-repos"];
+  };
   "/user/issues": {
     get: operations["issues/list-for-authenticated-user"];
   };
@@ -5821,7 +5826,7 @@ export interface operations {
     };
   };
   /**
-   * Shows which group of GitHub users can interact with this organization and when the restriction expires. If there are no restrictions, you will see an empty response.
+   * Shows which type of GitHub user can interact with this organization and when the restriction expires. If there is no restrictions, you will see an empty response.
    */
   "interactions/get-restrictions-for-org": {
     parameters: {
@@ -5834,12 +5839,12 @@ export interface operations {
        * response
        */
       "200": {
-        "application/json": components["schemas"]["interaction-limit"];
+        "application/json": components["schemas"]["interaction-limit-response"];
       };
     };
   };
   /**
-   * Temporarily restricts interactions to certain GitHub users in any public repository in the given organization. You must be an organization owner to set these restrictions.
+   * Temporarily restricts interactions to a certain type of GitHub user in any public repository in the given organization. You must be an organization owner to set these restrictions. Setting the interaction limit at the organization level will overwrite any interaction limits that are set for individual repositories owned by the organization.
    */
   "interactions/set-restrictions-for-org": {
     parameters: {
@@ -5848,19 +5853,14 @@ export interface operations {
       };
     };
     requestBody: {
-      "application/json": {
-        /**
-         * Specifies the group of GitHub users who can comment, open issues, or create pull requests in public repositories for the given organization. Must be one of: `existing_users`, `contributors_only`, or `collaborators_only`.
-         */
-        limit: "existing_users" | "contributors_only" | "collaborators_only";
-      };
+      "application/json": components["schemas"]["interaction-limit"];
     };
     responses: {
       /**
        * response
        */
       "200": {
-        "application/json": components["schemas"]["interaction-limit"];
+        "application/json": components["schemas"]["interaction-limit-response"];
       };
       "422": unknown;
     };
@@ -10287,7 +10287,12 @@ export interface operations {
       };
     };
     requestBody: {
-      "application/json": string[];
+      "application/json": {
+        /**
+         * contexts parameter
+         */
+        contexts: string[];
+      };
     };
     responses: {
       /**
@@ -10313,7 +10318,12 @@ export interface operations {
       };
     };
     requestBody: {
-      "application/json": string[];
+      "application/json": {
+        /**
+         * contexts parameter
+         */
+        contexts: string[];
+      };
     };
     responses: {
       /**
@@ -10338,7 +10348,12 @@ export interface operations {
       };
     };
     requestBody: {
-      "application/json": string[];
+      "application/json": {
+        /**
+         * contexts parameter
+         */
+        contexts: string[];
+      };
     };
     responses: {
       /**
@@ -10437,7 +10452,12 @@ export interface operations {
       };
     };
     requestBody: {
-      "application/json": string[];
+      "application/json": {
+        /**
+         * apps parameter
+         */
+        apps: string[];
+      };
     };
     responses: {
       /**
@@ -10467,7 +10487,12 @@ export interface operations {
       };
     };
     requestBody: {
-      "application/json": string[];
+      "application/json": {
+        /**
+         * apps parameter
+         */
+        apps: string[];
+      };
     };
     responses: {
       /**
@@ -10497,7 +10522,12 @@ export interface operations {
       };
     };
     requestBody: {
-      "application/json": string[];
+      "application/json": {
+        /**
+         * apps parameter
+         */
+        apps: string[];
+      };
     };
     responses: {
       /**
@@ -10550,7 +10580,12 @@ export interface operations {
       };
     };
     requestBody: {
-      "application/json": string[];
+      "application/json": {
+        /**
+         * teams parameter
+         */
+        teams: string[];
+      };
     };
     responses: {
       /**
@@ -10580,7 +10615,12 @@ export interface operations {
       };
     };
     requestBody: {
-      "application/json": string[];
+      "application/json": {
+        /**
+         * teams parameter
+         */
+        teams: string[];
+      };
     };
     responses: {
       /**
@@ -10610,7 +10650,12 @@ export interface operations {
       };
     };
     requestBody: {
-      "application/json": string[];
+      "application/json": {
+        /**
+         * teams parameter
+         */
+        teams: string[];
+      };
     };
     responses: {
       /**
@@ -10663,7 +10708,12 @@ export interface operations {
       };
     };
     requestBody: {
-      "application/json": string[];
+      "application/json": {
+        /**
+         * users parameter
+         */
+        users: string[];
+      };
     };
     responses: {
       /**
@@ -10693,7 +10743,12 @@ export interface operations {
       };
     };
     requestBody: {
-      "application/json": string[];
+      "application/json": {
+        /**
+         * users parameter
+         */
+        users: string[];
+      };
     };
     responses: {
       /**
@@ -10723,7 +10778,12 @@ export interface operations {
       };
     };
     requestBody: {
-      "application/json": string[];
+      "application/json": {
+        /**
+         * users parameter
+         */
+        users: string[];
+      };
     };
     responses: {
       /**
@@ -11237,7 +11297,7 @@ export interface operations {
     };
   };
   /**
-   * Lists all open code scanning alerts for the default branch (usually `master`) and protected branches in a repository. For private repos, you must use an access token with the `repo` scope. For public repos, you must use an access token with `public_repo` and `repo:security_events` scopes. GitHub Apps must have the `security_events` read permission to use this endpoint.
+   * Lists all open code scanning alerts for the default branch (usually `main` or `master`). For private repos, you must use an access token with the `repo` scope. For public repos, you must use an access token with `public_repo` and `repo:security_events` scopes. GitHub Apps must have the `security_events` read permission to use this endpoint.
    */
   "code-scanning/list-alerts-for-repo": {
     parameters: {
@@ -11795,7 +11855,7 @@ export interface operations {
        * response
        */
       "200": {
-        "application/json": components["schemas"]["simple-commit"][];
+        "application/json": components["schemas"]["commit"][];
       };
       "400": unknown;
       "404": unknown;
@@ -12138,7 +12198,12 @@ export interface operations {
     };
   };
   /**
-   * This endpoint will return all community profile metrics, including an overall health score, repository description, the presence of documentation, detected code of conduct, detected license, and the presence of ISSUE\_TEMPLATE, PULL\_REQUEST\_TEMPLATE, README, and CONTRIBUTING files.
+   * This endpoint will return all community profile metrics, including an
+   * overall health score, repository description, the presence of documentation, detected
+   * code of conduct, detected license, and the presence of ISSUE\_TEMPLATE, PULL\_REQUEST\_TEMPLATE,
+   * README, and CONTRIBUTING files.
+   *
+   * `content_reports_enabled` is only returned for organization-owned repositories.
    */
   "repos/get-community-profile-metrics": {
     parameters: {
@@ -14021,7 +14086,7 @@ export interface operations {
     };
   };
   /**
-   * Shows which group of GitHub users can interact with this repository and when the restriction expires. If there are no restrictions, you will see an empty response.
+   * Shows which type of GitHub user can interact with this repository and when the restriction expires. If there are no restrictions, you will see an empty response.
    */
   "interactions/get-restrictions-for-repo": {
     parameters: {
@@ -14035,12 +14100,12 @@ export interface operations {
        * response
        */
       "200": {
-        "application/json": components["schemas"]["interaction-limit"];
+        "application/json": components["schemas"]["interaction-limit-response"];
       };
     };
   };
   /**
-   * Temporarily restricts interactions to certain GitHub users within the given repository. You must have owner or admin access to set restrictions.
+   * Temporarily restricts interactions to a certain type of GitHub user within the given repository. You must have owner or admin access to set these restrictions. If an interaction limit is set for the user or organization that owns this repository, you will receive a `409 Conflict` response and will not be able to use this endpoint to change the interaction limit for a single repository.
    */
   "interactions/set-restrictions-for-repo": {
     parameters: {
@@ -14050,24 +14115,23 @@ export interface operations {
       };
     };
     requestBody: {
-      "application/json": {
-        /**
-         * Specifies the group of GitHub users who can comment, open issues, or create pull requests for the given repository. Must be one of: `existing_users`, `contributors_only`, or `collaborators_only`.
-         */
-        limit: "existing_users" | "contributors_only" | "collaborators_only";
-      };
+      "application/json": components["schemas"]["interaction-limit"];
     };
     responses: {
       /**
        * response
        */
       "200": {
-        "application/json": components["schemas"]["interaction-limit"];
+        "application/json": components["schemas"]["interaction-limit-response"];
       };
+      /**
+       * Conflict
+       */
+      "409": unknown;
     };
   };
   /**
-   * Removes all interaction restrictions from the given repository. You must have owner or admin access to remove restrictions.
+   * Removes all interaction restrictions from the given repository. You must have owner or admin access to remove restrictions. If the interaction limit is set for the user or organization that owns this repository, you will receive a `409 Conflict` response and will not be able to use this endpoint to change the interaction limit for a single repository.
    */
   "interactions/remove-restrictions-for-repo": {
     parameters: {
@@ -14081,6 +14145,10 @@ export interface operations {
        * Empty response
        */
       "204": never;
+      /**
+       * Conflict
+       */
+      "409": unknown;
     };
   };
   /**
@@ -16421,7 +16489,7 @@ export interface operations {
        * response
        */
       "200": {
-        "application/json": components["schemas"]["simple-commit"][];
+        "application/json": components["schemas"]["commit"][];
       };
     };
   };
@@ -18689,7 +18757,7 @@ export interface operations {
    *
    * `q=windows+label:bug+language:python+state:open&sort=created&order=asc`
    *
-   * This query searches for the keyword `windows`, within any open issue that is labeled as `bug`. The search runs across repositories whose primary language is Python. The results are sorted by creation date in ascending order, whick means the oldest issues appear first in the search results.
+   * This query searches for the keyword `windows`, within any open issue that is labeled as `bug`. The search runs across repositories whose primary language is Python. The results are sorted by creation date in ascending order, which means the oldest issues appear first in the search results.
    *
    * **Note:** For [user-to-server](https://docs.github.com/developers/apps/identifying-and-authorizing-users-for-github-apps#user-to-server-requests) GitHub App requests, you can't retrieve a combination of issues and pull requests in a single query. Requests that don't include the `is:issue` or `is:pull-request` qualifier will receive an HTTP `422 Unprocessable Entity` response. To get results for both issues and pull requests, you must send separate queries for issues and pull requests. For more information about the `is` qualifier, see "[Searching only issues or pull requests](https://docs.github.com/github/searching-for-information-on-github/searching-issues-and-pull-requests#search-only-issues-or-pull-requests)."
    */
@@ -20583,6 +20651,47 @@ export interface operations {
       "304": never;
       "403": unknown;
       "404": unknown;
+    };
+  };
+  /**
+   * Shows which type of GitHub user can interact with your public repositories and when the restriction expires. If there are no restrictions, you will see an empty response.
+   */
+  "interactions/get-restrictions-for-your-public-repos": {
+    responses: {
+      /**
+       * response
+       */
+      "200": {
+        "application/json": components["schemas"]["interaction-limit-response"];
+      };
+    };
+  };
+  /**
+   * Temporarily restricts which type of GitHub user can interact with your public repositories. Setting the interaction limit at the user level will overwrite any interaction limits that are set for individual repositories owned by the user.
+   */
+  "interactions/set-restrictions-for-your-public-repos": {
+    requestBody: {
+      "application/json": components["schemas"]["interaction-limit"];
+    };
+    responses: {
+      /**
+       * response
+       */
+      "200": {
+        "application/json": components["schemas"]["interaction-limit-response"];
+      };
+      "422": unknown;
+    };
+  };
+  /**
+   * Removes any interaction restrictions from your public repositories.
+   */
+  "interactions/remove-restrictions-for-your-public-repos": {
+    responses: {
+      /**
+       * Empty response
+       */
+      "204": never;
     };
   };
   /**
@@ -23804,15 +23913,35 @@ export interface components {
       type: string;
     };
     /**
+     * The type of GitHub user that can comment, open issues, or create pull requests while the interaction limit is in effect. Can be one of: `existing_users`, `contributors_only`, `collaborators_only`.
+     */
+    "interaction-group":
+      | "existing_users"
+      | "contributors_only"
+      | "collaborators_only";
+    /**
      * Interaction limit settings.
      */
-    "interaction-limit": {
-      /**
-       * The interaction limit to enable.
-       */
-      limit: "existing_users" | "contributors_only" | "collaborators_only";
+    "interaction-limit-response": {
+      limit: components["schemas"]["interaction-group"];
       origin: string;
       expires_at: string;
+    };
+    /**
+     * The duration of the interaction restriction. Can be one of: `one_day`, `three_days`, `one_week`, `one_month`, `six_months`. Default: `one_day`.
+     */
+    "interaction-expiry":
+      | "one_day"
+      | "three_days"
+      | "one_week"
+      | "one_month"
+      | "six_months";
+    /**
+     * Limit interactions to a specific type of user for a specified duration
+     */
+    "interaction-limit": {
+      limit: components["schemas"]["interaction-group"];
+      expiry?: components["schemas"]["interaction-expiry"];
     };
     /**
      * Organization Invitation
@@ -25168,9 +25297,7 @@ export interface components {
     /**
      * **Required when the state is dismissed.** The reason for dismissing or closing the alert. Can be one of: `false positive`, `won't fix`, and `used in tests`.
      */
-    "code-scanning-alert-dismissed-reason":
-      | ("false positive" | "won't fix" | "used in tests")
-      | null;
+    "code-scanning-alert-dismissed-reason": string | null;
     "code-scanning-alert-rule": {
       /**
        * A unique identifier for the rule used to detect the alert.
@@ -25501,6 +25628,7 @@ export interface components {
           | null;
       };
       updated_at: string | null;
+      content_reports_enabled?: boolean;
     };
     /**
      * Diff Entry
