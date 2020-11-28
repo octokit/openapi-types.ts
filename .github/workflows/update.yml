@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Version of https://www.npmjs.com/package/@github/openapi"
+        description: "Version of https://www.npmjs.com/package/@octokit/openapi"
         required: true
 
 jobs:
