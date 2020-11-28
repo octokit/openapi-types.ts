@@ -8,6 +8,10 @@ on:
       - dependabot/npm_and_yarn/openapi-typescript-*
 
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Version of https://www.npmjs.com/package/@github/openapi"
+        required: true
 
 jobs:
   update:
@@ -19,7 +23,13 @@ jobs:
       - run: npm ci
       # do not update cache for dependabot update
       - run: npm run download
-        if: github.event_name != 'push'
+        if: github.event_name == 'repository_dispatch'
+        env:
+          VERSION: ${{ github.event.client_payload.release.tag_name }}
+      - run: npm run download
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          VERSION: ${{ github.event.inputs.version }}
       - run: npm run generate-types
 
       # create/update pull request for dispatch event update

@@ -5,7 +5,10 @@ if (!process.env.VERSION) {
   throw new Error("VERSION is not set");
 }
 
-download(process.env.VERSION).then(() => console.log("done"), console.error);
+download(process.env.VERSION.replace(/^v/, "")).then(
+  () => console.log("done"),
+  console.error
+);
 
 function download(version) {
   const path = `cache/openapi-schema.json`;
