@@ -1,7 +1,7 @@
 name: Update
 on:
   repository_dispatch:
-    types: [octokit/openapi-release]
+    types: ["octokit/openapi release"]
 
   push:
     branches:
