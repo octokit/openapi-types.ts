@@ -22,15 +22,18 @@ jobs:
       - uses: actions/setup-node@v2.1.2
       - run: npm ci
       # do not update cache for dependabot update
-      - run: npm run download
+      - run: |
+          npm run download
+          npm run generate-types
         if: github.event_name == 'repository_dispatch'
         env:
           VERSION: ${{ github.event.client_payload.release.tag_name }}
-      - run: npm run download
+      - run: |
+          npm run download
+          npm run generate-types
         if: github.event_name == 'workflow_dispatch'
         env:
           VERSION: ${{ github.event.inputs.version }}
-      - run: npm run generate-types
 
       # create/update pull request for dispatch event update
       - name: Create Pull Request
