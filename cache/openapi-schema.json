@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "version": "1.0.4",
+    "version": "1.0.5",
     "title": "GitHub's official OpenAPI spec + Octokit extension",
     "description": "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs",
     "license": { "name": "MIT", "url": "https://spdx.org/licenses/MIT" },
@@ -15204,7 +15204,7 @@
           "changes": [
             {
               "type": "OPERATION",
-              "date": "2020-11-10",
+              "date": "2020-09-17",
               "before": { "operationId": "repos/update-status-check-potection" }
             }
           ]
