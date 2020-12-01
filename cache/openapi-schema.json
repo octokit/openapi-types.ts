@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "version": "1.0.1",
+    "version": "1.0.2",
     "title": "GitHub's official OpenAPI spec + Octokit extension",
     "description": "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs",
     "license": { "name": "MIT", "url": "https://spdx.org/licenses/MIT" },
@@ -17149,7 +17149,7 @@
             {
               "type": "PARAMETER",
               "date": "2020-09-17",
-              "parameter": "alert_name",
+              "parameter": "alert_number",
               "before": { "name": "alert_id" }
             }
           ]
