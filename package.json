@@ -22,6 +22,6 @@
     "branches": "main"
   },
   "octokit": {
-    "openapi-version": "1.0.5"
+    "openapi-version": "2.0.0"
   }
 }

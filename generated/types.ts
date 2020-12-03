@@ -1196,6 +1196,13 @@ export interface paths {
     get: operations["repos/list-release-assets"];
     post: operations["repos/upload-release-asset"];
   };
+  "/repos/{owner}/{repo}/secret-scanning/alerts": {
+    get: operations["secret-scanning/list-alerts-for-repo"];
+  };
+  "/repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}": {
+    get: operations["secret-scanning/get-alert"];
+    patch: operations["secret-scanning/update-alert"];
+  };
   "/repos/{owner}/{repo}/stargazers": {
     get: operations["activity/list-stargazers-for-repo"];
   };
@@ -9283,8 +9290,6 @@ export interface operations {
     };
   };
   /**
-   * **Warning:** This GitHub Actions usage endpoint is currently in public beta and subject to change. For more information, see "[GitHub Actions API workflow usage](https://developer.github.com/changes/2020-05-15-actions-api-workflow-usage)."
-   *
    * Gets the number of billable minutes and total run time for a specific workflow run. Billable minutes only apply to workflows in private repositories that use GitHub-hosted runners. Usage is listed for each GitHub-hosted runner operating system in milliseconds. Any job re-runs are also included in the usage. The usage does not include the multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
    *
    * Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
@@ -9651,8 +9656,6 @@ export interface operations {
     };
   };
   /**
-   * **Warning:** This GitHub Actions usage endpoint is currently in public beta and subject to change. For more information, see "[GitHub Actions API workflow usage](https://developer.github.com/changes/2020-05-15-actions-api-workflow-usage)."
-   *
    * Gets the number of billable minutes used by a specific workflow during the current billing cycle. Billable minutes only apply to workflows in private repositories that use GitHub-hosted runners. Usage is listed for each GitHub-hosted runner operating system in milliseconds. Any job re-runs are also included in the usage. The usage does not include the multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
    *
    * You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
@@ -11452,6 +11455,10 @@ export interface operations {
        */
       "202": unknown;
       /**
+       * Response if the `sarif` field is invalid
+       */
+      "400": unknown;
+      /**
        * Response if the repository is archived
        */
       "403": unknown;
@@ -11459,6 +11466,10 @@ export interface operations {
        * Response if `commit_sha` or `ref` cannot be found
        */
       "404": unknown;
+      /**
+       * Response if the `sarif` field is too large
+       */
+      "413": unknown;
     };
   };
   /**
@@ -17333,6 +17344,104 @@ export interface operations {
     };
   };
   /**
+   * Lists all secret scanning alerts for a private repository, from newest to oldest. To use this endpoint, you must be an administrator for the repository or organization, and you must use an access token with the `repo` scope or `security_events` scope.
+   *
+   * GitHub Apps must have the `secret_scanning_alerts` read permission to use this endpoint.
+   */
+  "secret-scanning/list-alerts-for-repo": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+      };
+      query: {
+        /**
+         * Set to `open` or `resolved` to only list secret scanning alerts in a specific state.
+         */
+        state?: "open" | "resolved";
+        page?: components["parameters"]["page"];
+        per_page?: components["parameters"]["per_page"];
+      };
+    };
+    responses: {
+      /**
+       * Response
+       */
+      "200": {
+        "application/json": components["schemas"]["secret-scanning-alert"][];
+      };
+      /**
+       * Repository is public or secret scanning is disabled for the repository
+       */
+      "404": unknown;
+      "503": unknown;
+    };
+  };
+  /**
+   * Gets a single secret scanning alert detected in a private repository. To use this endpoint, you must be an administrator for the repository or organization, and you must use an access token with the `repo` scope or `security_events` scope.
+   *
+   * GitHub Apps must have the `secret_scanning_alerts` read permission to use this endpoint.
+   */
+  "secret-scanning/get-alert": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        alert_number: components["parameters"]["alert_number"];
+      };
+    };
+    responses: {
+      /**
+       * Default response
+       */
+      "200": {
+        "application/json": components["schemas"]["secret-scanning-alert"];
+      };
+      /**
+       * Repository is public, or secret scanning is disabled for the repository, or the resource is not found
+       */
+      "404": unknown;
+      "503": unknown;
+    };
+  };
+  /**
+   * Updates the status of a secret scanning alert in a private repository. To use this endpoint, you must be an administrator for the repository or organization, and you must use an access token with the `repo` scope or `security_events` scope.
+   *
+   * GitHub Apps must have the `secret_scanning_alerts` write permission to use this endpoint.
+   */
+  "secret-scanning/update-alert": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        alert_number: components["parameters"]["alert_number"];
+      };
+    };
+    requestBody: {
+      "application/json": {
+        state: components["schemas"]["secret-scanning-alert-state"];
+        resolution?: components["schemas"]["secret-scanning-alert-resolution"];
+      };
+    };
+    responses: {
+      /**
+       * Default response
+       */
+      "200": {
+        "application/json": components["schemas"]["secret-scanning-alert"];
+      };
+      /**
+       * Repository is public, or secret scanning is disabled for the repository, or the resource is not found
+       */
+      "404": unknown;
+      /**
+       * State does not match the resolution
+       */
+      "422": unknown;
+      "503": unknown;
+    };
+  };
+  /**
    * Lists the people that have starred the repository.
    *
    * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/rest/overview/media-types/) via the `Accept` header:
@@ -22295,9 +22404,9 @@ export interface components {
      */
     status: "queued" | "in_progress" | "completed";
     /**
-     * The code scanning alert number.
+     * The security alert number, found at the end of the security alert's URL.
      */
-    alert_number: components["schemas"]["code-scanning-alert-number"];
+    alert_number: components["schemas"]["alert-number"];
     /**
      * commit_sha+ parameter
      */
@@ -23606,12 +23715,7 @@ export interface components {
      */
     "api-overview": {
       verifiable_password_authentication: boolean;
-      ssh_key_fingerprints?: {
-        MD5_RSA?: string;
-        MD5_DSA?: string;
-        SHA256_RSA?: string;
-        SHA256_DSA?: string;
-      };
+      ssh_key_fingerprints?: { SHA256_RSA?: string; SHA256_DSA?: string };
       hooks?: string[];
       web?: string[];
       api?: string[];
@@ -25275,21 +25379,21 @@ export interface components {
      */
     "code-scanning-alert-ref": string;
     /**
-     * The code scanning alert number.
+     * The security alert number.
      */
-    "code-scanning-alert-number": number;
+    "alert-number": number;
     /**
      * The time that the alert was created in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
      */
-    "code-scanning-alert-created-at": string;
+    "alert-created-at": string;
     /**
      * The REST API URL of the alert resource.
      */
-    "code-scanning-alert-url": string;
+    "alert-url": string;
     /**
      * The GitHub URL of the alert resource.
      */
-    "code-scanning-alert-html-url": string;
+    "alert-html-url": string;
     /**
      * The time that the alert was dismissed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
      */
@@ -25324,10 +25428,10 @@ export interface components {
       version?: string | null;
     };
     "code-scanning-alert-code-scanning-alert-items": {
-      number?: components["schemas"]["code-scanning-alert-number"];
-      created_at?: components["schemas"]["code-scanning-alert-created-at"];
-      url?: components["schemas"]["code-scanning-alert-url"];
-      html_url?: components["schemas"]["code-scanning-alert-html-url"];
+      number?: components["schemas"]["alert-number"];
+      created_at?: components["schemas"]["alert-created-at"];
+      url?: components["schemas"]["alert-url"];
+      html_url?: components["schemas"]["alert-html-url"];
       state?: components["schemas"]["code-scanning-alert-state"];
       dismissed_by?: components["schemas"]["simple-user"];
       dismissed_at?: components["schemas"]["code-scanning-alert-dismissed-at"];
@@ -25353,10 +25457,10 @@ export interface components {
         }[]
       | null;
     "code-scanning-alert-code-scanning-alert": {
-      number?: components["schemas"]["code-scanning-alert-number"];
-      created_at?: components["schemas"]["code-scanning-alert-created-at"];
-      url?: components["schemas"]["code-scanning-alert-url"];
-      html_url?: components["schemas"]["code-scanning-alert-html-url"];
+      number?: components["schemas"]["alert-number"];
+      created_at?: components["schemas"]["alert-created-at"];
+      url?: components["schemas"]["alert-url"];
+      html_url?: components["schemas"]["alert-html-url"];
       instances?: components["schemas"]["code-scanning-alert-instances"];
       state?: components["schemas"]["code-scanning-alert-state"];
       dismissed_by?: components["schemas"]["simple-user"];
@@ -26974,6 +27078,35 @@ export interface components {
       assets: components["schemas"]["release-asset"][];
       body_html?: string;
       body_text?: string;
+    };
+    /**
+     * Sets the state of the secret scanning alert. Can be either `open` or `resolved`. You must provide `resolution` when you set the state to `resolved`.
+     */
+    "secret-scanning-alert-state": "open" | "resolved";
+    /**
+     * **Required when the `state` is `resolved`.** The reason for resolving the alert. Can be one of `false_positive`, `wont_fix`, `revoked`, or `used_in_tests`.
+     */
+    "secret-scanning-alert-resolution": string | null;
+    "secret-scanning-alert": {
+      number?: components["schemas"]["alert-number"];
+      created_at?: components["schemas"]["alert-created-at"];
+      url?: components["schemas"]["alert-url"];
+      html_url?: components["schemas"]["alert-html-url"];
+      state?: components["schemas"]["secret-scanning-alert-state"];
+      resolution?: components["schemas"]["secret-scanning-alert-resolution"];
+      /**
+       * The time that the alert was resolved in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+       */
+      resolved_at?: string | null;
+      resolved_by?: components["schemas"]["simple-user"];
+      /**
+       * The type of secret that secret scanning detected.
+       */
+      secret_type?: string;
+      /**
+       * The secret that was detected.
+       */
+      secret?: string;
     };
     /**
      * Stargazer
