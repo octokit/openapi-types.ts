@@ -17,7 +17,7 @@
     "postgenerate-types": "node scripts/update-package"
   },
   "devDependencies": {
-    "openapi-typescript": "^2.4.2"
+    "openapi-typescript": "^2.5.0"
   },
   "release": {
     "branches": "main"
