@@ -371,6 +371,9 @@ export interface paths {
   "/orgs/{org}/events": {
     get: operations["activity/list-public-org-events"];
   };
+  "/orgs/{org}/failed_invitations": {
+    get: operations["orgs/list-failed-invitations"];
+  };
   "/orgs/{org}/hooks": {
     get: operations["orgs/list-webhooks"];
     post: operations["orgs/create-webhook"];
@@ -401,6 +404,9 @@ export interface paths {
   "/orgs/{org}/invitations": {
     get: operations["orgs/list-pending-invitations"];
     post: operations["orgs/create-invitation"];
+  };
+  "/orgs/{org}/invitations/{invitation_id}": {
+    delete: operations["orgs/cancel-invitation"];
   };
   "/orgs/{org}/invitations/{invitation_id}/teams": {
     get: operations["orgs/list-invitation-teams"];
@@ -3418,7 +3424,7 @@ export interface operations {
        * response
        */
       "201": {
-        "application/json": components["schemas"]["gist-full"];
+        "application/json": components["schemas"]["gist-simple"];
       };
       "304": never;
       "403": unknown;
@@ -3485,7 +3491,7 @@ export interface operations {
        * response
        */
       "200": {
-        "application/json": components["schemas"]["gist-full"];
+        "application/json": components["schemas"]["gist-simple"];
       };
       "304": never;
       "403": unknown;
@@ -3510,7 +3516,7 @@ export interface operations {
        * response
        */
       "200": {
-        "application/json": components["schemas"]["gist-full"];
+        "application/json": components["schemas"]["gist-simple"];
       };
       "404": unknown;
       "422": unknown;
@@ -3678,7 +3684,7 @@ export interface operations {
        * response
        */
       "200": {
-        "application/json": components["schemas"]["gist-full"][];
+        "application/json": components["schemas"]["gist-simple"][];
       };
       "304": never;
       "403": unknown;
@@ -3775,7 +3781,7 @@ export interface operations {
        * response
        */
       "200": {
-        "application/json": components["schemas"]["gist-full"];
+        "application/json": components["schemas"]["gist-simple"];
       };
       "403": unknown;
       "404": unknown;
@@ -5678,6 +5684,29 @@ export interface operations {
       };
     };
   };
+  /**
+   * The return hash contains `failed_at` and `failed_reason` fields which represent the time at which the invitation failed and the reason for the failure.
+   */
+  "orgs/list-failed-invitations": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+      };
+      query: {
+        per_page?: components["parameters"]["per_page"];
+        page?: components["parameters"]["page"];
+      };
+    };
+    responses: {
+      /**
+       * response
+       */
+      "200": {
+        "application/json": components["schemas"]["organization-invitation"][];
+      };
+      "404": unknown;
+    };
+  };
   "orgs/list-webhooks": {
     parameters: {
       path: {
@@ -6018,7 +6047,7 @@ export interface operations {
   /**
    * Invite people to an organization by using their GitHub user ID or their email address. In order to create invitations in an organization, the authenticated user must be an organization owner.
    *
-   * This endpoint triggers [notifications](https://help.github.com/articles/about-notifications/). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    */
   "orgs/create-invitation": {
     parameters: {
@@ -6056,6 +6085,27 @@ export interface operations {
       "201": {
         "application/json": components["schemas"]["organization-invitation"];
       };
+      "404": unknown;
+      "422": unknown;
+    };
+  };
+  /**
+   * Cancel an organization invitation. In order to cancel an organization invitation, the authenticated user must be an organization owner.
+   *
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+   */
+  "orgs/cancel-invitation": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+        invitation_id: components["parameters"]["invitation_id"];
+      };
+    };
+    responses: {
+      /**
+       * Empty response
+       */
+      "204": never;
       "404": unknown;
       "422": unknown;
     };
@@ -7124,7 +7174,7 @@ export interface operations {
   /**
    * Creates a new discussion post on a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
-   * This endpoint triggers [notifications](https://help.github.com/articles/about-notifications/). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/{org_id}/team/{team_id}/discussions`.
    */
@@ -7266,7 +7316,7 @@ export interface operations {
   /**
    * Creates a new comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
-   * This endpoint triggers [notifications](https://help.github.com/articles/about-notifications/). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
    */
@@ -11644,7 +11694,7 @@ export interface operations {
     };
   };
   /**
-   * This endpoint triggers [notifications](https://help.github.com/articles/about-notifications/). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    *
    * For more information the permission levels, see "[Repository permission levels for an organization](https://help.github.com/en/github/setting-up-and-managing-organizations-and-teams/repository-permission-levels-for-an-organization#permission-levels-for-repositories-owned-by-an-organization)".
    *
@@ -12039,7 +12089,7 @@ export interface operations {
   /**
    * Create a comment for a commit using its `:commit_sha`.
    *
-   * This endpoint triggers [notifications](https://help.github.com/articles/about-notifications/). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    */
   "repos/create-commit-comment": {
     parameters: {
@@ -12786,10 +12836,7 @@ export interface operations {
          * The [status](https://docs.github.com/rest/reference/repos#statuses) contexts to verify against commit status checks. If you omit this parameter, GitHub verifies all unique contexts before creating a deployment. To bypass checking entirely, pass an empty array. Defaults to all unique contexts.
          */
         required_contexts?: string[];
-        /**
-         * JSON payload with extra information about the deployment.
-         */
-        payload?: string;
+        payload?: { [key: string]: any } | string;
         /**
          * Name for the target deployment environment (e.g., `production`, `staging`, `qa`).
          */
@@ -12997,7 +13044,10 @@ export interface operations {
    *
    * The `client_payload` parameter is available for any extra information that your workflow might need. This parameter is a JSON payload that will be passed on when the webhook event is dispatched. For example, the `client_payload` can include a message that a user would like to send using a GitHub Actions workflow. Or the `client_payload` can be used as a test to debug your workflow.
    *
-   * To give you write access to the repository, you must use a personal access token with the `repo` scope. For more information, see "[Creating a personal access token for the command line](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line)" in the GitHub Help documentation.
+   * This endpoint requires write access to the repository by providing either:
+   *
+   *   - Personal access tokens with `repo` scope. For more information, see "[Creating a personal access token for the command line](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line)" in the GitHub Help documentation.
+   *   - GitHub Apps with both `metadata:read` and `contents:read&write` permissions.
    *
    * This input example shows how you can use the `client_payload` as a test to debug your workflow.
    */
@@ -14409,7 +14459,7 @@ export interface operations {
   /**
    * Any user with pull access to a repository can create an issue. If [issues are disabled in the repository](https://help.github.com/articles/disabling-issues/), the API returns a `410 Gone` status.
    *
-   * This endpoint triggers [notifications](https://help.github.com/articles/about-notifications/). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-abuse-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-abuse-rate-limits)" for details.
    */
   "issues/create": {
     parameters: {
@@ -14423,7 +14473,7 @@ export interface operations {
         /**
          * The title of the issue.
          */
-        title: string;
+        title: string | number;
         /**
          * The contents of the issue.
          */
@@ -14432,16 +14482,18 @@ export interface operations {
          * Login for the user that this issue should be assigned to. _NOTE: Only users with push access can set the assignee for new issues. The assignee is silently dropped otherwise. **This field is deprecated.**_
          */
         assignee?: string | null;
-        /**
-         * The `number` of the milestone to associate this issue with. _NOTE: Only users with push access can set the milestone for new issues. The milestone is silently dropped otherwise._
-         */
-        milestone?: number | null;
+        milestone?: (string | number) | null;
         /**
          * Labels to associate with this issue. _NOTE: Only users with push access can set labels for new issues. Labels are silently dropped otherwise._
          */
         labels?: (
           | string
-          | { id?: number; name?: string; description?: string; color?: string }
+          | {
+              id?: number;
+              name?: string;
+              description?: string | null;
+              color?: string | null;
+            }
         )[];
         /**
          * Logins for Users to assign to this issue. _NOTE: Only users with push access can set assignees for new issues. Assignees are silently dropped otherwise._
@@ -14747,7 +14799,7 @@ export interface operations {
         /**
          * The title of the issue.
          */
-        title?: string;
+        title?: string | number;
         /**
          * The contents of the issue.
          */
@@ -14755,21 +14807,23 @@ export interface operations {
         /**
          * Login for the user that this issue should be assigned to. **This field is deprecated.**
          */
-        assignee?: string;
+        assignee?: string | null;
         /**
          * State of the issue. Either `open` or `closed`.
          */
         state?: "open" | "closed";
-        /**
-         * The `number` of the milestone to associate this issue with or `null` to remove current. _NOTE: Only users with push access can set the milestone for issues. The milestone is silently dropped otherwise._
-         */
-        milestone?: number | null;
+        milestone?: (string | number) | null;
         /**
          * Labels to associate with this issue. Pass one or more Labels to _replace_ the set of Labels on this Issue. Send an empty array (`[]`) to clear all Labels from the Issue. _NOTE: Only users with push access can set labels for issues. Labels are silently dropped otherwise._
          */
         labels?: (
           | string
-          | { id?: number; name?: string; description?: string; color?: string }
+          | {
+              id?: number;
+              name?: string;
+              description?: string | null;
+              color?: string | null;
+            }
         )[];
         /**
          * Logins for Users to assign to this issue. Pass one or more user logins to _replace_ the set of assignees on this Issue. Send an empty array (`[]`) to clear all assignees from the Issue. _NOTE: Only users with push access can set assignees for new issues. Assignees are silently dropped otherwise._
@@ -14876,7 +14930,7 @@ export interface operations {
     };
   };
   /**
-   * This endpoint triggers [notifications](https://help.github.com/articles/about-notifications/). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-abuse-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-abuse-rate-limits)" for details.
    */
   "issues/create-comment": {
     parameters: {
@@ -15813,6 +15867,10 @@ export interface operations {
          * Specify a custom domain for the repository. Sending a `null` value will remove the custom domain. For more about custom domains, see "[Using a custom domain with GitHub Pages](https://help.github.com/articles/using-a-custom-domain-with-github-pages/)."
          */
         cname?: string | null;
+        /**
+         * Configures access controls for the GitHub Pages site. If public is set to `true`, the site is accessible to anyone on the internet. If set to `false`, the site will only be accessible to users who have at least `read` access to the repository that published the site. This includes anyone in your Enterprise if the repository is set to `internal` visibility. This feature is only available to repositories in an organization on an Enterprise plan.
+         */
+        public?: boolean;
         source: Partial<"gh-pages" | "master" | "master /docs"> &
           Partial<{
             /**
@@ -16046,7 +16104,7 @@ export interface operations {
    *
    * You can create a new pull request.
    *
-   * This endpoint triggers [notifications](https://help.github.com/articles/about-notifications/). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    */
   "pulls/create": {
     parameters: {
@@ -16417,7 +16475,7 @@ export interface operations {
    *
    * **Note:** The position value equals the number of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.
    *
-   * This endpoint triggers [notifications](https://help.github.com/articles/about-notifications/). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    */
   "pulls/create-review-comment": {
     parameters: {
@@ -16478,7 +16536,7 @@ export interface operations {
   /**
    * Creates a reply to a review comment for a pull request. For the `comment_id`, provide the ID of the review comment you are replying to. This must be the ID of a _top-level review comment_, not a reply to that comment. Replies to replies are not supported.
    *
-   * This endpoint triggers [notifications](https://help.github.com/articles/about-notifications/). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    */
   "pulls/create-reply-for-review-comment": {
     parameters: {
@@ -16742,7 +16800,7 @@ export interface operations {
     };
   };
   /**
-   * This endpoint triggers [notifications](https://help.github.com/articles/about-notifications/). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    *
    * Pull request reviews created in the `PENDING` state do not include the `submitted_at` property in the response.
    *
@@ -17055,7 +17113,7 @@ export interface operations {
   /**
    * Users with push access to the repository can create a release.
    *
-   * This endpoint triggers [notifications](https://help.github.com/articles/about-notifications/). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    */
   "repos/create-release": {
     parameters: {
@@ -17948,9 +18006,9 @@ export interface operations {
     requestBody: {
       "application/json": {
         /**
-         * **Required:** The username or organization name the repository will be transferred to.
+         * The username or organization name the repository will be transferred to.
          */
-        new_owner?: string;
+        new_owner: string;
         /**
          * ID of the team or teams to add to the repository. Teams can only be added to organization-owned repositories.
          */
@@ -19240,7 +19298,7 @@ export interface operations {
    *
    * Creates a new discussion post on a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
-   * This endpoint triggers [notifications](https://help.github.com/articles/about-notifications/). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    */
   "teams/create-discussion-legacy": {
     parameters: {
@@ -19377,7 +19435,7 @@ export interface operations {
    *
    * Creates a new comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
-   * This endpoint triggers [notifications](https://help.github.com/articles/about-notifications/). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    */
   "teams/create-discussion-comment-legacy": {
     parameters: {
@@ -22451,7 +22509,7 @@ export interface components {
      */
     alert_number: components["schemas"]["alert-number"];
     /**
-     * commit_sha+ parameter
+     * commit_sha parameter
      */
     commit_sha: string;
     /**
@@ -23722,81 +23780,6 @@ export interface components {
       truncated?: boolean;
     };
     /**
-     * Gist Full
-     */
-    "gist-full": components["schemas"]["gist-simple"] & {
-      forks?: {
-        user?: {
-          login?: string;
-          id?: number;
-          node_id?: string;
-          avatar_url?: string;
-          gravatar_id?: string;
-          url?: string;
-          html_url?: string;
-          followers_url?: string;
-          following_url?: string;
-          gists_url?: string;
-          starred_url?: string;
-          subscriptions_url?: string;
-          organizations_url?: string;
-          repos_url?: string;
-          events_url?: string;
-          received_events_url?: string;
-          type?: string;
-          site_admin?: boolean;
-        };
-        url?: string;
-        id?: string;
-        created_at?: string;
-        updated_at?: string;
-      }[];
-      history?: {
-        url?: string;
-        version?: string;
-        user?: {
-          login?: string;
-          id?: number;
-          node_id?: string;
-          avatar_url?: string;
-          gravatar_id?: string;
-          url?: string;
-          html_url?: string;
-          followers_url?: string;
-          following_url?: string;
-          gists_url?: string;
-          starred_url?: string;
-          subscriptions_url?: string;
-          organizations_url?: string;
-          repos_url?: string;
-          events_url?: string;
-          received_events_url?: string;
-          type?: string;
-          site_admin?: boolean;
-        } | null;
-        change_status?: {
-          deletions?: number;
-          additions?: number;
-          total?: number;
-        };
-        committed_at?: string;
-      }[];
-      fork_of?: components["schemas"]["gist-simple"] | null;
-      url?: string;
-      forks_url?: string;
-      commits_url?: string;
-      id?: string;
-      node_id?: string;
-      git_pull_url?: string;
-      git_push_url?: string;
-      html_url?: string;
-      created_at?: string;
-      updated_at?: string;
-      description?: string | null;
-      comments?: number;
-      comments_url?: string;
-    };
-    /**
      * A comment made to a gist.
      */
     "gist-comment": {
@@ -24261,6 +24244,23 @@ export interface components {
       authorized_credential_note?: string;
     };
     /**
+     * Organization Invitation
+     */
+    "organization-invitation": {
+      id: number;
+      login: string | null;
+      email: string | null;
+      role: string;
+      created_at: string;
+      failed_at?: string;
+      failed_reason?: string;
+      inviter: components["schemas"]["simple-user"];
+      team_count: number;
+      invitation_team_url: string;
+      node_id: string;
+      invitation_teams_url?: string;
+    };
+    /**
      * Org Hook
      */
     "org-hook": {
@@ -24310,21 +24310,6 @@ export interface components {
     "interaction-limit": {
       limit: components["schemas"]["interaction-group"];
       expiry?: components["schemas"]["interaction-expiry"];
-    };
-    /**
-     * Organization Invitation
-     */
-    "organization-invitation": {
-      id: number;
-      login: string | null;
-      email: string | null;
-      role: string;
-      created_at: string;
-      inviter: components["schemas"]["simple-user"];
-      team_count: number;
-      invitation_team_url: string;
-      node_id: string;
-      invitation_teams_url?: string;
     };
     /**
      * Groups of organization members that gives permissions on specified repositories.
@@ -26602,6 +26587,10 @@ export interface components {
        */
       html_url?: string;
       source?: components["schemas"]["pages-source-hash"];
+      /**
+       * Whether the GitHub Pages site is publicly visible. If set to `true`, the site is accessible to anyone on the internet. If set to `false`, the site will only be accessible to users who have at least `read` access to the repository that published the site.
+       */
+      public: boolean;
     };
     /**
      * Page Build
