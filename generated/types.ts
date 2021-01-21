@@ -23573,6 +23573,18 @@ export interface components {
       due_on: string | null;
     };
     /**
+     * How the author is associated with the repository.
+     */
+    author_association:
+      | "COLLABORATOR"
+      | "CONTRIBUTOR"
+      | "FIRST_TIMER"
+      | "FIRST_TIME_CONTRIBUTOR"
+      | "MANNEQUIN"
+      | "MEMBER"
+      | "NONE"
+      | "OWNER";
+    /**
      * Issue Simple
      */
     "issue-simple": {
@@ -23606,7 +23618,7 @@ export interface components {
       closed_at: string | null;
       created_at: string;
       updated_at: string;
-      author_association: string;
+      author_association: components["schemas"]["author_association"];
       body_html?: string;
       body_text?: string;
       timeline_url?: string;
@@ -23649,15 +23661,7 @@ export interface components {
       created_at: string;
       updated_at: string;
       issue_url: string;
-      author_association:
-        | "collaborator"
-        | "contributor"
-        | "first_timer"
-        | "first_time_contributor"
-        | "mannequin"
-        | "member"
-        | "none"
-        | "owner";
+      author_association: components["schemas"]["author_association"];
       performed_via_github_app?: components["schemas"]["integration"] | null;
       reactions?: components["schemas"]["reaction-rollup"];
     };
@@ -23793,7 +23797,7 @@ export interface components {
       user: components["schemas"]["simple-user"] | null;
       created_at: string;
       updated_at: string;
-      author_association: string;
+      author_association: components["schemas"]["author_association"];
     };
     /**
      * Gist Commit
@@ -23878,7 +23882,7 @@ export interface components {
       timeline_url?: string;
       repository?: components["schemas"]["repository"];
       performed_via_github_app?: components["schemas"]["integration"] | null;
-      author_association: string;
+      author_association: components["schemas"]["author_association"];
       reactions?: components["schemas"]["reaction-rollup"];
     };
     /**
@@ -25741,7 +25745,7 @@ export interface components {
       user: components["schemas"]["simple-user"] | null;
       created_at: string;
       updated_at: string;
-      author_association: string;
+      author_association: components["schemas"]["author_association"];
       reactions?: components["schemas"]["reaction-rollup"];
     };
     /**
@@ -25833,7 +25837,7 @@ export interface components {
         review_comment: components["schemas"]["link"];
         self: components["schemas"]["link"];
       };
-      author_association: string;
+      author_association: components["schemas"]["author_association"];
       /**
        * Indicates whether or not the pull request is a draft.
        */
@@ -26498,7 +26502,7 @@ export interface components {
       milestone?: components["schemas"]["issue-event-milestone"];
       project_card?: components["schemas"]["issue-event-project-card"];
       rename?: components["schemas"]["issue-event-rename"];
-      author_association?: string;
+      author_association?: components["schemas"]["author_association"];
       lock_reason?: string | null;
     };
     /**
@@ -26518,7 +26522,7 @@ export interface components {
       message?: string;
       issue_url?: string;
       updated_at?: string;
-      author_association?: string;
+      author_association?: components["schemas"]["author_association"];
       body?: string;
       lock_reason?: string;
       submitted_at?: string;
@@ -26928,7 +26932,7 @@ export interface components {
         review_comment: components["schemas"]["link"];
         self: components["schemas"]["link"];
       };
-      author_association: string;
+      author_association: components["schemas"]["author_association"];
       /**
        * Indicates whether or not the pull request is a draft.
        */
@@ -27012,10 +27016,7 @@ export interface components {
        * URL for the pull request that the review comment belongs to.
        */
       pull_request_url: string;
-      /**
-       * How the author of the comment is associated with the pull request.
-       */
-      author_association: string;
+      author_association: components["schemas"]["author_association"];
       _links: {
         self: { href: string };
         html: { href: string };
@@ -27089,7 +27090,7 @@ export interface components {
       commit_id: string;
       body_html?: string;
       body_text?: string;
-      author_association: string;
+      author_association: components["schemas"]["author_association"];
     };
     /**
      * Legacy Review Comment
@@ -27112,7 +27113,7 @@ export interface components {
       updated_at: string;
       html_url: string;
       pull_request_url: string;
-      author_association: string;
+      author_association: components["schemas"]["author_association"];
       _links: {
         self: components["schemas"]["link"];
         html: components["schemas"]["link"];
@@ -27557,7 +27558,7 @@ export interface components {
       };
       body?: string;
       score: number;
-      author_association: string;
+      author_association: components["schemas"]["author_association"];
       draft?: boolean;
       repository?: components["schemas"]["repository"];
       body_html?: string;
