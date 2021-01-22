@@ -770,6 +770,9 @@ export interface paths {
     put: operations["repos/set-user-access-restrictions"];
     delete: operations["repos/remove-user-access-restrictions"];
   };
+  "/repos/{owner}/{repo}/branches/{branch}/rename": {
+    post: operations["repos/rename-branch"];
+  };
   "/repos/{owner}/{repo}/check-runs": {
     post: operations["checks/create"];
   };
@@ -10951,6 +10954,51 @@ export interface operations {
       "200": {
         "application/json": components["schemas"]["simple-user"][];
       };
+      "422": unknown;
+    };
+  };
+  /**
+   * Renames a branch in a repository.
+   *
+   * **Note:** Although the API responds immediately, the branch rename process might take some extra time to complete in the background. You won't be able to push to the old branch name while the rename process is in progress. For more information, see "[Renaming a branch](https://docs.github.com/github/administering-a-repository/renaming-a-branch)".
+   *
+   * The permissions required to use this endpoint depends on whether you are renaming the default branch.
+   *
+   * To rename a non-default branch:
+   *
+   * * Users must have push access.
+   * * GitHub Apps must have the `contents:write` repository permission.
+   *
+   * To rename the default branch:
+   *
+   * * Users must have admin or owner permissions.
+   * * GitHub Apps must have the `administration:write` repository permission.
+   */
+  "repos/rename-branch": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        branch: components["parameters"]["branch"];
+      };
+    };
+    requestBody: {
+      "application/json": {
+        /**
+         * The new name of the branch.
+         */
+        new_name: string;
+      };
+    };
+    responses: {
+      /**
+       * response
+       */
+      "201": {
+        "application/json": components["schemas"]["branch-with-protection"];
+      };
+      "403": unknown;
+      "404": unknown;
       "422": unknown;
     };
   };
@@ -22231,7 +22279,7 @@ export interface components {
      */
     "workflow-id": number | string;
     /**
-     * branch+ parameter
+     * The name of the branch.
      */
     branch: string;
     /**

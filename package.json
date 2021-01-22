@@ -23,7 +23,7 @@
     "branches": "main"
   },
   "octokit": {
-    "openapi-version": "2.4.2"
+    "openapi-version": "2.5.0"
   },
   "renovate": {
     "extends": [
