@@ -31,6 +31,11 @@ jobs:
       # Checking if setting the version actually works
       - run: echo "OCTOKIT_OPENAPI_VERSION => $OCTOKIT_OPENAPI_VERSION"
 
+      - uses: gr2m/await-npm-package-version-action@v1
+        with:
+          package: "@octokit/openapi"
+          version: ${{ env.OCTOKIT_OPENAPI_VERSION }}
+
       # do not update cache for dependabot update
       - name: Update & generate types
         run: |
