@@ -28,9 +28,12 @@ jobs:
         if: github.event.client_payload.release.tag_name
       - run: echo "OCTOKIT_OPENAPI_VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
         if: github.event.inputs.version
+      # Checking if setting the version actually works
+      - run: echo "OCTOKIT_OPENAPI_VERSION => $OCTOKIT_OPENAPI_VERSION"
 
       # do not update cache for dependabot update
-      - run: |
+      - name: Update & generate types
+        run: |
           npm run download
           npm run generate-types
         if: github.event_name != 'push'
