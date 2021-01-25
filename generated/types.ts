@@ -6013,9 +6013,9 @@ export interface components {
       credential_accessed_at?: string | null;
       authorized_credential_id?: number | null;
       /** The title given to the ssh key. This will only be present when the credential is an ssh key. */
-      authorized_credential_title?: string;
+      authorized_credential_title?: string | null;
       /** The note given to the token. This will only be present when the credential is a token. */
-      authorized_credential_note?: string;
+      authorized_credential_note?: string | null;
     };
     /** Organization Invitation */
     "organization-invitation": {
