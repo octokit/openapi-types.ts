@@ -25019,7 +25019,7 @@ export interface operations {
           target_url?: string;
           /** A short description of the status. */
           description?: string;
-          /** A string label to differentiate this status from the status of other systems. */
+          /** A string label to differentiate this status from the status of other systems. This field is case-insensitive. */
           context?: string;
         };
       };
