@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "version": "2.7.0",
+    "version": "2.7.1",
     "title": "GitHub's official OpenAPI spec + Octokit extension",
     "description": "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs",
     "license": { "name": "MIT", "url": "https://spdx.org/licenses/MIT" },
@@ -28565,7 +28565,7 @@
                   },
                   "context": {
                     "type": "string",
-                    "description": "A string label to differentiate this status from the status of other systems.",
+                    "description": "A string label to differentiate this status from the status of other systems. This field is case-insensitive.",
                     "default": "default"
                   }
                 },
