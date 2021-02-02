@@ -361,7 +361,7 @@ export interface paths {
      */
     get: operations["enterprise-admin/list-self-hosted-runners-in-group-for-enterprise"];
     /**
-     * Replaces the list of self-hosted runners that that are part of an enterprise runner group.
+     * Replaces the list of self-hosted runners that are part of an enterprise runner group.
      *
      * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
      */
@@ -4382,11 +4382,11 @@ export interface paths {
   };
   "/user/interaction-limits": {
     /** Shows which type of GitHub user can interact with your public repositories and when the restriction expires. If there are no restrictions, you will see an empty response. */
-    get: operations["interactions/get-restrictions-for-your-public-repos"];
+    get: operations["interactions/get-restrictions-for-authenticated-user"];
     /** Temporarily restricts which type of GitHub user can interact with your public repositories. Setting the interaction limit at the user level will overwrite any interaction limits that are set for individual repositories owned by the user. */
-    put: operations["interactions/set-restrictions-for-your-public-repos"];
+    put: operations["interactions/set-restrictions-for-authenticated-user"];
     /** Removes any interaction restrictions from your public repositories. */
-    delete: operations["interactions/remove-restrictions-for-your-public-repos"];
+    delete: operations["interactions/remove-restrictions-for-authenticated-user"];
   };
   "/user/issues": {
     /**
@@ -9211,14 +9211,12 @@ export interface components {
       collaborators?: number;
     };
     /** Email */
-    email:
-      | {
-          email: string;
-          primary: boolean;
-          verified: boolean;
-          visibility: string | null;
-        }
-      | string;
+    email: {
+      email: string;
+      primary: boolean;
+      verified: boolean;
+      visibility: string | null;
+    };
     /** A unique encryption key */
     "gpg-key": {
       id: number;
@@ -10988,7 +10986,7 @@ export interface operations {
     };
   };
   /**
-   * Replaces the list of self-hosted runners that that are part of an enterprise runner group.
+   * Replaces the list of self-hosted runners that are part of an enterprise runner group.
    *
    * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
    */
@@ -11993,7 +11991,14 @@ export interface operations {
     parameters: {};
     responses: {
       /** response */
-      200: unknown;
+      200: {
+        headers: {
+          "Content-Length"?: string;
+        };
+        content: {
+          "text/html": string;
+        };
+      };
       304: components["responses"]["not_modified"];
     };
     requestBody: {
@@ -25895,7 +25900,7 @@ export interface operations {
          *
          * `?filter=userName%20eq%20\"Octocat\"`.
          *
-         * To filter results for for the identity with the email `octocat@github.com`, you would use this query:
+         * To filter results for the identity with the email `octocat@github.com`, you would use this query:
          *
          * `?filter=emails%20eq%20\"octocat@github.com\"`.
          */
@@ -28047,7 +28052,7 @@ export interface operations {
     };
   };
   /** Shows which type of GitHub user can interact with your public repositories and when the restriction expires. If there are no restrictions, you will see an empty response. */
-  "interactions/get-restrictions-for-your-public-repos": {
+  "interactions/get-restrictions-for-authenticated-user": {
     responses: {
       /** response */
       200: {
@@ -28058,7 +28063,7 @@ export interface operations {
     };
   };
   /** Temporarily restricts which type of GitHub user can interact with your public repositories. Setting the interaction limit at the user level will overwrite any interaction limits that are set for individual repositories owned by the user. */
-  "interactions/set-restrictions-for-your-public-repos": {
+  "interactions/set-restrictions-for-authenticated-user": {
     responses: {
       /** response */
       200: {
@@ -28075,7 +28080,7 @@ export interface operations {
     };
   };
   /** Removes any interaction restrictions from your public repositories. */
-  "interactions/remove-restrictions-for-your-public-repos": {
+  "interactions/remove-restrictions-for-authenticated-user": {
     responses: {
       /** Empty response */
       204: never;
