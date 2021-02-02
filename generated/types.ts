@@ -7282,6 +7282,16 @@ export interface components {
     link: {
       href: string;
     };
+    /** The status of auto merging a pull request. */
+    auto_merge: {
+      enabled_by: components["schemas"]["simple-user"];
+      /** The merge method to use. */
+      merge_method: "merge" | "squash" | "rebase";
+      /** Title for the merge commit message. */
+      commit_title: string;
+      /** Commit message for the merge commit. */
+      commit_message: string;
+    } | null;
     /** Pull Request Simple */
     "pull-request-simple": {
       url: string;
@@ -7347,6 +7357,7 @@ export interface components {
         self: components["schemas"]["link"];
       };
       author_association: components["schemas"]["author_association"];
+      auto_merge: components["schemas"]["auto_merge"];
       /** Indicates whether or not the pull request is a draft. */
       draft?: boolean;
     };
@@ -8363,6 +8374,7 @@ export interface components {
         self: components["schemas"]["link"];
       };
       author_association: components["schemas"]["author_association"];
+      auto_merge: components["schemas"]["auto_merge"];
       /** Indicates whether or not the pull request is a draft. */
       draft?: boolean;
       merged: boolean;
