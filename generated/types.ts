@@ -66,16 +66,12 @@ export interface paths {
   };
   "/app/installations/{installation_id}/suspended": {
     /**
-     * **Note:** Suspending a GitHub App installation is currently in beta and subject to change. Before you can suspend a GitHub App, the app owner must enable suspending installations for the app by opting-in to the beta. For more information, see "[Suspending a GitHub App installation](https://docs.github.com/apps/managing-github-apps/suspending-a-github-app-installation/)."
-     *
      * Suspends a GitHub App on a user, organization, or business account, which blocks the app from accessing the account's resources. When a GitHub App is suspended, the app's access to the GitHub API or webhook events is blocked for that account.
      *
      * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
      */
     put: operations["apps/suspend-installation"];
     /**
-     * **Note:** Suspending a GitHub App installation is currently in beta and subject to change. Before you can suspend a GitHub App, the app owner must enable suspending installations for the app by opting-in to the beta. For more information, see "[Suspending a GitHub App installation](https://docs.github.com/apps/managing-github-apps/suspending-a-github-app-installation/)."
-     *
      * Removes a GitHub App installation suspension.
      *
      * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
@@ -6171,17 +6167,11 @@ export interface components {
         group_name: string;
         /** a description of the group */
         group_description: string;
+        /** synchronization status for this group mapping */
+        status?: string;
+        /** the time of the last sync for this group-mapping */
+        synced_at?: string;
       }[];
-      /** The ID of the group */
-      group_id?: string;
-      /** The name of the group */
-      group_name?: string;
-      /** a description of the group */
-      group_description?: string;
-      /** synchronization status for this group mapping */
-      status?: string;
-      /** the time of the last sync for this group-mapping */
-      synced_at?: string;
     };
     /** Groups of organization members that gives permissions on specified repositories. */
     "team-full": {
@@ -6467,6 +6457,13 @@ export interface components {
       };
       rate: components["schemas"]["rate-limit"];
     };
+    /** Code of Conduct Simple */
+    "code-of-conduct-simple": {
+      url: string;
+      key: string;
+      name: string;
+      html_url: string | null;
+    };
     /** Full Repository */
     "full-repository": {
       id: number;
@@ -6566,6 +6563,7 @@ export interface components {
       watchers: number;
       /** Whether anonymous git access is allowed. */
       anonymous_access_enabled?: boolean;
+      code_of_conduct?: components["schemas"]["code-of-conduct-simple"];
     };
     /** An artifact */
     artifact: {
@@ -7397,13 +7395,6 @@ export interface components {
       created_at: string;
       updated_at: string;
       creator: components["schemas"]["simple-user"];
-    };
-    /** Code of Conduct Simple */
-    "code-of-conduct-simple": {
-      url: string;
-      key: string;
-      name: string;
-      html_url: string | null;
     };
     "community-health-file": {
       url: string;
@@ -9535,8 +9526,21 @@ export interface components {
     "workflow-run-branch": string;
     /** Returns workflow run triggered by the event you specify. For example, `push`, `pull_request` or `issue`. For more information, see "[Events that trigger workflows](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows)." */
     event: string;
-    /** Returns workflow runs associated with the check run `status` or `conclusion` you specify. For example, a conclusion can be `success` or a status can be `completed`. For more information, see the `status` and `conclusion` options available in "[Create a check run](https://docs.github.com/rest/reference/checks#create-a-check-run)." */
-    "workflow-run-status": "completed" | "status" | "conclusion";
+    /** Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. For a list of the possible `status` and `conclusion` options, see "[Create a check run](https://docs.github.com/rest/reference/checks#create-a-check-run)." */
+    "workflow-run-status":
+      | "completed"
+      | "action_required"
+      | "cancelled"
+      | "failure"
+      | "neutral"
+      | "skipped"
+      | "stale"
+      | "success"
+      | "timed_out"
+      | "in_progress"
+      | "queued"
+      | "requested"
+      | "waiting";
     "run-id": number;
     /** The ID of the workflow. You can also pass the workflow file name as a string. */
     "workflow-id": number | string;
@@ -9832,8 +9836,6 @@ export interface operations {
     };
   };
   /**
-   * **Note:** Suspending a GitHub App installation is currently in beta and subject to change. Before you can suspend a GitHub App, the app owner must enable suspending installations for the app by opting-in to the beta. For more information, see "[Suspending a GitHub App installation](https://docs.github.com/apps/managing-github-apps/suspending-a-github-app-installation/)."
-   *
    * Suspends a GitHub App on a user, organization, or business account, which blocks the app from accessing the account's resources. When a GitHub App is suspended, the app's access to the GitHub API or webhook events is blocked for that account.
    *
    * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
@@ -9852,8 +9854,6 @@ export interface operations {
     };
   };
   /**
-   * **Note:** Suspending a GitHub App installation is currently in beta and subject to change. Before you can suspend a GitHub App, the app owner must enable suspending installations for the app by opting-in to the beta. For more information, see "[Suspending a GitHub App installation](https://docs.github.com/apps/managing-github-apps/suspending-a-github-app-installation/)."
-   *
    * Removes a GitHub App installation suspension.
    *
    * You must use a [JWT](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
@@ -17160,7 +17160,7 @@ export interface operations {
         branch?: components["parameters"]["workflow-run-branch"];
         /** Returns workflow run triggered by the event you specify. For example, `push`, `pull_request` or `issue`. For more information, see "[Events that trigger workflows](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows)." */
         event?: components["parameters"]["event"];
-        /** Returns workflow runs associated with the check run `status` or `conclusion` you specify. For example, a conclusion can be `success` or a status can be `completed`. For more information, see the `status` and `conclusion` options available in "[Create a check run](https://docs.github.com/rest/reference/checks#create-a-check-run)." */
+        /** Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. For a list of the possible `status` and `conclusion` options, see "[Create a check run](https://docs.github.com/rest/reference/checks#create-a-check-run)." */
         status?: components["parameters"]["workflow-run-status"];
         /** Results per page (max 100) */
         per_page?: components["parameters"]["per_page"];
@@ -17678,7 +17678,7 @@ export interface operations {
         branch?: components["parameters"]["workflow-run-branch"];
         /** Returns workflow run triggered by the event you specify. For example, `push`, `pull_request` or `issue`. For more information, see "[Events that trigger workflows](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows)." */
         event?: components["parameters"]["event"];
-        /** Returns workflow runs associated with the check run `status` or `conclusion` you specify. For example, a conclusion can be `success` or a status can be `completed`. For more information, see the `status` and `conclusion` options available in "[Create a check run](https://docs.github.com/rest/reference/checks#create-a-check-run)." */
+        /** Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. For a list of the possible `status` and `conclusion` options, see "[Create a check run](https://docs.github.com/rest/reference/checks#create-a-check-run)." */
         status?: components["parameters"]["workflow-run-status"];
         /** Results per page (max 100) */
         per_page?: components["parameters"]["per_page"];
