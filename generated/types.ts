@@ -15050,7 +15050,7 @@ export interface operations {
       content: {
         "application/json": {
           /** The name of the team. */
-          name: string;
+          name?: string;
           /** The description of the team. */
           description?: string;
           /**
@@ -15070,7 +15070,7 @@ export interface operations {
            */
           permission?: "pull" | "push" | "admin";
           /** The ID of a team to set as the parent team. */
-          parent_team_id?: number;
+          parent_team_id?: number | null;
         };
       };
     };
@@ -15828,7 +15828,7 @@ export interface operations {
            * Default: the team's `permission` attribute will be used to determine what permission to grant the team on this project. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/rest/overview/resources-in-the-rest-api#http-verbs)."
            */
           permission?: "read" | "write" | "admin";
-        };
+        } | null;
       };
     };
   };
@@ -22259,9 +22259,9 @@ export interface operations {
       content: {
         "application/json": {
           /** The title of the issue. */
-          title?: string | number;
+          title?: (string | number) | null;
           /** The contents of the issue. */
-          body?: string;
+          body?: string | null;
           /** Login for the user that this issue should be assigned to. **This field is deprecated.** */
           assignee?: string | null;
           /** State of the issue. Either `open` or `closed`. */
@@ -23893,7 +23893,7 @@ export interface operations {
           /** The SHA of the commit needing a comment. Not using the latest commit SHA may render your comment outdated if a subsequent commit modifies the line you specify as the `position`. */
           commit_id?: string;
           /** The relative path to the file that necessitates a comment. */
-          path: string;
+          path?: string;
           /** **Required without `comfort-fade` preview**. The position in the diff where you want to add a review comment. Note this value is not the same as the line number in the file. For help finding the position value, read the note above. */
           position?: number;
           /** **Required with `comfort-fade` preview**. In a split diff view, the side of the diff that the pull request's changes appear on. Can be `LEFT` or `RIGHT`. Use `LEFT` for deletions that appear in red. Use `RIGHT` for additions that appear in green or unchanged lines that appear in white and are shown for context. For a multi-line comment, side represents whether the last line of the comment range is a deletion or addition. For more information, see "[Diff view options](https://help.github.com/en/articles/about-comparing-branches-in-pull-requests#diff-view-options)" in the GitHub Help documentation. */
@@ -24111,12 +24111,8 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": {
-          /** An array of user `login`s that will be requested. */
-          reviewers?: string[];
-          /** An array of team `slug`s that will be requested. */
-          team_reviewers?: string[];
-        };
+        "application/json": Partial<{ [key: string]: any }> &
+          Partial<{ [key: string]: any }>;
       };
     };
   };
@@ -24137,7 +24133,7 @@ export interface operations {
       content: {
         "application/json": {
           /** An array of user `login`s that will be removed. */
-          reviewers?: string[];
+          reviewers: string[];
           /** An array of team `slug`s that will be removed. */
           team_reviewers?: string[];
         };
