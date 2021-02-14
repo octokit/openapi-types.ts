@@ -1,0 +1,4 @@
+{
+  "extends": "@octokit/tsconfig",
+  "include": ["src/**/*"]
+}
