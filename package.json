@@ -14,7 +14,7 @@
   "scripts": {
     "build": "pika build",
     "download": "node scripts/download",
-    "generate-types": "npx openapi-typescript cache/openapi-schema.json -o generated/types.ts",
+    "generate-types": "npx openapi-typescript cache/openapi-schema.json -o src/generated/types.ts",
     "postgenerate-types": "node scripts/update-package"
   },
   "devDependencies": {
