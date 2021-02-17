@@ -2371,26 +2371,170 @@ export interface paths {
     post: operations["checks/rerequest-suite"];
   };
   "/repos/{owner}/{repo}/code-scanning/alerts": {
-    /** Lists all open code scanning alerts for the default branch (usually `main` or `master`). You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint. */
+    /**
+     * Lists all open code scanning alerts for the default branch (usually `main`
+     * or `master`). You must use an access token with the `security_events` scope to use
+     * this endpoint. GitHub Apps must have the `security_events` read permission to use
+     * this endpoint.
+     *
+     * The response includes a `most_recent_instance` object.
+     * This provides details of the most recent instance of this alert
+     * for the the default branch or for the specified Git reference
+     * (if you used `ref` in the request).
+     */
     get: operations["code-scanning/list-alerts-for-repo"];
   };
   "/repos/{owner}/{repo}/code-scanning/alerts/{alert_number}": {
     /**
      * Gets a single code scanning alert. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint.
      *
-     * The security `alert_number` is found at the end of the security alert's URL. For example, the security alert ID for `https://github.com/Octo-org/octo-repo/security/code-scanning/88` is `88`.
+     * **Deprecation notice**:
+     * The instances field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The same information can now be retrieved via a GET request to the URL specified by `instances_url`.
      */
     get: operations["code-scanning/get-alert"];
     /** Updates the status of a single code scanning alert. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` write permission to use this endpoint. */
     patch: operations["code-scanning/update-alert"];
   };
+  "/repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances": {
+    /** Lists all instances of the specified code scanning alert. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint. */
+    get: operations["code-scanning/list-alerts-instances"];
+  };
   "/repos/{owner}/{repo}/code-scanning/analyses": {
-    /** List the details of recent code scanning analyses for a repository. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint. */
+    /**
+     * Lists the details of all code scanning analyses for a repository,
+     * starting with the most recent.
+     * The response is paginated and you can use the `page` and `per_page` parameters
+     * to list the analyses you're interested in.
+     * By default 30 analyses are listed per page.
+     *
+     * The `rules_count` field in the response give the number of rules
+     * that were run in the analysis.
+     * For very old analyses this data is not available,
+     * and `0` is returned in this field.
+     *
+     * You must use an access token with the `security_events` scope to use this endpoint.
+     * GitHub Apps must have the `security_events` read permission to use this endpoint.
+     *
+     * **Deprecation notice**:
+     * The `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the `tool` field.
+     */
     get: operations["code-scanning/list-recent-analyses"];
   };
+  "/repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}": {
+    /**
+     * Gets a specified code scanning analysis for a repository.
+     * You must use an access token with the `security_events` scope to use this endpoint.
+     * GitHub Apps must have the `security_events` read permission to use this endpoint.
+     *
+     * The default JSON response contains fields that describe the analysis.
+     * This includes the Git reference and commit SHA to which the analysis relates,
+     * the datetime of the analysis, the name of the code scanning tool,
+     * and the number of alerts.
+     *
+     * The `rules_count` field in the default response give the number of rules
+     * that were run in the analysis.
+     * For very old analyses this data is not available,
+     * and `0` is returned in this field.
+     *
+     * If you use the Accept header `application/sarif+json`,
+     * the response contains the analysis data that was uploaded.
+     * This is formatted as
+     * [SARIF version 2.1.0](https://docs.oasis-open.org/sarif/sarif/v2.1.0/cs01/sarif-v2.1.0-cs01.html).
+     * For an example response, see "[Custom media type for code scanning](#custom-media-type-for-code-scanning)."
+     *
+     * **Deprecation notice**:
+     * The `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the `tool` field.
+     */
+    get: operations["code-scanning/get-analysis"];
+    /**
+     * Deletes a specified code scanning analysis from a repository. For
+     * private repositories, you must use an access token with the `repo` scope. For public repositories,
+     * you must use an access token with `public_repo` and `repo:security_events` scopes.
+     * GitHub Apps must have the `security_events` write permission to use this endpoint.
+     *
+     * You can delete one analysis at a time.
+     * To delete a series of analyses, start with the most recent analysis and work backwards.
+     * Conceptually, the process is similar to the undo function in a text editor.
+     *
+     * When you list the analyses for a repository,
+     * one or more will be identified as deletable in the response:
+     *
+     * ```
+     * "deletable": true
+     * ```
+     *
+     * An analysis is deletable when it's the most recent in a set of analyses.
+     * Typically, a repository will have multiple sets of analyses
+     * for each enabled code scanning tool,
+     * where a set is determined by a unique combination of analysis values:
+     *
+     * * `ref`
+     * * `tool`
+     * * `analysis_key`
+     * * `environment`
+     *
+     * If you attempt to delete an analysis that is not the most recent in a set,
+     * you'll get a 400 response with the message:
+     *
+     * ```
+     * Analysis specified is not deletable.
+     * ```
+     *
+     * The response from a successful `DELETE` operation provides you with
+     * two alternative URLs for deleting the next analysis in the set
+     * (see the example default response below).
+     * Use the `next_analysis_url` URL if you want to avoid accidentally deleting the final analysis
+     * in the set. This is a useful option if you want to preserve at least one analysis
+     * for the specified tool in your repository.
+     * Use the `confirm_delete_url` URL if you are content to remove all analyses for a tool.
+     * When you delete the last analysis in a set the value of `next_analysis_url` and `confirm_delete_url`
+     * in the 200 response is `null`.
+     *
+     * As an example of the deletion process,
+     * let's imagine that you added a workflow that configured a particular code scanning tool
+     * to analyze the code in a repository. This tool has added 15 analyses:
+     * 10 on the default branch, and another 5 on a topic branch.
+     * You therefore have two separate sets of analyses for this tool.
+     * You've now decided that you want to remove all of the analyses for the tool.
+     * To do this you must make 15 separate deletion requests.
+     * To start, you must find the deletable analysis for one of the sets,
+     * step through deleting the analyses in that set,
+     * and then repeat the process for the second set.
+     * The procedure therefore consists of a nested loop:
+     *
+     * **Outer loop**:
+     * * List the analyses for the repository, filtered by tool.
+     * * Parse this list to find a deletable analysis. If found:
+     *
+     *   **Inner loop**:
+     *   * Delete the identified analysis.
+     *   * Parse the response for the value of `next_analysis_url` and, if found, use this in the next iteration.
+     *
+     * The above process assumes that you want to remove all trace of the tool's analyses from the GitHub user interface, for the specified repository, and it therefore uses the `next_analysis_url` value. Alternatively, you could use the `confirm_delete_url` value, which would leave the last analysis in each set undeleted to avoid removing a tool's analysis entirely.
+     */
+    delete: operations["code-scanning/delete-analysis"];
+  };
   "/repos/{owner}/{repo}/code-scanning/sarifs": {
-    /** Upload a SARIF file containing the results of a code scanning analysis to make the results available in a repository. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` write permission to use this endpoint. */
+    /**
+     * Uploads SARIF data containing the results of a code scanning analysis to make the results available in a repository. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` write permission to use this endpoint.
+     *
+     * You must compress the SARIF-formatted analysis data that you want to upload, using `gzip`, and then encode it as a Base64 format string. For example:
+     *
+     * ```
+     * gzip -c analysis-data.sarif | base64
+     * ```
+     *
+     * SARIF upload supports a maximum of 1000 results per analysis run. Any results over this limit are ignored. Typically, but not necessarily, a SARIF file contains a single run of a single tool. If a code scanning tool generates too many results, you should update the analysis configuration to run only the most important rules or queries.
+     *
+     * The `202 Accepted`, response includes an `id` value.
+     * You can use this ID to check the status of the upload by using this for the `/sarifs/{sarif_id}` endpoint.
+     * For more information, see "[Get information about a SARIF upload](/rest/reference/code-scanning#get-information-about-a-sarif-upload)."
+     */
     post: operations["code-scanning/upload-sarif"];
+  };
+  "/repos/{owner}/{repo}/code-scanning/sarifs/{sarif_id}": {
+    /** Gets information about a SARIF upload, including the status and the URL of the analysis that was uploaded so that you can retrieve details of the analysis. For more information, see "[Get a code scanning analysis for a repository](/rest/reference/code-scanning#get-a-code-scanning-analysis-for-a-repository)." You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint. */
+    get: operations["code-scanning/get-sarif"];
   };
   "/repos/{owner}/{repo}/collaborators": {
     /**
@@ -7108,10 +7252,14 @@ export interface components {
       };
       repository: components["schemas"]["repository"];
     };
+    /** The name of the tool used to generate the code scanning analysis. */
+    "code-scanning-analysis-tool-name": string;
+    /** The GUID of the tool used to generate the code scanning analysis, if provided in the uploaded SARIF data. */
+    "code-scanning-analysis-tool-guid": string | null;
+    /** The full Git reference, formatted as `refs/heads/<branch name>`. */
+    "code-scanning-ref": string;
     /** State of a code scanning alert. */
     "code-scanning-alert-state": "open" | "dismissed" | "fixed";
-    /** The full Git reference, formatted as `refs/heads/<branch name>`. */
-    "code-scanning-alert-ref": string;
     /** The security alert number. */
     "alert-number": number;
     /** The time that the alert was created in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
@@ -7120,84 +7268,165 @@ export interface components {
     "alert-url": string;
     /** The GitHub URL of the alert resource. */
     "alert-html-url": string;
+    /** The REST API URL for fetching the list of instances for an alert. */
+    "alert-instances-url": string;
     /** The time that the alert was dismissed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
     "code-scanning-alert-dismissed-at": string | null;
     /** **Required when the state is dismissed.** The reason for dismissing or closing the alert. Can be one of: `false positive`, `won't fix`, and `used in tests`. */
     "code-scanning-alert-dismissed-reason": string | null;
-    "code-scanning-alert-rule": {
+    "code-scanning-alert-rule-summary": {
       /** A unique identifier for the rule used to detect the alert. */
       id?: string | null;
+      /** The name of the rule used to detect the alert. */
+      name?: string;
       /** The severity of the alert. */
       severity?: ("none" | "note" | "warning" | "error") | null;
       /** A short description of the rule used to detect the alert. */
       description?: string;
     };
-    /** The name of the tool used to generate the code scanning analysis alert. */
-    "code-scanning-analysis-tool-name": string;
+    /** The version of the tool used to generate the code scanning analysis. */
+    "code-scanning-analysis-tool-version": string | null;
     "code-scanning-analysis-tool": {
       name?: components["schemas"]["code-scanning-analysis-tool-name"];
-      /** The version of the tool used to detect the alert. */
-      version?: string | null;
-    };
-    "code-scanning-alert-code-scanning-alert-items": {
-      number: components["schemas"]["alert-number"];
-      created_at: components["schemas"]["alert-created-at"];
-      url: components["schemas"]["alert-url"];
-      html_url: components["schemas"]["alert-html-url"];
-      state: components["schemas"]["code-scanning-alert-state"];
-      dismissed_by: components["schemas"]["simple-user"];
-      dismissed_at: components["schemas"]["code-scanning-alert-dismissed-at"];
-      dismissed_reason: components["schemas"]["code-scanning-alert-dismissed-reason"];
-      rule: components["schemas"]["code-scanning-alert-rule"];
-      tool: components["schemas"]["code-scanning-analysis-tool"];
+      version?: components["schemas"]["code-scanning-analysis-tool-version"];
+      guid?: components["schemas"]["code-scanning-analysis-tool-guid"];
     };
     /** Identifies the configuration under which the analysis was executed. For example, in GitHub Actions this includes the workflow filename and job name. */
     "code-scanning-analysis-analysis-key": string;
     /** Identifies the variable values associated with the environment in which the analysis that generated this alert instance was performed, such as the language that was analyzed. */
     "code-scanning-alert-environment": string;
-    "code-scanning-alert-instances":
-      | {
-          ref?: components["schemas"]["code-scanning-alert-ref"];
-          analysis_key?: components["schemas"]["code-scanning-analysis-analysis-key"];
-          environment?: components["schemas"]["code-scanning-alert-environment"];
-          matrix_vars?: string | null;
-          state?: components["schemas"]["code-scanning-alert-state"];
-        }[]
+    /** Describe a region within a file for the alert. */
+    "code-scanning-alert-location": {
+      path?: string;
+      start_line?: number;
+      end_line?: number;
+      start_column?: number;
+      end_column?: number;
+    };
+    /** A classification of the file. For example to identify it as generated. */
+    "code-scanning-alert-classification":
+      | ("source" | "generated" | "test" | "library")
       | null;
-    "code-scanning-alert-code-scanning-alert": {
+    "code-scanning-alert-instance": {
+      ref?: components["schemas"]["code-scanning-ref"];
+      analysis_key?: components["schemas"]["code-scanning-analysis-analysis-key"];
+      environment?: components["schemas"]["code-scanning-alert-environment"];
+      state?: components["schemas"]["code-scanning-alert-state"];
+      commit_sha?: string;
+      message?: {
+        text?: string;
+      };
+      location?: components["schemas"]["code-scanning-alert-location"];
+      html_url?: string;
+      /**
+       * Classifications that have been applied to the file that triggered the alert.
+       * For example identifying it as documentation, or a generated file.
+       */
+      classifications?: components["schemas"]["code-scanning-alert-classification"][];
+    };
+    "code-scanning-alert-items": {
       number: components["schemas"]["alert-number"];
       created_at: components["schemas"]["alert-created-at"];
       url: components["schemas"]["alert-url"];
       html_url: components["schemas"]["alert-html-url"];
-      instances: components["schemas"]["code-scanning-alert-instances"];
+      instances_url: components["schemas"]["alert-instances-url"];
+      state: components["schemas"]["code-scanning-alert-state"];
+      dismissed_by: components["schemas"]["simple-user"];
+      dismissed_at: components["schemas"]["code-scanning-alert-dismissed-at"];
+      dismissed_reason: components["schemas"]["code-scanning-alert-dismissed-reason"];
+      rule: components["schemas"]["code-scanning-alert-rule-summary"];
+      tool: components["schemas"]["code-scanning-analysis-tool"];
+      most_recent_instance: components["schemas"]["code-scanning-alert-instance"];
+    };
+    "code-scanning-alert-rule": {
+      /** A unique identifier for the rule used to detect the alert. */
+      id?: string | null;
+      /** The name of the rule used to detect the alert. */
+      name?: string;
+      /** The severity of the alert. */
+      severity?: ("none" | "note" | "warning" | "error") | null;
+      /** A short description of the rule used to detect the alert. */
+      description?: string;
+      /** description of the rule used to detect the alert. */
+      full_description?: string;
+      /** A set of tags applicable for the rule. */
+      tags?: string[];
+      /** Detailed documentation for the rule as GitHub Flavored Markdown. */
+      help?: string;
+    };
+    "code-scanning-alert": {
+      number: components["schemas"]["alert-number"];
+      created_at: components["schemas"]["alert-created-at"];
+      url: components["schemas"]["alert-url"];
+      html_url: components["schemas"]["alert-html-url"];
+      instances_url: components["schemas"]["alert-instances-url"];
       state: components["schemas"]["code-scanning-alert-state"];
       dismissed_by: components["schemas"]["simple-user"];
       dismissed_at: components["schemas"]["code-scanning-alert-dismissed-at"];
       dismissed_reason: components["schemas"]["code-scanning-alert-dismissed-reason"];
       rule: components["schemas"]["code-scanning-alert-rule"];
       tool: components["schemas"]["code-scanning-analysis-tool"];
+      most_recent_instance: components["schemas"]["code-scanning-alert-instance"];
     };
     /** Sets the state of the code scanning alert. Can be one of `open` or `dismissed`. You must provide `dismissed_reason` when you set the state to `dismissed`. */
     "code-scanning-alert-set-state": "open" | "dismissed";
-    /** The full Git reference of the code scanning analysis file, formatted as `refs/heads/<branch name>`. */
-    "code-scanning-analysis-ref": string;
-    /** The commit SHA of the code scanning analysis file. */
+    /** An identifier for the upload. */
+    "code-scanning-analysis-sarif-id": string;
+    /** The SHA of the commit to which the analysis you are uploading relates. */
     "code-scanning-analysis-commit-sha": string;
-    /** The time that the analysis was created in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
-    "code-scanning-analysis-created-at": string;
     /** Identifies the variable values associated with the environment in which this analysis was performed. */
     "code-scanning-analysis-environment": string;
-    "code-scanning-analysis-code-scanning-analysis": {
+    /** The time that the analysis was created in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
+    "code-scanning-analysis-created-at": string;
+    /** The REST API URL of the analysis resource. */
+    "code-scanning-analysis-url": string;
+    "code-scanning-analysis": {
+      ref: components["schemas"]["code-scanning-ref"];
       commit_sha: components["schemas"]["code-scanning-analysis-commit-sha"];
-      ref: components["schemas"]["code-scanning-analysis-ref"];
       analysis_key: components["schemas"]["code-scanning-analysis-analysis-key"];
-      created_at: components["schemas"]["code-scanning-analysis-created-at"];
-      tool_name: components["schemas"]["code-scanning-analysis-tool-name"];
-      error: string;
       environment: components["schemas"]["code-scanning-analysis-environment"];
+      error: string;
+      created_at: components["schemas"]["code-scanning-analysis-created-at"];
+      /** The total number of results in the analysis. */
+      results_count: number;
+      /** The total number of rules used in the analysis. */
+      rules_count: number;
+      /** Unique identifier for this analysis. */
+      id: number;
+      url: components["schemas"]["code-scanning-analysis-url"];
+      sarif_id: components["schemas"]["code-scanning-analysis-sarif-id"];
+      tool: components["schemas"]["code-scanning-analysis-tool"];
+      deletable: boolean;
     };
-    /** A Base64 string representing the SARIF file to upload. You must first compress your SARIF file using [`gzip`](http://www.gnu.org/software/gzip/manual/gzip.html) and then translate the contents of the file into a Base64 encoding string. */
+    /** Successful deletion of a code scanning analysis */
+    "code-scanning-analysis-deletion": {
+      /** Next deletable analysis in chain, without last analysis deletion confirmation */
+      next_analysis_url: string | null;
+      /** Next deletable analysis in chain, with last analysis deletion confirmation */
+      confirm_delete_url: string | null;
+    };
+    /** Scim Error */
+    "scim-error": {
+      message?: string | null;
+      documentation_url?: string | null;
+      detail?: string | null;
+      status?: number;
+      scimType?: string | null;
+      schemas?: string[];
+    };
+    /** A Base64 string representing the SARIF file to upload. You must first compress your SARIF file using [`gzip`](http://www.gnu.org/software/gzip/manual/gzip.html) and then translate the contents of the file into a Base64 encoding string. For more information, see "[SARIF support for code scanning](https://docs.github.com/github/finding-security-vulnerabilities-and-errors-in-your-code/sarif-support-for-code-scanning)." */
     "code-scanning-analysis-sarif-file": string;
+    "code-scanning-sarifs-receipt": {
+      id?: components["schemas"]["code-scanning-analysis-sarif-id"];
+      /** The REST API URL for checking the status of the upload. */
+      url?: string;
+    };
+    "code-scanning-sarifs-status": {
+      /** `pending` files have not yet been processed, while `complete` means all results in the SARIF have been stored. */
+      processing_status?: "pending" | "complete";
+      /** The REST API URL for getting the analyses associated with the upload. */
+      analyses_url?: string | null;
+    };
     /** Collaborator */
     collaborator: {
       login: string;
@@ -7257,15 +7486,6 @@ export interface components {
       updated_at: string;
       author_association: components["schemas"]["author_association"];
       reactions?: components["schemas"]["reaction-rollup"];
-    };
-    /** Scim Error */
-    "scim-error": {
-      message?: string | null;
-      documentation_url?: string | null;
-      detail?: string | null;
-      status?: number;
-      scimType?: string | null;
-      schemas?: string[];
     };
     /** Branch Short */
     "branch-short": {
@@ -9370,8 +9590,14 @@ export interface components {
         "application/json": components["schemas"]["basic-error"];
       };
     };
-    /** Internal Error */
-    internal_error: {
+    /** Response if github advanced security is not enabled for this repository */
+    code_scanning_forbidden_read: {
+      content: {
+        "application/json": components["schemas"]["basic-error"];
+      };
+    };
+    /** Response if the repository is archived or if github advanced security is not enabled for this repository */
+    code_scanning_forbidden_write: {
       content: {
         "application/json": components["schemas"]["basic-error"];
       };
@@ -9381,6 +9607,12 @@ export interface components {
       content: {
         "application/json": components["schemas"]["basic-error"];
         "application/scim+json": components["schemas"]["scim-error"];
+      };
+    };
+    /** Internal Error */
+    internal_error: {
+      content: {
+        "application/json": components["schemas"]["basic-error"];
       };
     };
     /** Found */
@@ -9422,7 +9654,7 @@ export interface components {
     };
   };
   parameters: {
-    /** Results per page (max 100) */
+    /** Results per page (max 100). */
     per_page: number;
     /** Page number of the results to fetch. */
     page: number;
@@ -9554,7 +9786,13 @@ export interface components {
     check_name: string;
     /** Returns check runs with the specified `status`. Can be one of `queued`, `in_progress`, or `completed`. */
     status: "queued" | "in_progress" | "completed";
-    /** The security alert number, found at the end of the security alert's URL. */
+    /** The name of a code scanning tool. Only results by this tool will be listed. You can specify the tool by using either `tool_name` or `tool_guid`, but not both. */
+    tool_name: components["schemas"]["code-scanning-analysis-tool-name"];
+    /** The GUID of a code scanning tool. Only results by this tool will be listed. Note that some code scanning tools may not include a GUID in their analysis data. You can specify the tool by using either `tool_guid` or `tool_name`, but not both. */
+    tool_guid: components["schemas"]["code-scanning-analysis-tool-guid"];
+    /** The Git reference for the results you want to list. The `ref` for a branch can be formatted either as `refs/heads/<branch name>` or simply `<branch name>`. To reference a pull request use `refs/pull/<number>/merge`. */
+    git_ref: components["schemas"]["code-scanning-ref"];
+    /** The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation. */
     alert_number: components["schemas"]["alert-number"];
     /** commit_sha parameter */
     commit_sha: string;
@@ -9738,7 +9976,7 @@ export interface operations {
   "apps/list-installations": {
     parameters: {
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -9879,7 +10117,7 @@ export interface operations {
   "oauth-authorizations/list-grants": {
     parameters: {
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -10187,7 +10425,7 @@ export interface operations {
   "oauth-authorizations/list-authorizations": {
     parameters: {
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -10587,7 +10825,7 @@ export interface operations {
         enterprise: components["parameters"]["enterprise"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -10723,7 +10961,7 @@ export interface operations {
         enterprise: components["parameters"]["enterprise"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -10865,7 +11103,7 @@ export interface operations {
         runner_group_id: components["parameters"]["runner_group_id"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -10966,7 +11204,7 @@ export interface operations {
         runner_group_id: components["parameters"]["runner_group_id"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -11067,7 +11305,7 @@ export interface operations {
         enterprise: components["parameters"]["enterprise"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -11242,7 +11480,7 @@ export interface operations {
          * The default is `desc`.
          */
         order?: components["parameters"]["audit-log-order"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
       };
     };
@@ -11328,7 +11566,7 @@ export interface operations {
   "activity/list-public-events": {
     parameters: {
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -11376,7 +11614,7 @@ export interface operations {
       query: {
         /** Only show notifications updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         since?: components["parameters"]["since"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -11443,7 +11681,7 @@ export interface operations {
       query: {
         /** Only show notifications updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         since?: components["parameters"]["since"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -11468,7 +11706,7 @@ export interface operations {
       query: {
         /** Only show notifications updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         since?: components["parameters"]["since"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -11554,7 +11792,7 @@ export interface operations {
         gist_id: components["parameters"]["gist_id"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -11675,7 +11913,7 @@ export interface operations {
         gist_id: components["parameters"]["gist_id"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -11703,7 +11941,7 @@ export interface operations {
         gist_id: components["parameters"]["gist_id"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -11858,7 +12096,7 @@ export interface operations {
   "apps/list-repos-accessible-to-installation": {
     parameters: {
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -11932,7 +12170,7 @@ export interface operations {
         orgs?: boolean;
         owned?: boolean;
         pulls?: boolean;
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -11955,7 +12193,7 @@ export interface operations {
     parameters: {
       query: {
         featured?: boolean;
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
       };
     };
@@ -12070,7 +12308,7 @@ export interface operations {
   "apps/list-plans": {
     parameters: {
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -12104,7 +12342,7 @@ export interface operations {
         sort?: components["parameters"]["sort"];
         /** To return the oldest accounts first, set to `asc`. Can be one of `asc` or `desc`. Ignored without the `sort` parameter. */
         direction?: "asc" | "desc";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -12155,7 +12393,7 @@ export interface operations {
   "apps/list-plans-stubbed": {
     parameters: {
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -12188,7 +12426,7 @@ export interface operations {
         sort?: components["parameters"]["sort"];
         /** To return the oldest accounts first, set to `asc`. Can be one of `asc` or `desc`. Ignored without the `sort` parameter. */
         direction?: "asc" | "desc";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -12229,7 +12467,7 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -12260,7 +12498,7 @@ export interface operations {
         since?: components["parameters"]["since"];
         /** Only show notifications updated before the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         before?: components["parameters"]["before"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -12443,7 +12681,7 @@ export interface operations {
       query: {
         /** An organization ID. Only return organizations with an ID greater than this ID. */
         since?: components["parameters"]["since-org"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
       };
     };
@@ -12656,7 +12894,7 @@ export interface operations {
         org: components["parameters"]["org"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -12790,7 +13028,7 @@ export interface operations {
         org: components["parameters"]["org"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -13037,7 +13275,7 @@ export interface operations {
         runner_group_id: components["parameters"]["runner_group_id"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -13142,7 +13380,7 @@ export interface operations {
         org: components["parameters"]["org"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -13285,7 +13523,7 @@ export interface operations {
         org: components["parameters"]["org"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -13575,7 +13813,7 @@ export interface operations {
          * The default is `desc`.
          */
         order?: components["parameters"]["audit-log-order"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
       };
     };
@@ -13692,7 +13930,7 @@ export interface operations {
         org: components["parameters"]["org"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -13714,7 +13952,7 @@ export interface operations {
         org: components["parameters"]["org"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -13737,7 +13975,7 @@ export interface operations {
         org: components["parameters"]["org"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -13957,7 +14195,7 @@ export interface operations {
         org: components["parameters"]["org"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -14033,7 +14271,7 @@ export interface operations {
         org: components["parameters"]["org"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -14120,7 +14358,7 @@ export interface operations {
         invitation_id: components["parameters"]["invitation_id"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -14170,7 +14408,7 @@ export interface operations {
         direction?: components["parameters"]["direction"];
         /** Only show notifications updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         since?: components["parameters"]["since"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -14207,7 +14445,7 @@ export interface operations {
          * \* `member` - Non-owner organization members.
          */
         role?: "all" | "admin" | "member";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -14343,7 +14581,7 @@ export interface operations {
         org: components["parameters"]["org"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -14479,7 +14717,7 @@ export interface operations {
         migration_id: components["parameters"]["migration_id"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -14509,7 +14747,7 @@ export interface operations {
          * \* `all`: All outside collaborators.
          */
         filter?: "2fa_disabled" | "all";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -14581,7 +14819,7 @@ export interface operations {
       query: {
         /** Indicates the state of the projects to return. Can be either `open`, `closed`, or `all`. */
         state?: "open" | "closed" | "all";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -14636,7 +14874,7 @@ export interface operations {
         org: components["parameters"]["org"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -14716,7 +14954,7 @@ export interface operations {
         sort?: "created" | "updated" | "pushed" | "full_name";
         /** Can be one of `asc` or `desc`. Default: when using `full_name`: `asc`, otherwise `desc` */
         direction?: "asc" | "desc";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -14884,7 +15122,7 @@ export interface operations {
         org: components["parameters"]["org"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -14909,7 +15147,7 @@ export interface operations {
         org: components["parameters"]["org"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -15090,7 +15328,7 @@ export interface operations {
       query: {
         /** One of `asc` (ascending) or `desc` (descending). */
         direction?: components["parameters"]["direction"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -15233,7 +15471,7 @@ export interface operations {
       query: {
         /** One of `asc` (ascending) or `desc` (descending). */
         direction?: components["parameters"]["direction"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -15383,7 +15621,7 @@ export interface operations {
           | "hooray"
           | "rocket"
           | "eyes";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -15484,7 +15722,7 @@ export interface operations {
           | "hooray"
           | "rocket"
           | "eyes";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -15572,7 +15810,7 @@ export interface operations {
         team_slug: components["parameters"]["team_slug"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -15608,7 +15846,7 @@ export interface operations {
          * \* `all` - all members of the team.
          */
         role?: "member" | "maintainer" | "all";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -15749,7 +15987,7 @@ export interface operations {
         team_slug: components["parameters"]["team_slug"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -15864,7 +16102,7 @@ export interface operations {
         team_slug: components["parameters"]["team_slug"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -16047,7 +16285,7 @@ export interface operations {
         team_slug: components["parameters"]["team_slug"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -16268,7 +16506,7 @@ export interface operations {
       query: {
         /** Filters the project cards that are returned by the card's state. Can be one of `all`,`archived`, or `not_archived`. */
         archived_state?: "all" | "archived" | "not_archived";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -16483,7 +16721,7 @@ export interface operations {
          * \* `all`: All collaborators the authenticated user can see.
          */
         affiliation?: "outside" | "direct" | "all";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -16580,7 +16818,7 @@ export interface operations {
         project_id: components["parameters"]["project-id"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -16785,7 +17023,7 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -17002,7 +17240,7 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -17162,7 +17400,7 @@ export interface operations {
         event?: components["parameters"]["event"];
         /** Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. For a list of the possible `status` and `conclusion` options, see "[Create a check run](https://docs.github.com/rest/reference/checks#create-a-check-run)." */
         status?: components["parameters"]["workflow-run-status"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -17226,7 +17464,7 @@ export interface operations {
         run_id: components["parameters"]["run-id"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -17274,7 +17512,7 @@ export interface operations {
          * \* `all`: Returns all jobs for a workflow run, including from old executions of the workflow run.
          */
         filter?: "latest" | "all";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -17370,7 +17608,7 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -17551,7 +17789,7 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -17680,7 +17918,7 @@ export interface operations {
         event?: components["parameters"]["event"];
         /** Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. For a list of the possible `status` and `conclusion` options, see "[Create a check run](https://docs.github.com/rest/reference/checks#create-a-check-run)." */
         status?: components["parameters"]["workflow-run-status"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -17730,7 +17968,7 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -17808,7 +18046,7 @@ export interface operations {
       query: {
         /** Setting to `true` returns only protected branches. When set to `false`, only unprotected branches are returned. Omitting this parameter returns all branches. */
         protected?: boolean;
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -18942,7 +19180,7 @@ export interface operations {
         check_run_id: components["parameters"]["check_run_id"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -19060,7 +19298,7 @@ export interface operations {
         status?: components["parameters"]["status"];
         /** Filters check runs by their `completed_at` timestamp. Can be one of `latest` (returning the most recent check runs) or `all`. */
         filter?: "latest" | "all";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -19098,7 +19336,17 @@ export interface operations {
       201: unknown;
     };
   };
-  /** Lists all open code scanning alerts for the default branch (usually `main` or `master`). You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint. */
+  /**
+   * Lists all open code scanning alerts for the default branch (usually `main`
+   * or `master`). You must use an access token with the `security_events` scope to use
+   * this endpoint. GitHub Apps must have the `security_events` read permission to use
+   * this endpoint.
+   *
+   * The response includes a `most_recent_instance` object.
+   * This provides details of the most recent instance of this alert
+   * for the the default branch or for the specified Git reference
+   * (if you used `ref` in the request).
+   */
   "code-scanning/list-alerts-for-repo": {
     parameters: {
       path: {
@@ -19106,48 +19354,55 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
+        /** The name of a code scanning tool. Only results by this tool will be listed. You can specify the tool by using either `tool_name` or `tool_guid`, but not both. */
+        tool_name?: components["parameters"]["tool_name"];
+        /** The GUID of a code scanning tool. Only results by this tool will be listed. Note that some code scanning tools may not include a GUID in their analysis data. You can specify the tool by using either `tool_guid` or `tool_name`, but not both. */
+        tool_guid?: components["parameters"]["tool_guid"];
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
+        /** Results per page (max 100). */
+        per_page?: components["parameters"]["per_page"];
+        /** The Git reference for the results you want to list. The `ref` for a branch can be formatted either as `refs/heads/<branch name>` or simply `<branch name>`. To reference a pull request use `refs/pull/<number>/merge`. */
+        ref?: components["parameters"]["git_ref"];
         /** Set to `open`, `fixed`, or `dismissed` to list code scanning alerts in a specific state. */
         state?: components["schemas"]["code-scanning-alert-state"];
-        /** Set a full Git reference to list alerts for a specific branch. The `ref` must be formatted as `refs/heads/<branch name>`. */
-        ref?: components["schemas"]["code-scanning-alert-ref"];
       };
     };
     responses: {
       /** response */
       200: {
         content: {
-          "application/json": components["schemas"]["code-scanning-alert-code-scanning-alert-items"][];
+          "application/json": components["schemas"]["code-scanning-alert-items"][];
         };
       };
-      /** Response if github advanced security is not enabled for this repository */
-      403: unknown;
-      /** Response if the ref does not match an existing ref */
-      404: unknown;
+      403: components["responses"]["code_scanning_forbidden_read"];
+      404: components["responses"]["not_found"];
       503: components["responses"]["service_unavailable"];
     };
   };
   /**
    * Gets a single code scanning alert. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint.
    *
-   * The security `alert_number` is found at the end of the security alert's URL. For example, the security alert ID for `https://github.com/Octo-org/octo-repo/security/code-scanning/88` is `88`.
+   * **Deprecation notice**:
+   * The instances field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The same information can now be retrieved via a GET request to the URL specified by `instances_url`.
    */
   "code-scanning/get-alert": {
     parameters: {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        alert_number: number;
+        /** The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation. */
+        alert_number: components["parameters"]["alert_number"];
       };
     };
     responses: {
       /** response */
       200: {
         content: {
-          "application/json": components["schemas"]["code-scanning-alert-code-scanning-alert"];
+          "application/json": components["schemas"]["code-scanning-alert"];
         };
       };
-      /** Response if github advanced security is not enabled for this repository */
-      403: unknown;
+      403: components["responses"]["code_scanning_forbidden_read"];
       404: components["responses"]["not_found"];
       503: components["responses"]["service_unavailable"];
     };
@@ -19158,7 +19413,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** The security alert number, found at the end of the security alert's URL. */
+        /** The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation. */
         alert_number: components["parameters"]["alert_number"];
       };
     };
@@ -19166,13 +19421,12 @@ export interface operations {
       /** response */
       200: {
         content: {
-          "application/json": components["schemas"]["code-scanning-alert-code-scanning-alert"];
+          "application/json": components["schemas"]["code-scanning-alert"];
         };
       };
-      /** Response if the repository is archived, or if github advanced security is not enabled for this repository */
-      403: unknown;
-      /** Response when code scanning is not available and you should try again at a later time */
-      503: unknown;
+      403: components["responses"]["code_scanning_forbidden_write"];
+      404: components["responses"]["not_found"];
+      503: components["responses"]["service_unavailable"];
     };
     requestBody: {
       content: {
@@ -19183,7 +19437,54 @@ export interface operations {
       };
     };
   };
-  /** List the details of recent code scanning analyses for a repository. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint. */
+  /** Lists all instances of the specified code scanning alert. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint. */
+  "code-scanning/list-alerts-instances": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        /** The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation. */
+        alert_number: components["parameters"]["alert_number"];
+      };
+      query: {
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
+        /** Results per page (max 100). */
+        per_page?: components["parameters"]["per_page"];
+        /** The Git reference for the results you want to list. The `ref` for a branch can be formatted either as `refs/heads/<branch name>` or simply `<branch name>`. To reference a pull request use `refs/pull/<number>/merge`. */
+        ref?: components["parameters"]["git_ref"];
+      };
+    };
+    responses: {
+      /** response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["code-scanning-alert-instance"][];
+        };
+      };
+      403: components["responses"]["code_scanning_forbidden_read"];
+      404: components["responses"]["not_found"];
+      503: components["responses"]["service_unavailable"];
+    };
+  };
+  /**
+   * Lists the details of all code scanning analyses for a repository,
+   * starting with the most recent.
+   * The response is paginated and you can use the `page` and `per_page` parameters
+   * to list the analyses you're interested in.
+   * By default 30 analyses are listed per page.
+   *
+   * The `rules_count` field in the response give the number of rules
+   * that were run in the analysis.
+   * For very old analyses this data is not available,
+   * and `0` is returned in this field.
+   *
+   * You must use an access token with the `security_events` scope to use this endpoint.
+   * GitHub Apps must have the `security_events` read permission to use this endpoint.
+   *
+   * **Deprecation notice**:
+   * The `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the `tool` field.
+   */
   "code-scanning/list-recent-analyses": {
     parameters: {
       path: {
@@ -19191,24 +19492,184 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** Set a full Git reference to list alerts for a specific branch. The `ref` must be formatted as `refs/heads/<branch name>`. */
-        ref?: components["schemas"]["code-scanning-analysis-ref"];
-        /** Set a single code scanning tool name to filter alerts by tool. */
-        tool_name?: components["schemas"]["code-scanning-analysis-tool-name"];
+        /** The name of a code scanning tool. Only results by this tool will be listed. You can specify the tool by using either `tool_name` or `tool_guid`, but not both. */
+        tool_name?: components["parameters"]["tool_name"];
+        /** The GUID of a code scanning tool. Only results by this tool will be listed. Note that some code scanning tools may not include a GUID in their analysis data. You can specify the tool by using either `tool_guid` or `tool_name`, but not both. */
+        tool_guid?: components["parameters"]["tool_guid"];
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
+        /** Results per page (max 100). */
+        per_page?: components["parameters"]["per_page"];
+        /** The Git reference for the analyses you want to list. The `ref` for a branch can be formatted either as `refs/heads/<branch name>` or simply `<branch name>`. To reference a pull request use `refs/pull/<number>/merge`. */
+        ref?: components["schemas"]["code-scanning-ref"];
+        /** Filter analyses belonging to the same SARIF upload. */
+        sarif_id?: components["schemas"]["code-scanning-analysis-sarif-id"];
       };
     };
     responses: {
       /** response */
       200: {
         content: {
-          "application/json": components["schemas"]["code-scanning-analysis-code-scanning-analysis"][];
+          "application/json": components["schemas"]["code-scanning-analysis"][];
         };
       };
-      /** Response if github advanced security is not enabled for this repository */
-      403: unknown;
+      403: components["responses"]["code_scanning_forbidden_read"];
+      404: components["responses"]["not_found"];
+      503: components["responses"]["service_unavailable"];
     };
   };
-  /** Upload a SARIF file containing the results of a code scanning analysis to make the results available in a repository. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` write permission to use this endpoint. */
+  /**
+   * Gets a specified code scanning analysis for a repository.
+   * You must use an access token with the `security_events` scope to use this endpoint.
+   * GitHub Apps must have the `security_events` read permission to use this endpoint.
+   *
+   * The default JSON response contains fields that describe the analysis.
+   * This includes the Git reference and commit SHA to which the analysis relates,
+   * the datetime of the analysis, the name of the code scanning tool,
+   * and the number of alerts.
+   *
+   * The `rules_count` field in the default response give the number of rules
+   * that were run in the analysis.
+   * For very old analyses this data is not available,
+   * and `0` is returned in this field.
+   *
+   * If you use the Accept header `application/sarif+json`,
+   * the response contains the analysis data that was uploaded.
+   * This is formatted as
+   * [SARIF version 2.1.0](https://docs.oasis-open.org/sarif/sarif/v2.1.0/cs01/sarif-v2.1.0-cs01.html).
+   * For an example response, see "[Custom media type for code scanning](#custom-media-type-for-code-scanning)."
+   *
+   * **Deprecation notice**:
+   * The `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the `tool` field.
+   */
+  "code-scanning/get-analysis": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        /** The ID of the analysis, as returned from the `GET /repos/{owner}/{repo}/code-scanning/analyses` operation. */
+        analysis_id: number;
+      };
+    };
+    responses: {
+      /** response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["code-scanning-analysis"];
+        };
+      };
+      403: components["responses"]["code_scanning_forbidden_read"];
+      404: components["responses"]["not_found"];
+      503: components["responses"]["service_unavailable"];
+    };
+  };
+  /**
+   * Deletes a specified code scanning analysis from a repository. For
+   * private repositories, you must use an access token with the `repo` scope. For public repositories,
+   * you must use an access token with `public_repo` and `repo:security_events` scopes.
+   * GitHub Apps must have the `security_events` write permission to use this endpoint.
+   *
+   * You can delete one analysis at a time.
+   * To delete a series of analyses, start with the most recent analysis and work backwards.
+   * Conceptually, the process is similar to the undo function in a text editor.
+   *
+   * When you list the analyses for a repository,
+   * one or more will be identified as deletable in the response:
+   *
+   * ```
+   * "deletable": true
+   * ```
+   *
+   * An analysis is deletable when it's the most recent in a set of analyses.
+   * Typically, a repository will have multiple sets of analyses
+   * for each enabled code scanning tool,
+   * where a set is determined by a unique combination of analysis values:
+   *
+   * * `ref`
+   * * `tool`
+   * * `analysis_key`
+   * * `environment`
+   *
+   * If you attempt to delete an analysis that is not the most recent in a set,
+   * you'll get a 400 response with the message:
+   *
+   * ```
+   * Analysis specified is not deletable.
+   * ```
+   *
+   * The response from a successful `DELETE` operation provides you with
+   * two alternative URLs for deleting the next analysis in the set
+   * (see the example default response below).
+   * Use the `next_analysis_url` URL if you want to avoid accidentally deleting the final analysis
+   * in the set. This is a useful option if you want to preserve at least one analysis
+   * for the specified tool in your repository.
+   * Use the `confirm_delete_url` URL if you are content to remove all analyses for a tool.
+   * When you delete the last analysis in a set the value of `next_analysis_url` and `confirm_delete_url`
+   * in the 200 response is `null`.
+   *
+   * As an example of the deletion process,
+   * let's imagine that you added a workflow that configured a particular code scanning tool
+   * to analyze the code in a repository. This tool has added 15 analyses:
+   * 10 on the default branch, and another 5 on a topic branch.
+   * You therefore have two separate sets of analyses for this tool.
+   * You've now decided that you want to remove all of the analyses for the tool.
+   * To do this you must make 15 separate deletion requests.
+   * To start, you must find the deletable analysis for one of the sets,
+   * step through deleting the analyses in that set,
+   * and then repeat the process for the second set.
+   * The procedure therefore consists of a nested loop:
+   *
+   * **Outer loop**:
+   * * List the analyses for the repository, filtered by tool.
+   * * Parse this list to find a deletable analysis. If found:
+   *
+   *   **Inner loop**:
+   *   * Delete the identified analysis.
+   *   * Parse the response for the value of `next_analysis_url` and, if found, use this in the next iteration.
+   *
+   * The above process assumes that you want to remove all trace of the tool's analyses from the GitHub user interface, for the specified repository, and it therefore uses the `next_analysis_url` value. Alternatively, you could use the `confirm_delete_url` value, which would leave the last analysis in each set undeleted to avoid removing a tool's analysis entirely.
+   */
+  "code-scanning/delete-analysis": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        /** The ID of the analysis, as returned from the `GET /repos/{owner}/{repo}/code-scanning/analyses` operation. */
+        analysis_id: number;
+      };
+      query: {
+        /** Allow deletion if the specified analysis is the last in a set. The parameter can be used without a value as the parameter value is not considered. If you attempt to delete the final analysis in a set without using this parameter you'll get a 400 response with the message: `Analysis is last of its type and deletion may result in the loss of historical alert data. Please specify confirm_delete.` */
+        confirm_delete?: string;
+      };
+    };
+    responses: {
+      /** response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["code-scanning-analysis-deletion"];
+        };
+      };
+      400: components["responses"]["bad_request"];
+      403: components["responses"]["code_scanning_forbidden_write"];
+      404: components["responses"]["not_found"];
+      503: components["responses"]["service_unavailable"];
+    };
+  };
+  /**
+   * Uploads SARIF data containing the results of a code scanning analysis to make the results available in a repository. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` write permission to use this endpoint.
+   *
+   * You must compress the SARIF-formatted analysis data that you want to upload, using `gzip`, and then encode it as a Base64 format string. For example:
+   *
+   * ```
+   * gzip -c analysis-data.sarif | base64
+   * ```
+   *
+   * SARIF upload supports a maximum of 1000 results per analysis run. Any results over this limit are ignored. Typically, but not necessarily, a SARIF file contains a single run of a single tool. If a code scanning tool generates too many results, you should update the analysis configuration to run only the most important rules or queries.
+   *
+   * The `202 Accepted`, response includes an `id` value.
+   * You can use this ID to check the status of the upload by using this for the `/sarifs/{sarif_id}` endpoint.
+   * For more information, see "[Get information about a SARIF upload](/rest/reference/code-scanning#get-information-about-a-sarif-upload)."
+   */
   "code-scanning/upload-sarif": {
     parameters: {
       path: {
@@ -19218,21 +19679,24 @@ export interface operations {
     };
     responses: {
       /** response */
-      202: unknown;
-      /** Response if the `sarif` field is invalid */
+      202: {
+        content: {
+          "application/json": components["schemas"]["code-scanning-sarifs-receipt"];
+        };
+      };
+      /** Response if the sarif field is invalid */
       400: unknown;
-      /** Response if the repository is archived, or if github advanced security is not enabled for this repository */
-      403: unknown;
-      /** Response if `commit_sha` or `ref` cannot be found */
-      404: unknown;
-      /** Response if the `sarif` field is too large */
+      403: components["responses"]["code_scanning_forbidden_write"];
+      404: components["responses"]["not_found"];
+      /** Response if the sarif field is too large */
       413: unknown;
+      503: components["responses"]["service_unavailable"];
     };
     requestBody: {
       content: {
         "application/json": {
           commit_sha: components["schemas"]["code-scanning-analysis-commit-sha"];
-          ref: components["schemas"]["code-scanning-analysis-ref"];
+          ref: components["schemas"]["code-scanning-ref"];
           sarif: components["schemas"]["code-scanning-analysis-sarif-file"];
           /**
            * The base directory used in the analysis, as it appears in the SARIF file.
@@ -19241,9 +19705,33 @@ export interface operations {
           checkout_uri?: string;
           /** The time that the analysis run began. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
           started_at?: string;
-          tool_name: components["schemas"]["code-scanning-analysis-tool-name"];
+          /** The name of the tool used to generate the code scanning analysis. If this parameter is not used, the tool name defaults to "API". If the uploaded SARIF contains a tool GUID, this will be available for filtering using the `tool_guid` parameter of operations such as `GET /repos/{owner}/{repo}/code-scanning/alerts`. */
+          tool_name?: string;
         };
       };
+    };
+  };
+  /** Gets information about a SARIF upload, including the status and the URL of the analysis that was uploaded so that you can retrieve details of the analysis. For more information, see "[Get a code scanning analysis for a repository](/rest/reference/code-scanning#get-a-code-scanning-analysis-for-a-repository)." You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint. */
+  "code-scanning/get-sarif": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        /** The SARIF ID obtained after uploading. */
+        sarif_id: string;
+      };
+    };
+    responses: {
+      /** response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["code-scanning-sarifs-status"];
+        };
+      };
+      403: components["responses"]["code_scanning_forbidden_read"];
+      /** Response if the sarif id does not match any upload */
+      404: unknown;
+      503: components["responses"]["service_unavailable"];
     };
   };
   /**
@@ -19265,7 +19753,7 @@ export interface operations {
          * \* `all`: All collaborators the authenticated user can see.
          */
         affiliation?: "outside" | "direct" | "all";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -19396,7 +19884,7 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -19493,7 +19981,7 @@ export interface operations {
           | "hooray"
           | "rocket"
           | "eyes";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -19621,7 +20109,7 @@ export interface operations {
         since?: components["parameters"]["since"];
         /** Only commits before this date will be returned. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         until?: string;
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -19676,7 +20164,7 @@ export interface operations {
         commit_sha: components["parameters"]["commit_sha"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -19744,7 +20232,7 @@ export interface operations {
         commit_sha: components["parameters"]["commit_sha"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -19840,7 +20328,7 @@ export interface operations {
         status?: components["parameters"]["status"];
         /** Filters check runs by their `completed_at` timestamp. Can be one of `latest` (returning the most recent check runs) or `all`. */
         filter?: "latest" | "all";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -19877,7 +20365,7 @@ export interface operations {
         app_id?: number;
         /** Returns check runs with the specified `name`. */
         check_name?: components["parameters"]["check_name"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -19940,7 +20428,7 @@ export interface operations {
         ref: string;
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -20264,7 +20752,7 @@ export interface operations {
       query: {
         /** Set to `1` or `true` to include anonymous contributors in results. */
         anon?: string;
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -20300,7 +20788,7 @@ export interface operations {
         task?: string;
         /** The name of the environment that was deployed to (e.g., `staging` or `production`). */
         environment?: string;
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -20482,7 +20970,7 @@ export interface operations {
         deployment_id: components["parameters"]["deployment_id"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -20627,7 +21115,7 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -20651,7 +21139,7 @@ export interface operations {
       query: {
         /** The sort order. Can be either `newest`, `oldest`, or `stargazers`. */
         sort?: "newest" | "oldest" | "stargazers";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -20913,7 +21401,7 @@ export interface operations {
         ref: string;
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -21246,7 +21734,7 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -21797,7 +22285,7 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -21886,7 +22374,7 @@ export interface operations {
         direction?: components["parameters"]["direction"];
         /** Only show notifications updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         since?: components["parameters"]["since"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -21973,7 +22461,7 @@ export interface operations {
         direction?: "asc" | "desc";
         /** Only show notifications updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         since?: components["parameters"]["since"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -22071,7 +22559,7 @@ export interface operations {
           | "hooray"
           | "rocket"
           | "eyes";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -22159,7 +22647,7 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -22349,7 +22837,7 @@ export interface operations {
       query: {
         /** Only show notifications updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         since?: components["parameters"]["since"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -22410,7 +22898,7 @@ export interface operations {
         issue_number: components["parameters"]["issue_number"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -22436,7 +22924,7 @@ export interface operations {
         issue_number: components["parameters"]["issue_number"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -22621,7 +23109,7 @@ export interface operations {
           | "hooray"
           | "rocket"
           | "eyes";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -22706,7 +23194,7 @@ export interface operations {
         issue_number: components["parameters"]["issue_number"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -22732,7 +23220,7 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -22826,7 +23314,7 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -23035,7 +23523,7 @@ export interface operations {
         sort?: "due_on" | "completeness";
         /** The direction of the sort. Either `asc` or `desc`. */
         direction?: "asc" | "desc";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -23162,7 +23650,7 @@ export interface operations {
         milestone_number: components["parameters"]["milestone_number"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -23194,7 +23682,7 @@ export interface operations {
         since?: components["parameters"]["since"];
         /** Only show notifications updated before the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         before?: components["parameters"]["before"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -23335,7 +23823,7 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -23415,7 +23903,7 @@ export interface operations {
       query: {
         /** Indicates the state of the projects to return. Can be either `open`, `closed`, or `all`. */
         state?: "open" | "closed" | "all";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -23486,7 +23974,7 @@ export interface operations {
         sort?: "created" | "updated" | "popularity" | "long-running";
         /** The direction of the sort. Can be either `asc` or `desc`. Default: `desc` when sort is `created` or sort is not specified, otherwise `asc`. */
         direction?: "asc" | "desc";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -23567,7 +24055,7 @@ export interface operations {
         direction?: "asc" | "desc";
         /** Only show notifications updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         since?: components["parameters"]["since"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -23666,7 +24154,7 @@ export interface operations {
           | "hooray"
           | "rocket"
           | "eyes";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -23839,7 +24327,7 @@ export interface operations {
         direction?: "asc" | "desc";
         /** Only show notifications updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         since?: components["parameters"]["since"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -23954,7 +24442,7 @@ export interface operations {
         pull_number: components["parameters"]["pull-number"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -23979,7 +24467,7 @@ export interface operations {
         pull_number: components["parameters"]["pull-number"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -24073,7 +24561,7 @@ export interface operations {
         pull_number: components["parameters"]["pull-number"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -24149,7 +24637,7 @@ export interface operations {
         pull_number: components["parameters"]["pull-number"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -24299,7 +24787,7 @@ export interface operations {
         review_id: components["parameters"]["review_id"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -24450,7 +24938,7 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -24698,7 +25186,7 @@ export interface operations {
         release_id: components["parameters"]["release_id"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -24777,7 +25265,7 @@ export interface operations {
         state?: "open" | "resolved";
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
       };
     };
@@ -24803,7 +25291,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** The security alert number, found at the end of the security alert's URL. */
+        /** The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation. */
         alert_number: components["parameters"]["alert_number"];
       };
     };
@@ -24829,7 +25317,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** The security alert number, found at the end of the security alert's URL. */
+        /** The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation. */
         alert_number: components["parameters"]["alert_number"];
       };
     };
@@ -24867,7 +25355,7 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -25046,7 +25534,7 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -25128,7 +25616,7 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -25170,7 +25658,7 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -26150,7 +26638,7 @@ export interface operations {
         sort?: "indexed";
         /** Determines whether the first search result returned is the highest number of matches (`desc`) or lowest number of matches (`asc`). This parameter is ignored unless you provide `sort`. */
         order?: components["parameters"]["order"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -26192,7 +26680,7 @@ export interface operations {
         sort?: "author-date" | "committer-date";
         /** Determines whether the first search result returned is the highest number of matches (`desc`) or lowest number of matches (`asc`). This parameter is ignored unless you provide `sort`. */
         order?: components["parameters"]["order"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -26247,7 +26735,7 @@ export interface operations {
           | "updated";
         /** Determines whether the first search result returned is the highest number of matches (`desc`) or lowest number of matches (`asc`). This parameter is ignored unless you provide `sort`. */
         order?: components["parameters"]["order"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -26335,7 +26823,7 @@ export interface operations {
         sort?: "stars" | "forks" | "help-wanted-issues" | "updated";
         /** Determines whether the first search result returned is the highest number of matches (`desc`) or lowest number of matches (`asc`). This parameter is ignored unless you provide `sort`. */
         order?: components["parameters"]["order"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -26410,7 +26898,7 @@ export interface operations {
         sort?: "followers" | "repositories" | "joined";
         /** Determines whether the first search result returned is the highest number of matches (`desc`) or lowest number of matches (`asc`). This parameter is ignored unless you provide `sort`. */
         order?: components["parameters"]["order"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -26535,7 +27023,7 @@ export interface operations {
       query: {
         /** One of `asc` (ascending) or `desc` (descending). */
         direction?: components["parameters"]["direction"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -26668,7 +27156,7 @@ export interface operations {
       query: {
         /** One of `asc` (ascending) or `desc` (descending). */
         direction?: components["parameters"]["direction"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -26808,7 +27296,7 @@ export interface operations {
           | "hooray"
           | "rocket"
           | "eyes";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -26884,7 +27372,7 @@ export interface operations {
           | "hooray"
           | "rocket"
           | "eyes";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -26948,7 +27436,7 @@ export interface operations {
         team_id: components["parameters"]["team-id"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -26982,7 +27470,7 @@ export interface operations {
          * \* `all` - all members of the team.
          */
         role?: "member" | "maintainer" | "all";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -27205,7 +27693,7 @@ export interface operations {
         team_id: components["parameters"]["team-id"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -27317,7 +27805,7 @@ export interface operations {
         team_id: components["parameters"]["team-id"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -27491,7 +27979,7 @@ export interface operations {
         team_id: components["parameters"]["team-id"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -27669,7 +28157,7 @@ export interface operations {
   "users/list-emails-for-authenticated": {
     parameters: {
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -27745,7 +28233,7 @@ export interface operations {
   "users/list-followers-for-authenticated-user": {
     parameters: {
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -27768,7 +28256,7 @@ export interface operations {
   "users/list-followed-by-authenticated": {
     parameters: {
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -27847,7 +28335,7 @@ export interface operations {
   "users/list-gpg-keys-for-authenticated": {
     parameters: {
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -27943,7 +28431,7 @@ export interface operations {
   "apps/list-installations-for-authenticated-user": {
     parameters: {
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -27982,7 +28470,7 @@ export interface operations {
         installation_id: components["parameters"]["installation_id"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -28112,7 +28600,7 @@ export interface operations {
         direction?: components["parameters"]["direction"];
         /** Only show notifications updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         since?: components["parameters"]["since"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -28134,7 +28622,7 @@ export interface operations {
   "users/list-public-ssh-keys-for-authenticated": {
     parameters: {
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -28223,7 +28711,7 @@ export interface operations {
   "apps/list-subscriptions-for-authenticated-user": {
     parameters: {
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -28246,7 +28734,7 @@ export interface operations {
   "apps/list-subscriptions-for-authenticated-user-stubbed": {
     parameters: {
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -28269,7 +28757,7 @@ export interface operations {
       query: {
         /** Indicates the state of the memberships to return. Can be either `active` or `pending`. If not specified, the API returns both active and pending memberships. */
         state?: "active" | "pending";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -28336,7 +28824,7 @@ export interface operations {
   "migrations/list-for-authenticated-user": {
     parameters: {
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -28499,7 +28987,7 @@ export interface operations {
         migration_id: components["parameters"]["migration_id"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -28526,7 +29014,7 @@ export interface operations {
   "orgs/list-for-authenticated-user": {
     parameters: {
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -28575,7 +29063,7 @@ export interface operations {
   "users/list-public-emails-for-authenticated": {
     parameters: {
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -28622,7 +29110,7 @@ export interface operations {
         sort?: "created" | "updated" | "pushed" | "full_name";
         /** Can be one of `asc` or `desc`. Default: `asc` when using `full_name`, otherwise `desc` */
         direction?: "asc" | "desc";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -28719,7 +29207,7 @@ export interface operations {
   "repos/list-invitations-for-authenticated-user": {
     parameters: {
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -28783,7 +29271,7 @@ export interface operations {
         sort?: components["parameters"]["sort"];
         /** One of `asc` (ascending) or `desc` (descending). */
         direction?: components["parameters"]["direction"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -28861,7 +29349,7 @@ export interface operations {
   "activity/list-watched-repos-for-authenticated-user": {
     parameters: {
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -28884,7 +29372,7 @@ export interface operations {
   "teams/list-for-authenticated-user": {
     parameters: {
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -28913,7 +29401,7 @@ export interface operations {
       query: {
         /** A user ID. Only return users with an ID greater than this ID. */
         since?: components["parameters"]["since-user"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
       };
     };
@@ -28964,7 +29452,7 @@ export interface operations {
         username: components["parameters"]["username"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -28987,7 +29475,7 @@ export interface operations {
         org: components["parameters"]["org"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -29008,7 +29496,7 @@ export interface operations {
         username: components["parameters"]["username"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -29030,7 +29518,7 @@ export interface operations {
         username: components["parameters"]["username"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -29053,7 +29541,7 @@ export interface operations {
         username: components["parameters"]["username"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -29092,7 +29580,7 @@ export interface operations {
       query: {
         /** Only show notifications updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         since?: components["parameters"]["since"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -29116,7 +29604,7 @@ export interface operations {
         username: components["parameters"]["username"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -29192,7 +29680,7 @@ export interface operations {
         username: components["parameters"]["username"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -29219,7 +29707,7 @@ export interface operations {
         username: components["parameters"]["username"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -29243,7 +29731,7 @@ export interface operations {
       query: {
         /** Indicates the state of the projects to return. Can be either `open`, `closed`, or `all`. */
         state?: "open" | "closed" | "all";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -29268,7 +29756,7 @@ export interface operations {
         username: components["parameters"]["username"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -29289,7 +29777,7 @@ export interface operations {
         username: components["parameters"]["username"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -29317,7 +29805,7 @@ export interface operations {
         sort?: "created" | "updated" | "pushed" | "full_name";
         /** Can be one of `asc` or `desc`. Default: `asc` when using `full_name`, otherwise `desc` */
         direction?: "asc" | "desc";
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -29414,7 +29902,7 @@ export interface operations {
         sort?: components["parameters"]["sort"];
         /** One of `asc` (ascending) or `desc` (descending). */
         direction?: components["parameters"]["direction"];
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
@@ -29438,7 +29926,7 @@ export interface operations {
         username: components["parameters"]["username"];
       };
       query: {
-        /** Results per page (max 100) */
+        /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
