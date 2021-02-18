@@ -1273,6 +1273,77 @@ export interface paths {
     /** Removing a user from this list will remove them from all the organization's repositories. */
     delete: operations["orgs/remove-outside-collaborator"];
   };
+  "/orgs/{org}/packages/{package_type}/{package_name}": {
+    /**
+     * Gets a specific package in an organization.
+     *
+     * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+     * If `package_type` is not `container`, your token must also include the `repo` scope.
+     */
+    get: operations["packages/get-package-for-organization"];
+    /**
+     * Deletes an entire package in an organization. You cannot delete a public package if any version of the package has more than 25 downloads. In this scenario, contact GitHub support for further assistance.
+     *
+     * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` scope. In addition:
+     * - If `package_type` is not `container`, your token must also include the `repo` scope.
+     * - If `package_type` is `container`, you must also have admin permissions to the container you want to delete.
+     */
+    delete: operations["packages/delete-package-for-org"];
+  };
+  "/orgs/{org}/packages/{package_type}/{package_name}/restore": {
+    /**
+     * Restores an entire package in an organization.
+     *
+     * You can restore a deleted package under the following conditions:
+     *   - The package was deleted within the last 30 days.
+     *   - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+     *
+     * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` and `packages:write` scope. In addition:
+     * - If `package_type` is not `container`, your token must also include the `repo` scope.
+     * - If `package_type` is `container`, you must also have admin permissions to the container that you want to restore.
+     */
+    post: operations["packages/restore-package-for-org"];
+  };
+  "/orgs/{org}/packages/{package_type}/{package_name}/versions": {
+    /**
+     * Returns all package versions for a package owned by an organization.
+     *
+     * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+     * If `package_type` is not `container`, your token must also include the `repo` scope.
+     */
+    get: operations["packages/get-all-package-versions-for-a-package-owned-by-an-org"];
+  };
+  "/orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}": {
+    /**
+     * Gets a specific package version in an organization.
+     *
+     * You must authenticate using an access token with the `packages:read` scope.
+     * If `package_type` is not `container`, your token must also include the `repo` scope.
+     */
+    get: operations["packages/get-package-version-for-organization"];
+    /**
+     * Deletes a specific package version in an organization. If the package is public and the package version has more than 25 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.
+     *
+     * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` scope. In addition:
+     * - If `package_type` is not `container`, your token must also include the `repo` scope.
+     * - If `package_type` is `container`, you must also have admin permissions to the container you want to delete.
+     */
+    delete: operations["packages/delete-package-version-for-org"];
+  };
+  "/orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore": {
+    /**
+     * Restores a specific package version in an organization.
+     *
+     * You can restore a deleted package under the following conditions:
+     *   - The package was deleted within the last 30 days.
+     *   - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+     *
+     * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` and `packages:write` scope. In addition:
+     * - If `package_type` is not `container`, your token must also include the `repo` scope.
+     * - If `package_type` is `container`, you must also have admin permissions to the container that you want to restore.
+     */
+    post: operations["packages/restore-package-version-for-org"];
+  };
   "/orgs/{org}/projects": {
     /** Lists the projects in an organization. Returns a `404 Not Found` status if projects are disabled in the organization. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
     get: operations["projects/list-for-org"];
@@ -4631,6 +4702,71 @@ export interface paths {
      */
     get: operations["orgs/list-for-authenticated-user"];
   };
+  "/user/packages/{package_type}/{package_name}": {
+    /**
+     * Gets a specific package for a package owned by the authenticated user.
+     *
+     * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+     * If `package_type` is not `container`, your token must also include the `repo` scope.
+     */
+    get: operations["packages/get-package-for-authenticated-user"];
+    /**
+     * Deletes a package owned by the authenticated user. You cannot delete a public package if any version of the package has more than 25 downloads. In this scenario, contact GitHub support for further assistance.
+     *
+     * To use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:delete` scope.
+     * If `package_type` is not `container`, your token must also include the `repo` scope.
+     */
+    delete: operations["packages/delete-package-for-authenticated-user"];
+  };
+  "/user/packages/{package_type}/{package_name}/restore": {
+    /**
+     * Restores a package owned by the authenticated user.
+     *
+     * You can restore a deleted package under the following conditions:
+     *   - The package was deleted within the last 30 days.
+     *   - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+     *
+     * To use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:write` scope. If `package_type` is not `container`, your token must also include the `repo` scope.
+     */
+    post: operations["packages/restore-package-for-authenticated-user"];
+  };
+  "/user/packages/{package_type}/{package_name}/versions": {
+    /**
+     * Returns all package versions for a package owned by the authenticated user.
+     *
+     * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+     * If `package_type` is not `container`, your token must also include the `repo` scope.
+     */
+    get: operations["packages/get-all-package-versions-for-a-package-owned-by-the-authenticated-user"];
+  };
+  "/user/packages/{package_type}/{package_name}/versions/{package_version_id}": {
+    /**
+     * Gets a specific package version for a package owned by the authenticated user.
+     *
+     * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+     * If `package_type` is not `container`, your token must also include the `repo` scope.
+     */
+    get: operations["packages/get-package-version-for-authenticated-user"];
+    /**
+     * Deletes a specific package version for a package owned by the authenticated user.  If the package is public and the package version has more than 25 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.
+     *
+     * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` scope.
+     * If `package_type` is not `container`, your token must also include the `repo` scope.
+     */
+    delete: operations["packages/delete-package-version-for-authenticated-user"];
+  };
+  "/user/packages/{package_type}/{package_name}/versions/{package_version_id}/restore": {
+    /**
+     * Restores a package version owned by the authenticated user.
+     *
+     * You can restore a deleted package version under the following conditions:
+     *   - The package was deleted within the last 30 days.
+     *   - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+     *
+     * To use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:write` scope. If `package_type` is not `container`, your token must also include the `repo` scope.
+     */
+    post: operations["packages/restore-package-version-for-authenticated-user"];
+  };
   "/user/projects": {
     post: operations["projects/create-for-authenticated-user"];
   };
@@ -4769,6 +4905,33 @@ export interface paths {
      * This method only lists _public_ memberships, regardless of authentication. If you need to fetch all of the organization memberships (public and private) for the authenticated user, use the [List organizations for the authenticated user](https://docs.github.com/rest/reference/orgs#list-organizations-for-the-authenticated-user) API instead.
      */
     get: operations["orgs/list-for-user"];
+  };
+  "/users/{username}/packages/{package_type}/{package_name}": {
+    /**
+     * Gets a specific package metadata for a public package owned by a user.
+     *
+     * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+     * If `package_type` is not `container`, your token must also include the `repo` scope.
+     */
+    get: operations["packages/get-package-for-user"];
+  };
+  "/users/{username}/packages/{package_type}/{package_name}/versions": {
+    /**
+     * Returns all package versions for a public package owned by a specified user.
+     *
+     * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+     * If `package_type` is not `container`, your token must also include the `repo` scope.
+     */
+    get: operations["packages/get-all-package-versions-for-package-owned-by-user"];
+  };
+  "/users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}": {
+    /**
+     * Gets a specific package version for a public package owned by a specified user.
+     *
+     * At this time, to use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+     * If `package_type` is not `container`, your token must also include the `repo` scope.
+     */
+    get: operations["packages/get-package-version-for-user"];
   };
   "/users/{username}/projects": {
     get: operations["projects/list-for-user"];
@@ -6277,6 +6440,59 @@ export interface components {
       node_id: string;
       archive_url?: string;
       exclude?: { [key: string]: any }[];
+    };
+    /** A software package */
+    package: {
+      /** Unique identifier of the package. */
+      id: number;
+      /** The name of the package. */
+      name: string;
+      package_type:
+        | "npm"
+        | "maven"
+        | "rubygems"
+        | "docker"
+        | "nuget"
+        | "container";
+      url: string;
+      html_url: string;
+      /** The number of versions of the package. */
+      version_count: number;
+      visibility: "private" | "public";
+      owner?: components["schemas"]["simple-user"] | null;
+      repository?: components["schemas"]["minimal-repository"] | null;
+      created_at: string;
+      updated_at: string;
+    };
+    /** A version of a software package */
+    "package-version": {
+      /** Unique identifier of the package version. */
+      id: number;
+      /** The name of the package version. */
+      name: string;
+      url: string;
+      package_html_url: string;
+      html_url?: string;
+      license?: string;
+      description?: string;
+      created_at: string;
+      updated_at: string;
+      deleted_at?: string;
+      metadata?: {
+        package_type:
+          | "npm"
+          | "maven"
+          | "rubygems"
+          | "docker"
+          | "nuget"
+          | "container";
+        container?: {
+          tags: any[];
+        };
+        docker?: {
+          tag?: any[];
+        };
+      };
     };
     /** Projects are a way to organize columns and cards of work. */
     project: {
@@ -9738,6 +9954,18 @@ export interface components {
     migration_id: number;
     /** repo_name parameter */
     repo_name: string;
+    /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. For Docker images that use the package namespace `https://ghcr.io/owner/package-name`, use `container`. */
+    package_type:
+      | "npm"
+      | "maven"
+      | "rubygems"
+      | "docker"
+      | "nuget"
+      | "container";
+    /** The name of the package. */
+    package_name: string;
+    /** Unique identifier of the package version. */
+    package_version_id: number;
     /** team_slug parameter */
     team_slug: string;
     "discussion-number": number;
@@ -14808,6 +15036,198 @@ export interface operations {
           };
         };
       };
+    };
+  };
+  /**
+   * Gets a specific package in an organization.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   */
+  "packages/get-package-for-organization": {
+    parameters: {
+      path: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. For Docker images that use the package namespace `https://ghcr.io/owner/package-name`, use `container`. */
+        package_type: components["parameters"]["package_type"];
+        /** The name of the package. */
+        package_name: components["parameters"]["package_name"];
+        org: components["parameters"]["org"];
+      };
+    };
+    responses: {
+      /** response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["package"];
+        };
+      };
+    };
+  };
+  /**
+   * Deletes an entire package in an organization. You cannot delete a public package if any version of the package has more than 25 downloads. In this scenario, contact GitHub support for further assistance.
+   *
+   * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` scope. In addition:
+   * - If `package_type` is not `container`, your token must also include the `repo` scope.
+   * - If `package_type` is `container`, you must also have admin permissions to the container you want to delete.
+   */
+  "packages/delete-package-for-org": {
+    parameters: {
+      path: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. For Docker images that use the package namespace `https://ghcr.io/owner/package-name`, use `container`. */
+        package_type: components["parameters"]["package_type"];
+        /** The name of the package. */
+        package_name: components["parameters"]["package_name"];
+        org: components["parameters"]["org"];
+      };
+    };
+    responses: {
+      /** Empty response */
+      204: never;
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+    };
+  };
+  /**
+   * Restores an entire package in an organization.
+   *
+   * You can restore a deleted package under the following conditions:
+   *   - The package was deleted within the last 30 days.
+   *   - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+   *
+   * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` and `packages:write` scope. In addition:
+   * - If `package_type` is not `container`, your token must also include the `repo` scope.
+   * - If `package_type` is `container`, you must also have admin permissions to the container that you want to restore.
+   */
+  "packages/restore-package-for-org": {
+    parameters: {
+      path: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. For Docker images that use the package namespace `https://ghcr.io/owner/package-name`, use `container`. */
+        package_type: components["parameters"]["package_type"];
+        /** The name of the package. */
+        package_name: components["parameters"]["package_name"];
+        org: components["parameters"]["org"];
+      };
+    };
+    responses: {
+      /** Empty response */
+      204: never;
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+    };
+  };
+  /**
+   * Returns all package versions for a package owned by an organization.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   */
+  "packages/get-all-package-versions-for-a-package-owned-by-an-org": {
+    parameters: {
+      path: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. For Docker images that use the package namespace `https://ghcr.io/owner/package-name`, use `container`. */
+        package_type: components["parameters"]["package_type"];
+        /** The name of the package. */
+        package_name: components["parameters"]["package_name"];
+        org: components["parameters"]["org"];
+      };
+    };
+    responses: {
+      /** response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["package-version"][];
+        };
+      };
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+    };
+  };
+  /**
+   * Gets a specific package version in an organization.
+   *
+   * You must authenticate using an access token with the `packages:read` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   */
+  "packages/get-package-version-for-organization": {
+    parameters: {
+      path: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. For Docker images that use the package namespace `https://ghcr.io/owner/package-name`, use `container`. */
+        package_type: components["parameters"]["package_type"];
+        /** The name of the package. */
+        package_name: components["parameters"]["package_name"];
+        org: components["parameters"]["org"];
+        /** Unique identifier of the package version. */
+        package_version_id: components["parameters"]["package_version_id"];
+      };
+    };
+    responses: {
+      /** response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["package-version"];
+        };
+      };
+    };
+  };
+  /**
+   * Deletes a specific package version in an organization. If the package is public and the package version has more than 25 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.
+   *
+   * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` scope. In addition:
+   * - If `package_type` is not `container`, your token must also include the `repo` scope.
+   * - If `package_type` is `container`, you must also have admin permissions to the container you want to delete.
+   */
+  "packages/delete-package-version-for-org": {
+    parameters: {
+      path: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. For Docker images that use the package namespace `https://ghcr.io/owner/package-name`, use `container`. */
+        package_type: components["parameters"]["package_type"];
+        /** The name of the package. */
+        package_name: components["parameters"]["package_name"];
+        org: components["parameters"]["org"];
+        /** Unique identifier of the package version. */
+        package_version_id: components["parameters"]["package_version_id"];
+      };
+    };
+    responses: {
+      /** Empty response */
+      204: never;
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+    };
+  };
+  /**
+   * Restores a specific package version in an organization.
+   *
+   * You can restore a deleted package under the following conditions:
+   *   - The package was deleted within the last 30 days.
+   *   - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+   *
+   * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` and `packages:write` scope. In addition:
+   * - If `package_type` is not `container`, your token must also include the `repo` scope.
+   * - If `package_type` is `container`, you must also have admin permissions to the container that you want to restore.
+   */
+  "packages/restore-package-version-for-org": {
+    parameters: {
+      path: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. For Docker images that use the package namespace `https://ghcr.io/owner/package-name`, use `container`. */
+        package_type: components["parameters"]["package_type"];
+        /** The name of the package. */
+        package_name: components["parameters"]["package_name"];
+        org: components["parameters"]["org"];
+        /** Unique identifier of the package version. */
+        package_version_id: components["parameters"]["package_version_id"];
+      };
+    };
+    responses: {
+      /** Empty response */
+      204: never;
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
     };
   };
   /** Lists the projects in an organization. Returns a `404 Not Found` status if projects are disabled in the organization. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
@@ -29033,6 +29453,185 @@ export interface operations {
       403: components["responses"]["forbidden"];
     };
   };
+  /**
+   * Gets a specific package for a package owned by the authenticated user.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   */
+  "packages/get-package-for-authenticated-user": {
+    parameters: {
+      path: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. For Docker images that use the package namespace `https://ghcr.io/owner/package-name`, use `container`. */
+        package_type: components["parameters"]["package_type"];
+        /** The name of the package. */
+        package_name: components["parameters"]["package_name"];
+      };
+    };
+    responses: {
+      /** response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["package"];
+        };
+      };
+    };
+  };
+  /**
+   * Deletes a package owned by the authenticated user. You cannot delete a public package if any version of the package has more than 25 downloads. In this scenario, contact GitHub support for further assistance.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:delete` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   */
+  "packages/delete-package-for-authenticated-user": {
+    parameters: {
+      path: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. For Docker images that use the package namespace `https://ghcr.io/owner/package-name`, use `container`. */
+        package_type: components["parameters"]["package_type"];
+        /** The name of the package. */
+        package_name: components["parameters"]["package_name"];
+      };
+    };
+    responses: {
+      /** Empty response */
+      204: never;
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+    };
+  };
+  /**
+   * Restores a package owned by the authenticated user.
+   *
+   * You can restore a deleted package under the following conditions:
+   *   - The package was deleted within the last 30 days.
+   *   - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:write` scope. If `package_type` is not `container`, your token must also include the `repo` scope.
+   */
+  "packages/restore-package-for-authenticated-user": {
+    parameters: {
+      path: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. For Docker images that use the package namespace `https://ghcr.io/owner/package-name`, use `container`. */
+        package_type: components["parameters"]["package_type"];
+        /** The name of the package. */
+        package_name: components["parameters"]["package_name"];
+      };
+    };
+    responses: {
+      /** Empty response */
+      204: never;
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+    };
+  };
+  /**
+   * Returns all package versions for a package owned by the authenticated user.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   */
+  "packages/get-all-package-versions-for-a-package-owned-by-the-authenticated-user": {
+    parameters: {
+      path: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. For Docker images that use the package namespace `https://ghcr.io/owner/package-name`, use `container`. */
+        package_type: components["parameters"]["package_type"];
+        /** The name of the package. */
+        package_name: components["parameters"]["package_name"];
+      };
+    };
+    responses: {
+      /** response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["package-version"][];
+        };
+      };
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+    };
+  };
+  /**
+   * Gets a specific package version for a package owned by the authenticated user.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   */
+  "packages/get-package-version-for-authenticated-user": {
+    parameters: {
+      path: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. For Docker images that use the package namespace `https://ghcr.io/owner/package-name`, use `container`. */
+        package_type: components["parameters"]["package_type"];
+        /** The name of the package. */
+        package_name: components["parameters"]["package_name"];
+        /** Unique identifier of the package version. */
+        package_version_id: components["parameters"]["package_version_id"];
+      };
+    };
+    responses: {
+      /** response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["package-version"];
+        };
+      };
+    };
+  };
+  /**
+   * Deletes a specific package version for a package owned by the authenticated user.  If the package is public and the package version has more than 25 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.
+   *
+   * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   */
+  "packages/delete-package-version-for-authenticated-user": {
+    parameters: {
+      path: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. For Docker images that use the package namespace `https://ghcr.io/owner/package-name`, use `container`. */
+        package_type: components["parameters"]["package_type"];
+        /** The name of the package. */
+        package_name: components["parameters"]["package_name"];
+        /** Unique identifier of the package version. */
+        package_version_id: components["parameters"]["package_version_id"];
+      };
+    };
+    responses: {
+      /** Empty response */
+      204: never;
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+    };
+  };
+  /**
+   * Restores a package version owned by the authenticated user.
+   *
+   * You can restore a deleted package version under the following conditions:
+   *   - The package was deleted within the last 30 days.
+   *   - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:write` scope. If `package_type` is not `container`, your token must also include the `repo` scope.
+   */
+  "packages/restore-package-version-for-authenticated-user": {
+    parameters: {
+      path: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. For Docker images that use the package namespace `https://ghcr.io/owner/package-name`, use `container`. */
+        package_type: components["parameters"]["package_type"];
+        /** The name of the package. */
+        package_name: components["parameters"]["package_name"];
+        /** Unique identifier of the package version. */
+        package_version_id: components["parameters"]["package_version_id"];
+      };
+    };
+    responses: {
+      /** Empty response */
+      204: never;
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+    };
+  };
   "projects/create-for-authenticated-user": {
     parameters: {};
     responses: {
@@ -29719,6 +30318,86 @@ export interface operations {
         headers: {};
         content: {
           "application/json": components["schemas"]["organization-simple"][];
+        };
+      };
+    };
+  };
+  /**
+   * Gets a specific package metadata for a public package owned by a user.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   */
+  "packages/get-package-for-user": {
+    parameters: {
+      path: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. For Docker images that use the package namespace `https://ghcr.io/owner/package-name`, use `container`. */
+        package_type: components["parameters"]["package_type"];
+        /** The name of the package. */
+        package_name: components["parameters"]["package_name"];
+        username: components["parameters"]["username"];
+      };
+    };
+    responses: {
+      /** response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["package"];
+        };
+      };
+    };
+  };
+  /**
+   * Returns all package versions for a public package owned by a specified user.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   */
+  "packages/get-all-package-versions-for-package-owned-by-user": {
+    parameters: {
+      path: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. For Docker images that use the package namespace `https://ghcr.io/owner/package-name`, use `container`. */
+        package_type: components["parameters"]["package_type"];
+        /** The name of the package. */
+        package_name: components["parameters"]["package_name"];
+        username: components["parameters"]["username"];
+      };
+    };
+    responses: {
+      /** response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["package-version"][];
+        };
+      };
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+    };
+  };
+  /**
+   * Gets a specific package version for a public package owned by a specified user.
+   *
+   * At this time, to use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   */
+  "packages/get-package-version-for-user": {
+    parameters: {
+      path: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. For Docker images that use the package namespace `https://ghcr.io/owner/package-name`, use `container`. */
+        package_type: components["parameters"]["package_type"];
+        /** The name of the package. */
+        package_name: components["parameters"]["package_name"];
+        /** Unique identifier of the package version. */
+        package_version_id: components["parameters"]["package_version_id"];
+        username: components["parameters"]["username"];
+      };
+    };
+    responses: {
+      /** response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["package-version"];
         };
       };
     };
