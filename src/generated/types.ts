@@ -3056,21 +3056,15 @@ export interface paths {
     /** Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. */
     get: operations["repos/get-environment"];
     /**
-     * Set protection rules, such as required reviewers, for an environment. For more information about environment protection rules, see "[Environments](/actions/reference/environments#environment-protection-rules)."
+     * Create or update an environment with protection rules, such as required reviewers. For more information about environment protection rules, see "[Environments](/actions/reference/environments#environment-protection-rules)."
      *
      * **Note:** Although you can use this operation to specify that only branches that match specified name patterns can deploy to this environment, you must use the UI to set the name patterns. For more information, see "[Environments](/actions/reference/environments#deployment-branches)."
      *
-     * You must authenticate using an access token with the repo scope to use this endpoint.
-     */
-    put: operations["repos/set-environment-protection-rules"];
-    /**
-     * Create an environment for a repository. If an environment with the specified name already exists, the existing environment will be returned.
-     *
-     * The created environment will not have any protection rules configured. To configure protection rules for the created environment, see "[Set protection rules for an environment](#set-protection-rules-for-an-environment)".
+     * **Note:** To create or update secrets for an environment, see "[Secrets](/rest/reference/actions#secrets)."
      *
      * You must authenticate using an access token with the repo scope to use this endpoint.
      */
-    post: operations["repos/create-an-environment"];
+    put: operations["repos/create-or-update-environment"];
     /** You must authenticate using an access token with the repo scope to use this endpoint. */
     delete: operations["repos/delete-an-environment"];
   };
@@ -10814,9 +10808,9 @@ export interface operations {
           target?: string;
           /** The ID of the user or organization to scope the user-to-server access token to. **Required** unless `target` is specified. */
           target_id?: number;
-          /** The list of repository IDs to scope the user-to-server access token to. `repositories` may not be specified if `repository_ids` is specified. */
+          /** The list of repository names to scope the user-to-server access token to. `repositories` may not be specified if `repository_ids` is specified. */
           repositories?: string[];
-          /** The list of repository names to scope the user-to-server access token to. `repository_ids` may not be specified if `repositories` is specified. */
+          /** The list of repository IDs to scope the user-to-server access token to. `repository_ids` may not be specified if `repositories` is specified. */
           repository_ids?: number[];
           permissions?: components["schemas"]["app-permissions"];
         };
@@ -21919,13 +21913,15 @@ export interface operations {
     };
   };
   /**
-   * Set protection rules, such as required reviewers, for an environment. For more information about environment protection rules, see "[Environments](/actions/reference/environments#environment-protection-rules)."
+   * Create or update an environment with protection rules, such as required reviewers. For more information about environment protection rules, see "[Environments](/actions/reference/environments#environment-protection-rules)."
    *
    * **Note:** Although you can use this operation to specify that only branches that match specified name patterns can deploy to this environment, you must use the UI to set the name patterns. For more information, see "[Environments](/actions/reference/environments#deployment-branches)."
    *
+   * **Note:** To create or update secrets for an environment, see "[Secrets](/rest/reference/actions#secrets)."
+   *
    * You must authenticate using an access token with the repo scope to use this endpoint.
    */
-  "repos/set-environment-protection-rules": {
+  "repos/create-or-update-environment": {
     parameters: {
       path: {
         owner: components["parameters"]["owner"];
@@ -21941,7 +21937,7 @@ export interface operations {
           "application/json": components["schemas"]["environment"];
         };
       };
-      /** Response when `protected_branches` and `custom_branch_policies` in `deployment_branch_policy` are set to the same value */
+      /** Validation error when the environment name is invalid or when `protected_branches` and `custom_branch_policies` in `deployment_branch_policy` are set to the same value */
       422: {
         content: {
           "application/json": components["schemas"]["basic-error"];
@@ -21952,38 +21948,13 @@ export interface operations {
       content: {
         "application/json": {
           wait_timer?: components["schemas"]["wait-timer"];
-          /** The people or teams that may jobs that reference the environment. You can list up to six users or teams as reviewers. The reviewers must have at least read access to the repository. Only one of the required reviewers needs to approve the job for it to proceed. */
+          /** The people or teams that may review jobs that reference the environment. You can list up to six users or teams as reviewers. The reviewers must have at least read access to the repository. Only one of the required reviewers needs to approve the job for it to proceed. */
           reviewers?: {
             type?: components["schemas"]["deployment-reviewer-type"];
             /** The id of the user or team who can review the deployment */
             id?: number;
           }[];
           deployment_branch_policy?: components["schemas"]["deployment_branch_policy"];
-        };
-      };
-    };
-  };
-  /**
-   * Create an environment for a repository. If an environment with the specified name already exists, the existing environment will be returned.
-   *
-   * The created environment will not have any protection rules configured. To configure protection rules for the created environment, see "[Set protection rules for an environment](#set-protection-rules-for-an-environment)".
-   *
-   * You must authenticate using an access token with the repo scope to use this endpoint.
-   */
-  "repos/create-an-environment": {
-    parameters: {
-      path: {
-        owner: components["parameters"]["owner"];
-        repo: components["parameters"]["repo"];
-        /** The name of the environment */
-        environment_name: components["parameters"]["environment_name"];
-      };
-    };
-    responses: {
-      /** response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["environment"];
         };
       };
     };
