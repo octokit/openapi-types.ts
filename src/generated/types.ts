@@ -10748,7 +10748,7 @@ export interface operations {
       content: {
         "application/json": {
           /** The OAuth access token used to authenticate to the GitHub API. */
-          access_token?: string;
+          access_token: string;
         };
       };
     };
@@ -10803,7 +10803,7 @@ export interface operations {
       content: {
         "application/json": {
           /** **Required.** The OAuth access token used to authenticate to the GitHub API. */
-          access_token?: string;
+          access_token: string;
           /** The name of the user or organization to scope the user-to-server access token to. **Required** unless `target_id` is specified. */
           target?: string;
           /** The ID of the user or organization to scope the user-to-server access token to. **Required** unless `target` is specified. */
@@ -22109,13 +22109,15 @@ export interface operations {
         "application/json": {
           wait_timer?: components["schemas"]["wait-timer"];
           /** The people or teams that may review jobs that reference the environment. You can list up to six users or teams as reviewers. The reviewers must have at least read access to the repository. Only one of the required reviewers needs to approve the job for it to proceed. */
-          reviewers?: {
-            type?: components["schemas"]["deployment-reviewer-type"];
-            /** The id of the user or team who can review the deployment */
-            id?: number;
-          }[];
+          reviewers?:
+            | {
+                type?: components["schemas"]["deployment-reviewer-type"];
+                /** The id of the user or team who can review the deployment */
+                id?: number;
+              }[]
+            | null;
           deployment_branch_policy?: components["schemas"]["deployment_branch_policy"];
-        };
+        } | null;
       };
     };
   };
@@ -27331,7 +27333,11 @@ export interface operations {
           /** The SCIM schema URIs. */
           schemas: string[];
           /** Array of [SCIM operations](https://tools.ietf.org/html/rfc7644#section-3.5.2). */
-          Operations: { [key: string]: any }[];
+          Operations: {
+            op: "add" | "Add" | "remove" | "Remove" | "replace" | "Replace";
+            path?: string;
+            value?: string | { [key: string]: any } | any[];
+          }[];
         };
       };
     };
