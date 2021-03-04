@@ -19867,16 +19867,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": (Partial<
-          {
-            status?: "completed";
-          } & { [key: string]: any }
-        > &
-          Partial<
-            {
+        "application/json": (
+          | ({
+              status: "completed";
+            } & { [key: string]: any })
+          | ({
               status?: "queued" | "in_progress";
-            } & { [key: string]: any }
-          >) & {
+            } & { [key: string]: any })
+        ) & {
           /** The name of the check. For example, "code-coverage". */
           name: string;
           /** The SHA of the commit. */
