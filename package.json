@@ -53,7 +53,7 @@
     ]
   },
   "octokit": {
-    "openapi-version": "2.13.1"
+    "openapi-version": "2.13.2"
   },
   "@pika/pack": {
     "pipeline": [

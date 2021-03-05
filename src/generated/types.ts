@@ -1374,7 +1374,7 @@ export interface paths {
      *
      * When using [OAuth](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
      *
-     * *   `public_repo` scope or `repo` scope to create a public repository
+     * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.
      * *   `repo` scope to create a private repository
      */
     post: operations["repos/create-in-org"];
@@ -3971,7 +3971,7 @@ export interface paths {
      *
      * When using [OAuth](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
      *
-     * *   `public_repo` scope or `repo` scope to create a public repository
+     * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.
      * *   `repo` scope to create a private repository
      */
     post: operations["repos/create-using-template"];
@@ -3980,7 +3980,9 @@ export interface paths {
     /**
      * Lists all public repositories in the order that they were created.
      *
-     * Note: Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of repositories.
+     * Notes:
+     * - For GitHub Enterprise Server and GitHub AE, this endpoint will only list repositories available to all users on the enterprise.
+     * - Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of repositories.
      */
     get: operations["repos/list-public"];
   };
@@ -4922,8 +4924,8 @@ export interface paths {
      *
      * When using [OAuth](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
      *
-     * *   `public_repo` scope or `repo` scope to create a public repository
-     * *   `repo` scope to create a private repository
+     * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.
+     * *   `repo` scope to create a private repository.
      */
     post: operations["repos/create-for-authenticated-user"];
   };
@@ -5078,7 +5080,7 @@ export interface paths {
     get: operations["activity/list-received-public-events-for-user"];
   };
   "/users/{username}/repos": {
-    /** Lists public repositories for the specified user. */
+    /** Lists public repositories for the specified user. Note: For GitHub AE, this endpoint will list internal repositories for the specified user. */
     get: operations["repos/list-for-user"];
   };
   "/users/{username}/settings/billing/actions": {
@@ -15625,7 +15627,7 @@ export interface operations {
         org: components["parameters"]["org"];
       };
       query: {
-        /** Specifies the types of repositories you want returned. Can be one of `all`, `public`, `private`, `forks`, `sources`, `member`, `internal`. Default: `all`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `type` can also be `internal`. */
+        /** Specifies the types of repositories you want returned. Can be one of `all`, `public`, `private`, `forks`, `sources`, `member`, `internal`. Note: For GitHub AE, can be one of `all`, `private`, `forks`, `sources`, `member`, `internal`. Default: `all`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `type` can also be `internal`. */
         type?:
           | "all"
           | "public"
@@ -15661,7 +15663,7 @@ export interface operations {
    *
    * When using [OAuth](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
    *
-   * *   `public_repo` scope or `repo` scope to create a public repository
+   * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.
    * *   `repo` scope to create a private repository
    */
   "repos/create-in-org": {
@@ -15692,10 +15694,10 @@ export interface operations {
           description?: string;
           /** A URL with more information about the repository. */
           homepage?: string;
-          /** Either `true` to create a private repository or `false` to create a public one. */
+          /** Whether the repository is private. */
           private?: boolean;
           /**
-           * Can be `public` or `private`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `visibility` can also be `internal`. For more information, see "[Creating an internal repository](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-repository-visibility#about-internal-repositories)" in the GitHub Help documentation.
+           * Can be `public` or `private`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `visibility` can also be `internal`. Note: For GitHub Enterprise Server and GitHub AE, this endpoint will only list repositories available to all users on the enterprise. For more information, see "[Creating an internal repository](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-repository-visibility#about-internal-repositories)" in the GitHub Help documentation.
            * The `visibility` parameter overrides the `private` parameter when you use both parameters with the `nebula-preview` preview header.
            */
           visibility?: "public" | "private" | "visibility" | "internal";
@@ -26924,7 +26926,7 @@ export interface operations {
    *
    * When using [OAuth](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
    *
-   * *   `public_repo` scope or `repo` scope to create a public repository
+   * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.
    * *   `repo` scope to create a private repository
    */
   "repos/create-using-template": {
@@ -26965,7 +26967,9 @@ export interface operations {
   /**
    * Lists all public repositories in the order that they were created.
    *
-   * Note: Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of repositories.
+   * Notes:
+   * - For GitHub Enterprise Server and GitHub AE, this endpoint will only list repositories available to all users on the enterprise.
+   * - Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of repositories.
    */
   "repos/list-public": {
     parameters: {
@@ -30491,7 +30495,7 @@ export interface operations {
   "repos/list-for-authenticated-user": {
     parameters: {
       query: {
-        /** Can be one of `all`, `public`, or `private`. */
+        /** Can be one of `all`, `public`, or `private`. Note: For GitHub AE, can be one of `all`, `internal`, or `private`. */
         visibility?: "all" | "public" | "private";
         /**
          * Comma-separated list of values. Can include:
@@ -30501,7 +30505,7 @@ export interface operations {
          */
         affiliation?: string;
         /**
-         * Can be one of `all`, `owner`, `public`, `private`, `member`. Default: `all`
+         * Can be one of `all`, `owner`, `public`, `private`, `member`. Note: For GitHub AE, can be one of `all`, `owner`, `internal`, `private`, `member`. Default: `all`
          *
          * Will cause a `422` error if used in the same request as **visibility** or **affiliation**. Will cause a `422` error if used in the same request as **visibility** or **affiliation**.
          */
@@ -30540,8 +30544,8 @@ export interface operations {
    *
    * When using [OAuth](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
    *
-   * *   `public_repo` scope or `repo` scope to create a public repository
-   * *   `repo` scope to create a private repository
+   * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.
+   * *   `repo` scope to create a private repository.
    */
   "repos/create-for-authenticated-user": {
     parameters: {};
@@ -30571,7 +30575,7 @@ export interface operations {
           description?: string;
           /** A URL with more information about the repository. */
           homepage?: string;
-          /** Whether the repository is private or public. */
+          /** Whether the repository is private. */
           private?: boolean;
           /** Whether issues are enabled. */
           has_issues?: boolean;
@@ -31272,7 +31276,7 @@ export interface operations {
       };
     };
   };
-  /** Lists public repositories for the specified user. */
+  /** Lists public repositories for the specified user. Note: For GitHub AE, this endpoint will list internal repositories for the specified user. */
   "repos/list-for-user": {
     parameters: {
       path: {
