@@ -1209,7 +1209,7 @@ export interface paths {
     delete: operations["orgs/remove-member"];
   };
   "/orgs/{org}/memberships/{username}": {
-    /** In order to get a user's membership with an organization, the authenticated user must be an organization member. */
+    /** In order to get a user's membership with an organization, the authenticated user must be an organization member. The `state` parameter in the response can be used to identify the user's membership status. */
     get: operations["orgs/get-membership-for-user"];
     /**
      * Only authenticated organization owners can add a member to the organization or update the member's role.
@@ -1311,7 +1311,7 @@ export interface paths {
      * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
      * If `package_type` is not `container`, your token must also include the `repo` scope.
      */
-    get: operations["packages/get-all-package-versions-for-a-package-owned-by-an-org"];
+    get: operations["packages/get-all-package-versions-for-package-owned-by-org"];
   };
   "/orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}": {
     /**
@@ -1383,7 +1383,7 @@ export interface paths {
     /**
      * Gets the summary of the free and paid GitHub Actions minutes used.
      *
-     * Paid minutes only apply to workflows in private repositories that use GitHub-hosted runners. Minutes used is listed for each GitHub-hosted runner operating system. Any job re-runs are also included in the usage. The usage does not include the multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
+     * Paid minutes only apply to workflows in private repositories that use GitHub-hosted runners. Minutes used is listed for each GitHub-hosted runner operating system. Any job re-runs are also included in the usage. The usage returned includes any minute multipliers for macOS and Windows runners, and is rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
      *
      * Access tokens must have the `repo` or `admin:org` scope.
      */
@@ -1591,7 +1591,10 @@ export interface paths {
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/memberships/{username}`.
      *
-     * **Note:** The `role` for organization owners returns as `maintainer`. For more information about `maintainer` roles, see [Create a team](https://docs.github.com/rest/reference/teams#create-a-team).
+     * **Note:**
+     * The response contains the `state` of the membership and the member's `role`.
+     *
+     * The `role` for organization owners is set to `maintainer`. For more information about `maintainer` roles, see see [Create a team](https://docs.github.com/rest/reference/teams#create-a-team).
      */
     get: operations["teams/get-membership-for-user-in-org"];
     /**
@@ -2860,10 +2863,9 @@ export interface paths {
      *
      * **Working with large comparisons**
      *
-     * The response will include a comparison of up to 250 commits. If you are working with a larger commit range, you can use the [List commits](https://docs.github.com/rest/reference/repos#list-commits) to enumerate all commits in the range.
+     * To process a response with a large number of commits, you can use (`per_page` or `page`) to paginate the results. When using paging, the list of changed files is only returned with page 1, but includes all changed files for the entire comparison. For more information on working with pagination, see "[Traversing with pagination](/rest/guides/traversing-with-pagination)."
      *
-     * For comparisons with extremely large diffs, you may receive an error response indicating that the diff took too long
-     * to generate. You can typically resolve this error by using a smaller commit range.
+     * When calling this API without any paging parameters (`per_page` or `page`), the returned list is limited to 250 commits and the last commit in the list is the most recent of the entire comparison. When a paging parameter is specified, the first commit in the returned list of each page is the earliest.
      *
      * **Signature verification object**
      *
@@ -3758,6 +3760,14 @@ export interface paths {
      */
     get: operations["repos/get-readme"];
   };
+  "/repos/{owner}/{repo}/readme/{dir}": {
+    /**
+     * Gets the README from a repository directory.
+     *
+     * READMEs support [custom media types](https://docs.github.com/rest/reference/repos#custom-media-types) for retrieving the raw content or rendered HTML.
+     */
+    get: operations["repos/get-readme-in-directory"];
+  };
   "/repos/{owner}/{repo}/releases": {
     /**
      * This returns a list of releases, which does not include regular Git tags that have not been associated with a release. To get a list of Git tags, use the [Repository Tags API](https://docs.github.com/rest/reference/repos#list-repository-tags).
@@ -4525,7 +4535,10 @@ export interface paths {
      *
      * To get a user's membership with a team, the team must be visible to the authenticated user.
      *
-     * **Note:** The `role` for organization owners returns as `maintainer`. For more information about `maintainer` roles, see [Create a team](https://docs.github.com/rest/reference/teams#create-a-team).
+     * **Note:**
+     * The response contains the `state` of the membership and the member's `role`.
+     *
+     * The `role` for organization owners is set to `maintainer`. For more information about `maintainer` roles, see [Create a team](https://docs.github.com/rest/reference/teams#create-a-team).
      */
     get: operations["teams/get-membership-for-user-legacy"];
     /**
@@ -4732,7 +4745,7 @@ export interface paths {
     delete: operations["apps/remove-repo-from-installation"];
   };
   "/user/interaction-limits": {
-    /** Shows which type of GitHub user can interact with your public repositories and when the restriction expires. If there are no restrictions, you will see an empty response. */
+    /** Shows which type of GitHub user can interact with your public repositories and when the restriction expires. */
     get: operations["interactions/get-restrictions-for-authenticated-user"];
     /** Temporarily restricts which type of GitHub user can interact with your public repositories. Setting the interaction limit at the user level will overwrite any interaction limits that are set for individual repositories owned by the user. */
     put: operations["interactions/set-restrictions-for-authenticated-user"];
@@ -4877,7 +4890,7 @@ export interface paths {
      * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
      * If `package_type` is not `container`, your token must also include the `repo` scope.
      */
-    get: operations["packages/get-all-package-versions-for-a-package-owned-by-the-authenticated-user"];
+    get: operations["packages/get-all-package-versions-for-package-owned-by-authenticated-user"];
   };
   "/user/packages/{package_type}/{package_name}/versions/{package_version_id}": {
     /**
@@ -5091,7 +5104,7 @@ export interface paths {
     /**
      * Gets the summary of the free and paid GitHub Actions minutes used.
      *
-     * Paid minutes only apply to workflows in private repositories that use GitHub-hosted runners. Minutes used is listed for each GitHub-hosted runner operating system. Any job re-runs are also included in the usage. The usage does not include the multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
+     * Paid minutes only apply to workflows in private repositories that use GitHub-hosted runners. Minutes used is listed for each GitHub-hosted runner operating system. Any job re-runs are also included in the usage. The usage returned includes any minute multipliers for macOS and Windows runners, and is rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
      *
      * Access tokens must have the `user` scope.
      */
@@ -6556,8 +6569,10 @@ export interface components {
     /** Org Membership */
     "org-membership": {
       url: string;
-      state: string;
-      role: string;
+      /** The state of the member in the organization. The `pending` state indicates the user has not yet accepted an invitation. */
+      state: "active" | "pending";
+      /** The user's membership type in the organization. */
+      role: "admin" | "member";
       organization_url: string;
       organization: components["schemas"]["organization-simple"];
       user: components["schemas"]["simple-user"] | null;
@@ -6768,7 +6783,8 @@ export interface components {
       url: string;
       /** The role of the user in the team. */
       role: "member" | "maintainer";
-      state: string;
+      /** The state of the user's membership in the team. */
+      state: "active" | "pending";
     };
     /** A team's access to a project. */
     "team-project": {
@@ -7716,7 +7732,7 @@ export interface components {
      */
     "code-scanning-ref": string;
     /** State of a code scanning alert. */
-    "code-scanning-alert-state": "open" | "dismissed" | "fixed";
+    "code-scanning-alert-state": "open" | "closed" | "dismissed" | "fixed";
     /** The security alert number. */
     "alert-number": number;
     /** The time that the alert was created in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
@@ -9987,19 +10003,19 @@ export interface components {
     };
   };
   responses: {
-    /** Resource Not Found */
+    /** Resource not found */
     not_found: {
       content: {
         "application/json": components["schemas"]["basic-error"];
       };
     };
-    /** Validation Failed */
+    /** Validation failed */
     validation_failed_simple: {
       content: {
         "application/json": components["schemas"]["validation-error-simple"];
       };
     };
-    /** Preview Header Missing */
+    /** Preview header missing */
     preview_header_missing: {
       content: {
         "application/json": {
@@ -10014,19 +10030,19 @@ export interface components {
         "application/json": components["schemas"]["basic-error"];
       };
     };
-    /** Requires Authentication */
+    /** Requires authentication */
     requires_authentication: {
       content: {
         "application/json": components["schemas"]["basic-error"];
       };
     };
-    /** Validation Failed */
+    /** Validation failed */
     validation_failed: {
       content: {
         "application/json": components["schemas"]["validation-error"];
       };
     };
-    /** Not Modified */
+    /** Not modified */
     not_modified: unknown;
     /** Gone */
     gone: {
@@ -10034,7 +10050,7 @@ export interface components {
         "application/json": components["schemas"]["basic-error"];
       };
     };
-    /** Service Unavailable */
+    /** Service unavailable */
     service_unavailable: {
       content: {
         "application/json": {
@@ -10058,7 +10074,7 @@ export interface components {
         };
       };
     };
-    /** Moved Permanently */
+    /** Moved permanently */
     moved_permanently: unknown;
     /** Conflict */
     conflict: {
@@ -10066,7 +10082,7 @@ export interface components {
         "application/json": components["schemas"]["basic-error"];
       };
     };
-    /** Response if github advanced security is not enabled for this repository */
+    /** Response if GitHub Advanced Security is not enabled for this repository */
     code_scanning_forbidden_read: {
       content: {
         "application/json": components["schemas"]["basic-error"];
@@ -10093,7 +10109,7 @@ export interface components {
     };
     /** Found */
     found: unknown;
-    /** Resource Not Found */
+    /** Resource not found */
     scim_not_found: {
       content: {
         "application/json": components["schemas"]["scim-error"];
@@ -10305,7 +10321,7 @@ export interface components {
     /** release_id parameter */
     release_id: number;
     /** Must be one of: `day`, `week`. */
-    per: "day" | "week";
+    per: "" | "day" | "week";
     /** A repository ID. Only return repositories with an ID greater than this ID. */
     "since-repo": number;
     /** Used for pagination: the index of the first result to return. */
@@ -10337,7 +10353,7 @@ export interface operations {
   /** Get Hypermedia links to resources accessible in GitHub's REST API */
   "meta/root": {
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": {
@@ -10387,7 +10403,7 @@ export interface operations {
   "apps/get-authenticated": {
     parameters: {};
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["integration"];
@@ -10403,7 +10419,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["integration"] &
@@ -10426,7 +10442,7 @@ export interface operations {
    */
   "apps/get-webhook-config-for-app": {
     responses: {
-      /** Default response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["webhook-config"];
@@ -10441,7 +10457,7 @@ export interface operations {
    */
   "apps/update-webhook-config-for-app": {
     responses: {
-      /** Default response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["webhook-config"];
@@ -10499,7 +10515,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["installation"];
@@ -10522,7 +10538,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       404: components["responses"]["not_found"];
     };
@@ -10540,7 +10556,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["installation-token"];
@@ -10577,7 +10593,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       404: components["responses"]["not_found"];
     };
@@ -10595,7 +10611,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       404: components["responses"]["not_found"];
     };
@@ -10612,10 +10628,12 @@ export interface operations {
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
+        /** The client ID of your GitHub app. */
+        client_id?: string;
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -10637,7 +10655,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["application-grant"];
@@ -10661,7 +10679,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
@@ -10680,7 +10698,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       422: components["responses"]["validation_failed"];
     };
@@ -10709,7 +10727,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -10722,7 +10740,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["authorization"];
@@ -10749,7 +10767,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       422: components["responses"]["validation_failed"];
     };
@@ -10771,7 +10789,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["authorization"];
@@ -10797,7 +10815,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["authorization"];
@@ -10840,7 +10858,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["authorization"] | null;
@@ -10863,7 +10881,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["authorization"];
@@ -10885,7 +10903,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -10901,7 +10919,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["integration"];
@@ -10920,10 +10938,12 @@ export interface operations {
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
+        /** The client ID of your GitHub app. */
+        client_id?: string;
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -10952,7 +10972,7 @@ export interface operations {
   "oauth-authorizations/create-authorization": {
     parameters: {};
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -11107,7 +11127,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["authorization"];
@@ -11127,7 +11147,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
@@ -11149,7 +11169,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["authorization"];
@@ -11179,7 +11199,7 @@ export interface operations {
   "codes-of-conduct/get-all-codes-of-conduct": {
     parameters: {};
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["code-of-conduct"][];
@@ -11196,7 +11216,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["code-of-conduct"];
@@ -11221,7 +11241,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["content-reference-attachment"];
@@ -11249,7 +11269,7 @@ export interface operations {
   "emojis/get": {
     parameters: {};
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": { [key: string]: string };
@@ -11271,7 +11291,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["actions-enterprise-permissions"];
@@ -11292,7 +11312,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
     requestBody: {
@@ -11323,7 +11343,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": {
@@ -11347,7 +11367,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
     requestBody: {
@@ -11374,7 +11394,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -11393,7 +11413,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -11410,7 +11430,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["selected-actions"];
@@ -11431,7 +11451,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
     requestBody: {
@@ -11459,7 +11479,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": {
@@ -11483,7 +11503,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["runner-groups-enterprise"];
@@ -11520,7 +11540,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["runner-groups-enterprise"];
@@ -11543,7 +11563,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -11562,7 +11582,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["runner-groups-enterprise"];
@@ -11601,7 +11621,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": {
@@ -11627,7 +11647,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
     requestBody: {
@@ -11656,7 +11676,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -11677,7 +11697,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -11702,7 +11722,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -11729,7 +11749,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
     requestBody: {
@@ -11759,7 +11779,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -11780,7 +11800,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -11803,7 +11823,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -11828,7 +11848,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["runner-application"][];
@@ -11857,7 +11877,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["authentication-token"];
@@ -11887,7 +11907,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["authentication-token"];
@@ -11910,7 +11930,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["runner"];
@@ -11933,7 +11953,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -11971,6 +11991,8 @@ export interface operations {
          * The default is `desc`.
          */
         order?: components["parameters"]["audit-log-order"];
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
         /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
       };
@@ -11999,7 +12021,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["actions-billing-usage"];
@@ -12022,7 +12044,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["packages-billing-usage"];
@@ -12045,7 +12067,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["combined-billing-usage"];
@@ -12064,7 +12086,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["event"][];
@@ -12091,7 +12113,7 @@ export interface operations {
   "activity/get-feeds": {
     parameters: {};
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["feed"];
@@ -12112,7 +12134,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -12131,7 +12153,7 @@ export interface operations {
   "gists/create": {
     parameters: {};
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -12179,7 +12201,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -12204,7 +12226,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -12224,7 +12246,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["gist-simple"];
@@ -12243,7 +12265,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       403: components["responses"]["forbidden"];
@@ -12259,7 +12281,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["gist-simple"];
@@ -12300,7 +12322,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -12320,7 +12342,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -12352,7 +12374,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["gist-comment"];
@@ -12373,7 +12395,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       403: components["responses"]["forbidden"];
@@ -12390,7 +12412,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["gist-comment"];
@@ -12421,7 +12443,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {
           Link?: string;
@@ -12449,7 +12471,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -12470,7 +12492,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -12514,7 +12536,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       403: components["responses"]["forbidden"];
@@ -12529,7 +12551,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       403: components["responses"]["forbidden"];
@@ -12545,7 +12567,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["gist-simple"];
@@ -12560,7 +12582,7 @@ export interface operations {
   "gitignore/get-all-templates": {
     parameters: {};
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": string[];
@@ -12580,7 +12602,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["gitignore-template"];
@@ -12604,7 +12626,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -12630,7 +12652,7 @@ export interface operations {
   "apps/revoke-installation-access-token": {
     parameters: {};
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -12656,7 +12678,13 @@ export interface operations {
          * \* `subscribed`: Issues you're subscribed to updates for
          * \* `all`: All issues the authenticated user can see, regardless of participation or creation
          */
-        filter?: "assigned" | "created" | "mentioned" | "subscribed" | "all";
+        filter?:
+          | "assigned"
+          | "created"
+          | "mentioned"
+          | "subscribed"
+          | "repos"
+          | "all";
         /** Indicates the state of the issues to return. Can be either `open`, `closed`, or `all`. */
         state?: "open" | "closed" | "all";
         /** A list of comma separated label names. Example: `bug,ui,@high` */
@@ -12678,7 +12706,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -12696,10 +12724,12 @@ export interface operations {
         featured?: boolean;
         /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["license-simple"][];
@@ -12715,7 +12745,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["license"];
@@ -12729,7 +12759,7 @@ export interface operations {
   "markdown/render": {
     parameters: {};
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {
           "Content-Length"?: string;
@@ -12757,7 +12787,7 @@ export interface operations {
   "markdown/render-raw": {
     parameters: {};
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -12786,7 +12816,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["marketplace-purchase"];
@@ -12816,7 +12846,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -12850,7 +12880,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -12875,7 +12905,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["marketplace-purchase"];
@@ -12901,7 +12931,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -12934,7 +12964,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -12952,7 +12982,7 @@ export interface operations {
   "meta/get": {
     parameters: {};
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["api-overview"];
@@ -12975,7 +13005,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["event"][];
@@ -13006,7 +13036,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -13023,7 +13053,7 @@ export interface operations {
   "activity/mark-notifications-as-read": {
     parameters: {};
     responses: {
-      /** response */
+      /** Response */
       202: {
         content: {
           "application/json": {
@@ -13031,7 +13061,7 @@ export interface operations {
           };
         };
       };
-      /** response */
+      /** Response */
       205: unknown;
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
@@ -13056,7 +13086,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["thread"];
@@ -13075,7 +13105,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       205: unknown;
       304: components["responses"]["not_modified"];
       403: components["responses"]["forbidden"];
@@ -13094,7 +13124,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["thread-subscription"];
@@ -13120,7 +13150,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["thread-subscription"];
@@ -13148,7 +13178,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
@@ -13164,7 +13194,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/octocat-stream": string;
@@ -13187,7 +13217,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {
           Link?: string;
@@ -13211,7 +13241,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["organization-full"];
@@ -13232,7 +13262,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["organization-full"];
@@ -13240,7 +13270,7 @@ export interface operations {
       };
       409: components["responses"]["conflict"];
       415: components["responses"]["preview_header_missing"];
-      /** Validation Failed */
+      /** Validation failed */
       422: {
         content: {
           "application/json":
@@ -13350,7 +13380,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["actions-organization-permissions"];
@@ -13372,7 +13402,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
     requestBody: {
@@ -13402,7 +13432,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": {
@@ -13425,7 +13455,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
     requestBody: {
@@ -13450,7 +13480,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -13467,7 +13497,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -13483,7 +13513,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["selected-actions"];
@@ -13507,7 +13537,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
     requestBody: {
@@ -13536,7 +13566,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": {
@@ -13561,7 +13591,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["runner-groups-org"];
@@ -13599,7 +13629,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["runner-groups-org"];
@@ -13623,7 +13653,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -13643,7 +13673,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["runner-groups-org"];
@@ -13675,9 +13705,15 @@ export interface operations {
         /** Unique identifier of the self-hosted runner group. */
         runner_group_id: components["parameters"]["runner_group_id"];
       };
+      query: {
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
+        /** Results per page (max 100). */
+        per_page?: components["parameters"]["per_page"];
+      };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": {
@@ -13704,7 +13740,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
     requestBody: {
@@ -13735,7 +13771,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -13757,7 +13793,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -13783,7 +13819,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -13811,7 +13847,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
     requestBody: {
@@ -13843,7 +13879,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -13866,7 +13902,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -13888,7 +13924,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -13912,7 +13948,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["runner-application"][];
@@ -13940,7 +13976,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["authentication-token"];
@@ -13969,7 +14005,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["authentication-token"];
@@ -13991,7 +14027,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["runner"];
@@ -14013,7 +14049,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -14031,7 +14067,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -14051,7 +14087,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["actions-public-key"];
@@ -14069,7 +14105,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["organization-actions-secret"];
@@ -14198,7 +14234,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -14210,9 +14246,15 @@ export interface operations {
         /** secret_name parameter */
         secret_name: components["parameters"]["secret_name"];
       };
+      query: {
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
+        /** Results per page (max 100). */
+        per_page?: components["parameters"]["per_page"];
+      };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": {
@@ -14233,7 +14275,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
     requestBody: {
@@ -14316,6 +14358,8 @@ export interface operations {
         order?: components["parameters"]["audit-log-order"];
         /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
       };
     };
     responses: {
@@ -14335,7 +14379,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["simple-user"][];
@@ -14370,7 +14414,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       422: components["responses"]["validation_failed"];
     };
@@ -14383,7 +14427,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -14399,7 +14443,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["credential-authorization"][];
@@ -14420,7 +14464,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       404: components["responses"]["not_found"];
     };
@@ -14438,7 +14482,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["event"][];
@@ -14460,7 +14504,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -14483,7 +14527,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -14501,7 +14545,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -14544,7 +14588,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["org-hook"];
@@ -14561,7 +14605,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       404: components["responses"]["not_found"];
     };
@@ -14575,7 +14619,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["org-hook"];
@@ -14616,7 +14660,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Default response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["webhook-config"];
@@ -14637,7 +14681,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Default response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["webhook-config"];
@@ -14664,7 +14708,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       404: components["responses"]["not_found"];
     };
@@ -14681,7 +14725,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["installation"];
@@ -14703,7 +14747,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -14723,7 +14767,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["interaction-limit-response"];
@@ -14739,7 +14783,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["interaction-limit-response"];
@@ -14761,7 +14805,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -14779,7 +14823,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -14801,7 +14845,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["organization-invitation"];
@@ -14844,7 +14888,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       404: components["responses"]["not_found"];
       422: components["responses"]["validation_failed"];
@@ -14866,7 +14910,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -14898,7 +14942,13 @@ export interface operations {
          * \* `subscribed`: Issues you're subscribed to updates for
          * \* `all`: All issues the authenticated user can see, regardless of participation or creation
          */
-        filter?: "assigned" | "created" | "mentioned" | "subscribed" | "all";
+        filter?:
+          | "assigned"
+          | "created"
+          | "mentioned"
+          | "subscribed"
+          | "repos"
+          | "all";
         /** Indicates the state of the issues to return. Can be either `open`, `closed`, or `all`. */
         state?: "open" | "closed" | "all";
         /** A list of comma separated label names. Example: `bug,ui,@high` */
@@ -14916,7 +14966,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -14953,7 +15003,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -14991,12 +15041,12 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       403: components["responses"]["forbidden"];
     };
   };
-  /** In order to get a user's membership with an organization, the authenticated user must be an organization member. */
+  /** In order to get a user's membership with an organization, the authenticated user must be an organization member. The `state` parameter in the response can be used to identify the user's membership status. */
   "orgs/get-membership-for-user": {
     parameters: {
       path: {
@@ -15005,7 +15055,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["org-membership"];
@@ -15034,7 +15084,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["org-membership"];
@@ -15069,7 +15119,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
@@ -15086,10 +15136,12 @@ export interface operations {
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
+        /** Exclude attributes from the API response to improve performance */
+        exclude?: "repositories"[];
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -15106,7 +15158,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["migration"];
@@ -15146,6 +15198,10 @@ export interface operations {
         /** migration_id parameter */
         migration_id: components["parameters"]["migration_id"];
       };
+      query: {
+        /** Exclude attributes from the API response to improve performance */
+        exclude?: "repositories"[];
+      };
     };
     responses: {
       /**
@@ -15172,7 +15228,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       302: never;
       404: components["responses"]["not_found"];
     };
@@ -15187,7 +15243,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       404: components["responses"]["not_found"];
     };
@@ -15204,7 +15260,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       404: components["responses"]["not_found"];
     };
@@ -15225,7 +15281,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -15255,7 +15311,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -15277,15 +15333,8 @@ export interface operations {
       202: unknown;
       /** User was converted */
       204: never;
-      /** response */
-      403: {
-        content: {
-          "application/json": {
-            message?: string;
-            documentation_url?: string;
-          };
-        };
-      };
+      /** Response if user is the last owner of the organization or not a member of the organization */
+      403: unknown;
       404: components["responses"]["not_found"];
     };
   };
@@ -15298,7 +15347,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       /** Response if user is a member of the organization */
       422: {
@@ -15354,7 +15403,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -15381,9 +15430,13 @@ export interface operations {
         package_name: components["parameters"]["package_name"];
         org: components["parameters"]["org"];
       };
+      query: {
+        /** package token */
+        token?: string;
+      };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -15396,7 +15449,7 @@ export interface operations {
    * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
    * If `package_type` is not `container`, your token must also include the `repo` scope.
    */
-  "packages/get-all-package-versions-for-a-package-owned-by-an-org": {
+  "packages/get-all-package-versions-for-package-owned-by-org": {
     parameters: {
       path: {
         /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. For Docker images that use the package namespace `https://ghcr.io/owner/package-name`, use `container`. */
@@ -15404,6 +15457,14 @@ export interface operations {
         /** The name of the package. */
         package_name: components["parameters"]["package_name"];
         org: components["parameters"]["org"];
+      };
+      query: {
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
+        /** Results per page (max 100). */
+        per_page?: components["parameters"]["per_page"];
+        /** The state of the package, either active or deleted. */
+        state?: "active" | "deleted";
       };
     };
     responses: {
@@ -15465,7 +15526,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -15496,7 +15557,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -15519,7 +15580,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -15537,7 +15598,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["project"];
@@ -15574,7 +15635,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -15610,7 +15671,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       403: components["responses"]["forbidden"];
     };
@@ -15623,7 +15684,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -15654,7 +15715,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -15680,7 +15741,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -15739,7 +15800,7 @@ export interface operations {
   /**
    * Gets the summary of the free and paid GitHub Actions minutes used.
    *
-   * Paid minutes only apply to workflows in private repositories that use GitHub-hosted runners. Minutes used is listed for each GitHub-hosted runner operating system. Any job re-runs are also included in the usage. The usage does not include the multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
+   * Paid minutes only apply to workflows in private repositories that use GitHub-hosted runners. Minutes used is listed for each GitHub-hosted runner operating system. Any job re-runs are also included in the usage. The usage returned includes any minute multipliers for macOS and Windows runners, and is rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
    *
    * Access tokens must have the `repo` or `admin:org` scope.
    */
@@ -15750,7 +15811,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["actions-billing-usage"];
@@ -15772,7 +15833,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["packages-billing-usage"];
@@ -15794,7 +15855,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["combined-billing-usage"];
@@ -15817,12 +15878,12 @@ export interface operations {
       query: {
         /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
+        /** Page token */
+        page?: string;
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {
           Link?: string;
@@ -15847,7 +15908,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -15869,7 +15930,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["team-full"];
@@ -15927,7 +15988,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["team-full"];
@@ -15952,7 +16013,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -15970,7 +16031,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["team-full"];
@@ -16025,10 +16086,12 @@ export interface operations {
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
+        /** Pinned discussions only filter */
+        pinned?: string;
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -16053,7 +16116,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["team-discussion"];
@@ -16088,7 +16151,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["team-discussion"];
@@ -16111,7 +16174,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -16130,7 +16193,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["team-discussion"];
@@ -16171,7 +16234,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -16197,7 +16260,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["team-discussion-comment"];
@@ -16229,7 +16292,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["team-discussion-comment"];
@@ -16253,7 +16316,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -16273,7 +16336,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["team-discussion-comment"];
@@ -16321,7 +16384,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -16346,7 +16409,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["reaction"];
@@ -16387,7 +16450,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -16422,7 +16485,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -16446,7 +16509,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["reaction"];
@@ -16486,7 +16549,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -16510,7 +16573,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -16546,7 +16609,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -16562,7 +16625,10 @@ export interface operations {
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/memberships/{username}`.
    *
-   * **Note:** The `role` for organization owners returns as `maintainer`. For more information about `maintainer` roles, see [Create a team](https://docs.github.com/rest/reference/teams#create-a-team).
+   * **Note:**
+   * The response contains the `state` of the membership and the member's `role`.
+   *
+   * The `role` for organization owners is set to `maintainer`. For more information about `maintainer` roles, see see [Create a team](https://docs.github.com/rest/reference/teams#create-a-team).
    */
   "teams/get-membership-for-user-in-org": {
     parameters: {
@@ -16574,7 +16640,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["team-membership"];
@@ -16607,7 +16673,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["team-membership"];
@@ -16616,18 +16682,7 @@ export interface operations {
       /** Response if team synchronization is set up */
       403: unknown;
       /** Response if you attempt to add an organization to a team */
-      422: {
-        content: {
-          "application/json": {
-            message?: string;
-            errors?: {
-              code?: string;
-              field?: string;
-              resource?: string;
-            }[];
-          };
-        };
-      };
+      422: unknown;
     };
     requestBody: {
       content: {
@@ -16661,7 +16716,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       /** Response if team synchronization is set up */
       403: unknown;
@@ -16687,7 +16742,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -16711,7 +16766,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["team-project"];
@@ -16736,7 +16791,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       /** Response if the project is not owned by the organization */
       403: {
@@ -16778,7 +16833,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -16802,7 +16857,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -16861,7 +16916,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
     requestBody: {
@@ -16898,7 +16953,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -16918,7 +16973,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["group-mapping"];
@@ -16942,7 +16997,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["group-mapping"];
@@ -17002,7 +17057,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["project-card"];
@@ -17022,7 +17077,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
@@ -17047,7 +17102,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["project-card"];
@@ -17078,7 +17133,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": { [key: string]: any };
@@ -17102,7 +17157,7 @@ export interface operations {
         };
       };
       422: components["responses"]["validation_failed"];
-      /** Service Unavailable */
+      /** Service unavailable */
       503: {
         content: {
           "application/json": {
@@ -17136,7 +17191,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["project-column"];
@@ -17156,7 +17211,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
@@ -17171,7 +17226,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["project-column"];
@@ -17206,7 +17261,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -17231,7 +17286,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["project-card"];
@@ -17240,7 +17295,7 @@ export interface operations {
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
-      /** Validation Failed */
+      /** Validation failed */
       422: {
         content: {
           "application/json":
@@ -17248,7 +17303,7 @@ export interface operations {
             | components["schemas"]["validation-error-simple"];
         };
       };
-      /** Service Unavailable */
+      /** Service unavailable */
       503: {
         content: {
           "application/json": {
@@ -17287,7 +17342,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": { [key: string]: any };
@@ -17315,7 +17370,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["project"];
@@ -17360,7 +17415,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["project"];
@@ -17421,7 +17476,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -17445,7 +17500,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
@@ -17472,7 +17527,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
@@ -17491,7 +17546,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["repository-collaborator-permission"];
@@ -17518,7 +17573,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -17537,7 +17592,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["project-column"];
@@ -17565,7 +17620,7 @@ export interface operations {
   "rate-limit/get": {
     parameters: {};
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -17588,7 +17643,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
@@ -17610,7 +17665,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["full-repository"];
@@ -17635,7 +17690,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       /** If an organization owner has configured the organization to prevent members from deleting organization-owned repositories, a member will get this response: */
       403: {
@@ -17658,7 +17713,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["full-repository"];
@@ -17723,7 +17778,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -17746,7 +17801,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["artifact"];
@@ -17765,7 +17820,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -17786,7 +17841,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       302: never;
     };
   };
@@ -17801,7 +17856,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       202: {
         content: {
           "application/json": components["schemas"]["job"];
@@ -17825,7 +17880,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       302: never;
     };
   };
@@ -17843,7 +17898,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["actions-repository-permissions"];
@@ -17866,7 +17921,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
     requestBody: {
@@ -17891,7 +17946,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["selected-actions"];
@@ -17916,7 +17971,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
     requestBody: {
@@ -17940,7 +17995,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -17965,7 +18020,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["runner-application"][];
@@ -17993,7 +18048,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["authentication-token"];
@@ -18021,7 +18076,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["authentication-token"];
@@ -18045,7 +18100,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["runner"];
@@ -18069,7 +18124,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -18100,7 +18155,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -18123,7 +18178,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["workflow-run"];
@@ -18146,7 +18201,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -18186,7 +18241,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -18209,7 +18264,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       202: unknown;
     };
   };
@@ -18236,7 +18291,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -18264,7 +18319,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       302: never;
     };
   };
@@ -18279,7 +18334,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -18352,7 +18407,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: unknown;
     };
   };
@@ -18371,7 +18426,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["workflow-run-usage"];
@@ -18394,7 +18449,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -18415,7 +18470,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["actions-public-key"];
@@ -18434,7 +18489,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["actions-secret"];
@@ -18556,7 +18611,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -18575,7 +18630,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -18598,7 +18653,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["workflow"];
@@ -18621,7 +18676,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -18642,7 +18697,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
     requestBody: {
@@ -18671,7 +18726,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -18704,7 +18759,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -18731,7 +18786,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["workflow-usage"];
@@ -18754,7 +18809,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -18799,7 +18854,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -18812,7 +18867,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -18832,7 +18887,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -18852,7 +18907,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["branch-with-protection"];
@@ -18873,7 +18928,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["branch-protection"];
@@ -18901,7 +18956,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["protected-branch"];
@@ -18970,7 +19025,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       403: components["responses"]["forbidden"];
     };
@@ -18986,7 +19041,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["protected-branch-admin-enforced"];
@@ -19009,7 +19064,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["protected-branch-admin-enforced"];
@@ -19048,7 +19103,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/vnd.github.luke-cage-preview+json": components["schemas"]["protected-branch-pull-request-review"];
@@ -19089,7 +19144,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["protected-branch-pull-request-review"];
@@ -19134,7 +19189,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["protected-branch-admin-enforced"];
@@ -19158,7 +19213,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["protected-branch-admin-enforced"];
@@ -19198,7 +19253,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["status-check-policy"];
@@ -19237,7 +19292,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["status-check-policy"];
@@ -19268,7 +19323,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": string[];
@@ -19288,7 +19343,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": string[];
@@ -19317,7 +19372,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": string[];
@@ -19347,7 +19402,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": string[];
@@ -19382,7 +19437,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["branch-restriction-policy"];
@@ -19425,7 +19480,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["integration"][];
@@ -19453,7 +19508,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["integration"][];
@@ -19489,7 +19544,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["integration"][];
@@ -19525,7 +19580,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["integration"][];
@@ -19557,7 +19612,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["team"][];
@@ -19585,7 +19640,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["team"][];
@@ -19621,7 +19676,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["team"][];
@@ -19657,7 +19712,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["team"][];
@@ -19689,7 +19744,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["simple-user"][];
@@ -19717,7 +19772,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["simple-user"][];
@@ -19753,7 +19808,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["simple-user"][];
@@ -19789,7 +19844,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["simple-user"][];
@@ -19833,7 +19888,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["branch-with-protection"];
@@ -19867,7 +19922,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["check-run"];
@@ -19978,7 +20033,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["check-run"];
@@ -20001,7 +20056,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["check-run"];
@@ -20114,7 +20169,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -20136,7 +20191,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["check-suite"];
@@ -20161,7 +20216,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["check-suite-preference"];
@@ -20197,7 +20252,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["check-suite"];
@@ -20232,7 +20287,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -20259,7 +20314,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: unknown;
     };
   };
@@ -20296,7 +20351,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["code-scanning-alert-items"][];
@@ -20323,7 +20378,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["code-scanning-alert"];
@@ -20345,7 +20400,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["code-scanning-alert"];
@@ -20383,7 +20438,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["code-scanning-alert-instance"][];
@@ -20434,7 +20489,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["code-scanning-analysis"][];
@@ -20479,7 +20534,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["code-scanning-analysis"];
@@ -20565,12 +20620,12 @@ export interface operations {
         analysis_id: number;
       };
       query: {
-        /** Allow deletion if the specified analysis is the last in a set. The parameter can be used without a value as the parameter value is not considered. If you attempt to delete the final analysis in a set without using this parameter you'll get a 400 response with the message: `Analysis is last of its type and deletion may result in the loss of historical alert data. Please specify confirm_delete.` */
-        confirm_delete?: string;
+        /** Allow deletion if the specified analysis is the last in a set. If you attempt to delete the final analysis in a set without setting this parameter to `true`, you'll get a 400 response with the message: `Analysis is last of its type and deletion may result in the loss of historical alert data. Please specify confirm_delete.` */
+        confirm_delete?: string | null;
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["code-scanning-analysis-deletion"];
@@ -20609,7 +20664,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       202: {
         content: {
           "application/json": components["schemas"]["code-scanning-sarifs-receipt"];
@@ -20653,7 +20708,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["code-scanning-sarifs-status"];
@@ -20691,7 +20746,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -20780,7 +20835,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -20822,7 +20877,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -20841,7 +20896,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["commit-comment"];
@@ -20860,7 +20915,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       404: components["responses"]["not_found"];
     };
@@ -20875,7 +20930,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["commit-comment"];
@@ -20919,7 +20974,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -20989,7 +21044,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -21044,10 +21099,14 @@ export interface operations {
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
+        /** @deprecated legacy parameter for pagination. */
+        top?: string;
+        /** @deprecated legacy parameter for pagination. */
+        last_sha?: string;
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -21075,7 +21134,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["branch-short"][];
@@ -21102,7 +21161,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -21126,7 +21185,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -21170,7 +21229,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -21223,12 +21282,18 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** ref+ parameter */
+        /** ref parameter */
         ref: string;
+      };
+      query: {
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
+        /** Results per page (max 100). */
+        per_page?: components["parameters"]["per_page"];
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["commit"];
@@ -21249,7 +21314,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** ref+ parameter */
+        /** ref parameter */
         ref: string;
       };
       query: {
@@ -21263,10 +21328,11 @@ export interface operations {
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
+        app_id?: number;
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -21288,7 +21354,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** ref+ parameter */
+        /** ref parameter */
         ref: string;
       };
       query: {
@@ -21303,7 +21369,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -21331,12 +21397,18 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** ref+ parameter */
+        /** ref parameter */
         ref: string;
+      };
+      query: {
+        /** Results per page (max 100). */
+        per_page?: components["parameters"]["per_page"];
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["combined-commit-status"];
@@ -21355,7 +21427,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** ref+ parameter */
+        /** ref parameter */
         ref: string;
       };
       query: {
@@ -21366,7 +21438,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -21389,7 +21461,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["code-of-conduct"];
@@ -21419,7 +21491,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["community-profile"];
@@ -21436,10 +21508,9 @@ export interface operations {
    *
    * **Working with large comparisons**
    *
-   * The response will include a comparison of up to 250 commits. If you are working with a larger commit range, you can use the [List commits](https://docs.github.com/rest/reference/repos#list-commits) to enumerate all commits in the range.
+   * To process a response with a large number of commits, you can use (`per_page` or `page`) to paginate the results. When using paging, the list of changed files is only returned with page 1, but includes all changed files for the entire comparison. For more information on working with pagination, see "[Traversing with pagination](/rest/guides/traversing-with-pagination)."
    *
-   * For comparisons with extremely large diffs, you may receive an error response indicating that the diff took too long
-   * to generate. You can typically resolve this error by using a smaller commit range.
+   * When calling this API without any paging parameters (`per_page` or `page`), the returned list is limited to 250 commits and the last commit in the list is the most recent of the entire comparison. When a paging parameter is specified, the first commit in the returned list of each page is the earliest.
    *
    * **Signature verification object**
    *
@@ -21478,9 +21549,15 @@ export interface operations {
         base: string;
         head: string;
       };
+      query: {
+        /** Results per page. */
+        per_page?: number;
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
+      };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["commit-comparison"];
@@ -21529,7 +21606,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** path+ parameter */
+        /** path parameter */
         path: string;
       };
       query: {
@@ -21538,7 +21615,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/vnd.github.v3.object": components["schemas"]["content-tree"];
@@ -21560,18 +21637,18 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** path+ parameter */
+        /** path parameter */
         path: string;
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["file-commit"];
         };
       };
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["file-commit"];
@@ -21626,12 +21703,12 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** path+ parameter */
+        /** path parameter */
         path: string;
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["file-commit"];
@@ -21718,7 +21795,7 @@ export interface operations {
         /** The name of the task for the deployment (e.g., `deploy` or `deploy:migrations`). */
         task?: string;
         /** The name of the environment that was deployed to (e.g., `staging` or `production`). */
-        environment?: string;
+        environment?: string | null;
         /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
@@ -21726,7 +21803,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -21790,7 +21867,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["deployment"];
@@ -21804,15 +21881,8 @@ export interface operations {
           };
         };
       };
-      /** response */
-      409: {
-        content: {
-          "application/json": {
-            message?: string;
-            documentation_url?: string;
-          };
-        };
-      };
+      /** Response when there is a merge conflict or the commit's status checks failed */
+      409: unknown;
       422: components["responses"]["validation_failed"];
     };
     requestBody: {
@@ -21856,7 +21926,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["deployment"];
@@ -21885,7 +21955,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       404: components["responses"]["not_found"];
       422: components["responses"]["validation_failed_simple"];
@@ -21908,7 +21978,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -21933,7 +22003,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -21994,7 +22064,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["deployment-status"];
@@ -22024,7 +22094,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       422: components["responses"]["validation_failed"];
     };
@@ -22143,7 +22213,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Default response */
       204: never;
     };
   };
@@ -22161,7 +22231,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["event"][];
@@ -22177,15 +22247,19 @@ export interface operations {
       };
       query: {
         /** The sort order. Can be either `newest`, `oldest`, or `stargazers`. */
-        sort?: "newest" | "oldest" | "stargazers";
+        sort?: "newest" | "oldest" | "stargazers" | "watchers";
         /** Results per page (max 100). */
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
+        /** @deprecated legacy query parameter for specifying the org. */
+        org?: string;
+        /** @deprecated legacy query parameter for specifying the org. */
+        organization?: string;
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -22206,9 +22280,15 @@ export interface operations {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
       };
+      query: {
+        /** @deprecated legacy query parameter for specifying the org. */
+        org?: string;
+        /** @deprecated legacy query parameter for specifying the org. */
+        organization?: string;
+      };
     };
     responses: {
-      /** response */
+      /** Response */
       202: {
         content: {
           "application/json": components["schemas"]["repository"];
@@ -22224,7 +22304,7 @@ export interface operations {
         "application/json": {
           /** Optional parameter to specify the organization name if forking into an organization. */
           organization?: string;
-        };
+        } | null;
       };
     };
   };
@@ -22236,7 +22316,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -22275,7 +22355,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["blob"];
@@ -22326,7 +22406,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -22413,7 +22493,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["git-commit"];
@@ -22436,7 +22516,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** ref+ parameter */
+        /** ref parameter */
         ref: string;
       };
       query: {
@@ -22447,7 +22527,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -22466,12 +22546,12 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** ref+ parameter */
+        /** ref parameter */
         ref: string;
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["git-ref"];
@@ -22489,7 +22569,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -22517,12 +22597,12 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** ref+ parameter */
+        /** ref parameter */
         ref: string;
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       422: components["responses"]["validation_failed"];
     };
@@ -22532,12 +22612,12 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** ref+ parameter */
+        /** ref parameter */
         ref: string;
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["git-ref"];
@@ -22596,7 +22676,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -22670,7 +22750,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["git-tag"];
@@ -22692,7 +22772,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -22756,7 +22836,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["git-tree"];
@@ -22780,7 +22860,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -22802,7 +22882,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -22847,7 +22927,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["hook"];
@@ -22865,7 +22945,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       404: components["responses"]["not_found"];
     };
@@ -22880,7 +22960,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["hook"];
@@ -22927,7 +23007,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Default response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["webhook-config"];
@@ -22949,7 +23029,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Default response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["webhook-config"];
@@ -22977,7 +23057,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       404: components["responses"]["not_found"];
     };
@@ -22996,7 +23076,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       404: components["responses"]["not_found"];
     };
@@ -23045,7 +23125,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["import"];
@@ -23063,7 +23143,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -23101,7 +23181,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -23117,7 +23197,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["import"];
@@ -23154,7 +23234,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["porter-author"][];
@@ -23173,7 +23253,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["porter-author"];
@@ -23203,7 +23283,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["porter-large-file"][];
@@ -23220,7 +23300,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["import"];
@@ -23250,7 +23330,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["installation"];
@@ -23269,7 +23349,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["interaction-limit-response"];
@@ -23286,7 +23366,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["interaction-limit-response"];
@@ -23310,7 +23390,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       /** Conflict */
       409: unknown;
@@ -23331,7 +23411,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -23350,7 +23430,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -23364,7 +23444,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["repository-invitation"];
@@ -23420,7 +23500,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -23445,7 +23525,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -23507,7 +23587,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -23528,7 +23608,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["issue-comment"];
@@ -23547,7 +23627,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -23561,7 +23641,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["issue-comment"];
@@ -23605,7 +23685,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -23675,7 +23755,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -23693,7 +23773,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -23712,7 +23792,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["issue-event"];
@@ -23746,7 +23826,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["issue"];
@@ -23769,7 +23849,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["issue"];
@@ -23821,7 +23901,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["issue-simple"];
@@ -23848,7 +23928,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["issue-simple"];
@@ -23883,7 +23963,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -23905,7 +23985,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -23944,7 +24024,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -23970,7 +24050,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -23991,7 +24071,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["label"][];
@@ -24019,7 +24099,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["label"][];
@@ -24047,7 +24127,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       410: components["responses"]["gone"];
     };
@@ -24064,7 +24144,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["label"][];
@@ -24089,7 +24169,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
@@ -24122,7 +24202,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
@@ -24155,7 +24235,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -24178,7 +24258,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["reaction"];
@@ -24220,7 +24300,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -24240,7 +24320,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -24266,7 +24346,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -24284,7 +24364,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -24322,7 +24402,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["deploy-key"];
@@ -24342,7 +24422,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -24360,7 +24440,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -24378,7 +24458,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -24393,7 +24473,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** The name of the label. Emoji can be added to label names, using either native emoji or colon-style markup. For example, typing `:strawberry:` will render the emoji ![:strawberry:](https://github.githubassets.com/images/icons/emoji/unicode/1f353.png ":strawberry:"). For a full list of available emoji and codes, see [emoji-cheat-sheet.com](http://emoji-cheat-sheet.com/). */
+          /** The name of the label. Emoji can be added to label names, using either native emoji or colon-style markup. For example, typing `:strawberry:` will render the emoji ![:strawberry:](https://github.githubassets.com/images/icons/emoji/unicode/1f353.png ":strawberry:"). For a full list of available emoji and codes, see "[Emoji cheat sheet](https://github.com/ikatyang/emoji-cheat-sheet)." */
           name: string;
           /** The [hexadecimal color code](http://www.color-hex.com/) for the label, without the leading `#`. */
           color?: string;
@@ -24412,7 +24492,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["label"];
@@ -24430,7 +24510,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -24443,7 +24523,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["label"];
@@ -24453,7 +24533,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** The new name of the label. Emoji can be added to label names, using either native emoji or colon-style markup. For example, typing `:strawberry:` will render the emoji ![:strawberry:](https://github.githubassets.com/images/icons/emoji/unicode/1f353.png ":strawberry:"). For a full list of available emoji and codes, see [emoji-cheat-sheet.com](http://emoji-cheat-sheet.com/). */
+          /** The new name of the label. Emoji can be added to label names, using either native emoji or colon-style markup. For example, typing `:strawberry:` will render the emoji ![:strawberry:](https://github.githubassets.com/images/icons/emoji/unicode/1f353.png ":strawberry:"). For a full list of available emoji and codes, see "[Emoji cheat sheet](https://github.com/ikatyang/emoji-cheat-sheet)." */
           new_name?: string;
           /** The [hexadecimal color code](http://www.color-hex.com/) for the label, without the leading `#`. */
           color?: string;
@@ -24472,7 +24552,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["language"];
@@ -24493,7 +24573,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["license-content"];
@@ -24516,24 +24596,10 @@ export interface operations {
         };
       };
       403: components["responses"]["forbidden"];
-      /** response */
-      404: {
-        content: {
-          "application/json": {
-            message?: string;
-            documentation_url?: string;
-          };
-        };
-      };
-      /** Merge conflict response */
-      409: {
-        content: {
-          "application/json": {
-            message?: string;
-            documentation_url?: string;
-          };
-        };
-      };
+      /** Response when the base or head does not exist */
+      404: unknown;
+      /** Response when there is a merge conflict */
+      409: unknown;
       422: components["responses"]["validation_failed"];
     };
     requestBody: {
@@ -24569,7 +24635,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -24587,7 +24653,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -24624,7 +24690,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["milestone"];
@@ -24643,7 +24709,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       404: components["responses"]["not_found"];
     };
@@ -24658,7 +24724,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["milestone"];
@@ -24696,7 +24762,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -24728,7 +24794,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -24746,7 +24812,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       202: unknown;
     };
     requestBody: {
@@ -24766,7 +24832,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["page"];
@@ -24784,7 +24850,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       400: components["responses"]["bad_request"];
       422: components["responses"]["validation_failed"];
@@ -24816,7 +24882,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["page"];
@@ -24848,7 +24914,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       404: components["responses"]["not_found"];
       415: components["responses"]["preview_header_missing"];
@@ -24869,7 +24935,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -24891,7 +24957,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["page-build-status"];
@@ -24907,7 +24973,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["page-build"];
@@ -24924,7 +24990,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["page-build"];
@@ -24949,7 +25015,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -24972,7 +25038,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["project"];
@@ -25020,7 +25086,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -25048,7 +25114,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -25088,8 +25154,7 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** One of `created` (when the repository was starred) or `updated` (when it was last pushed to). */
-        sort?: components["parameters"]["sort"];
+        sort?: "created" | "updated" | "created_at";
         /** Can be either `asc` or `desc`. Ignored without `sort` parameter. */
         direction?: "asc" | "desc";
         /** Only show notifications updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
@@ -25101,7 +25166,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -25121,7 +25186,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["pull-request-review-comment"];
@@ -25141,7 +25206,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       404: components["responses"]["not_found"];
     };
@@ -25157,7 +25222,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["pull-request-review-comment"];
@@ -25200,7 +25265,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -25270,7 +25335,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -25325,7 +25390,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["pull-request"];
@@ -25373,7 +25438,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -25400,7 +25465,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -25452,7 +25517,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -25488,7 +25553,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -25513,7 +25578,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -25607,7 +25672,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -25626,7 +25691,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["pull-request-simple"];
@@ -25657,7 +25722,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: unknown;
       422: components["responses"]["validation_failed"];
     };
@@ -25715,7 +25780,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["pull-request-review"];
@@ -25761,7 +25826,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["pull-request-review"];
@@ -25782,7 +25847,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["pull-request-review"];
@@ -25810,7 +25875,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["pull-request-review"];
@@ -25838,7 +25903,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -25860,7 +25925,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["pull-request-review"];
@@ -25890,7 +25955,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["pull-request-review"];
@@ -25921,7 +25986,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       202: {
         content: {
           "application/json": {
@@ -25960,6 +26025,35 @@ export interface operations {
       };
     };
     responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["content-file"];
+        };
+      };
+      404: components["responses"]["not_found"];
+      422: components["responses"]["validation_failed"];
+    };
+  };
+  /**
+   * Gets the README from a repository directory.
+   *
+   * READMEs support [custom media types](https://docs.github.com/rest/reference/repos#custom-media-types) for retrieving the raw content or rendered HTML.
+   */
+  "repos/get-readme-in-directory": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        /** The alternate path to look for a README file */
+        dir: string;
+      };
+      query: {
+        /** The name of the commit/branch/tag. Default: the repository’s default branch (usually `master`) */
+        ref?: string;
+      };
+    };
+    responses: {
       /** response */
       200: {
         content: {
@@ -25989,7 +26083,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -26012,7 +26106,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -26074,7 +26168,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -26089,7 +26183,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["release-asset"];
@@ -26121,7 +26215,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["release"];
@@ -26135,12 +26229,12 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** tag+ parameter */
+        /** tag parameter */
         tag: string;
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["release"];
@@ -26180,7 +26274,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -26195,7 +26289,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["release"];
@@ -26237,7 +26331,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -26340,7 +26434,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Default response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["secret-scanning-alert"];
@@ -26366,7 +26460,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Default response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["secret-scanning-alert"];
@@ -26406,7 +26500,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -26443,7 +26537,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["commit-activity"][];
@@ -26541,7 +26635,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -26585,7 +26679,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -26622,7 +26716,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["repository-subscription"];
@@ -26649,7 +26743,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -26667,7 +26761,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -26691,7 +26785,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       302: never;
     };
   };
@@ -26709,7 +26803,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -26724,9 +26818,15 @@ export interface operations {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
       };
+      query: {
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
+        /** Results per page (max 100). */
+        per_page?: components["parameters"]["per_page"];
+      };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["topic"];
@@ -26744,7 +26844,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["topic"];
@@ -26776,7 +26876,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["clone-traffic"];
@@ -26794,7 +26894,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["content-traffic"][];
@@ -26812,7 +26912,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["referrer-traffic"][];
@@ -26834,7 +26934,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["view-traffic"];
@@ -26852,7 +26952,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       202: {
         content: {
           "application/json": components["schemas"]["repository"];
@@ -26894,7 +26994,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -26907,7 +27007,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -26926,7 +27026,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       302: never;
     };
   };
@@ -26948,7 +27048,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -26990,7 +27090,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {
           Link?: string;
@@ -27185,7 +27285,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Default response */
       204: never;
     };
   };
@@ -27201,10 +27301,14 @@ export interface operations {
         startIndex?: components["parameters"]["start_index"];
         /** Used for pagination: the number of results to return. */
         count?: components["parameters"]["count"];
+        /** filter results */
+        filter?: string;
+        /** attributes to exclude */
+        excludedAttributes?: string;
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["scim-group-list-enterprise"];
@@ -27225,7 +27329,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["scim-enterprise-group"];
@@ -27256,9 +27360,13 @@ export interface operations {
         /** Identifier generated by the GitHub SCIM endpoint. */
         scim_group_id: components["parameters"]["scim_group_id"];
       };
+      query: {
+        /** Attributes to exclude. */
+        excludedAttributes?: string;
+      };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["scim-enterprise-group"];
@@ -27281,7 +27389,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["scim-enterprise-group"];
@@ -27314,7 +27422,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -27333,7 +27441,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["scim-enterprise-group"];
@@ -27386,10 +27494,12 @@ export interface operations {
         startIndex?: components["parameters"]["start_index"];
         /** Used for pagination: the number of results to return. */
         count?: components["parameters"]["count"];
+        /** filter results */
+        filter?: string;
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["scim-user-list-enterprise"];
@@ -27412,7 +27522,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["scim-enterprise-user"];
@@ -27460,7 +27570,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["scim-enterprise-user"];
@@ -27487,7 +27597,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["scim-enterprise-user"];
@@ -27535,7 +27645,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -27569,7 +27679,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["scim-enterprise-user"];
@@ -27628,7 +27738,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/scim+json": components["schemas"]["scim-user-list"];
@@ -27648,7 +27758,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/scim+json": components["schemas"]["scim-user"];
@@ -27696,7 +27806,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/scim+json": components["schemas"]["scim-user"];
@@ -27723,7 +27833,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/scim+json": components["schemas"]["scim-user"];
@@ -27768,7 +27878,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       403: components["responses"]["scim_forbidden"];
@@ -27802,7 +27912,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/scim+json": components["schemas"]["scim-user"];
@@ -27881,7 +27991,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": {
@@ -27923,7 +28033,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": {
@@ -27978,7 +28088,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": {
@@ -28019,7 +28129,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": {
@@ -28066,7 +28176,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": {
@@ -28100,7 +28210,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": {
@@ -28141,7 +28251,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": {
@@ -28164,7 +28274,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["team-full"];
@@ -28187,7 +28297,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       404: components["responses"]["not_found"];
       422: components["responses"]["validation_failed"];
@@ -28207,7 +28317,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["team-full"];
@@ -28266,7 +28376,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -28289,7 +28399,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["team-discussion"];
@@ -28322,7 +28432,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["team-discussion"];
@@ -28343,7 +28453,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -28360,7 +28470,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["team-discussion"];
@@ -28399,7 +28509,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -28423,7 +28533,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["team-discussion-comment"];
@@ -28453,7 +28563,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["team-discussion-comment"];
@@ -28475,7 +28585,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -28493,7 +28603,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["team-discussion-comment"];
@@ -28539,7 +28649,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -28562,7 +28672,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["reaction"];
@@ -28615,7 +28725,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -28637,7 +28747,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["reaction"];
@@ -28679,7 +28789,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -28713,7 +28823,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -28765,25 +28875,13 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       403: components["responses"]["forbidden"];
       /** Response if team synchronization is set up */
       404: unknown;
-      /** response */
-      422: {
-        content: {
-          "application/json": {
-            message?: string;
-            errors?: {
-              code?: string;
-              field?: string;
-              resource?: string;
-            }[];
-            documentation_url?: string;
-          };
-        };
-      };
+      /** Response if you attempt to add an organization to a team or you attempt to add a user to a team when they are not a member of at least one other team in the same organization */
+      422: unknown;
     };
   };
   /**
@@ -28805,7 +28903,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       /** Response if team synchronization is setup */
       404: unknown;
@@ -28818,7 +28916,10 @@ export interface operations {
    *
    * To get a user's membership with a team, the team must be visible to the authenticated user.
    *
-   * **Note:** The `role` for organization owners returns as `maintainer`. For more information about `maintainer` roles, see [Create a team](https://docs.github.com/rest/reference/teams#create-a-team).
+   * **Note:**
+   * The response contains the `state` of the membership and the member's `role`.
+   *
+   * The `role` for organization owners is set to `maintainer`. For more information about `maintainer` roles, see [Create a team](https://docs.github.com/rest/reference/teams#create-a-team).
    */
   "teams/get-membership-for-user-legacy": {
     parameters: {
@@ -28828,7 +28929,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["team-membership"];
@@ -28858,7 +28959,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["team-membership"];
@@ -28868,19 +28969,7 @@ export interface operations {
       403: unknown;
       404: components["responses"]["not_found"];
       /** Response if you attempt to add an organization to a team */
-      422: {
-        content: {
-          "application/json": {
-            message?: string;
-            errors?: {
-              code?: string;
-              field?: string;
-              resource?: string;
-            }[];
-            documentation_url?: string;
-          };
-        };
-      };
+      422: unknown;
     };
     requestBody: {
       content: {
@@ -28912,7 +29001,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       /** Response if team synchronization is set up */
       403: unknown;
@@ -28936,7 +29025,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -28960,7 +29049,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["team-project"];
@@ -28984,7 +29073,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       /** Response if the project is not owned by the organization */
       403: {
@@ -29027,7 +29116,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       404: components["responses"]["not_found"];
       415: components["responses"]["preview_header_missing"];
@@ -29048,7 +29137,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -29102,7 +29191,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       403: components["responses"]["forbidden"];
       422: components["responses"]["validation_failed"];
@@ -29137,7 +29226,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -29155,7 +29244,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["group-mapping"];
@@ -29179,7 +29268,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["group-mapping"];
@@ -29242,7 +29331,7 @@ export interface operations {
   "users/get-authenticated": {
     parameters: {};
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json":
@@ -29259,7 +29348,7 @@ export interface operations {
   "users/update-authenticated": {
     parameters: {};
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["private-user"];
@@ -29298,7 +29387,7 @@ export interface operations {
   "users/list-blocked-by-authenticated": {
     parameters: {};
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["simple-user"][];
@@ -29338,7 +29427,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
@@ -29354,7 +29443,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
@@ -29366,7 +29455,7 @@ export interface operations {
   "users/set-primary-email-visibility-for-authenticated": {
     parameters: {};
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["email"][];
@@ -29400,7 +29489,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -29417,7 +29506,7 @@ export interface operations {
   "users/add-email-for-authenticated": {
     parameters: {};
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["email"][];
@@ -29445,7 +29534,7 @@ export interface operations {
   "users/delete-email-for-authenticated": {
     parameters: {};
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
@@ -29476,7 +29565,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -29499,7 +29588,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -29543,7 +29632,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
@@ -29559,7 +29648,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
@@ -29578,7 +29667,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -29595,7 +29684,7 @@ export interface operations {
   "users/create-gpg-key-for-authenticated": {
     parameters: {};
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["gpg-key"];
@@ -29625,7 +29714,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["gpg-key"];
@@ -29646,7 +29735,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
@@ -29743,7 +29832,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       403: components["responses"]["forbidden"];
@@ -29764,28 +29853,30 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
     };
   };
-  /** Shows which type of GitHub user can interact with your public repositories and when the restriction expires. If there are no restrictions, you will see an empty response. */
+  /** Shows which type of GitHub user can interact with your public repositories and when the restriction expires. */
   "interactions/get-restrictions-for-authenticated-user": {
     responses: {
-      /** response */
+      /** Default response */
       200: {
         content: {
           "application/json": components["schemas"]["interaction-limit-response"];
         };
       };
+      /** Response when there are no restrictions */
+      204: never;
     };
   };
   /** Temporarily restricts which type of GitHub user can interact with your public repositories. Setting the interaction limit at the user level will overwrite any interaction limits that are set for individual repositories owned by the user. */
   "interactions/set-restrictions-for-authenticated-user": {
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["interaction-limit-response"];
@@ -29802,7 +29893,7 @@ export interface operations {
   /** Removes any interaction restrictions from your public repositories. */
   "interactions/remove-restrictions-for-authenticated-user": {
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
     };
   };
@@ -29825,7 +29916,13 @@ export interface operations {
          * \* `subscribed`: Issues you're subscribed to updates for
          * \* `all`: All issues the authenticated user can see, regardless of participation or creation
          */
-        filter?: "assigned" | "created" | "mentioned" | "subscribed" | "all";
+        filter?:
+          | "assigned"
+          | "created"
+          | "mentioned"
+          | "subscribed"
+          | "repos"
+          | "all";
         /** Indicates the state of the issues to return. Can be either `open`, `closed`, or `all`. */
         state?: "open" | "closed" | "all";
         /** A list of comma separated label names. Example: `bug,ui,@high` */
@@ -29843,7 +29940,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -29865,7 +29962,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -29882,7 +29979,7 @@ export interface operations {
   "users/create-public-ssh-key-for-authenticated": {
     parameters: {};
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["key"];
@@ -29914,7 +30011,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["key"];
@@ -29935,7 +30032,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
@@ -29954,7 +30051,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -29977,7 +30074,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -30000,7 +30097,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -30020,7 +30117,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["org-membership"];
@@ -30037,7 +30134,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["org-membership"];
@@ -30067,7 +30164,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -30083,7 +30180,7 @@ export interface operations {
   "migrations/start-for-authenticated-user": {
     parameters: {};
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["migration"];
@@ -30129,7 +30226,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["migration"];
@@ -30172,7 +30269,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       302: never;
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
@@ -30188,7 +30285,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
@@ -30207,7 +30304,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
@@ -30230,7 +30327,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -30257,7 +30354,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -30309,7 +30406,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -30333,9 +30430,13 @@ export interface operations {
         /** The name of the package. */
         package_name: components["parameters"]["package_name"];
       };
+      query: {
+        /** package token */
+        token?: string;
+      };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -30348,13 +30449,21 @@ export interface operations {
    * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
    * If `package_type` is not `container`, your token must also include the `repo` scope.
    */
-  "packages/get-all-package-versions-for-a-package-owned-by-the-authenticated-user": {
+  "packages/get-all-package-versions-for-package-owned-by-authenticated-user": {
     parameters: {
       path: {
         /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. For Docker images that use the package namespace `https://ghcr.io/owner/package-name`, use `container`. */
         package_type: components["parameters"]["package_type"];
         /** The name of the package. */
         package_name: components["parameters"]["package_name"];
+      };
+      query: {
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
+        /** Results per page (max 100). */
+        per_page?: components["parameters"]["per_page"];
+        /** The state of the package, either active or deleted. */
+        state?: "active" | "deleted";
       };
     };
     responses: {
@@ -30413,7 +30522,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -30441,7 +30550,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -30451,7 +30560,7 @@ export interface operations {
   "projects/create-for-authenticated-user": {
     parameters: {};
     responses: {
-      /** response */
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["project"];
@@ -30485,7 +30594,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -30536,7 +30645,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["repository"][];
@@ -30561,7 +30670,7 @@ export interface operations {
   "repos/create-for-authenticated-user": {
     parameters: {};
     responses: {
-      /** response */
+      /** Response */
       201: {
         headers: {
           Location?: string;
@@ -30629,7 +30738,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -30650,7 +30759,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       403: components["responses"]["forbidden"];
@@ -30666,7 +30775,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       403: components["responses"]["forbidden"];
@@ -30693,7 +30802,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -30736,7 +30845,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
@@ -30752,7 +30861,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Empty response */
+      /** Response */
       204: never;
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
@@ -30771,7 +30880,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -30794,7 +30903,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -30821,7 +30930,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {
           Link?: string;
@@ -30849,7 +30958,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json":
@@ -30874,7 +30983,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["event"][];
@@ -30897,7 +31006,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["event"][];
@@ -30918,7 +31027,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["event"][];
@@ -30940,7 +31049,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -30963,7 +31072,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -31002,7 +31111,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -31026,7 +31135,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -31058,7 +31167,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["hovercard"];
@@ -31080,7 +31189,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["installation"];
@@ -31102,7 +31211,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -31129,7 +31238,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -31233,7 +31342,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -31258,7 +31367,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["event"][];
@@ -31279,7 +31388,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["event"][];
@@ -31307,7 +31416,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -31319,7 +31428,7 @@ export interface operations {
   /**
    * Gets the summary of the free and paid GitHub Actions minutes used.
    *
-   * Paid minutes only apply to workflows in private repositories that use GitHub-hosted runners. Minutes used is listed for each GitHub-hosted runner operating system. Any job re-runs are also included in the usage. The usage does not include the multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
+   * Paid minutes only apply to workflows in private repositories that use GitHub-hosted runners. Minutes used is listed for each GitHub-hosted runner operating system. Any job re-runs are also included in the usage. The usage returned includes any minute multipliers for macOS and Windows runners, and is rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
    *
    * Access tokens must have the `user` scope.
    */
@@ -31330,7 +31439,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["actions-billing-usage"];
@@ -31352,7 +31461,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["packages-billing-usage"];
@@ -31374,7 +31483,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["combined-billing-usage"];
@@ -31404,7 +31513,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -31428,7 +31537,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -31440,7 +31549,7 @@ export interface operations {
   /** Get a random sentence from the Zen of GitHub */
   "meta/get-zen": {
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "text/plain": string;
