@@ -122,7 +122,7 @@ export interface paths {
     patch: operations["apps/reset-token"];
   };
   "/applications/{client_id}/token/scoped": {
-    /** Exchanges a non-repository scoped user-to-server OAuth access token for a repository scoped user-to-server OAuth access token. You can specify which repositories the token can access and which permissions are granted to the token. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`. */
+    /** Use a non-scoped user-to-server OAuth access token to create a repository scoped and/or permission scoped user-to-server OAuth access token. You can specify which repositories the token can access and which permissions are granted to the token. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`. */
     post: operations["apps/scope-token"];
   };
   "/applications/{client_id}/tokens/{access_token}": {
@@ -442,11 +442,7 @@ export interface paths {
     delete: operations["enterprise-admin/delete-self-hosted-runner-from-enterprise"];
   };
   "/enterprises/{enterprise}/audit-log": {
-    /**
-     * **Note:** The audit log REST API is currently in beta and is subject to change.
-     *
-     * Gets the audit log for an enterprise. To use this endpoint, you must be an enterprise admin, and you must use an access token with the `admin:enterprise` scope.
-     */
+    /** Gets the audit log for an enterprise. To use this endpoint, you must be an enterprise admin, and you must use an access token with the `admin:enterprise` scope. */
     get: operations["audit-log/get-audit-log"];
   };
   "/enterprises/{enterprise}/settings/billing/actions": {
@@ -1075,8 +1071,6 @@ export interface paths {
   };
   "/orgs/{org}/audit-log": {
     /**
-     * **Note:** The audit log REST API is currently in beta and is subject to change.
-     *
      * Gets the audit log for an organization. For more information, see "[Reviewing the audit log for your organization](https://docs.github.com/github/setting-up-and-managing-organizations-and-teams/reviewing-the-audit-log-for-your-organization)."
      *
      * To use this endpoint, you must be an organization owner, and you must use an access token with the `admin:org` scope. GitHub Apps must have the `organization_administration` read permission to use this endpoint.
@@ -1282,7 +1276,7 @@ export interface paths {
      */
     get: operations["packages/get-package-for-organization"];
     /**
-     * Deletes an entire package in an organization. You cannot delete a public package if any version of the package has more than 25 downloads. In this scenario, contact GitHub support for further assistance.
+     * Deletes an entire package in an organization. You cannot delete a public package if any version of the package has more than 5,000 downloads. In this scenario, contact GitHub support for further assistance.
      *
      * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` scope. In addition:
      * - If `package_type` is not `container`, your token must also include the `repo` scope.
@@ -1322,7 +1316,7 @@ export interface paths {
      */
     get: operations["packages/get-package-version-for-organization"];
     /**
-     * Deletes a specific package version in an organization. If the package is public and the package version has more than 25 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.
+     * Deletes a specific package version in an organization. If the package is public and the package version has more than 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.
      *
      * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` scope. In addition:
      * - If `package_type` is not `container`, your token must also include the `repo` scope.
@@ -2600,9 +2594,9 @@ export interface paths {
      *
      *   **Inner loop**:
      *   * Delete the identified analysis.
-     *   * Parse the response for the value of `next_analysis_url` and, if found, use this in the next iteration.
+     *   * Parse the response for the value of `confirm_delete_url` and, if found, use this in the next iteration.
      *
-     * The above process assumes that you want to remove all trace of the tool's analyses from the GitHub user interface, for the specified repository, and it therefore uses the `next_analysis_url` value. Alternatively, you could use the `confirm_delete_url` value, which would leave the last analysis in each set undeleted to avoid removing a tool's analysis entirely.
+     * The above process assumes that you want to remove all trace of the tool's analyses from the GitHub user interface, for the specified repository, and it therefore uses the `confirm_delete_url` value. Alternatively, you could use the `next_analysis_url` value, which would leave the last analysis in each set undeleted to avoid removing a tool's analysis entirely.
      */
     delete: operations["code-scanning/delete-analysis"];
   };
@@ -2746,7 +2740,7 @@ export interface paths {
     post: operations["repos/create-commit-comment"];
   };
   "/repos/{owner}/{repo}/commits/{commit_sha}/pulls": {
-    /** Lists all pull requests containing the provided commit SHA, which can be from any point in the commit history. The results will include open and closed pull requests. Additional preview headers may be required to see certain details for associated pull requests, such as whether a pull request is in a draft state. For more information about previews that might affect this endpoint, see the [List pull requests](https://docs.github.com/rest/reference/pulls#list-pull-requests) endpoint. */
+    /** Lists the merged pull request that introduced the commit to the repository. If the commit is not present in the default branch, additionally returns open pull requests associated with the commit. The results may include open and closed pull requests. Additional preview headers may be required to see certain details for associated pull requests, such as whether a pull request is in a draft state. For more information about previews that might affect this endpoint, see the [List pull requests](https://docs.github.com/rest/reference/pulls#list-pull-requests) endpoint. */
     get: operations["repos/list-pull-requests-associated-with-commit"];
   };
   "/repos/{owner}/{repo}/commits/{ref}": {
@@ -2852,51 +2846,6 @@ export interface paths {
      * `content_reports_enabled` is only returned for organization-owned repositories.
      */
     get: operations["repos/get-community-profile-metrics"];
-  };
-  "/repos/{owner}/{repo}/compare/{base}...{head}": {
-    /**
-     * Both `:base` and `:head` must be branch names in `:repo`. To compare branches across other repositories in the same network as `:repo`, use the format `<USERNAME>:branch`.
-     *
-     * The response from the API is equivalent to running the `git log base..head` command; however, commits are returned in chronological order. Pass the appropriate [media type](https://docs.github.com/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.
-     *
-     * The response also includes details on the files that were changed between the two commits. This includes the status of the change (for example, if a file was added, removed, modified, or renamed), and details of the change itself. For example, files with a `renamed` status have a `previous_filename` field showing the previous filename of the file, and files with a `modified` status have a `patch` field showing the changes made to the file.
-     *
-     * **Working with large comparisons**
-     *
-     * To process a response with a large number of commits, you can use (`per_page` or `page`) to paginate the results. When using paging, the list of changed files is only returned with page 1, but includes all changed files for the entire comparison. For more information on working with pagination, see "[Traversing with pagination](/rest/guides/traversing-with-pagination)."
-     *
-     * When calling this API without any paging parameters (`per_page` or `page`), the returned list is limited to 250 commits and the last commit in the list is the most recent of the entire comparison. When a paging parameter is specified, the first commit in the returned list of each page is the earliest.
-     *
-     * **Signature verification object**
-     *
-     * The response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:
-     *
-     * | Name | Type | Description |
-     * | ---- | ---- | ----------- |
-     * | `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
-     * | `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |
-     * | `signature` | `string` | The signature that was extracted from the commit. |
-     * | `payload` | `string` | The value that was signed. |
-     *
-     * These are the possible values for `reason` in the `verification` object:
-     *
-     * | Value | Description |
-     * | ----- | ----------- |
-     * | `expired_key` | The key that made the signature is expired. |
-     * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
-     * | `gpgverify_error` | There was an error communicating with the signature verification service. |
-     * | `gpgverify_unavailable` | The signature verification service is currently unavailable. |
-     * | `unsigned` | The object does not include a signature. |
-     * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
-     * | `no_user` | No user was associated with the `committer` email address in the commit. |
-     * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
-     * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
-     * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
-     * | `malformed_signature` | There was an error parsing the signature. |
-     * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
-     * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
-     */
-    get: operations["repos/compare-commits"];
   };
   "/repos/{owner}/{repo}/contents/{path}": {
     /**
@@ -4864,7 +4813,7 @@ export interface paths {
      */
     get: operations["packages/get-package-for-authenticated-user"];
     /**
-     * Deletes a package owned by the authenticated user. You cannot delete a public package if any version of the package has more than 25 downloads. In this scenario, contact GitHub support for further assistance.
+     * Deletes a package owned by the authenticated user. You cannot delete a public package if any version of the package has more than 5,000 downloads. In this scenario, contact GitHub support for further assistance.
      *
      * To use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:delete` scope.
      * If `package_type` is not `container`, your token must also include the `repo` scope.
@@ -4901,7 +4850,7 @@ export interface paths {
      */
     get: operations["packages/get-package-version-for-authenticated-user"];
     /**
-     * Deletes a specific package version for a package owned by the authenticated user.  If the package is public and the package version has more than 25 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.
+     * Deletes a specific package version for a package owned by the authenticated user.  If the package is public and the package version has more than 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.
      *
      * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` scope.
      * If `package_type` is not `container`, your token must also include the `repo` scope.
@@ -5146,6 +5095,51 @@ export interface paths {
     /** Get a random sentence from the Zen of GitHub */
     get: operations["meta/get-zen"];
   };
+  "/repos/{owner}/{repo}/compare/{base}...{head}": {
+    /**
+     * Both `:base` and `:head` must be branch names in `:repo`. To compare branches across other repositories in the same network as `:repo`, use the format `<USERNAME>:branch`.
+     *
+     * The response from the API is equivalent to running the `git log base..head` command; however, commits are returned in chronological order. Pass the appropriate [media type](https://docs.github.com/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.
+     *
+     * The response also includes details on the files that were changed between the two commits. This includes the status of the change (for example, if a file was added, removed, modified, or renamed), and details of the change itself. For example, files with a `renamed` status have a `previous_filename` field showing the previous filename of the file, and files with a `modified` status have a `patch` field showing the changes made to the file.
+     *
+     * **Working with large comparisons**
+     *
+     * To process a response with a large number of commits, you can use (`per_page` or `page`) to paginate the results. When using paging, the list of changed files is only returned with page 1, but includes all changed files for the entire comparison. For more information on working with pagination, see "[Traversing with pagination](/rest/guides/traversing-with-pagination)."
+     *
+     * When calling this API without any paging parameters (`per_page` or `page`), the returned list is limited to 250 commits and the last commit in the list is the most recent of the entire comparison. When a paging parameter is specified, the first commit in the returned list of each page is the earliest.
+     *
+     * **Signature verification object**
+     *
+     * The response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:
+     *
+     * | Name | Type | Description |
+     * | ---- | ---- | ----------- |
+     * | `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
+     * | `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |
+     * | `signature` | `string` | The signature that was extracted from the commit. |
+     * | `payload` | `string` | The value that was signed. |
+     *
+     * These are the possible values for `reason` in the `verification` object:
+     *
+     * | Value | Description |
+     * | ----- | ----------- |
+     * | `expired_key` | The key that made the signature is expired. |
+     * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
+     * | `gpgverify_error` | There was an error communicating with the signature verification service. |
+     * | `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+     * | `unsigned` | The object does not include a signature. |
+     * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
+     * | `no_user` | No user was associated with the `committer` email address in the commit. |
+     * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
+     * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
+     * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
+     * | `malformed_signature` | There was an error parsing the signature. |
+     * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
+     * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
+     */
+    get: operations["repos/compare-commits"];
+  };
 }
 
 export interface components {
@@ -5201,13 +5195,15 @@ export interface components {
       installations_count?: number;
       client_id?: string;
       client_secret?: string;
-      webhook_secret?: string;
+      webhook_secret?: string | null;
       pem?: string;
     } & { [key: string]: any };
     /** Basic Error */
     "basic-error": {
       message?: string;
       documentation_url?: string;
+      url?: string;
+      status?: string;
     };
     /** Validation Error Simple */
     "validation-error-simple": {
@@ -5221,8 +5217,7 @@ export interface components {
     "webhook-config-content-type": string;
     /** If provided, the `secret` will be used as the `key` to generate the HMAC hex digest value for [delivery signature headers](https://docs.github.com/webhooks/event-payloads/#delivery-headers). */
     "webhook-config-secret": string;
-    /** Determines whether the SSL certificate of the host for `url` will be verified when delivering payloads. Supported values include `0` (verification is performed) and `1` (verification is not performed). The default is `0`. **We strongly recommend not setting this to `1` as you are subject to man-in-the-middle and other attacks.** */
-    "webhook-config-insecure-ssl": string;
+    "webhook-config-insecure-ssl": string | number;
     /** Configuration object of the webhook */
     "webhook-config": {
       url?: components["schemas"]["webhook-config-url"];
@@ -5282,8 +5277,8 @@ export interface components {
       has_multiple_single_files?: boolean;
       single_file_paths?: string[];
       app_slug: string;
-      suspended_by?: components["schemas"]["simple-user"] | null;
-      suspended_at?: string | null;
+      suspended_by: components["schemas"]["simple-user"] | null;
+      suspended_at: string | null;
       contact_email?: string | null;
     };
     /** The permissions granted to the user-to-server access token. */
@@ -5367,6 +5362,7 @@ export interface components {
       name: string;
       full_name: string;
       license: components["schemas"]["license-simple"] | null;
+      organization?: components["schemas"]["simple-user"] | null;
       forks: number;
       permissions?: {
         admin: boolean;
@@ -5698,11 +5694,11 @@ export interface components {
     };
     "selected-actions": {
       /** Whether GitHub-owned actions are allowed. For example, this includes the actions in the `actions` organization. */
-      github_owned_allowed: boolean;
+      github_owned_allowed?: boolean;
       /** Whether actions in GitHub Marketplace from verified creators are allowed. Set to `true` to allow all GitHub Marketplace actions by verified creators. */
-      verified_allowed: boolean;
+      verified_allowed?: boolean;
       /** Specifies a list of string-matching patterns to allow specific action(s). Wildcards, tags, and SHAs are allowed. For example, `monalisa/octocat@*`, `monalisa/octocat@v2`, `monalisa/*`." */
-      patterns_allowed: string[];
+      patterns_allowed?: string[];
     };
     "runner-groups-enterprise": {
       id: number;
@@ -5739,6 +5735,9 @@ export interface components {
       architecture: string;
       download_url: string;
       filename: string;
+      /** A short lived bearer token used to download the runner, if needed. */
+      temp_download_token?: string;
+      sha256_checksum?: string;
     };
     /** Authentication Token */
     "authentication-token": {
@@ -5970,7 +5969,7 @@ export interface components {
       };
       org?: components["schemas"]["actor"];
       payload: {
-        action: string;
+        action?: string;
         issue?: components["schemas"]["issue-simple"];
         comment?: components["schemas"]["issue-comment"];
         pages?: {
@@ -6044,6 +6043,39 @@ export interface components {
     };
     /** Gist Simple */
     "gist-simple": {
+      forks?: { [key: string]: any }[] | null;
+      history?: { [key: string]: any }[] | null;
+      /** Gist */
+      fork_of?: {
+        url: string;
+        forks_url: string;
+        commits_url: string;
+        id: string;
+        node_id: string;
+        git_pull_url: string;
+        git_push_url: string;
+        html_url: string;
+        files: {
+          [key: string]: {
+            filename?: string;
+            type?: string;
+            language?: string;
+            raw_url?: string;
+            size?: number;
+          };
+        };
+        public: boolean;
+        created_at: string;
+        updated_at: string;
+        description: string | null;
+        comments: number;
+        user: components["schemas"]["simple-user"] | null;
+        comments_url: string;
+        owner?: components["schemas"]["simple-user"] | null;
+        truncated?: boolean;
+        forks?: { [key: string]: any }[];
+        history?: { [key: string]: any }[];
+      } | null;
       url?: string;
       forks_url?: string;
       commits_url?: string;
@@ -6120,7 +6152,7 @@ export interface components {
       /** Title of the issue */
       title: string;
       /** Contents of the issue */
-      body?: string;
+      body?: string | null;
       user: components["schemas"]["simple-user"] | null;
       /** Labels to associate with this issue; pass one or more label names to replace the set of labels on this issue; send an empty array to clear all labels from the issue; note that the labels are silently dropped for users without push access to the repository */
       labels: (
@@ -6199,6 +6231,7 @@ export interface components {
       id: number;
       login: string;
       organization_billing_email?: string;
+      email?: string | null;
       marketplace_pending_change?: {
         is_installed?: boolean;
         effective_date?: string;
@@ -6228,9 +6261,11 @@ export interface components {
       web?: string[];
       api?: string[];
       git?: string[];
+      packages?: string[];
       pages?: string[];
       importer?: string[];
       actions?: string[];
+      dependabot?: string[];
     };
     /** Minimal Repository */
     "minimal-repository": {
@@ -6405,6 +6440,8 @@ export interface components {
       members_can_create_private_repositories?: boolean;
       members_can_create_internal_repositories?: boolean;
       members_can_create_pages?: boolean;
+      members_can_create_public_pages?: boolean;
+      members_can_create_private_pages?: boolean;
       updated_at: string;
     };
     /** The policy that controls the repositories in the organization that are allowed to run GitHub Actions. Can be one of: `all`, `none`, or `selected`. */
@@ -6413,7 +6450,7 @@ export interface components {
       enabled_repositories: components["schemas"]["enabled-repositories"];
       /** The API URL to use to get or set the selected repositories that are allowed to run GitHub Actions, when `enabled_repositories` is set to `selected`. */
       selected_repositories_url?: string;
-      allowed_actions: components["schemas"]["allowed-actions"];
+      allowed_actions?: components["schemas"]["allowed-actions"];
       selected_actions_url?: components["schemas"]["selected-actions-url"];
     };
     "runner-groups-org": {
@@ -6480,13 +6517,12 @@ export interface components {
       email: string | null;
       role: string;
       created_at: string;
-      failed_at?: string;
-      failed_reason?: string;
+      failed_at?: string | null;
+      failed_reason?: string | null;
       inviter: components["schemas"]["simple-user"];
       team_count: number;
-      invitation_team_url: string;
       node_id: string;
-      invitation_teams_url?: string;
+      invitation_teams_url: string;
     };
     /** Org Hook */
     "org-hook": {
@@ -6572,7 +6608,7 @@ export interface components {
       /** The state of the member in the organization. The `pending` state indicates the user has not yet accepted an invitation. */
       state: "active" | "pending";
       /** The user's membership type in the organization. */
-      role: "admin" | "member";
+      role: "admin" | "member" | "billing_manager";
       organization_url: string;
       organization: components["schemas"]["organization-simple"];
       user: components["schemas"]["simple-user"] | null;
@@ -6685,7 +6721,7 @@ export interface components {
         /** synchronization status for this group mapping */
         status?: string;
         /** the time of the last sync for this group-mapping */
-        synced_at?: string;
+        synced_at?: string | null;
       }[];
     };
     /** Groups of organization members that gives permissions on specified repositories. */
@@ -7094,7 +7130,7 @@ export interface components {
       /** Whether or not the artifact has expired. */
       expired: boolean;
       created_at: string | null;
-      expires_at: string;
+      expires_at: string | null;
       updated_at: string | null;
     };
     /** Information of a job execution in a workflow run */
@@ -7185,8 +7221,12 @@ export interface components {
       /** The ID of the workflow run. */
       id: number;
       /** The name of the workflow run. */
-      name?: string;
+      name?: string | null;
       node_id: string;
+      /** The ID of the associated check suite. */
+      check_suite_id?: number;
+      /** The node ID of the associated check suite. */
+      check_suite_node_id?: string;
       head_branch: string | null;
       /** The SHA of the head commit that points to the version of the worflow being run. */
       head_sha: string;
@@ -7217,7 +7257,7 @@ export interface components {
       rerun_url: string;
       /** The URL to the workflow. */
       workflow_url: string;
-      head_commit: components["schemas"]["simple-commit"];
+      head_commit: components["schemas"]["simple-commit"] | null;
       repository: components["schemas"]["minimal-repository"];
       head_repository: components["schemas"]["minimal-repository"];
       head_repository_id?: number;
@@ -7281,7 +7321,7 @@ export interface components {
       ref: string;
       /** Parameter to specify a task to execute */
       task: string;
-      payload: { [key: string]: any };
+      payload: { [key: string]: any } | string;
       original_environment?: string;
       /** Name for the target deployment environment. */
       environment: string;
@@ -7313,7 +7353,7 @@ export interface components {
           jobs: number;
         };
       };
-      run_duration_ms: number;
+      run_duration_ms?: number;
     };
     /** Set secrets for GitHub Actions. */
     "actions-secret": {
@@ -7328,7 +7368,12 @@ export interface components {
       node_id: string;
       name: string;
       path: string;
-      state: "active" | "deleted";
+      state:
+        | "active"
+        | "deleted"
+        | "disabled_fork"
+        | "disabled_inactivity"
+        | "disabled_manually";
       created_at: string;
       updated_at: string;
       url: string;
@@ -7457,9 +7502,9 @@ export interface components {
     /** Branch Protection */
     "branch-protection": {
       url?: string;
-      required_status_checks: {
+      required_status_checks?: {
         url?: string;
-        enforcement_level: string;
+        enforcement_level?: string;
         contexts: string[];
         contexts_url?: string;
       };
@@ -7475,9 +7520,15 @@ export interface components {
       allow_deletions?: {
         enabled?: boolean;
       };
-      enabled: boolean;
+      required_conversation_resolution?: {
+        enabled?: boolean;
+      };
       name?: string;
       protection_url?: string;
+      required_signatures?: {
+        url: string;
+        enabled: boolean;
+      };
     };
     /** Short Branch */
     "short-branch": {
@@ -7603,6 +7654,9 @@ export interface components {
         enabled: boolean;
       };
       restrictions?: components["schemas"]["branch-restriction-policy"];
+      required_conversation_resolution?: {
+        enabled?: boolean;
+      };
     };
     /** A deployment created as the result of an Actions check run from a workflow that references an environment */
     "deployment-simple": {
@@ -7720,7 +7774,7 @@ export interface components {
           setting: boolean;
         }[];
       };
-      repository: components["schemas"]["repository"];
+      repository: components["schemas"]["minimal-repository"];
     };
     /** The name of the tool used to generate the code scanning analysis. */
     "code-scanning-analysis-tool-name": string;
@@ -7823,15 +7877,16 @@ export interface components {
       /** description of the rule used to detect the alert. */
       full_description?: string;
       /** A set of tags applicable for the rule. */
-      tags?: string[];
+      tags?: string[] | null;
       /** Detailed documentation for the rule as GitHub Flavored Markdown. */
-      help?: string;
+      help?: string | null;
     };
     "code-scanning-alert": {
       number: components["schemas"]["alert-number"];
       created_at: components["schemas"]["alert-created-at"];
       url: components["schemas"]["alert-url"];
       html_url: components["schemas"]["alert-html-url"];
+      instances?: { [key: string]: any };
       instances_url: components["schemas"]["alert-instances-url"];
       state: components["schemas"]["code-scanning-alert-state"];
       dismissed_by: components["schemas"]["simple-user"];
@@ -7934,7 +7989,7 @@ export interface components {
       invitee: components["schemas"]["simple-user"] | null;
       inviter: components["schemas"]["simple-user"] | null;
       /** The permission associated with the invitation. */
-      permissions: "read" | "write" | "admin";
+      permissions: "read" | "write" | "admin" | "triage" | "maintain";
       created_at: string;
       /** Whether or not the invitation has expired */
       expired?: boolean;
@@ -8139,7 +8194,7 @@ export interface components {
       behind_by: number;
       total_commits: number;
       commits: components["schemas"]["commit"][];
-      files: components["schemas"]["diff-entry"][];
+      files?: components["schemas"]["diff-entry"][];
     };
     /** Content Tree */
     "content-tree": {
@@ -8549,7 +8604,7 @@ export interface components {
     /** A repository import from an external source. */
     import: {
       vcs: string | null;
-      use_lfs?: string;
+      use_lfs?: boolean;
       /** The URL of the originating repository. */
       vcs_url: string;
       svc_root?: string;
@@ -8662,6 +8717,7 @@ export interface components {
       rename?: components["schemas"]["issue-event-rename"];
       author_association?: components["schemas"]["author_association"];
       lock_reason?: string | null;
+      performed_via_github_app?: components["schemas"]["integration"] | null;
     };
     /** Issue Event for Issue */
     "issue-event-for-issue": {
@@ -8679,8 +8735,8 @@ export interface components {
       issue_url?: string;
       updated_at?: string;
       author_association?: components["schemas"]["author_association"];
-      body?: string;
-      lock_reason?: string;
+      body?: string | null;
+      lock_reason?: string | null;
       submitted_at?: string;
       state?: string;
       pull_request_url?: string;
@@ -8723,6 +8779,25 @@ export interface components {
       branch: string;
       path: string;
     };
+    "pages-https-certificate": {
+      state:
+        | "new"
+        | "authorization_created"
+        | "authorization_pending"
+        | "authorized"
+        | "authorization_revoked"
+        | "issued"
+        | "uploaded"
+        | "approved"
+        | "errored"
+        | "bad_authz"
+        | "destroy_pending"
+        | "dns_changed";
+      description: string;
+      /** Array of the domain set and its alternate name (if it is configured) */
+      domains: any[];
+      expires_at?: string;
+    };
     /** The configuration for GitHub Pages for a repository. */
     page: {
       /** The API address for accessing this Page resource. */
@@ -8738,6 +8813,9 @@ export interface components {
       source?: components["schemas"]["pages-source-hash"];
       /** Whether the GitHub Pages site is publicly visible. If set to `true`, the site is accessible to anyone on the internet. If set to `false`, the site will only be accessible to users who have at least `read` access to the repository that published the site. */
       public: boolean;
+      https_certificate?: components["schemas"]["pages-https-certificate"];
+      /** Whether https is enabled on the domain */
+      https_enforced?: boolean;
     };
     /** Page Build */
     "page-build": {
@@ -9276,6 +9354,8 @@ export interface components {
       assets: components["schemas"]["release-asset"][];
       body_html?: string;
       body_text?: string;
+      /** The URL of the release discussion. */
+      discussion_url?: string;
     };
     /** Sets the state of the secret scanning alert. Can be either `open` or `resolved`. You must provide `resolution` when you set the state to `resolved`. */
     "secret-scanning-alert-state": "open" | "resolved";
@@ -9314,7 +9394,7 @@ export interface components {
       author: components["schemas"]["simple-user"] | null;
       total: number;
       weeks: {
-        w?: string;
+        w?: number;
         a?: number;
         d?: number;
         c?: number;
@@ -9955,7 +10035,6 @@ export interface components {
     };
     /** Key */
     key: {
-      key_id: string;
       key: string;
       id: number;
       url: string;
@@ -10075,7 +10154,11 @@ export interface components {
       };
     };
     /** Moved permanently */
-    moved_permanently: unknown;
+    moved_permanently: {
+      content: {
+        "application/json": components["schemas"]["basic-error"];
+      };
+    };
     /** Conflict */
     conflict: {
       content: {
@@ -10109,6 +10192,14 @@ export interface components {
     };
     /** Found */
     found: unknown;
+    /** Accepted */
+    accepted: {
+      content: {
+        "application/json": { [key: string]: any };
+      };
+    };
+    /** A header with no content is returned. */
+    no_content: unknown;
     /** Resource not found */
     scim_not_found: {
       content: {
@@ -10301,6 +10392,8 @@ export interface components {
     alert_number: components["schemas"]["alert-number"];
     /** commit_sha parameter */
     commit_sha: string;
+    /** Results per page (max 100) */
+    "per-page": number;
     /** deployment_id parameter */
     deployment_id: number;
     /** The name of the environment */
@@ -10426,13 +10519,18 @@ export interface operations {
             ({
               client_id: string;
               client_secret: string;
-              webhook_secret: string;
+              webhook_secret: string | null;
               pem: string;
             } & { [key: string]: any });
         };
       };
       404: components["responses"]["not_found"];
       422: components["responses"]["validation_failed_simple"];
+    };
+    requestBody: {
+      content: {
+        "application/json": { [key: string]: any };
+      };
     };
   };
   /**
@@ -10806,7 +10904,7 @@ export interface operations {
       };
     };
   };
-  /** Exchanges a non-repository scoped user-to-server OAuth access token for a repository scoped user-to-server OAuth access token. You can specify which repositories the token can access and which permissions are granted to the token. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`. */
+  /** Use a non-scoped user-to-server OAuth access token to create a repository scoped and/or permission scoped user-to-server OAuth access token. You can specify which repositories the token can access and which permissions are granted to the token. You must use [Basic Authentication](https://docs.github.com/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`. */
   "apps/scope-token": {
     parameters: {
       path: {
@@ -10829,7 +10927,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** **Required.** The OAuth access token used to authenticate to the GitHub API. */
+          /** The OAuth access token used to authenticate to the GitHub API. */
           access_token: string;
           /** The name of the user or organization to scope the user-to-server access token to. **Required** unless `target_id` is specified. */
           target?: string;
@@ -11025,7 +11123,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Response if returning an existing token */
+      /** if returning an existing token */
       200: {
         headers: {
           Location?: string;
@@ -11083,7 +11181,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Response if returning an existing token */
+      /** if returning an existing token */
       200: {
         headers: {
           Location?: string;
@@ -11957,11 +12055,7 @@ export interface operations {
       204: never;
     };
   };
-  /**
-   * **Note:** The audit log REST API is currently in beta and is subject to change.
-   *
-   * Gets the audit log for an enterprise. To use this endpoint, you must be an enterprise admin, and you must use an access token with the `admin:enterprise` scope.
-   */
+  /** Gets the audit log for an enterprise. To use this endpoint, you must be an enterprise admin, and you must use an access token with the `admin:enterprise` scope. */
   "audit-log/get-audit-log": {
     parameters: {
       path: {
@@ -12519,7 +12613,7 @@ export interface operations {
       204: never;
       304: components["responses"]["not_modified"];
       403: components["responses"]["forbidden"];
-      /** Response if gist is not starred */
+      /** Not Found if gist is not starred */
       404: {
         content: {
           "application/json": { [key: string]: any };
@@ -12823,7 +12917,7 @@ export interface operations {
         };
       };
       401: components["responses"]["requires_authentication"];
-      /** Response when the account has not purchased the listing */
+      /** Not Found when the account has not purchased the listing */
       404: {
         content: {
           "application/json": components["schemas"]["basic-error"];
@@ -12912,7 +13006,7 @@ export interface operations {
         };
       };
       401: components["responses"]["requires_authentication"];
-      /** Response when the account has not purchased the listing */
+      /** Not Found when the account has not purchased the listing */
       404: unknown;
     };
   };
@@ -13061,7 +13155,7 @@ export interface operations {
           };
         };
       };
-      /** Response */
+      /** Reset Content */
       205: unknown;
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
@@ -13105,7 +13199,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Response */
+      /** Reset Content */
       205: unknown;
       304: components["responses"]["not_modified"];
       403: components["responses"]["forbidden"];
@@ -14200,7 +14294,11 @@ export interface operations {
     };
     responses: {
       /** Response when creating a secret */
-      201: unknown;
+      201: {
+        content: {
+          "application/json": { [key: string]: any };
+        };
+      };
       /** Response when updating a secret */
       204: never;
     };
@@ -14217,7 +14315,7 @@ export interface operations {
            * \- `private` - Private repositories in an organization can access the secret.
            * \- `selected` - Only specific repositories can access the secret.
            */
-          visibility?: "all" | "private" | "selected";
+          visibility: "all" | "private" | "selected";
           /** An array of repository ids that can access the organization secret. You can only provide a list of repository ids when the `visibility` is set to `selected`. You can manage the list of selected repositories using the [List selected repositories for an organization secret](https://docs.github.com/rest/reference/actions#list-selected-repositories-for-an-organization-secret), [Set selected repositories for an organization secret](https://docs.github.com/rest/reference/actions#set-selected-repositories-for-an-organization-secret), and [Remove selected repository from an organization secret](https://docs.github.com/rest/reference/actions#remove-selected-repository-from-an-organization-secret) endpoints. */
           selected_repository_ids?: string[];
         };
@@ -14298,9 +14396,9 @@ export interface operations {
       };
     };
     responses: {
-      /** Response when repository was added to the selected list */
+      /** No Content when repository was added to the selected list */
       204: never;
-      /** Response when visibility type is not set to selected */
+      /** Conflict when visibility type is not set to selected */
       409: unknown;
     };
   };
@@ -14317,13 +14415,11 @@ export interface operations {
     responses: {
       /** Response when repository was removed from the selected list */
       204: never;
-      /** Response when visibility type not set to selected */
+      /** Conflict when visibility type not set to selected */
       409: unknown;
     };
   };
   /**
-   * **Note:** The audit log REST API is currently in beta and is subject to change.
-   *
    * Gets the audit log for an organization. For more information, see "[Reviewing the audit log for your organization](https://docs.github.com/github/setting-up-and-managing-organizations-and-teams/reviewing-the-audit-log-for-your-organization)."
    *
    * To use this endpoint, you must be an organization owner, and you must use an access token with the `admin:org` scope. GitHub Apps must have the `organization_administration` read permission to use this endpoint.
@@ -14770,7 +14866,10 @@ export interface operations {
       /** Response */
       200: {
         content: {
-          "application/json": components["schemas"]["interaction-limit-response"];
+          "application/json": Partial<
+            components["schemas"]["interaction-limit-response"]
+          > &
+            Partial<{ [key: string]: any }>;
         };
       };
     };
@@ -15028,7 +15127,7 @@ export interface operations {
       204: never;
       /** Response if requester is not an organization member */
       302: never;
-      /** Response if requester is an organization member and user is not a member */
+      /** Not Found if requester is an organization member and user is not a member */
       404: unknown;
     };
   };
@@ -15176,7 +15275,7 @@ export interface operations {
           lock_repositories?: boolean;
           /** Indicates whether attachments should be excluded from the migration (to reduce migration archive file size). */
           exclude_attachments?: boolean;
-          exclude?: string[];
+          exclude?: "repositories"[];
         };
       };
     };
@@ -15330,10 +15429,14 @@ export interface operations {
     };
     responses: {
       /** User is getting converted asynchronously */
-      202: unknown;
+      202: {
+        content: {
+          "application/json": { [key: string]: any };
+        };
+      };
       /** User was converted */
       204: never;
-      /** Response if user is the last owner of the organization or not a member of the organization */
+      /** Forbidden if user is the last owner of the organization or not a member of the organization */
       403: unknown;
       404: components["responses"]["not_found"];
     };
@@ -15349,7 +15452,7 @@ export interface operations {
     responses: {
       /** Response */
       204: never;
-      /** Response if user is a member of the organization */
+      /** Unprocessable Entity if user is a member of the organization */
       422: {
         content: {
           "application/json": {
@@ -15377,7 +15480,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["package"];
@@ -15386,7 +15489,7 @@ export interface operations {
     };
   };
   /**
-   * Deletes an entire package in an organization. You cannot delete a public package if any version of the package has more than 25 downloads. In this scenario, contact GitHub support for further assistance.
+   * Deletes an entire package in an organization. You cannot delete a public package if any version of the package has more than 5,000 downloads. In this scenario, contact GitHub support for further assistance.
    *
    * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` scope. In addition:
    * - If `package_type` is not `container`, your token must also include the `repo` scope.
@@ -15468,7 +15571,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["package-version"][];
@@ -15498,7 +15601,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["package-version"];
@@ -15507,7 +15610,7 @@ export interface operations {
     };
   };
   /**
-   * Deletes a specific package version in an organization. If the package is public and the package version has more than 25 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.
+   * Deletes a specific package version in an organization. If the package is public and the package version has more than 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.
    *
    * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` scope. In addition:
    * - If `package_type` is not `container`, your token must also include the `repo` scope.
@@ -15654,7 +15757,7 @@ export interface operations {
     responses: {
       /** Response if user is a public member */
       204: never;
-      /** Response if user is not a public member */
+      /** Not Found if user is not a public member */
       404: unknown;
     };
   };
@@ -16410,6 +16513,12 @@ export interface operations {
     };
     responses: {
       /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["reaction"];
+        };
+      };
+      /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["reaction"];
@@ -16509,6 +16618,12 @@ export interface operations {
       };
     };
     responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["reaction"];
+        };
+      };
       /** Response */
       201: {
         content: {
@@ -16646,7 +16761,7 @@ export interface operations {
           "application/json": components["schemas"]["team-membership"];
         };
       };
-      /** Response if user has no team membership */
+      /** if user has no team membership */
       404: unknown;
     };
   };
@@ -16679,9 +16794,9 @@ export interface operations {
           "application/json": components["schemas"]["team-membership"];
         };
       };
-      /** Response if team synchronization is set up */
+      /** Forbidden if team synchronization is set up */
       403: unknown;
-      /** Response if you attempt to add an organization to a team */
+      /** Unprocessable Entity if you attempt to add an organization to a team */
       422: unknown;
     };
     requestBody: {
@@ -16718,7 +16833,7 @@ export interface operations {
     responses: {
       /** Response */
       204: never;
-      /** Response if team synchronization is set up */
+      /** Forbidden if team synchronization is set up */
       403: unknown;
     };
   };
@@ -16772,7 +16887,7 @@ export interface operations {
           "application/json": components["schemas"]["team-project"];
         };
       };
-      /** Response if project is not managed by this team */
+      /** Not Found if project is not managed by this team */
       404: unknown;
     };
   };
@@ -16793,7 +16908,7 @@ export interface operations {
     responses: {
       /** Response */
       204: never;
-      /** Response if the project is not owned by the organization */
+      /** Forbidden if the project is not owned by the organization */
       403: {
         content: {
           "application/json": {
@@ -16889,12 +17004,12 @@ export interface operations {
       /** Alternative response with repository permissions */
       200: {
         content: {
-          "application/vnd.github.v3.repository+json": components["schemas"]["team-repository"];
+          "application/json": components["schemas"]["team-repository"];
         };
       };
-      /** Response if team has permission for the repository */
+      /** Response if team has permission for the repository. This is the response when the repository media type hasn't been provded in the Accept header. */
       204: never;
-      /** Response if team does not have permission for the repository */
+      /** Not Found if team does not have permission for the repository */
       404: unknown;
     };
   };
@@ -17008,7 +17123,7 @@ export interface operations {
       content: {
         "application/json": {
           /** The IdP groups you want to connect to a GitHub team. When updating, the new `groups` object will replace the original one. You must include any existing groups that you don't want to remove. */
-          groups: {
+          groups?: {
             /** ID of the IdP group. */
             group_id: string;
             /** Name of the IdP group. */
@@ -17040,7 +17155,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Response if child teams exist */
+      /** if child teams exist */
       200: {
         headers: {};
         content: {
@@ -17157,7 +17272,7 @@ export interface operations {
         };
       };
       422: components["responses"]["validation_failed"];
-      /** Service unavailable */
+      /** Response */
       503: {
         content: {
           "application/json": {
@@ -17303,7 +17418,7 @@ export interface operations {
             | components["schemas"]["validation-error-simple"];
         };
       };
-      /** Service unavailable */
+      /** Response */
       503: {
         content: {
           "application/json": {
@@ -17433,7 +17548,7 @@ export interface operations {
           };
         };
       };
-      /** Response if the authenticated user does not have access to the project */
+      /** Not Found if the authenticated user does not have access to the project */
       404: unknown;
       410: components["responses"]["gone"];
       422: components["responses"]["validation_failed_simple"];
@@ -17514,7 +17629,7 @@ export interface operations {
         "application/json": {
           /** The permission to grant the collaborator. */
           permission?: "read" | "write" | "admin";
-        };
+        } | null;
       };
     };
   };
@@ -17857,7 +17972,7 @@ export interface operations {
     };
     responses: {
       /** Response */
-      202: {
+      200: {
         content: {
           "application/json": components["schemas"]["job"];
         };
@@ -18216,7 +18331,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["environment-approvals"][];
@@ -18265,7 +18380,11 @@ export interface operations {
     };
     responses: {
       /** Response */
-      202: unknown;
+      202: {
+        content: {
+          "application/json": { [key: string]: any };
+        };
+      };
     };
   };
   /** Lists jobs for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/rest/overview/resources-in-the-rest-api#parameters). */
@@ -18353,7 +18472,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["pending-deployment"][];
@@ -18376,7 +18495,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["deployment"][];
@@ -18408,7 +18527,11 @@ export interface operations {
     };
     responses: {
       /** Response */
-      201: unknown;
+      201: {
+        content: {
+          "application/json": { [key: string]: any };
+        };
+      };
     };
   };
   /**
@@ -18585,7 +18708,11 @@ export interface operations {
     };
     responses: {
       /** Response when creating a secret */
-      201: unknown;
+      201: {
+        content: {
+          "application/json": { [key: string]: any };
+        };
+      };
       /** Response when updating a secret */
       204: never;
     };
@@ -18913,6 +19040,7 @@ export interface operations {
           "application/json": components["schemas"]["branch-with-protection"];
         };
       };
+      301: components["responses"]["moved_permanently"];
       404: components["responses"]["not_found"];
       415: components["responses"]["preview_header_missing"];
     };
@@ -19087,7 +19215,7 @@ export interface operations {
       };
     };
     responses: {
-      /** No Content */
+      /** Response */
       204: never;
       404: components["responses"]["not_found"];
     };
@@ -19106,7 +19234,7 @@ export interface operations {
       /** Response */
       200: {
         content: {
-          "application/vnd.github.luke-cage-preview+json": components["schemas"]["protected-branch-pull-request-review"];
+          "application/json": components["schemas"]["protected-branch-pull-request-review"];
         };
       };
     };
@@ -19122,7 +19250,7 @@ export interface operations {
       };
     };
     responses: {
-      /** No Content */
+      /** Response */
       204: never;
       404: components["responses"]["not_found"];
     };
@@ -19237,7 +19365,7 @@ export interface operations {
       };
     };
     responses: {
-      /** No Content */
+      /** Response */
       204: never;
       404: components["responses"]["not_found"];
     };
@@ -19273,7 +19401,7 @@ export interface operations {
       };
     };
     responses: {
-      /** No Content */
+      /** Response */
       204: never;
     };
   };
@@ -19461,7 +19589,7 @@ export interface operations {
       };
     };
     responses: {
-      /** No Content */
+      /** Response */
       204: never;
     };
   };
@@ -20191,7 +20319,13 @@ export interface operations {
       };
     };
     responses: {
-      /** Response */
+      /** when the suite already existed */
+      200: {
+        content: {
+          "application/json": components["schemas"]["check-suite"];
+        };
+      };
+      /** Response when the suite was created */
       201: {
         content: {
           "application/json": components["schemas"]["check-suite"];
@@ -20315,7 +20449,11 @@ export interface operations {
     };
     responses: {
       /** Response */
-      201: unknown;
+      201: {
+        content: {
+          "application/json": { [key: string]: any };
+        };
+      };
     };
   };
   /**
@@ -20537,6 +20675,7 @@ export interface operations {
       /** Response */
       200: {
         content: {
+          "application/json+sarif": string;
           "application/json": components["schemas"]["code-scanning-analysis"];
         };
       };
@@ -20607,9 +20746,9 @@ export interface operations {
    *
    *   **Inner loop**:
    *   * Delete the identified analysis.
-   *   * Parse the response for the value of `next_analysis_url` and, if found, use this in the next iteration.
+   *   * Parse the response for the value of `confirm_delete_url` and, if found, use this in the next iteration.
    *
-   * The above process assumes that you want to remove all trace of the tool's analyses from the GitHub user interface, for the specified repository, and it therefore uses the `next_analysis_url` value. Alternatively, you could use the `confirm_delete_url` value, which would leave the last analysis in each set undeleted to avoid removing a tool's analysis entirely.
+   * The above process assumes that you want to remove all trace of the tool's analyses from the GitHub user interface, for the specified repository, and it therefore uses the `confirm_delete_url` value. Alternatively, you could use the `next_analysis_url` value, which would leave the last analysis in each set undeleted to avoid removing a tool's analysis entirely.
    */
   "code-scanning/delete-analysis": {
     parameters: {
@@ -20665,16 +20804,22 @@ export interface operations {
     };
     responses: {
       /** Response */
+      200: {
+        content: {
+          "application/json": { [key: string]: any };
+        };
+      };
+      /** Response */
       202: {
         content: {
           "application/json": components["schemas"]["code-scanning-sarifs-receipt"];
         };
       };
-      /** Response if the sarif field is invalid */
+      /** Bad Request if the sarif field is invalid */
       400: unknown;
       403: components["responses"]["code_scanning_forbidden_write"];
       404: components["responses"]["not_found"];
-      /** Response if the sarif field is too large */
+      /** Payload Too Large if the sarif field is too large */
       413: unknown;
       503: components["responses"]["service_unavailable"];
     };
@@ -20715,7 +20860,7 @@ export interface operations {
         };
       };
       403: components["responses"]["code_scanning_forbidden_read"];
-      /** Response if the sarif id does not match any upload */
+      /** Not Found if the sarif id does not match any upload */
       404: unknown;
       503: components["responses"]["service_unavailable"];
     };
@@ -20772,7 +20917,7 @@ export interface operations {
     responses: {
       /** Response if user is a collaborator */
       204: never;
-      /** Response if user is not a collaborator */
+      /** Not Found if user is not a collaborator */
       404: unknown;
     };
   };
@@ -20849,7 +20994,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Response if user has admin permissions */
+      /** if user has admin permissions */
       200: {
         content: {
           "application/json": components["schemas"]["repository-collaborator-permission"];
@@ -21099,10 +21244,6 @@ export interface operations {
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
-        /** @deprecated legacy parameter for pagination. */
-        top?: string;
-        /** @deprecated legacy parameter for pagination. */
-        last_sha?: string;
       };
     };
     responses: {
@@ -21212,7 +21353,7 @@ export interface operations {
       };
     };
   };
-  /** Lists all pull requests containing the provided commit SHA, which can be from any point in the commit history. The results will include open and closed pull requests. Additional preview headers may be required to see certain details for associated pull requests, such as whether a pull request is in a draft state. For more information about previews that might affect this endpoint, see the [List pull requests](https://docs.github.com/rest/reference/pulls#list-pull-requests) endpoint. */
+  /** Lists the merged pull request that introduced the commit to the repository. If the commit is not present in the default branch, additionally returns open pull requests associated with the commit. The results may include open and closed pull requests. Additional preview headers may be required to see certain details for associated pull requests, such as whether a pull request is in a draft state. For more information about previews that might affect this endpoint, see the [List pull requests](https://docs.github.com/rest/reference/pulls#list-pull-requests) endpoint. */
   "repos/list-pull-requests-associated-with-commit": {
     parameters: {
       path: {
@@ -21500,74 +21641,6 @@ export interface operations {
     };
   };
   /**
-   * Both `:base` and `:head` must be branch names in `:repo`. To compare branches across other repositories in the same network as `:repo`, use the format `<USERNAME>:branch`.
-   *
-   * The response from the API is equivalent to running the `git log base..head` command; however, commits are returned in chronological order. Pass the appropriate [media type](https://docs.github.com/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.
-   *
-   * The response also includes details on the files that were changed between the two commits. This includes the status of the change (for example, if a file was added, removed, modified, or renamed), and details of the change itself. For example, files with a `renamed` status have a `previous_filename` field showing the previous filename of the file, and files with a `modified` status have a `patch` field showing the changes made to the file.
-   *
-   * **Working with large comparisons**
-   *
-   * To process a response with a large number of commits, you can use (`per_page` or `page`) to paginate the results. When using paging, the list of changed files is only returned with page 1, but includes all changed files for the entire comparison. For more information on working with pagination, see "[Traversing with pagination](/rest/guides/traversing-with-pagination)."
-   *
-   * When calling this API without any paging parameters (`per_page` or `page`), the returned list is limited to 250 commits and the last commit in the list is the most recent of the entire comparison. When a paging parameter is specified, the first commit in the returned list of each page is the earliest.
-   *
-   * **Signature verification object**
-   *
-   * The response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:
-   *
-   * | Name | Type | Description |
-   * | ---- | ---- | ----------- |
-   * | `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
-   * | `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |
-   * | `signature` | `string` | The signature that was extracted from the commit. |
-   * | `payload` | `string` | The value that was signed. |
-   *
-   * These are the possible values for `reason` in the `verification` object:
-   *
-   * | Value | Description |
-   * | ----- | ----------- |
-   * | `expired_key` | The key that made the signature is expired. |
-   * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
-   * | `gpgverify_error` | There was an error communicating with the signature verification service. |
-   * | `gpgverify_unavailable` | The signature verification service is currently unavailable. |
-   * | `unsigned` | The object does not include a signature. |
-   * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
-   * | `no_user` | No user was associated with the `committer` email address in the commit. |
-   * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
-   * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
-   * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
-   * | `malformed_signature` | There was an error parsing the signature. |
-   * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
-   * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
-   */
-  "repos/compare-commits": {
-    parameters: {
-      path: {
-        owner: components["parameters"]["owner"];
-        repo: components["parameters"]["repo"];
-        base: string;
-        head: string;
-      };
-      query: {
-        /** Results per page. */
-        per_page?: number;
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["commit-comparison"];
-        };
-      };
-      404: components["responses"]["not_found"];
-      500: components["responses"]["internal_error"];
-    };
-  };
-  /**
    * Gets the contents of a file or directory in a repository. Specify the file path or directory in `:path`. If you omit
    * `:path`, you will receive the contents of the repository's root directory. See the description below regarding what the API response includes for directories.
    *
@@ -21767,7 +21840,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Response if repository contains content */
+      /** if repository contains content */
       200: {
         headers: {};
         content: {
@@ -21881,7 +21954,7 @@ export interface operations {
           };
         };
       };
-      /** Response when there is a merge conflict or the commit's status checks failed */
+      /** Conflict when there is a merge conflict or the commit's status checks failed */
       409: unknown;
       422: components["responses"]["validation_failed"];
     };
@@ -22122,7 +22195,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": {
@@ -22145,7 +22218,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["environment"];
@@ -22172,7 +22245,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["environment"];
@@ -22252,10 +22325,6 @@ export interface operations {
         per_page?: components["parameters"]["per_page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
-        /** @deprecated legacy query parameter for specifying the org. */
-        org?: string;
-        /** @deprecated legacy query parameter for specifying the org. */
-        organization?: string;
       };
     };
     responses: {
@@ -22280,18 +22349,12 @@ export interface operations {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
       };
-      query: {
-        /** @deprecated legacy query parameter for specifying the org. */
-        org?: string;
-        /** @deprecated legacy query parameter for specifying the org. */
-        organization?: string;
-      };
     };
     responses: {
       /** Response */
       202: {
         content: {
-          "application/json": components["schemas"]["repository"];
+          "application/json": components["schemas"]["full-repository"];
         };
       };
       400: components["responses"]["bad_request"];
@@ -22430,9 +22493,9 @@ export interface operations {
           /** Information about the author of the commit. By default, the `author` will be the authenticated user and the current date. See the `author` and `committer` object below for details. */
           author?: {
             /** The name of the author (or committer) of the commit */
-            name?: string;
+            name: string;
             /** The email of the author (or committer) of the commit */
-            email?: string;
+            email: string;
             /** Indicates when this commit was authored (or committed). This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
             date?: string;
           };
@@ -22701,9 +22764,9 @@ export interface operations {
           /** An object with information about the individual creating the tag. */
           tagger?: {
             /** The name of the author of the tag */
-            name?: string;
+            name: string;
             /** The email of the author of the tag */
-            email?: string;
+            email: string;
             /** When this object was tagged. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
             date?: string;
           };
@@ -22901,8 +22964,8 @@ export interface operations {
           /** Use `web` to create a webhook. Default: `web`. This parameter only accepts the value `web`. */
           name?: string;
           /** Key/value pairs to provide settings for this webhook. [These are defined below](https://docs.github.com/rest/reference/repos#create-hook-config-params). */
-          config: {
-            url: components["schemas"]["webhook-config-url"];
+          config?: {
+            url?: components["schemas"]["webhook-config-url"];
             content_type?: components["schemas"]["webhook-config-content-type"];
             secret?: components["schemas"]["webhook-config-secret"];
             insecure_ssl?: components["schemas"]["webhook-config-insecure-ssl"];
@@ -22913,7 +22976,7 @@ export interface operations {
           events?: string[];
           /** Determines if notifications are sent when the webhook is triggered. Set to `true` to send notifications. */
           active?: boolean;
-        };
+        } | null;
       };
     };
   };
@@ -23213,7 +23276,7 @@ export interface operations {
           vcs_password?: string;
           vcs?: string;
           tfvc_project?: string;
-        };
+        } | null;
       };
     };
   };
@@ -23269,7 +23332,6 @@ export interface operations {
           email?: string;
           /** The new Git author name. */
           name?: string;
-          remote_id?: string;
         };
       };
     };
@@ -23352,7 +23414,10 @@ export interface operations {
       /** Response */
       200: {
         content: {
-          "application/json": components["schemas"]["interaction-limit-response"];
+          "application/json": Partial<
+            components["schemas"]["interaction-limit-response"]
+          > &
+            Partial<{ [key: string]: any }>;
         };
       };
     };
@@ -23372,7 +23437,7 @@ export interface operations {
           "application/json": components["schemas"]["interaction-limit-response"];
         };
       };
-      /** Conflict */
+      /** Response */
       409: unknown;
     };
     requestBody: {
@@ -23392,7 +23457,7 @@ export interface operations {
     responses: {
       /** Response */
       204: never;
-      /** Conflict */
+      /** Response */
       409: unknown;
     };
   };
@@ -24082,10 +24147,15 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": {
+        "application/json": Partial<{
           /** The names of the labels to add to the issue. You can pass an empty array to remove all labels. **Note:** Alternatively, you can pass a single label as a `string` or an `array` of labels directly, but GitHub recommends passing an object with the `labels` key. */
           labels?: string[];
-        };
+        }> &
+          Partial<{
+            labels?: {
+              name: string;
+            }[];
+          }>;
       };
     };
   };
@@ -24110,10 +24180,16 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": {
-          /** The name of the label to add to the issue. Must contain at least one label. **Note:** Alternatively, you can pass a single label as a `string` or an `array` of labels directly, but GitHub recommends passing an object with the `labels` key. */
-          labels: string[];
-        };
+        "application/json":
+          | {
+              /** The names of the labels to add to the issue. You can pass an empty array to remove all labels. **Note:** Alternatively, you can pass a single label as a `string` or an `array` of labels directly, but GitHub recommends passing an object with the `labels` key. */
+              labels?: string[];
+            }
+          | {
+              labels?: {
+                name: string;
+              }[];
+            };
       };
     };
   };
@@ -24258,6 +24334,12 @@ export interface operations {
       };
     };
     responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["reaction"];
+        };
+      };
       /** Response */
       201: {
         content: {
@@ -24595,10 +24677,12 @@ export interface operations {
           "application/json": components["schemas"]["commit"];
         };
       };
+      /** Response when already merged */
+      204: never;
       403: components["responses"]["forbidden"];
-      /** Response when the base or head does not exist */
+      /** Not Found when the base or head does not exist */
       404: unknown;
-      /** Response when there is a merge conflict */
+      /** Conflict when there is a merge conflict */
       409: unknown;
       422: components["responses"]["validation_failed"];
     };
@@ -24813,7 +24897,16 @@ export interface operations {
     };
     responses: {
       /** Response */
-      202: unknown;
+      202: {
+        content: {
+          "application/json": {
+            message?: string;
+            url?: string;
+          };
+        };
+      };
+      /** Reset Content */
+      205: unknown;
     };
     requestBody: {
       content: {
@@ -24857,12 +24950,17 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": {
+        "application/json": (Partial<{ [key: string]: any }> &
+          Partial<{ [key: string]: any }> &
+          Partial<{ [key: string]: any }> &
+          Partial<{ [key: string]: any }>) & {
           /** Specify a custom domain for the repository. Sending a `null` value will remove the custom domain. For more about custom domains, see "[Using a custom domain with GitHub Pages](https://help.github.com/articles/using-a-custom-domain-with-github-pages/)." */
           cname?: string | null;
+          /** Specify whether HTTPS should be enforced for the repository. */
+          https_enforced?: boolean;
           /** Configures access controls for the GitHub Pages site. If public is set to `true`, the site is accessible to anyone on the internet. If set to `false`, the site will only be accessible to users who have at least `read` access to the repository that published the site. This includes anyone in your Enterprise if the repository is set to `internal` visibility. This feature is only available to repositories in an organization on an Enterprise plan. */
           public?: boolean;
-          source: Partial<"gh-pages" | "master" | "master /docs"> &
+          source?: Partial<"gh-pages" | "master" | "master /docs"> &
             Partial<{
               /** The repository branch used to publish your site's source files. */
               branch: string;
@@ -24902,7 +25000,7 @@ export interface operations {
             /** The repository directory that includes the source files for the Pages site. Allowed paths are `/` or `/docs`. Default: `/` */
             path?: "/" | "/docs";
           };
-        };
+        } | null;
       };
     };
   };
@@ -25600,7 +25698,7 @@ export interface operations {
     responses: {
       /** Response if pull request has been merged */
       204: never;
-      /** Response if pull request has not been merged */
+      /** Not Found if pull request has not been merged */
       404: unknown;
     };
   };
@@ -25614,7 +25712,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Response if merge was successful */
+      /** if merge was successful */
       200: {
         content: {
           "application/json": components["schemas"]["pull-request-merge-result"];
@@ -25622,7 +25720,7 @@ export interface operations {
       };
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
-      /** Response if merge cannot be performed */
+      /** Method Not Allowed if merge cannot be performed */
       405: {
         content: {
           "application/json": {
@@ -25631,7 +25729,7 @@ export interface operations {
           };
         };
       };
-      /** Response if sha was provided and pull request head did not match */
+      /** Conflict if sha was provided and pull request head did not match */
       409: {
         content: {
           "application/json": {
@@ -25698,7 +25796,7 @@ export interface operations {
         };
       };
       403: components["responses"]["forbidden"];
-      /** Response if user is not a collaborator */
+      /** Unprocessable Entity if user is not a collaborator */
       422: unknown;
     };
     requestBody: {
@@ -25723,7 +25821,11 @@ export interface operations {
     };
     responses: {
       /** Response */
-      200: unknown;
+      200: {
+        content: {
+          "application/json": components["schemas"]["pull-request-simple"];
+        };
+      };
       422: components["responses"]["validation_failed"];
     };
     requestBody: {
@@ -26054,7 +26156,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["content-file"];
@@ -26115,6 +26217,12 @@ export interface operations {
           "application/json": components["schemas"]["release"];
         };
       };
+      /** Not Found if the discussion category name is invalid */
+      404: {
+        content: {
+          "application/json": components["schemas"]["basic-error"];
+        };
+      };
       422: components["responses"]["validation_failed"];
     };
     requestBody: {
@@ -26132,6 +26240,8 @@ export interface operations {
           draft?: boolean;
           /** `true` to identify the release as a prerelease. `false` to identify the release as a full release. */
           prerelease?: boolean;
+          /** If specified, a discussion of the specified category is created and linked to the release. The value must be a category that already exists in the repository. For more information, see "[Managing categories for discussions in your repository](https://docs.github.com/discussions/managing-discussions-for-your-community/managing-categories-for-discussions-in-your-repository)." */
+          discussion_category_name?: string;
         };
       };
     };
@@ -26295,6 +26405,12 @@ export interface operations {
           "application/json": components["schemas"]["release"];
         };
       };
+      /** Not Found if the discussion category name is invalid */
+      404: {
+        content: {
+          "application/json": components["schemas"]["basic-error"];
+        };
+      };
     };
     requestBody: {
       content: {
@@ -26311,6 +26427,8 @@ export interface operations {
           draft?: boolean;
           /** `true` to identify the release as a prerelease, `false` to identify the release as a full release. */
           prerelease?: boolean;
+          /** If specified, a discussion of the specified category is created and linked to the release. The value must be a category that already exists in the repository. If there is already a discussion linked to the release, this parameter is ignored. For more information, see "[Managing categories for discussions in your repository](https://docs.github.com/discussions/managing-discussions-for-your-community/managing-categories-for-discussions-in-your-repository)." */
+          discussion_category_name?: string;
         };
       };
     };
@@ -26504,8 +26622,8 @@ export interface operations {
       200: {
         headers: {};
         content: {
-          "application/json": components["schemas"]["simple-user"][];
-          "application/vnd.github.v3.star+json": components["schemas"]["stargazer"][];
+          "application/json": Partial<components["schemas"]["simple-user"][]> &
+            Partial<components["schemas"]["stargazer"][]>;
         };
       };
       422: components["responses"]["validation_failed"];
@@ -26526,6 +26644,8 @@ export interface operations {
           "application/json": components["schemas"]["code-frequency-stat"][];
         };
       };
+      202: components["responses"]["accepted"];
+      204: components["responses"]["no_content"];
     };
   };
   /** Returns the last year of commit activity grouped by week. The `days` array is a group of commits per day, starting on `Sunday`. */
@@ -26543,6 +26663,8 @@ export interface operations {
           "application/json": components["schemas"]["commit-activity"][];
         };
       };
+      202: components["responses"]["accepted"];
+      204: components["responses"]["no_content"];
     };
   };
   /**
@@ -26572,6 +26694,8 @@ export interface operations {
           "application/json": components["schemas"]["contributor-activity"][];
         };
       };
+      202: components["responses"]["accepted"];
+      204: components["responses"]["no_content"];
     };
   };
   /**
@@ -26619,6 +26743,7 @@ export interface operations {
           "application/json": components["schemas"]["code-frequency-stat"][];
         };
       };
+      204: components["responses"]["no_content"];
     };
   };
   /**
@@ -26696,14 +26821,14 @@ export interface operations {
       };
     };
     responses: {
-      /** Response if you subscribe to the repository */
+      /** if you subscribe to the repository */
       200: {
         content: {
           "application/json": components["schemas"]["repository-subscription"];
         };
       };
       403: components["responses"]["forbidden"];
-      /** Response if you don't subscribe to the repository */
+      /** Not Found if you don't subscribe to the repository */
       404: unknown;
     };
   };
@@ -26955,7 +27080,7 @@ export interface operations {
       /** Response */
       202: {
         content: {
-          "application/json": components["schemas"]["repository"];
+          "application/json": components["schemas"]["minimal-repository"];
         };
       };
     };
@@ -26981,7 +27106,7 @@ export interface operations {
     responses: {
       /** Response if repository is enabled with vulnerability alerts */
       204: never;
-      /** Response if repository is not enabled with vulnerability alerts */
+      /** Not Found if repository is not enabled with vulnerability alerts */
       404: unknown;
     };
   };
@@ -27119,7 +27244,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         headers: {};
         content: {
@@ -27141,7 +27266,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["actions-public-key"];
@@ -27161,7 +27286,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["actions-secret"];
@@ -27922,7 +28047,7 @@ export interface operations {
       400: components["responses"]["scim_bad_request"];
       403: components["responses"]["scim_forbidden"];
       404: components["responses"]["scim_not_found"];
-      /** Too many requests */
+      /** Response */
       429: {
         content: {
           "application/json": components["schemas"]["basic-error"];
@@ -28317,6 +28442,12 @@ export interface operations {
       };
     };
     responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["team-full"];
+        };
+      };
       /** Response */
       201: {
         content: {
@@ -28848,9 +28979,9 @@ export interface operations {
       };
     };
     responses: {
-      /** Response if user is a member */
+      /** if user is a member */
       204: never;
-      /** Response if user is not a member */
+      /** if user is not a member */
       404: unknown;
     };
   };
@@ -28878,9 +29009,9 @@ export interface operations {
       /** Response */
       204: never;
       403: components["responses"]["forbidden"];
-      /** Response if team synchronization is set up */
+      /** Not Found if team synchronization is set up */
       404: unknown;
-      /** Response if you attempt to add an organization to a team or you attempt to add a user to a team when they are not a member of at least one other team in the same organization */
+      /** Unprocessable Entity if you attempt to add an organization to a team or you attempt to add a user to a team when they are not a member of at least one other team in the same organization */
       422: unknown;
     };
   };
@@ -28905,7 +29036,7 @@ export interface operations {
     responses: {
       /** Response */
       204: never;
-      /** Response if team synchronization is setup */
+      /** Not Found if team synchronization is setup */
       404: unknown;
     };
   };
@@ -28965,10 +29096,10 @@ export interface operations {
           "application/json": components["schemas"]["team-membership"];
         };
       };
-      /** Response if team synchronization is set up */
+      /** Forbidden if team synchronization is set up */
       403: unknown;
       404: components["responses"]["not_found"];
-      /** Response if you attempt to add an organization to a team */
+      /** Unprocessable Entity if you attempt to add an organization to a team */
       422: unknown;
     };
     requestBody: {
@@ -29003,7 +29134,7 @@ export interface operations {
     responses: {
       /** Response */
       204: never;
-      /** Response if team synchronization is set up */
+      /** if team synchronization is set up */
       403: unknown;
     };
   };
@@ -29055,7 +29186,7 @@ export interface operations {
           "application/json": components["schemas"]["team-project"];
         };
       };
-      /** Response if project is not managed by this team */
+      /** Not Found if project is not managed by this team */
       404: unknown;
       415: components["responses"]["preview_header_missing"];
     };
@@ -29075,7 +29206,7 @@ export interface operations {
     responses: {
       /** Response */
       204: never;
-      /** Response if the project is not owned by the organization */
+      /** Forbidden if the project is not owned by the organization */
       403: {
         content: {
           "application/json": {
@@ -29166,12 +29297,12 @@ export interface operations {
       /** Alternative response with extra repository information */
       200: {
         content: {
-          "application/vnd.github.v3.repository+json": components["schemas"]["team-repository"];
+          "application/json": components["schemas"]["team-repository"];
         };
       };
       /** Response if repository is managed by this team */
       204: never;
-      /** Response if repository is not managed by this team */
+      /** Not Found if repository is not managed by this team */
       404: unknown;
     };
   };
@@ -29311,7 +29442,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Response if child teams exist */
+      /** if child teams exist */
       200: {
         headers: {};
         content: {
@@ -29471,7 +29602,7 @@ export interface operations {
       content: {
         "application/json": {
           /** An email address associated with the GitHub user account to manage. */
-          email: string;
+          email?: string;
           /** Denotes whether an email is publically visible. */
           visibility: "public" | "private";
         };
@@ -29520,13 +29651,10 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json":
-          | {
-              /** Adds one or more email addresses to your GitHub account. Must contain at least one email address. **Note:** Alternatively, you can pass a single email address or an `array` of emails addresses directly, but we recommend that you pass an object using the `emails` key. */
-              emails: string[];
-            }
-          | string[]
-          | string;
+        "application/json": {
+          /** Adds one or more email addresses to your GitHub account. Must contain at least one email address. **Note:** Alternatively, you can pass a single email address or an `array` of emails addresses directly, but we recommend that you pass an object using the `emails` key. */
+          emails: string[];
+        };
       };
     };
   };
@@ -29544,13 +29672,10 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json":
-          | {
-              /** Email addresses associated with the GitHub user account. */
-              emails: string[];
-            }
-          | string[]
-          | string;
+        "application/json": {
+          /** Email addresses associated with the GitHub user account. */
+          emails: string[];
+        };
       };
     };
   };
@@ -29607,12 +29732,12 @@ export interface operations {
       };
     };
     responses: {
-      /** Response if the person is followed by the authenticated user */
+      /** if the person is followed by the authenticated user */
       204: never;
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
-      /** Response if the person is not followed by the authenticated user */
+      /** if the person is not followed by the authenticated user */
       404: {
         content: {
           "application/json": components["schemas"]["basic-error"];
@@ -29866,7 +29991,10 @@ export interface operations {
       /** Default response */
       200: {
         content: {
-          "application/json": components["schemas"]["interaction-limit-response"];
+          "application/json": Partial<
+            components["schemas"]["interaction-limit-response"]
+          > &
+            Partial<{ [key: string]: any }>;
         };
       };
       /** Response when there are no restrictions */
@@ -30382,7 +30510,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["package"];
@@ -30391,7 +30519,7 @@ export interface operations {
     };
   };
   /**
-   * Deletes a package owned by the authenticated user. You cannot delete a public package if any version of the package has more than 25 downloads. In this scenario, contact GitHub support for further assistance.
+   * Deletes a package owned by the authenticated user. You cannot delete a public package if any version of the package has more than 5,000 downloads. In this scenario, contact GitHub support for further assistance.
    *
    * To use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:delete` scope.
    * If `package_type` is not `container`, your token must also include the `repo` scope.
@@ -30467,7 +30595,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["package-version"][];
@@ -30496,7 +30624,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["package-version"];
@@ -30505,7 +30633,7 @@ export interface operations {
     };
   };
   /**
-   * Deletes a specific package version for a package owned by the authenticated user.  If the package is public and the package version has more than 25 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.
+   * Deletes a specific package version for a package owned by the authenticated user.  If the package is public and the package version has more than 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.
    *
    * To use this endpoint, you must have admin permissions in the organization and authenticate using an access token with the `packages:read` scope.
    * If `package_type` is not `container`, your token must also include the `repo` scope.
@@ -30828,7 +30956,7 @@ export interface operations {
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
-      /** Response if this repository is not starred by you */
+      /** Not Found if this repository is not starred by you */
       404: {
         content: {
           "application/json": components["schemas"]["basic-error"];
@@ -30966,6 +31094,7 @@ export interface operations {
             | components["schemas"]["public-user"];
         };
       };
+      202: components["responses"]["accepted"];
       404: components["responses"]["not_found"];
     };
   };
@@ -31089,9 +31218,9 @@ export interface operations {
       };
     };
     responses: {
-      /** Response if the user follows the target user */
+      /** if the user follows the target user */
       204: never;
-      /** Response if the user does not follow the target user */
+      /** if the user does not follow the target user */
       404: unknown;
     };
   };
@@ -31264,7 +31393,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["package"];
@@ -31289,7 +31418,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["package-version"][];
@@ -31319,7 +31448,7 @@ export interface operations {
       };
     };
     responses: {
-      /** response */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["package-version"];
@@ -31517,8 +31646,10 @@ export interface operations {
       200: {
         headers: {};
         content: {
-          "application/json": components["schemas"]["repository"][];
-          "application/vnd.github.v3.star+json": components["schemas"]["starred-repository"][];
+          "application/json": Partial<
+            components["schemas"]["starred-repository"][]
+          > &
+            Partial<components["schemas"]["repository"][]>;
         };
       };
     };
@@ -31555,6 +31686,74 @@ export interface operations {
           "text/plain": string;
         };
       };
+    };
+  };
+  /**
+   * Both `:base` and `:head` must be branch names in `:repo`. To compare branches across other repositories in the same network as `:repo`, use the format `<USERNAME>:branch`.
+   *
+   * The response from the API is equivalent to running the `git log base..head` command; however, commits are returned in chronological order. Pass the appropriate [media type](https://docs.github.com/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.
+   *
+   * The response also includes details on the files that were changed between the two commits. This includes the status of the change (for example, if a file was added, removed, modified, or renamed), and details of the change itself. For example, files with a `renamed` status have a `previous_filename` field showing the previous filename of the file, and files with a `modified` status have a `patch` field showing the changes made to the file.
+   *
+   * **Working with large comparisons**
+   *
+   * To process a response with a large number of commits, you can use (`per_page` or `page`) to paginate the results. When using paging, the list of changed files is only returned with page 1, but includes all changed files for the entire comparison. For more information on working with pagination, see "[Traversing with pagination](/rest/guides/traversing-with-pagination)."
+   *
+   * When calling this API without any paging parameters (`per_page` or `page`), the returned list is limited to 250 commits and the last commit in the list is the most recent of the entire comparison. When a paging parameter is specified, the first commit in the returned list of each page is the earliest.
+   *
+   * **Signature verification object**
+   *
+   * The response will include a `verification` object that describes the result of verifying the commit's signature. The following fields are included in the `verification` object:
+   *
+   * | Name | Type | Description |
+   * | ---- | ---- | ----------- |
+   * | `verified` | `boolean` | Indicates whether GitHub considers the signature in this commit to be verified. |
+   * | `reason` | `string` | The reason for verified value. Possible values and their meanings are enumerated in table below. |
+   * | `signature` | `string` | The signature that was extracted from the commit. |
+   * | `payload` | `string` | The value that was signed. |
+   *
+   * These are the possible values for `reason` in the `verification` object:
+   *
+   * | Value | Description |
+   * | ----- | ----------- |
+   * | `expired_key` | The key that made the signature is expired. |
+   * | `not_signing_key` | The "signing" flag is not among the usage flags in the GPG key that made the signature. |
+   * | `gpgverify_error` | There was an error communicating with the signature verification service. |
+   * | `gpgverify_unavailable` | The signature verification service is currently unavailable. |
+   * | `unsigned` | The object does not include a signature. |
+   * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
+   * | `no_user` | No user was associated with the `committer` email address in the commit. |
+   * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
+   * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
+   * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
+   * | `malformed_signature` | There was an error parsing the signature. |
+   * | `invalid` | The signature could not be cryptographically verified using the key whose key-id was found in the signature. |
+   * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
+   */
+  "repos/compare-commits": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        base: string;
+        head: string;
+      };
+      query: {
+        /** Results per page (max 100) */
+        per_page?: components["parameters"]["per-page"];
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["commit-comparison"];
+        };
+      };
+      404: components["responses"]["not_found"];
+      500: components["responses"]["internal_error"];
     };
   };
 }
