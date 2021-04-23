@@ -2611,10 +2611,10 @@ export interface paths {
      * You must compress the SARIF-formatted analysis data that you want to upload, using `gzip`, and then encode it as a Base64 format string. For example:
      *
      * ```
-     * gzip -c analysis-data.sarif | base64
+     * gzip -c analysis-data.sarif | base64 -w0
      * ```
      *
-     * SARIF upload supports a maximum of 1000 results per analysis run. Any results over this limit are ignored. Typically, but not necessarily, a SARIF file contains a single run of a single tool. If a code scanning tool generates too many results, you should update the analysis configuration to run only the most important rules or queries.
+     * SARIF upload supports a maximum of 5000 results per analysis run. Any results over this limit are ignored and any SARIF uploads with more than 25,000 results are rejected. Typically, but not necessarily, a SARIF file contains a single run of a single tool. If a code scanning tool generates too many results, you should update the analysis configuration to run only the most important rules or queries.
      *
      * The `202 Accepted`, response includes an `id` value.
      * You can use this ID to check the status of the upload by using this for the `/sarifs/{sarif_id}` endpoint.
@@ -7925,6 +7925,8 @@ export interface components {
       sarif_id: components["schemas"]["code-scanning-analysis-sarif-id"];
       tool: components["schemas"]["code-scanning-analysis-tool"];
       deletable: boolean;
+      /** Warning generated when processing the analysis */
+      warning: string;
     };
     /** Successful deletion of a code scanning analysis */
     "code-scanning-analysis-deletion": {
@@ -20786,10 +20788,10 @@ export interface operations {
    * You must compress the SARIF-formatted analysis data that you want to upload, using `gzip`, and then encode it as a Base64 format string. For example:
    *
    * ```
-   * gzip -c analysis-data.sarif | base64
+   * gzip -c analysis-data.sarif | base64 -w0
    * ```
    *
-   * SARIF upload supports a maximum of 1000 results per analysis run. Any results over this limit are ignored. Typically, but not necessarily, a SARIF file contains a single run of a single tool. If a code scanning tool generates too many results, you should update the analysis configuration to run only the most important rules or queries.
+   * SARIF upload supports a maximum of 5000 results per analysis run. Any results over this limit are ignored and any SARIF uploads with more than 25,000 results are rejected. Typically, but not necessarily, a SARIF file contains a single run of a single tool. If a code scanning tool generates too many results, you should update the analysis configuration to run only the most important rules or queries.
    *
    * The `202 Accepted`, response includes an `id` value.
    * You can use this ID to check the status of the upload by using this for the `/sarifs/{sarif_id}` endpoint.
@@ -20803,12 +20805,6 @@ export interface operations {
       };
     };
     responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": { [key: string]: any };
-        };
-      };
       /** Response */
       202: {
         content: {
