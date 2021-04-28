@@ -22056,7 +22056,6 @@ export interface operations {
            * **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/rest/overview/api-previews#enhanced-deployments) custom media type.
            */
           production_environment?: boolean;
-          created_at?: string;
         };
       };
     };
