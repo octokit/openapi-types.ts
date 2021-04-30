@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "version": "2.17.3",
+    "version": "2.17.4",
     "title": "GitHub's official OpenAPI spec + Octokit extension",
     "description": "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs",
     "license": { "name": "MIT", "url": "https://spdx.org/licenses/MIT" },
@@ -3100,7 +3100,15 @@
           "category": "enterprise-admin",
           "subcategory": "audit-log"
         },
-        "x-octokit": {}
+        "x-octokit": {
+          "changes": [
+            {
+              "type": "OPERATION",
+              "date": "2021-04-30",
+              "before": { "operationId": "audit-log/get-audit-log" }
+            }
+          ]
+        }
       }
     },
     "/enterprises/{enterprise}/settings/billing/actions": {
