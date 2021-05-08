@@ -5790,6 +5790,8 @@ export interface components {
       /** The time the audit log event was recorded, given as a [Unix timestamp](http://en.wikipedia.org/wiki/Unix_time). */
       created_at?: number;
       deploy_key_fingerprint?: string;
+      /** A unique identifier for an audit event. */
+      _document_id?: string;
       emoji?: string;
       events?: any[];
       events_were?: any[];
@@ -10254,6 +10256,12 @@ export interface components {
     };
     /** Conflict */
     conflict: {
+      content: {
+        "application/json": components["schemas"]["basic-error"];
+      };
+    };
+    /** Temporary Redirect */
+    temporary_redirect: {
       content: {
         "application/json": components["schemas"]["basic-error"];
       };
@@ -17900,6 +17908,7 @@ export interface operations {
     responses: {
       /** Response */
       204: never;
+      307: components["responses"]["temporary_redirect"];
       /** If an organization owner has configured the organization to prevent members from deleting organization-owned repositories, a member will get this response: */
       403: {
         content: {
@@ -17927,6 +17936,7 @@ export interface operations {
           "application/json": components["schemas"]["full-repository"];
         };
       };
+      307: components["responses"]["temporary_redirect"];
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
       422: components["responses"]["validation_failed"];
