@@ -18734,33 +18734,6 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /**
-   * **Note:** This endpoint is currently in beta and is subject to change.
-   *
-   * Approves a workflow run for a pull request from a public fork of a first time contributor. For more information, see ["Approving workflow runs from public forks](https://docs.github.com/actions/managing-workflow-runs/approving-workflow-runs-from-public-forks)."
-   *
-   * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
-   */
-  "actions/approve-workflow-run": {
-    parameters: {
-      path: {
-        owner: components["parameters"]["owner"];
-        repo: components["parameters"]["repo"];
-        /** The id of the workflow run. */
-        run_id: components["parameters"]["run-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      201: {
-        content: {
-          "application/json": components["schemas"]["empty-object"];
-        };
-      };
-      403: components["responses"]["forbidden"];
-      404: components["responses"]["not_found"];
-    };
-  };
   /** Lists artifacts for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. */
   "actions/list-workflow-run-artifacts": {
     parameters: {
