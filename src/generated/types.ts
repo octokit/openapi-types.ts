@@ -3836,7 +3836,6 @@ export interface paths {
     /** Create a reaction to a [release](https://docs.github.com/rest/reference/repos#releases). A response with a `Status: 200 OK` means that you already added the reaction type to this release. */
     post: operations["reactions/create-for-release"];
   };
-  "/repos/{owner}/{repo}/releases/{release_id}/reactions/{reaction_id}": {};
   "/repos/{owner}/{repo}/secret-scanning/alerts": {
     /**
      * Lists all secret scanning alerts for a private repository, from newest to oldest. To use this endpoint, you must be an administrator for the repository or organization, and you must use an access token with the `repo` scope or `security_events` scope.
@@ -4980,7 +4979,6 @@ export interface paths {
     /** List all of the teams across all of the organizations to which the authenticated user belongs. This method requires `user`, `repo`, or `read:org` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/) when authenticating via [OAuth](https://docs.github.com/apps/building-oauth-apps/). */
     get: operations["teams/list-for-authenticated-user"];
   };
-  "/user/tokens/reset": {};
   "/users": {
     /**
      * Lists all users, in the order that they signed up on GitHub. This list includes personal user accounts and organization accounts.

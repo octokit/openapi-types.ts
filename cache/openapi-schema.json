@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "version": "2.21.0",
+    "version": "2.21.1",
     "title": "GitHub's official OpenAPI spec + Octokit extension",
     "description": "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs",
     "license": { "name": "MIT", "url": "https://spdx.org/licenses/MIT" },
@@ -29402,7 +29402,6 @@
         "x-octokit": {}
       }
     },
-    "/repos/{owner}/{repo}/releases/{release_id}/reactions/{reaction_id}": {},
     "/repos/{owner}/{repo}/secret-scanning/alerts": {
       "get": {
         "summary": "List secret scanning alerts for a repository",
@@ -37761,7 +37760,6 @@
         "x-octokit": {}
       }
     },
-    "/user/tokens/reset": {},
     "/users": {
       "get": {
         "summary": "List users",
@@ -38988,8 +38986,7 @@
           "category": "repos",
           "subcategory": "commits"
         },
-        "x-octokit": {},
-        "deprecated": true
+        "x-octokit": {}
       }
     },
     "/repos/{owner}/{repo}/content_references/{content_reference_id}/attachments": {
@@ -39166,8 +39163,7 @@
           "category": "apps",
           "subcategory": "installations"
         },
-        "x-octokit": {},
-        "deprecated": true
+        "x-octokit": {}
       }
     }
   },
