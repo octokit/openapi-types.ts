@@ -1935,6 +1935,16 @@ export interface paths {
     /** Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. */
     get: operations["actions/get-reviews-for-run"];
   };
+  "/repos/{owner}/{repo}/actions/runs/{run_id}/approve": {
+    /**
+     * **Note:** This endpoint is currently in beta and is subject to change.
+     *
+     * Approves a workflow run for a pull request from a public fork of a first time contributor. For more information, see ["Approving workflow runs from public forks](https://docs.github.com/actions/managing-workflow-runs/approving-workflow-runs-from-public-forks)."
+     *
+     * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+     */
+    post: operations["actions/approve-workflow-run"];
+  };
   "/repos/{owner}/{repo}/actions/runs/{run_id}/artifacts": {
     /** Lists artifacts for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. */
     get: operations["actions/list-workflow-run-artifacts"];
@@ -5780,6 +5790,8 @@ export interface components {
       /** The time the audit log event was recorded, given as a [Unix timestamp](http://en.wikipedia.org/wiki/Unix_time). */
       created_at?: number;
       deploy_key_fingerprint?: string;
+      /** A unique identifier for an audit event. */
+      _document_id?: string;
       emoji?: string;
       events?: any[];
       events_were?: any[];
@@ -8172,6 +8184,9 @@ export interface components {
       documentation: string | null;
       files: {
         code_of_conduct: components["schemas"]["code-of-conduct-simple"] | null;
+        code_of_conduct_file:
+          | components["schemas"]["community-health-file"]
+          | null;
         license: components["schemas"]["license-simple"] | null;
         contributing: components["schemas"]["community-health-file"] | null;
         readme: components["schemas"]["community-health-file"] | null;
@@ -10245,6 +10260,12 @@ export interface components {
         "application/json": components["schemas"]["basic-error"];
       };
     };
+    /** Temporary Redirect */
+    temporary_redirect: {
+      content: {
+        "application/json": components["schemas"]["basic-error"];
+      };
+    };
     /** Response if GitHub Advanced Security is not enabled for this repository */
     code_scanning_forbidden_read: {
       content: {
@@ -10448,7 +10469,7 @@ export interface components {
       | "queued"
       | "requested"
       | "waiting";
-    /** The id of the workflow run */
+    /** The id of the workflow run. */
     "run-id": number;
     /** The ID of the workflow. You can also pass the workflow file name as a string. */
     "workflow-id": number | string;
@@ -17887,6 +17908,7 @@ export interface operations {
     responses: {
       /** Response */
       204: never;
+      307: components["responses"]["temporary_redirect"];
       /** If an organization owner has configured the organization to prevent members from deleting organization-owned repositories, a member will get this response: */
       403: {
         content: {
@@ -17914,6 +17936,7 @@ export interface operations {
           "application/json": components["schemas"]["full-repository"];
         };
       };
+      307: components["responses"]["temporary_redirect"];
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
       422: components["responses"]["validation_failed"];
@@ -18368,7 +18391,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** The id of the workflow run */
+        /** The id of the workflow run. */
         run_id: components["parameters"]["run-id"];
       };
     };
@@ -18391,7 +18414,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** The id of the workflow run */
+        /** The id of the workflow run. */
         run_id: components["parameters"]["run-id"];
       };
     };
@@ -18406,7 +18429,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** The id of the workflow run */
+        /** The id of the workflow run. */
         run_id: components["parameters"]["run-id"];
       };
     };
@@ -18419,13 +18442,40 @@ export interface operations {
       };
     };
   };
+  /**
+   * **Note:** This endpoint is currently in beta and is subject to change.
+   *
+   * Approves a workflow run for a pull request from a public fork of a first time contributor. For more information, see ["Approving workflow runs from public forks](https://docs.github.com/actions/managing-workflow-runs/approving-workflow-runs-from-public-forks)."
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+   */
+  "actions/approve-workflow-run": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        /** The id of the workflow run. */
+        run_id: components["parameters"]["run-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      201: {
+        content: {
+          "application/json": components["schemas"]["empty-object"];
+        };
+      };
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+    };
+  };
   /** Lists artifacts for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. */
   "actions/list-workflow-run-artifacts": {
     parameters: {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** The id of the workflow run */
+        /** The id of the workflow run. */
         run_id: components["parameters"]["run-id"];
       };
       query: {
@@ -18454,7 +18504,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** The id of the workflow run */
+        /** The id of the workflow run. */
         run_id: components["parameters"]["run-id"];
       };
     };
@@ -18473,7 +18523,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** The id of the workflow run */
+        /** The id of the workflow run. */
         run_id: components["parameters"]["run-id"];
       };
       query: {
@@ -18513,7 +18563,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** The id of the workflow run */
+        /** The id of the workflow run. */
         run_id: components["parameters"]["run-id"];
       };
     };
@@ -18528,7 +18578,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** The id of the workflow run */
+        /** The id of the workflow run. */
         run_id: components["parameters"]["run-id"];
       };
     };
@@ -18547,7 +18597,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** The id of the workflow run */
+        /** The id of the workflow run. */
         run_id: components["parameters"]["run-id"];
       };
     };
@@ -18570,7 +18620,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** The id of the workflow run */
+        /** The id of the workflow run. */
         run_id: components["parameters"]["run-id"];
       };
     };
@@ -18601,7 +18651,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** The id of the workflow run */
+        /** The id of the workflow run. */
         run_id: components["parameters"]["run-id"];
       };
     };
@@ -18624,7 +18674,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** The id of the workflow run */
+        /** The id of the workflow run. */
         run_id: components["parameters"]["run-id"];
       };
     };

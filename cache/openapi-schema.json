@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "version": "2.17.9",
+    "version": "2.20.2",
     "title": "GitHub's official OpenAPI spec + Octokit extension",
     "description": "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs",
     "license": { "name": "MIT", "url": "https://spdx.org/licenses/MIT" },
@@ -13303,6 +13303,7 @@
               }
             }
           },
+          "307": { "$ref": "#/components/responses/temporary_redirect" },
           "403": { "$ref": "#/components/responses/forbidden" },
           "404": { "$ref": "#/components/responses/not_found" },
           "422": { "$ref": "#/components/responses/validation_failed" }
@@ -13342,6 +13343,7 @@
         ],
         "responses": {
           "204": { "description": "Response" },
+          "307": { "$ref": "#/components/responses/temporary_redirect" },
           "403": {
             "description": "If an organization owner has configured the organization to prevent members from deleting organization-owned repositories, a member will get this response:",
             "content": {
@@ -14152,6 +14154,43 @@
               }
             }
           }
+        },
+        "x-github": {
+          "githubCloudOnly": false,
+          "enabledForGitHubApps": true,
+          "previews": [],
+          "category": "actions",
+          "subcategory": "workflow-runs"
+        },
+        "x-octokit": {}
+      }
+    },
+    "/repos/{owner}/{repo}/actions/runs/{run_id}/approve": {
+      "post": {
+        "summary": "Approve a workflow run for a fork pull request",
+        "description": "**Note:** This endpoint is currently in beta and is subject to change.\n\nApproves a workflow run for a pull request from a public fork of a first time contributor. For more information, see [\"Approving workflow runs from public forks](https://docs.github.com/actions/managing-workflow-runs/approving-workflow-runs-from-public-forks).\"\n\nYou must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.",
+        "tags": ["actions"],
+        "operationId": "actions/approve-workflow-run",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/actions#approve-a-workflow-run-for-a-fork-pull-request"
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/owner" },
+          { "$ref": "#/components/parameters/repo" },
+          { "$ref": "#/components/parameters/run-id" }
+        ],
+        "responses": {
+          "201": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/empty-object" }
+              }
+            }
+          },
+          "403": { "$ref": "#/components/responses/forbidden" },
+          "404": { "$ref": "#/components/responses/not_found" }
         },
         "x-github": {
           "githubCloudOnly": false,
@@ -40599,6 +40638,10 @@
             "description": "The time the audit log event was recorded, given as a [Unix timestamp](http://en.wikipedia.org/wiki/Unix_time)."
           },
           "deploy_key_fingerprint": { "type": "string" },
+          "_document_id": {
+            "type": "string",
+            "description": "A unique identifier for an audit event."
+          },
           "emoji": { "type": "string" },
           "events": { "type": "array" },
           "events_were": { "type": "array" },
@@ -40745,7 +40788,7 @@
         "description": "Color-coded labels help you categorize and filter your issues (just like labels in Gmail).",
         "type": "object",
         "properties": {
-          "id": { "type": "integer", "example": 208045946 },
+          "id": { "type": "integer", "format": "int64", "example": 208045946 },
           "node_id": {
             "type": "string",
             "example": "MDU6TGFiZWwyMDgwNDU5NDY="
@@ -41596,7 +41639,7 @@
                 {
                   "type": "object",
                   "properties": {
-                    "id": { "type": "integer" },
+                    "id": { "type": "integer", "format": "int64" },
                     "node_id": { "type": "string" },
                     "url": { "type": "string", "format": "uri" },
                     "name": { "type": "string" },
@@ -47292,7 +47335,7 @@
             "items": {
               "type": "object",
               "properties": {
-                "id": { "type": "integer" },
+                "id": { "type": "integer", "format": "int64" },
                 "node_id": { "type": "string" },
                 "url": { "type": "string" },
                 "name": { "type": "string" },
@@ -47572,6 +47615,12 @@
                   { "$ref": "#/components/schemas/code-of-conduct-simple" }
                 ]
               },
+              "code_of_conduct_file": {
+                "nullable": true,
+                "allOf": [
+                  { "$ref": "#/components/schemas/community-health-file" }
+                ]
+              },
               "license": {
                 "nullable": true,
                 "allOf": [{ "$ref": "#/components/schemas/license-simple" }]
@@ -47603,6 +47652,7 @@
             },
             "required": [
               "code_of_conduct",
+              "code_of_conduct_file",
               "license",
               "contributing",
               "readme",
@@ -49464,7 +49514,7 @@
             "items": {
               "type": "object",
               "properties": {
-                "id": { "type": "integer" },
+                "id": { "type": "integer", "format": "int64" },
                 "node_id": { "type": "string" },
                 "url": { "type": "string" },
                 "name": { "type": "string" },
@@ -51553,7 +51603,7 @@
             "items": {
               "type": "object",
               "properties": {
-                "id": { "type": "integer" },
+                "id": { "type": "integer", "format": "int64" },
                 "node_id": { "type": "string" },
                 "url": { "type": "string" },
                 "name": { "type": "string" },
@@ -53312,6 +53362,7 @@
             "action": "team.add_member",
             "actor": "octocat",
             "created_at": 1606929874512,
+            "_document_id": "xJJFlFOhQ6b-5vaAFy9Rjw",
             "org": "octo-corp",
             "team": "octo-corp/example-team",
             "user": "monalisa"
@@ -53321,6 +53372,7 @@
             "action": "org.create",
             "actor": "octocat",
             "created_at": 1606507117008,
+            "_document_id": "Vqvg6kZ4MYqwWRKFDzlMoQ",
             "org": "octocat-test-org"
           },
           {
@@ -53328,6 +53380,7 @@
             "action": "repo.destroy",
             "actor": "monalisa",
             "created_at": 1605719148837,
+            "_document_id": "LwW2vpJZCDS-WUmo9Z-ifw",
             "org": "mona-org",
             "repo": "mona-org/mona-test-repo",
             "visibility": "private"
@@ -62220,6 +62273,10 @@
               "url": "https://api.github.com/codes_of_conduct/contributor_covenant",
               "html_url": "https://github.com/octocat/Hello-World/blob/master/CODE_OF_CONDUCT.md"
             },
+            "code_of_conduct_file": {
+              "url": "https://api.github.com/repos/octocat/Hello-World/contents/CODE_OF_CONDUCT.md",
+              "html_url": "https://github.com/octocat/Hello-World/blob/master/CODE_OF_CONDUCT.md"
+            },
             "contributing": {
               "url": "https://api.github.com/repos/octocat/Hello-World/contents/CONTRIBUTING",
               "html_url": "https://github.com/octocat/Hello-World/blob/master/CONTRIBUTING"
@@ -67280,112 +67337,14 @@
       "participation-stats": {
         "value": {
           "all": [
-            11,
-            21,
-            15,
-            2,
-            8,
-            1,
-            8,
-            23,
-            17,
-            21,
-            11,
-            10,
-            33,
-            91,
-            38,
-            34,
-            22,
-            23,
-            32,
-            3,
-            43,
-            87,
-            71,
-            18,
-            13,
-            5,
-            13,
-            16,
-            66,
-            27,
-            12,
-            45,
-            110,
-            117,
-            13,
-            8,
-            18,
-            9,
-            19,
-            26,
-            39,
-            12,
-            20,
-            31,
-            46,
-            91,
-            45,
-            10,
-            24,
-            9,
-            29,
-            7
+            11, 21, 15, 2, 8, 1, 8, 23, 17, 21, 11, 10, 33, 91, 38, 34, 22, 23,
+            32, 3, 43, 87, 71, 18, 13, 5, 13, 16, 66, 27, 12, 45, 110, 117, 13,
+            8, 18, 9, 19, 26, 39, 12, 20, 31, 46, 91, 45, 10, 24, 9, 29, 7
           ],
           "owner": [
-            3,
-            2,
-            3,
-            0,
-            2,
-            0,
-            5,
-            14,
-            7,
-            9,
-            1,
-            5,
-            0,
-            48,
-            19,
-            2,
-            0,
-            1,
-            10,
-            2,
-            23,
-            40,
-            35,
-            8,
-            8,
-            2,
-            10,
-            6,
-            30,
-            0,
-            2,
-            9,
-            53,
-            104,
-            3,
-            3,
-            10,
-            4,
-            7,
-            11,
-            21,
-            4,
-            4,
-            22,
-            26,
-            63,
-            11,
-            2,
-            14,
-            1,
-            10,
-            3
+            3, 2, 3, 0, 2, 0, 5, 14, 7, 9, 1, 5, 0, 48, 19, 2, 0, 1, 10, 2, 23,
+            40, 35, 8, 8, 2, 10, 6, 30, 0, 2, 9, 53, 104, 3, 3, 10, 4, 7, 11,
+            21, 4, 4, 22, 26, 63, 11, 2, 14, 1, 10, 3
           ]
         }
       },
@@ -70956,6 +70915,14 @@
           }
         }
       },
+      "temporary_redirect": {
+        "description": "Temporary Redirect",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/basic-error" }
+          }
+        }
+      },
       "code_scanning_forbidden_read": {
         "description": "Response if GitHub Advanced Security is not enabled for this repository",
         "content": {
@@ -71462,7 +71429,7 @@
       },
       "run-id": {
         "name": "run_id",
-        "description": "The id of the workflow run",
+        "description": "The id of the workflow run.",
         "in": "path",
         "required": true,
         "schema": { "type": "integer" }
