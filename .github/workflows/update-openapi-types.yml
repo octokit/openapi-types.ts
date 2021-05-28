@@ -1,0 +1,23 @@
+name: Update generate-types
+"on":
+  push:
+    branches:
+      - dependabot/npm_and_yarn/openapi-typescript-*
+jobs:
+  update_prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 12
+      - run: npm ci
+      - run: "npm run generate-types"
+      - uses: gr2m/create-or-update-pull-request-action@v1.x
+        env:
+          GITHUB_TOKEN: "${{ secrets.OCTOKITBOT_PAT }}"
+        with:
+          title: Prettier updated
+          body: An update to prettier required updates to your code.
+          branch: "${{ github.ref }}"
+          commit-message: "WIP: review changes and set correct commit prefix"
