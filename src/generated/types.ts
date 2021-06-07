@@ -2887,6 +2887,16 @@ export interface paths {
      */
     get: operations["repos/compare-commits-with-basehead"];
   };
+  "/repos/{owner}/{repo}/content_references/{content_reference_id}/attachments": {
+    /**
+     * Creates an attachment under a content reference URL in the body or comment of an issue or pull request. Use the `id` and `repository` `full_name` of the content reference from the [`content_reference` event](https://docs.github.com/webhooks/event-payloads/#content_reference) to create an attachment.
+     *
+     * The app must create a content attachment within six hours of the content reference URL being posted. See "[Using content attachments](https://docs.github.com/apps/using-content-attachments/)" for details about content attachments.
+     *
+     * You must use an [installation access token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
+     */
+    post: operations["apps/create-content-attachment-for-repo"];
+  };
   "/repos/{owner}/{repo}/contents/{path}": {
     /**
      * Gets the contents of a file or directory in a repository. Specify the file path or directory in `:path`. If you omit
@@ -5194,16 +5204,6 @@ export interface paths {
      */
     get: operations["repos/compare-commits"];
   };
-  "/repos/{owner}/{repo}/content_references/{content_reference_id}/attachments": {
-    /**
-     * Creates an attachment under a content reference URL in the body or comment of an issue or pull request. Use the `id` and `repository` `full_name` of the content reference from the [`content_reference` event](https://docs.github.com/webhooks/event-payloads/#content_reference) to create an attachment.
-     *
-     * The app must create a content attachment within six hours of the content reference URL being posted. See "[Using content attachments](https://docs.github.com/apps/using-content-attachments/)" for details about content attachments.
-     *
-     * You must use an [installation access token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
-     */
-    post: operations["apps/create-content-attachment-for-repo"];
-  };
   "/content_references/{content_reference_id}/attachments": {
     /**
      * **Deprecated:** use `apps.createContentAttachmentForRepo()` (`POST /repos/{owner}/{repo}/content_references/{content_reference_id}/attachments`) instead. Creates an attachment under a content reference URL in the body or comment of an issue or pull request. Use the `id` of the content reference from the [`content_reference` event](https://docs.github.com/webhooks/event-payloads/#content_reference) to create an attachment.
@@ -7183,6 +7183,7 @@ export interface components {
       /** Whether anonymous git access is allowed. */
       anonymous_access_enabled?: boolean;
       code_of_conduct?: components["schemas"]["code-of-conduct-simple"];
+      has_advanced_security?: boolean;
     };
     /** An artifact */
     artifact: {
@@ -8272,6 +8273,17 @@ export interface components {
       total_commits: number;
       commits: components["schemas"]["commit"][];
       files?: components["schemas"]["diff-entry"][];
+    };
+    /** Content Reference attachments allow you to provide context around URLs posted in comments */
+    "content-reference-attachment": {
+      /** The ID of the attachment */
+      id: number;
+      /** The title of the attachment */
+      title: string;
+      /** The body of the attachment */
+      body: string;
+      /** The node_id of the content attachment */
+      node_id?: string;
     };
     /** Content Tree */
     "content-tree": {
@@ -10239,17 +10251,6 @@ export interface components {
     "key-simple": {
       id: number;
       key: string;
-    };
-    /** Content Reference attachments allow you to provide context around URLs posted in comments */
-    "content-reference-attachment": {
-      /** The ID of the attachment */
-      id: number;
-      /** The title of the attachment */
-      title: string;
-      /** The body of the attachment */
-      body: string;
-      /** The node_id of the content attachment */
-      node_id?: string;
     };
   };
   responses: {
@@ -21866,6 +21867,49 @@ export interface operations {
     };
   };
   /**
+   * Creates an attachment under a content reference URL in the body or comment of an issue or pull request. Use the `id` and `repository` `full_name` of the content reference from the [`content_reference` event](https://docs.github.com/webhooks/event-payloads/#content_reference) to create an attachment.
+   *
+   * The app must create a content attachment within six hours of the content reference URL being posted. See "[Using content attachments](https://docs.github.com/apps/using-content-attachments/)" for details about content attachments.
+   *
+   * You must use an [installation access token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
+   */
+  "apps/create-content-attachment-for-repo": {
+    parameters: {
+      path: {
+        /** The owner of the repository. Determined from the `repository` `full_name` of the `content_reference` event. */
+        owner: string;
+        /** The name of the repository. Determined from the `repository` `full_name` of the `content_reference` event. */
+        repo: string;
+        /** The `id` of the `content_reference` event. */
+        content_reference_id: number;
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["content-reference-attachment"];
+        };
+      };
+      304: components["responses"]["not_modified"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      410: components["responses"]["gone"];
+      415: components["responses"]["preview_header_missing"];
+      422: components["responses"]["validation_failed"];
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** The title of the attachment */
+          title: string;
+          /** The body of the attachment */
+          body: string;
+        };
+      };
+    };
+  };
+  /**
    * Gets the contents of a file or directory in a repository. Specify the file path or directory in `:path`. If you omit
    * `:path`, you will receive the contents of the repository's root directory. See the description below regarding what the API response includes for directories.
    *
@@ -32051,49 +32095,6 @@ export interface operations {
       };
       404: components["responses"]["not_found"];
       500: components["responses"]["internal_error"];
-    };
-  };
-  /**
-   * Creates an attachment under a content reference URL in the body or comment of an issue or pull request. Use the `id` and `repository` `full_name` of the content reference from the [`content_reference` event](https://docs.github.com/webhooks/event-payloads/#content_reference) to create an attachment.
-   *
-   * The app must create a content attachment within six hours of the content reference URL being posted. See "[Using content attachments](https://docs.github.com/apps/using-content-attachments/)" for details about content attachments.
-   *
-   * You must use an [installation access token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
-   */
-  "apps/create-content-attachment-for-repo": {
-    parameters: {
-      path: {
-        /** The owner of the repository. Determined from the `repository` `full_name` of the `content_reference` event. */
-        owner: string;
-        /** The name of the repository. Determined from the `repository` `full_name` of the `content_reference` event. */
-        repo: string;
-        /** The `id` of the `content_reference` event. */
-        content_reference_id: number;
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["content-reference-attachment"];
-        };
-      };
-      304: components["responses"]["not_modified"];
-      403: components["responses"]["forbidden"];
-      404: components["responses"]["not_found"];
-      410: components["responses"]["gone"];
-      415: components["responses"]["preview_header_missing"];
-      422: components["responses"]["validation_failed"];
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** The title of the attachment */
-          title: string;
-          /** The body of the attachment */
-          body: string;
-        };
-      };
     };
   };
   /**
