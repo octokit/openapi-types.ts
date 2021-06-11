@@ -13952,7 +13952,7 @@ export interface operations {
         content: {
           "application/json": {
             total_count: number;
-            repositories: components["schemas"]["repository"][];
+            repositories: components["schemas"]["minimal-repository"][];
           };
         };
       };
