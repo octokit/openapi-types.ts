@@ -29027,6 +29027,10 @@ export interface operations {
         sort?: "created" | "updated";
         /** Determines whether the first search result returned is the highest number of matches (`desc`) or lowest number of matches (`asc`). This parameter is ignored unless you provide `sort`. */
         order?: components["parameters"]["order"];
+        /** Results per page (max 100). */
+        per_page?: components["parameters"]["per_page"];
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
       };
     };
     responses: {
@@ -29108,6 +29112,10 @@ export interface operations {
       query: {
         /** The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub. The REST API supports the same qualifiers as GitHub.com. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/rest/reference/search#constructing-a-search-query). */
         q: string;
+        /** Results per page (max 100). */
+        per_page?: components["parameters"]["per_page"];
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
       };
     };
     responses: {
