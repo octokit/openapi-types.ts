@@ -20,7 +20,10 @@
     "openapi-typescript": "^4.0.1"
   },
   "release": {
-    "branches": "main"
+    "branches": [
+      "main",
+      "beta"
+    ]
   },
   "octokit": {
     "openapi-version": "2.23.0"
