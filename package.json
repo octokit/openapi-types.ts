@@ -13,7 +13,7 @@
   "license": "MIT",
   "scripts": {
     "download": "node scripts/download",
-    "generate-types": "npx openapi-typescript cache/openapi-schema.json -o generated/types.d.ts",
+    "generate-types": "node scripts/generate-types",
     "postgenerate-types": "node scripts/update-package"
   },
   "devDependencies": {
