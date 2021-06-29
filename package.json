@@ -17,6 +17,9 @@
     "postgenerate-types": "node scripts/update-package"
   },
   "devDependencies": {
+    "@octokit/core": "^3.5.1",
+    "execa": "^5.1.1",
+    "github-enterprise-server-versions": "^1.0.0",
     "openapi-typescript": "^4.0.1"
   },
   "release": {
