@@ -41,6 +41,7 @@ jobs:
         run: |
           npm run download
           npm run generate-types
+          npm run update-package
         if: github.event_name != 'push'
 
       # create/update pull request for dispatch event update
