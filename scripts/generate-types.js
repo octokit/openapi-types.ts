@@ -83,7 +83,7 @@ type Repository = components["schemas"]["full-repository"]
     );
 
     await writeFile(
-      `packages/${packageName}/types.ts`,
+      `packages/${packageName}/types.d.ts`,
       await openapiTS(`cache/${name}.json`)
     );
     console.log(`packages/${packageName}/types.ts written`);
