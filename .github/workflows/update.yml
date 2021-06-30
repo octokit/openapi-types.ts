@@ -19,7 +19,7 @@ jobs:
     if: github.event_name == 'workflow_dispatch' || github.event.client_payload.action == 'published'
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.1.5
+      - uses: actions/setup-node@v2.2.0
       - run: npm ci
 
       # set gOCTOKIT_OPENAPI_VERSION environment variable for all next steps
