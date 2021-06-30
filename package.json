@@ -5,31 +5,60 @@
   },
   "version": "0.0.0-development",
   "description": "Generated TypeScript definitions based on GitHub's OpenAPI spec for https://api.github.com",
-  "main": "",
-  "types": "generated/types.d.ts",
   "repository": "github:octokit/openapi-types.ts",
-  "keywords": [],
   "author": "Gregor Martynus (https://twitter.com/gr2m)",
   "license": "MIT",
   "scripts": {
     "download": "node scripts/download",
     "generate-types": "node scripts/generate-types",
-    "postgenerate-types": "node scripts/update-package"
+    "update-package": "node scripts/update-package"
   },
   "devDependencies": {
     "@octokit/core": "^3.5.1",
-    "execa": "^5.1.1",
     "github-enterprise-server-versions": "^1.0.0",
-    "openapi-typescript": "^4.0.1"
+    "openapi-typescript": "^4.0.1",
+    "prettier": "^2.3.2"
   },
   "release": {
     "branches": [
       "main",
       "beta"
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/github",
+      [
+        "@semantic-release/npm",
+        {
+          "pkgRoot": "packages/openapi-types"
+        }
+      ],
+      [
+        "@semantic-release/npm",
+        {
+          "pkgRoot": "packages/openapi-types-ghes-2.22"
+        }
+      ],
+      [
+        "@semantic-release/npm",
+        {
+          "pkgRoot": "packages/openapi-types-ghes-3.0"
+        }
+      ],
+      [
+        "@semantic-release/npm",
+        {
+          "pkgRoot": "packages/openapi-types-ghes-3.1"
+        }
+      ],
+      [
+        "@semantic-release/npm",
+        {
+          "pkgRoot": "packages/openapi-types-github.ae"
+        }
+      ]
     ]
-  },
-  "octokit": {
-    "openapi-version": "2.23.0"
   },
   "renovate": {
     "extends": [

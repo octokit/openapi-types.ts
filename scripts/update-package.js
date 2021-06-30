@@ -1,4 +1,4 @@
-const { writeFileSync } = require("fs");
+const { writeFile, readdir } = require("fs/promises");
 
 if (!process.env.OCTOKIT_OPENAPI_VERSION) {
   throw new Error("OCTOKIT_OPENAPI_VERSION is not set");
@@ -6,13 +6,27 @@ if (!process.env.OCTOKIT_OPENAPI_VERSION) {
 
 const pkg = require("../package.json");
 
-if (!pkg.octokit) {
-  pkg.octokit = {};
+updatePackage();
+
+async function updatePackage() {
+  // set semantic-release configuration of npm packages
+  const items = await readdir("packages");
+  const packages = items.filter((item) => item.startsWith("openapi-types"));
+
+  pkg.release.plugins = [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/github",
+  ].concat(
+    packages.map((package) => {
+      return [
+        "@semantic-release/npm",
+        {
+          pkgRoot: `packages/${package}`,
+        },
+      ];
+    })
+  );
+
+  await writeFile("package.json", JSON.stringify(pkg, null, 2) + "\n");
 }
-
-pkg.octokit["openapi-version"] = process.env.OCTOKIT_OPENAPI_VERSION.replace(
-  /^v/,
-  ""
-);
-
-writeFileSync("package.json", JSON.stringify(pkg, null, 2) + "\n");
