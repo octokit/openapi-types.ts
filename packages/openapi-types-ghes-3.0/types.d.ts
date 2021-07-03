@@ -3622,40 +3622,46 @@ export interface paths {
   "/setup/api/maintenance": {
     /** Check your installation's maintenance status: */
     get: operations["enterprise-admin/get-maintenance-status"];
-    /**
-     * The possible values for `enabled` are `true` and `false`. When it's `false`, the attribute `when` is ignored and the maintenance mode is turned off. `when` defines the time period when the maintenance was enabled.
-     *
-     * The possible values for `when` are `now` or any date parseable by [mojombo/chronic](https://github.com/mojombo/chronic).
-     */
+    /** **Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode). */
     post: operations["enterprise-admin/enable-or-disable-maintenance-mode"];
   };
   "/setup/api/settings": {
     get: operations["enterprise-admin/get-settings"];
-    /** For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@3.0/rest/reference/enterprise-admin#get-settings). */
+    /**
+     * For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@3.0/rest/reference/enterprise-admin#get-settings).
+     *
+     * **Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode).
+     */
     put: operations["enterprise-admin/set-settings"];
   };
   "/setup/api/settings/authorized-keys": {
     get: operations["enterprise-admin/get-all-authorized-ssh-keys"];
+    /** **Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode). */
     post: operations["enterprise-admin/add-authorized-ssh-key"];
+    /** **Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode). */
     delete: operations["enterprise-admin/remove-authorized-ssh-key"];
   };
   "/setup/api/start": {
     /**
-     * When you boot a GitHub instance for the first time, you can use the following endpoint to upload a license:
+     * When you boot a GitHub instance for the first time, you can use the following endpoint to upload a license.
      *
-     * Note that you need to POST to [`/setup/api/configure`](https://docs.github.com/enterprise-server@3.0/rest/reference/enterprise-admin#start-a-configuration-process) to start the actual configuration process.
+     * Note that you need to `POST` to [`/setup/api/configure`](https://docs.github.com/enterprise-server@3.0/rest/reference/enterprise-admin#start-a-configuration-process) to start the actual configuration process.
      *
      * When using this endpoint, your GitHub instance must have a password set. This can be accomplished two ways:
      *
      * 1.  If you're working directly with the API before accessing the web interface, you must pass in the password parameter to set your password.
      * 2.  If you set up your instance via the web interface before accessing the API, your calls to this endpoint do not need the password parameter.
      *
-     * For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@3.0/rest/reference/enterprise-admin#get-settings).
+     * **Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode).
      */
     post: operations["enterprise-admin/create-enterprise-server-license"];
   };
   "/setup/api/upgrade": {
-    /** This API upgrades your license and also triggers the configuration process: */
+    /**
+     * This API upgrades your license and also triggers the configuration process.
+     *
+     * **Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode).
+     */
     post: operations["enterprise-admin/upgrade-license"];
   };
   "/teams/{team_id}": {
@@ -25611,11 +25617,7 @@ export interface operations {
       };
     };
   };
-  /**
-   * The possible values for `enabled` are `true` and `false`. When it's `false`, the attribute `when` is ignored and the maintenance mode is turned off. `when` defines the time period when the maintenance was enabled.
-   *
-   * The possible values for `when` are `now` or any date parseable by [mojombo/chronic](https://github.com/mojombo/chronic).
-   */
+  /** **Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode). */
   "enterprise-admin/enable-or-disable-maintenance-mode": {
     responses: {
       /** Response */
@@ -25627,8 +25629,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": {
-          /** A JSON string with the attributes `enabled` and `when`. */
+        "application/x-www-form-urlencoded": {
+          /**
+           * A JSON string with the attributes `enabled` and `when`.
+           *
+           * The possible values for `enabled` are `true` and `false`. When it's `false`, the attribute `when` is ignored and the maintenance mode is turned off. `when` defines the time period when the maintenance was enabled.
+           *
+           * The possible values for `when` are `now` or any date parseable by [mojombo/chronic](https://github.com/mojombo/chronic).
+           */
           maintenance: string;
         };
       };
@@ -25644,7 +25652,11 @@ export interface operations {
       };
     };
   };
-  /** For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@3.0/rest/reference/enterprise-admin#get-settings). */
+  /**
+   * For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@3.0/rest/reference/enterprise-admin#get-settings).
+   *
+   * **Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode).
+   */
   "enterprise-admin/set-settings": {
     responses: {
       /** Response */
@@ -25652,8 +25664,8 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": {
-          /** A JSON string with the new settings. Note that you only need to pass the specific settings you want to modify. */
+        "application/x-www-form-urlencoded": {
+          /** A JSON string with the new settings. Note that you only need to pass the specific settings you want to modify. For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@3.0/rest/reference/enterprise-admin#get-settings). */
           settings: string;
         };
       };
@@ -25669,6 +25681,7 @@ export interface operations {
       };
     };
   };
+  /** **Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode). */
   "enterprise-admin/add-authorized-ssh-key": {
     responses: {
       /** Response */
@@ -25680,13 +25693,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": {
-          /** The path to the public SSH key. */
+        "application/x-www-form-urlencoded": {
+          /** The public SSH key. */
           authorized_key: string;
         };
       };
     };
   };
+  /** **Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode). */
   "enterprise-admin/remove-authorized-ssh-key": {
     responses: {
       /** Response */
@@ -25698,24 +25712,24 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": {
-          /** The path to the public SSH key. */
+        "application/x-www-form-urlencoded": {
+          /** The public SSH key. */
           authorized_key: string;
         };
       };
     };
   };
   /**
-   * When you boot a GitHub instance for the first time, you can use the following endpoint to upload a license:
+   * When you boot a GitHub instance for the first time, you can use the following endpoint to upload a license.
    *
-   * Note that you need to POST to [`/setup/api/configure`](https://docs.github.com/enterprise-server@3.0/rest/reference/enterprise-admin#start-a-configuration-process) to start the actual configuration process.
+   * Note that you need to `POST` to [`/setup/api/configure`](https://docs.github.com/enterprise-server@3.0/rest/reference/enterprise-admin#start-a-configuration-process) to start the actual configuration process.
    *
    * When using this endpoint, your GitHub instance must have a password set. This can be accomplished two ways:
    *
    * 1.  If you're working directly with the API before accessing the web interface, you must pass in the password parameter to set your password.
    * 2.  If you set up your instance via the web interface before accessing the API, your calls to this endpoint do not need the password parameter.
    *
-   * For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@3.0/rest/reference/enterprise-admin#get-settings).
+   * **Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode).
    */
   "enterprise-admin/create-enterprise-server-license": {
     responses: {
@@ -25724,18 +25738,22 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": {
+        "application/x-www-form-urlencoded": {
           /** The content of your _.ghl_ license file. */
           license: string;
           /** You **must** provide a password _only if_ you are uploading your license for the first time. If you previously set a password through the web interface, you don't need this parameter. */
           password?: string;
-          /** An optional JSON string containing the installation settings. */
+          /** An optional JSON string containing the installation settings. For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@3.0/rest/reference/enterprise-admin#get-settings). */
           settings?: string;
         };
       };
     };
   };
-  /** This API upgrades your license and also triggers the configuration process: */
+  /**
+   * This API upgrades your license and also triggers the configuration process.
+   *
+   * **Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode).
+   */
   "enterprise-admin/upgrade-license": {
     responses: {
       /** Response */
@@ -25743,7 +25761,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": {
+        "application/x-www-form-urlencoded": {
           /** The content of your new _.ghl_ license file. */
           license?: string;
         };
