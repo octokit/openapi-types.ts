@@ -116,6 +116,30 @@ export interface paths {
      */
     patch: operations["apps/update-webhook-config-for-app"];
   };
+  "/app/hook/deliveries": {
+    /**
+     * Returns a list of webhook deliveries for the webhook configured for a GitHub App.
+     *
+     * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+     */
+    get: operations["apps/list-webhook-deliveries"];
+  };
+  "/app/hook/deliveries/{delivery_id}": {
+    /**
+     * Returns a delivery for the webhook configured for a GitHub App.
+     *
+     * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+     */
+    get: operations["apps/get-webhook-delivery"];
+  };
+  "/app/hook/deliveries/{delivery_id}/attempts": {
+    /**
+     * Redeliver a delivery for the webhook configured for a GitHub App.
+     *
+     * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+     */
+    post: operations["apps/redeliver-webhook-delivery"];
+  };
   "/app/installations": {
     /**
      * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
@@ -823,6 +847,14 @@ export interface paths {
      * Access tokens must have the `admin:org_hook` scope, and GitHub Apps must have the `organization_hooks:write` permission.
      */
     patch: operations["orgs/update-webhook-config-for-org"];
+  };
+  "/orgs/{org}/hooks/{hook_id}/deliveries/{delivery_id}": {
+    /** Returns a delivery for a webhook configured in an organization. */
+    get: operations["orgs/get-webhook-delivery"];
+  };
+  "/orgs/{org}/hooks/{hook_id}/deliveries/{delivery_id}/attempts": {
+    /** Redeliver a delivery for a webhook configured in an organization. */
+    post: operations["orgs/redeliver-webhook-delivery"];
   };
   "/orgs/{org}/hooks/{hook_id}/pings": {
     /** This will trigger a [ping event](https://docs.github.com/github-ae@latest/webhooks/#ping-event) to be sent to the hook. */
@@ -2561,6 +2593,18 @@ export interface paths {
      */
     patch: operations["repos/update-webhook-config-for-repo"];
   };
+  "/repos/{owner}/{repo}/hooks/{hook_id}/deliveries": {
+    /** Returns a list of webhook deliveries for a webhook configured in a repository. */
+    get: operations["repos/list-webhook-deliveries"];
+  };
+  "/repos/{owner}/{repo}/hooks/{hook_id}/deliveries/{delivery_id}": {
+    /** Returns a delivery for a webhook configured in a repository. */
+    get: operations["repos/get-webhook-delivery"];
+  };
+  "/repos/{owner}/{repo}/hooks/{hook_id}/deliveries/{delivery_id}/attempts": {
+    /** Redeliver a webhook delivery for a webhook configured in a repository. */
+    post: operations["repos/redeliver-webhook-delivery"];
+  };
   "/repos/{owner}/{repo}/hooks/{hook_id}/pings": {
     /** This will trigger a [ping event](https://docs.github.com/github-ae@latest/webhooks/#ping-event) to be sent to the hook. */
     post: operations["repos/ping-webhook"];
@@ -4136,6 +4180,90 @@ export interface components {
       secret?: components["schemas"]["webhook-config-secret"];
       insecure_ssl?: components["schemas"]["webhook-config-insecure-ssl"];
     };
+    /** Delivery made by a webhook, without request and response information. */
+    "hook-delivery-item": {
+      /** Unique identifier of the webhook delivery. */
+      id: number;
+      /** Unique identifier for the event (shared with all deliveries for all webhooks that subscribe to this event). */
+      guid: string;
+      /** Time when the webhook delivery occurred. */
+      delivered_at: string;
+      /** Whether the webhook delivery is a redelivery. */
+      redelivery: boolean;
+      /** Time spent delivering. */
+      duration: number;
+      /** Describes the response returned after attempting the delivery. */
+      status: string;
+      /** Status code received when delivery was made. */
+      status_code: number;
+      /** The event that triggered the delivery. */
+      event: string;
+      /** The type of activity for the event that triggered the delivery. */
+      action: string | null;
+      /** The id of the GitHub App installation associated with this event. */
+      installation_id: number | null;
+      /** The id of the repository associated with this event. */
+      repository_id: number | null;
+    };
+    /** Scim Error */
+    "scim-error": {
+      message?: string | null;
+      documentation_url?: string | null;
+      detail?: string | null;
+      status?: number;
+      scimType?: string | null;
+      schemas?: string[];
+    };
+    /** Validation Error */
+    "validation-error": {
+      message: string;
+      documentation_url: string;
+      errors?: {
+        resource?: string;
+        field?: string;
+        message?: string;
+        code: string;
+        index?: number;
+        value?: (string | null) | (number | null) | (string[] | null);
+      }[];
+    };
+    /** Delivery made by a webhook. */
+    "hook-delivery": {
+      /** Unique identifier of the delivery. */
+      id: number;
+      /** Unique identifier for the event (shared with all deliveries for all webhooks that subscribe to this event). */
+      guid: string;
+      /** Time when the delivery was delivered. */
+      delivered_at: string;
+      /** Whether the delivery is a redelivery. */
+      redelivery: boolean;
+      /** Time spent delivering. */
+      duration: number;
+      /** Description of the status of the attempted delivery */
+      status: string;
+      /** Status code received when delivery was made. */
+      status_code: number;
+      /** The event that triggered the delivery. */
+      event: string;
+      /** The type of activity for the event that triggered the delivery. */
+      action: string | null;
+      /** The id of the GitHub App installation associated with this event. */
+      installation_id: number | null;
+      /** The id of the repository associated with this event. */
+      repository_id: number | null;
+      request: {
+        /** The request headers sent with the webhook delivery. */
+        headers: { [key: string]: any } | null;
+        /** The webhook payload. */
+        payload: { [key: string]: any } | null;
+      };
+      response: {
+        /** The response headers received when the delivery was made. */
+        headers: { [key: string]: any } | null;
+        /** The response payload received. */
+        payload: string | null;
+      };
+    };
     /** An enterprise account */
     enterprise: {
       /** A short description of the enterprise. */
@@ -4419,19 +4547,6 @@ export interface components {
       single_file?: string;
       has_multiple_single_files?: boolean;
       single_file_paths?: string[];
-    };
-    /** Validation Error */
-    "validation-error": {
-      message: string;
-      documentation_url: string;
-      errors?: {
-        resource?: string;
-        field?: string;
-        message?: string;
-        code: string;
-        index?: number;
-        value?: (string | null) | (number | null) | (string[] | null);
-      }[];
     };
     /** Code Of Conduct */
     "code-of-conduct": {
@@ -5155,6 +5270,7 @@ export interface components {
       id: number;
       url: string;
       ping_url: string;
+      deliveries_url?: string;
       name: string;
       events: string[];
       active: boolean;
@@ -6475,15 +6591,6 @@ export interface components {
       author_association: components["schemas"]["author_association"];
       reactions?: components["schemas"]["reaction-rollup"];
     };
-    /** Scim Error */
-    "scim-error": {
-      message?: string | null;
-      documentation_url?: string | null;
-      detail?: string | null;
-      status?: number;
-      scimType?: string | null;
-      schemas?: string[];
-    };
     /** Branch Short */
     "branch-short": {
       name: string;
@@ -7146,6 +7253,7 @@ export interface components {
       url: string;
       test_url: string;
       ping_url: string;
+      deliveries_url?: string;
       last_response: components["schemas"]["hook-response"];
     };
     /** Issue Event Label */
@@ -8757,6 +8865,25 @@ export interface components {
         "application/json": components["schemas"]["validation-error-simple"];
       };
     };
+    /** Bad Request */
+    bad_request: {
+      content: {
+        "application/json": components["schemas"]["basic-error"];
+        "application/scim+json": components["schemas"]["scim-error"];
+      };
+    };
+    /** Validation failed */
+    validation_failed: {
+      content: {
+        "application/json": components["schemas"]["validation-error"];
+      };
+    };
+    /** Accepted */
+    accepted: {
+      content: {
+        "application/json": { [key: string]: any };
+      };
+    };
     /** Preview header missing */
     preview_header_missing: {
       content: {
@@ -8776,12 +8903,6 @@ export interface components {
     requires_authentication: {
       content: {
         "application/json": components["schemas"]["basic-error"];
-      };
-    };
-    /** Validation failed */
-    validation_failed: {
-      content: {
-        "application/json": components["schemas"]["validation-error"];
       };
     };
     /** Not modified */
@@ -8852,21 +8973,8 @@ export interface components {
         "application/json": components["schemas"]["basic-error"];
       };
     };
-    /** Bad Request */
-    bad_request: {
-      content: {
-        "application/json": components["schemas"]["basic-error"];
-        "application/scim+json": components["schemas"]["scim-error"];
-      };
-    };
     /** Found */
     found: unknown;
-    /** Accepted */
-    accepted: {
-      content: {
-        "application/json": { [key: string]: any };
-      };
-    };
     /** A header with no content is returned. */
     no_content: unknown;
   };
@@ -8885,6 +8993,9 @@ export interface components {
     username: string;
     /** Results per page (max 100). */
     per_page: number;
+    /** Used for pagination: the starting delivery from which the page of deliveries is fetched. Refer to the `link` header for the next and previous page cursors. */
+    cursor: string;
+    "delivery-id": number;
     /** Only show notifications updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
     since: string;
     /** installation_id parameter */
@@ -9654,6 +9765,70 @@ export interface operations {
           insecure_ssl?: components["schemas"]["webhook-config-insecure-ssl"];
         };
       };
+    };
+  };
+  /**
+   * Returns a list of webhook deliveries for the webhook configured for a GitHub App.
+   *
+   * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   */
+  "apps/list-webhook-deliveries": {
+    parameters: {
+      query: {
+        /** Results per page (max 100). */
+        per_page?: components["parameters"]["per_page"];
+        /** Used for pagination: the starting delivery from which the page of deliveries is fetched. Refer to the `link` header for the next and previous page cursors. */
+        cursor?: components["parameters"]["cursor"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["hook-delivery-item"][];
+        };
+      };
+      400: components["responses"]["bad_request"];
+      422: components["responses"]["validation_failed"];
+    };
+  };
+  /**
+   * Returns a delivery for the webhook configured for a GitHub App.
+   *
+   * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   */
+  "apps/get-webhook-delivery": {
+    parameters: {
+      path: {
+        delivery_id: components["parameters"]["delivery-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["hook-delivery"];
+        };
+      };
+      400: components["responses"]["bad_request"];
+      422: components["responses"]["validation_failed"];
+    };
+  };
+  /**
+   * Redeliver a delivery for the webhook configured for a GitHub App.
+   *
+   * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   */
+  "apps/redeliver-webhook-delivery": {
+    parameters: {
+      path: {
+        delivery_id: components["parameters"]["delivery-id"];
+      };
+    };
+    responses: {
+      202: components["responses"]["accepted"];
+      400: components["responses"]["bad_request"];
+      422: components["responses"]["validation_failed"];
     };
   };
   /**
@@ -12497,6 +12672,41 @@ export interface operations {
           insecure_ssl?: components["schemas"]["webhook-config-insecure-ssl"];
         };
       };
+    };
+  };
+  /** Returns a delivery for a webhook configured in an organization. */
+  "orgs/get-webhook-delivery": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+        hook_id: components["parameters"]["hook-id"];
+        delivery_id: components["parameters"]["delivery-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["hook-delivery"];
+        };
+      };
+      400: components["responses"]["bad_request"];
+      422: components["responses"]["validation_failed"];
+    };
+  };
+  /** Redeliver a delivery for a webhook configured in an organization. */
+  "orgs/redeliver-webhook-delivery": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+        hook_id: components["parameters"]["hook-id"];
+        delivery_id: components["parameters"]["delivery-id"];
+      };
+    };
+    responses: {
+      202: components["responses"]["accepted"];
+      400: components["responses"]["bad_request"];
+      422: components["responses"]["validation_failed"];
     };
   };
   /** This will trigger a [ping event](https://docs.github.com/github-ae@latest/webhooks/#ping-event) to be sent to the hook. */
@@ -19588,6 +19798,69 @@ export interface operations {
           insecure_ssl?: components["schemas"]["webhook-config-insecure-ssl"];
         };
       };
+    };
+  };
+  /** Returns a list of webhook deliveries for a webhook configured in a repository. */
+  "repos/list-webhook-deliveries": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        hook_id: components["parameters"]["hook-id"];
+      };
+      query: {
+        /** Results per page (max 100). */
+        per_page?: components["parameters"]["per_page"];
+        /** Used for pagination: the starting delivery from which the page of deliveries is fetched. Refer to the `link` header for the next and previous page cursors. */
+        cursor?: components["parameters"]["cursor"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["hook-delivery-item"][];
+        };
+      };
+      400: components["responses"]["bad_request"];
+      422: components["responses"]["validation_failed"];
+    };
+  };
+  /** Returns a delivery for a webhook configured in a repository. */
+  "repos/get-webhook-delivery": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        hook_id: components["parameters"]["hook-id"];
+        delivery_id: components["parameters"]["delivery-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["hook-delivery"];
+        };
+      };
+      400: components["responses"]["bad_request"];
+      422: components["responses"]["validation_failed"];
+    };
+  };
+  /** Redeliver a webhook delivery for a webhook configured in a repository. */
+  "repos/redeliver-webhook-delivery": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        hook_id: components["parameters"]["hook-id"];
+        delivery_id: components["parameters"]["delivery-id"];
+      };
+    };
+    responses: {
+      202: components["responses"]["accepted"];
+      400: components["responses"]["bad_request"];
+      422: components["responses"]["validation_failed"];
     };
   };
   /** This will trigger a [ping event](https://docs.github.com/github-ae@latest/webhooks/#ping-event) to be sent to the hook. */
