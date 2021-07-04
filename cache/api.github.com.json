@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "version": "2.24.0",
+    "version": "2.24.1",
     "title": "GitHub's official OpenAPI spec + Octokit extension",
     "description": "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs",
     "license": { "name": "MIT", "url": "https://spdx.org/licenses/MIT" },
@@ -47716,12 +47716,6 @@
             "type": "string",
             "description": "The severity of the alert.",
             "enum": ["none", "note", "warning", "error"]
-          },
-          "security_severity_level": {
-            "nullable": true,
-            "type": "string",
-            "description": "The security severity of the alert.",
-            "enum": ["low", "medium", "high", "critical"]
           },
           "description": {
             "type": "string",
