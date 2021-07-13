@@ -4510,7 +4510,7 @@ export interface components {
       permission?: string;
       members_url?: string;
       repositories_url?: string;
-      parent?: { [key: string]: any } | null;
+      parent?: { [key: string]: unknown } | null;
     };
     /** Ldap Private User */
     "ldap-mapping-user": {
@@ -5220,7 +5220,7 @@ export interface components {
       enabled_organizations: components["schemas"]["enabled-organizations"];
       /** The API URL to use to get or set the selected organizations that are allowed to run GitHub Actions, when `enabled_organizations` is set to `selected`. */
       selected_organizations_url?: string;
-      allowed_actions: components["schemas"]["allowed-actions"];
+      allowed_actions?: components["schemas"]["allowed-actions"];
       selected_actions_url?: components["schemas"]["selected-actions-url"];
     };
     "selected-actions": {
@@ -5274,7 +5274,7 @@ export interface components {
       token: string;
       /** The time this token expires */
       expires_at: string;
-      permissions?: { [key: string]: any };
+      permissions?: { [key: string]: unknown };
       /** The repositories this token has access to */
       repositories?: components["schemas"]["repository"][];
       single_file?: string | null;
@@ -5487,8 +5487,8 @@ export interface components {
       comments_url: string;
       owner?: components["schemas"]["simple-user"] | null;
       truncated?: boolean;
-      forks?: { [key: string]: any }[];
-      history?: { [key: string]: any }[];
+      forks?: { [key: string]: unknown }[];
+      history?: { [key: string]: unknown }[];
     };
     /** Public User */
     "public-user": {
@@ -5589,8 +5589,8 @@ export interface components {
         comments_url: string;
         owner?: components["schemas"]["simple-user"] | null;
         truncated?: boolean;
-        forks?: { [key: string]: any }[];
-        history?: { [key: string]: any }[];
+        forks?: { [key: string]: unknown }[];
+        history?: { [key: string]: unknown }[];
       } | null;
       url?: string;
       forks_url?: string;
@@ -5954,7 +5954,7 @@ export interface components {
       created_at?: string;
     };
     /** An object without any properties. */
-    "empty-object": { [key: string]: any };
+    "empty-object": { [key: string]: unknown };
     "audit-log-event": {
       /** The time the audit log event occurred, given as a [Unix timestamp](http://en.wikipedia.org/wiki/Unix_time). */
       "@timestamp"?: number;
@@ -6572,7 +6572,7 @@ export interface components {
     "actions-enabled": boolean;
     "actions-repository-permissions": {
       enabled: components["schemas"]["actions-enabled"];
-      allowed_actions: components["schemas"]["allowed-actions"];
+      allowed_actions?: components["schemas"]["allowed-actions"];
       selected_actions_url?: components["schemas"]["selected-actions-url"];
     };
     "pull-request-minimal": {
@@ -7181,7 +7181,7 @@ export interface components {
       created_at: components["schemas"]["alert-created-at"];
       url: components["schemas"]["alert-url"];
       html_url: components["schemas"]["alert-html-url"];
-      instances?: { [key: string]: any };
+      instances?: { [key: string]: unknown };
       instances_url: components["schemas"]["alert-instances-url"];
       state: components["schemas"]["code-scanning-alert-state"];
       dismissed_by: components["schemas"]["simple-user"];
@@ -7521,6 +7521,9 @@ export interface components {
         html: string | null;
         self: string;
       };
+    } & {
+      content: unknown;
+      encoding: unknown;
     };
     /** A list of directory items */
     "content-directory": {
@@ -9402,13 +9405,13 @@ export interface components {
         ldap?: {
           host?: string | null;
           port?: number;
-          base?: { [key: string]: any }[];
+          base?: { [key: string]: unknown }[];
           uid?: string | null;
           bind_dn?: string | null;
           password?: string | null;
           method?: string;
           search_strategy?: string;
-          user_groups?: { [key: string]: any }[];
+          user_groups?: { [key: string]: unknown }[];
           admin_group?: string | null;
           virtual_attribute_enabled?: boolean;
           recursive_group_search?: boolean;
@@ -9573,8 +9576,8 @@ export interface components {
         primary_key_id?: number;
         key_id?: string;
         public_key?: string;
-        emails?: { [key: string]: any }[];
-        subkeys?: { [key: string]: any }[];
+        emails?: { [key: string]: unknown }[];
+        subkeys?: { [key: string]: unknown }[];
         can_sign?: boolean;
         can_encrypt_comms?: boolean;
         can_encrypt_storage?: boolean;
@@ -9739,7 +9742,7 @@ export interface components {
     /** Accepted */
     accepted: {
       content: {
-        "application/json": { [key: string]: any };
+        "application/json": { [key: string]: unknown };
       };
     };
     /** A header with no content is returned. */
@@ -10759,7 +10762,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": { [key: string]: any };
+        "application/json": { [key: string]: unknown };
       };
     };
   };
@@ -11534,7 +11537,6 @@ export interface operations {
         };
       };
       304: components["responses"]["not_modified"];
-      415: components["responses"]["preview_header_missing"];
     };
   };
   "codes-of-conduct/get-conduct-code": {
@@ -11552,7 +11554,6 @@ export interface operations {
       };
       304: components["responses"]["not_modified"];
       404: components["responses"]["not_found"];
-      415: components["responses"]["preview_header_missing"];
     };
   };
   /** Lists all the emojis available to use on GitHub Enterprise Server. */
@@ -12612,7 +12613,7 @@ export interface operations {
           /** Description of the gist */
           description?: string;
           /** Names of files to be updated */
-          files?: { [key: string]: Partial<{ [key: string]: any }> };
+          files?: { [key: string]: Partial<{ [key: string]: unknown }> };
         } | null;
       };
     };
@@ -12831,7 +12832,7 @@ export interface operations {
       /** Not Found if gist is not starred */
       404: {
         content: {
-          "application/json": { [key: string]: any };
+          "application/json": { [key: string]: unknown };
         };
       };
     };
@@ -14967,7 +14968,7 @@ export interface operations {
       /** User is getting converted asynchronously */
       202: {
         content: {
-          "application/json": { [key: string]: any };
+          "application/json": { [key: string]: unknown };
         };
       };
       /** User was converted */
@@ -16480,7 +16481,7 @@ export interface operations {
       /** Response */
       201: {
         content: {
-          "application/json": { [key: string]: any };
+          "application/json": { [key: string]: unknown };
         };
       };
       304: components["responses"]["not_modified"];
@@ -16684,7 +16685,7 @@ export interface operations {
       /** Response */
       201: {
         content: {
-          "application/json": { [key: string]: any };
+          "application/json": { [key: string]: unknown };
         };
       };
       304: components["responses"]["not_modified"];
@@ -17589,7 +17590,7 @@ export interface operations {
       /** Response */
       202: {
         content: {
-          "application/json": { [key: string]: any };
+          "application/json": { [key: string]: unknown };
         };
       };
     };
@@ -17678,7 +17679,7 @@ export interface operations {
       /** Response */
       201: {
         content: {
-          "application/json": { [key: string]: any };
+          "application/json": { [key: string]: unknown };
         };
       };
     };
@@ -17836,7 +17837,7 @@ export interface operations {
       /** Response when creating a secret */
       201: {
         content: {
-          "application/json": { [key: string]: any };
+          "application/json": { [key: string]: unknown };
         };
       };
       /** Response when updating a secret */
@@ -19141,6 +19142,8 @@ export interface operations {
         "application/json": (
           | ({
               status: "completed";
+            } & {
+              conclusion: unknown;
             } & { [key: string]: any })
           | ({
               status?: "queued" | "in_progress";
@@ -19275,6 +19278,8 @@ export interface operations {
         "application/json": (Partial<
           {
             status?: "completed";
+          } & {
+            conclusion: unknown;
           } & { [key: string]: any }
         > &
           Partial<
@@ -19530,7 +19535,7 @@ export interface operations {
       /** Response */
       201: {
         content: {
-          "application/json": { [key: string]: any };
+          "application/json": { [key: string]: unknown };
         };
       };
     };
