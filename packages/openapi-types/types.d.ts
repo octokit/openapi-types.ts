@@ -11105,6 +11105,7 @@ export interface components {
       | "queued"
       | "requested"
       | "waiting";
+    created: string;
     /** The id of the workflow run. */
     "run-id": number;
     /** The ID of the workflow. You can also pass the workflow file name as a string. */
@@ -19089,6 +19090,7 @@ export interface operations {
         per_page?: components["parameters"]["per-page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
+        created?: components["parameters"]["created"];
       };
     };
     responses: {
@@ -19730,6 +19732,7 @@ export interface operations {
         per_page?: components["parameters"]["per-page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
+        created?: components["parameters"]["created"];
       };
     };
     responses: {
