@@ -45,6 +45,18 @@
         {
           "pkgRoot": "packages/openapi-types-ghes-3.0"
         }
+      ],
+      [
+        "@semantic-release/npm",
+        {
+          "pkgRoot": "packages/openapi-types-ghes-3.1"
+        }
+      ],
+      [
+        "@semantic-release/npm",
+        {
+          "pkgRoot": "packages/openapi-types-github.ae"
+        }
       ]
     ]
   },

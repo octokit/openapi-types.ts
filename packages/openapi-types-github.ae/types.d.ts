@@ -19,7 +19,7 @@ export interface paths {
     patch: operations["enterprise-admin/update-global-webhook"];
   };
   "/admin/hooks/{hook_id}/pings": {
-    /** This will trigger a [ping event](https://docs.github.com/enterprise-server@2.22/webhooks/#ping-event) to be sent to the webhook. */
+    /** This will trigger a [ping event](https://docs.github.com/github-ae@latest/webhooks/#ping-event) to be sent to the webhook. */
     post: operations["enterprise-admin/ping-global-webhook"];
   };
   "/admin/keys": {
@@ -27,25 +27,6 @@ export interface paths {
   };
   "/admin/keys/{key_ids}": {
     delete: operations["enterprise-admin/delete-public-key"];
-  };
-  "/admin/ldap/teams/{team_id}/mapping": {
-    /**
-     * Updates the [distinguished name](https://www.ldap.com/ldap-dns-and-rdns) (DN) of the LDAP entry to map to a team. [LDAP synchronization](https://help.github.com/enterprise/admin/guides/user-management/using-ldap/#enabling-ldap-sync) must be enabled to map LDAP entries to a team. Use the [Create a team](https://docs.github.com/enterprise-server@2.22/rest/reference/teams/#create-a-team) endpoint to create a team with LDAP mapping.
-     *
-     * If you pass the `hellcat-preview` media type, you can also update the LDAP mapping of a child team.
-     */
-    patch: operations["enterprise-admin/update-ldap-mapping-for-team"];
-  };
-  "/admin/ldap/teams/{team_id}/sync": {
-    /** Note that this API call does not automatically initiate an LDAP sync. Rather, if a `201` is returned, the sync job is queued successfully, and is performed when the instance is ready. */
-    post: operations["enterprise-admin/sync-ldap-mapping-for-team"];
-  };
-  "/admin/ldap/users/{username}/mapping": {
-    patch: operations["enterprise-admin/update-ldap-mapping-for-user"];
-  };
-  "/admin/ldap/users/{username}/sync": {
-    /** Note that this API call does not automatically initiate an LDAP sync. Rather, if a `201` is returned, the sync job is queued successfully, and is performed when the instance is ready. */
-    post: operations["enterprise-admin/sync-ldap-mapping-for-user"];
   };
   "/admin/organizations": {
     post: operations["enterprise-admin/create-org"];
@@ -89,15 +70,6 @@ export interface paths {
     /** In addition to seeing the download status at the "[Get a pre-receive environment](#get-a-pre-receive-environment)" endpoint, there is also this separate endpoint for just the download status. */
     get: operations["enterprise-admin/get-download-status-for-pre-receive-environment"];
   };
-  "/admin/pre-receive-hooks": {
-    get: operations["enterprise-admin/list-pre-receive-hooks"];
-    post: operations["enterprise-admin/create-pre-receive-hook"];
-  };
-  "/admin/pre-receive-hooks/{pre_receive_hook_id}": {
-    get: operations["enterprise-admin/get-pre-receive-hook"];
-    delete: operations["enterprise-admin/delete-pre-receive-hook"];
-    patch: operations["enterprise-admin/update-pre-receive-hook"];
-  };
   "/admin/tokens": {
     /** Lists personal access tokens for all users, including admin users. */
     get: operations["enterprise-admin/list-personal-access-tokens"];
@@ -106,24 +78,13 @@ export interface paths {
     /** Deletes a personal access token. Returns a `403 - Forbidden` status when a personal access token is in use. For example, if you access this endpoint with the same personal access token that you are trying to delete, you will receive this error. */
     delete: operations["enterprise-admin/delete-personal-access-token"];
   };
-  "/admin/users": {
-    /**
-     * If an external authentication mechanism is used, the login name should match the login name in the external system. If you are using LDAP authentication, you should also [update the LDAP mapping](https://docs.github.com/enterprise-server@2.22/rest/reference/enterprise-admin#update-ldap-mapping-for-a-user) for the user.
-     *
-     * The login name will be normalized to only contain alphanumeric characters or single hyphens. For example, if you send `"octo_cat"` as the login, a user named `"octo-cat"` will be created.
-     *
-     * If the login name or email address is already associated with an account, the server will return a `422` response.
-     */
-    post: operations["enterprise-admin/create-user"];
-  };
   "/admin/users/{username}": {
     /**
-     * Deleting a user will delete all their repositories, gists, applications, and personal settings. [Suspending a user](https://docs.github.com/enterprise-server@2.22/rest/reference/enterprise-admin#suspend-a-user) is often a better option.
+     * Deleting a user will delete all their repositories, gists, applications, and personal settings. [Suspending a user](https://docs.github.com/github-ae@latest/rest/reference/enterprise-admin#suspend-a-user) is often a better option.
      *
      * You can delete any user account except your own.
      */
     delete: operations["enterprise-admin/delete-user"];
-    patch: operations["enterprise-admin/update-username-for-user"];
   };
   "/admin/users/{username}/authorizations": {
     post: operations["enterprise-admin/create-impersonation-o-auth-token"];
@@ -131,19 +92,57 @@ export interface paths {
   };
   "/app": {
     /**
-     * Returns the GitHub App associated with the authentication credentials used. To see how many app installations are associated with this GitHub App, see the `installations_count` in the response. For more details about your app's installations, see the "[List installations for the authenticated app](https://docs.github.com/enterprise-server@2.22/rest/reference/apps#list-installations-for-the-authenticated-app)" endpoint.
+     * Returns the GitHub App associated with the authentication credentials used. To see how many app installations are associated with this GitHub App, see the `installations_count` in the response. For more details about your app's installations, see the "[List installations for the authenticated app](https://docs.github.com/github-ae@latest/rest/reference/apps#list-installations-for-the-authenticated-app)" endpoint.
      *
-     * You must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+     * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
      */
     get: operations["apps/get-authenticated"];
   };
   "/app-manifests/{code}/conversions": {
-    /** Use this endpoint to complete the handshake necessary when implementing the [GitHub App Manifest flow](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/creating-github-apps-from-a-manifest/). When you create a GitHub App with the manifest flow, you receive a temporary `code` used to retrieve the GitHub App's `id`, `pem` (private key), and `webhook_secret`. */
+    /** Use this endpoint to complete the handshake necessary when implementing the [GitHub App Manifest flow](https://docs.github.com/github-ae@latest/apps/building-github-apps/creating-github-apps-from-a-manifest/). When you create a GitHub App with the manifest flow, you receive a temporary `code` used to retrieve the GitHub App's `id`, `pem` (private key), and `webhook_secret`. */
     post: operations["apps/create-from-manifest"];
+  };
+  "/app/hook/config": {
+    /**
+     * Returns the webhook configuration for a GitHub App. For more information about configuring a webhook for your app, see "[Creating a GitHub App](/developers/apps/creating-a-github-app)."
+     *
+     * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+     */
+    get: operations["apps/get-webhook-config-for-app"];
+    /**
+     * Updates the webhook configuration for a GitHub App. For more information about configuring a webhook for your app, see "[Creating a GitHub App](/developers/apps/creating-a-github-app)."
+     *
+     * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+     */
+    patch: operations["apps/update-webhook-config-for-app"];
+  };
+  "/app/hook/deliveries": {
+    /**
+     * Returns a list of webhook deliveries for the webhook configured for a GitHub App.
+     *
+     * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+     */
+    get: operations["apps/list-webhook-deliveries"];
+  };
+  "/app/hook/deliveries/{delivery_id}": {
+    /**
+     * Returns a delivery for the webhook configured for a GitHub App.
+     *
+     * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+     */
+    get: operations["apps/get-webhook-delivery"];
+  };
+  "/app/hook/deliveries/{delivery_id}/attempts": {
+    /**
+     * Redeliver a delivery for the webhook configured for a GitHub App.
+     *
+     * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+     */
+    post: operations["apps/redeliver-webhook-delivery"];
   };
   "/app/installations": {
     /**
-     * You must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+     * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
      *
      * The permissions the installation has are included under the `permissions` key.
      */
@@ -153,13 +152,13 @@ export interface paths {
     /**
      * Enables an authenticated GitHub App to find an installation's information using the installation id. The installation's account type (`target_type`) will be either an organization or a user account, depending which account the repository belongs to.
      *
-     * You must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+     * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
      */
     get: operations["apps/get-installation"];
     /**
-     * Uninstalls a GitHub App on a user, organization, or business account. If you prefer to temporarily suspend an app's access to your account's resources, then we recommend the "[Suspend an app installation](https://docs.github.com/enterprise-server@2.22/rest/reference/apps/#suspend-an-app-installation)" endpoint.
+     * Uninstalls a GitHub App on a user, organization, or business account. If you prefer to temporarily suspend an app's access to your account's resources, then we recommend the "[Suspend an app installation](https://docs.github.com/github-ae@latest/rest/reference/apps/#suspend-an-app-installation)" endpoint.
      *
-     * You must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+     * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
      */
     delete: operations["apps/delete-installation"];
   };
@@ -167,84 +166,66 @@ export interface paths {
     /**
      * Creates an installation access token that enables a GitHub App to make authenticated API requests for the app's installation on an organization or individual account. Installation tokens expire one hour from the time you create them. Using an expired token produces a status code of `401 - Unauthorized`, and requires creating a new installation token. By default the installation token has access to all repositories that the installation can access. To restrict the access to specific repositories, you can provide the `repository_ids` when creating the token. When you omit `repository_ids`, the response does not contain the `repositories` key.
      *
-     * You must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+     * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
      */
     post: operations["apps/create-installation-access-token"];
   };
   "/app/installations/{installation_id}/suspended": {
     /**
-     * Suspends a GitHub App on a user, organization, or business account, which blocks the app from accessing the account's resources. When a GitHub App is suspended, the app's access to the GitHub Enterprise Server API or webhook events is blocked for that account.
+     * Suspends a GitHub App on a user, organization, or business account, which blocks the app from accessing the account's resources. When a GitHub App is suspended, the app's access to the GitHub AE API or webhook events is blocked for that account.
      *
-     * You must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+     * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
      */
     put: operations["apps/suspend-installation"];
     /**
      * Removes a GitHub App installation suspension.
      *
-     * You must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+     * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
      */
     delete: operations["apps/unsuspend-installation"];
   };
-  "/applications/grants": {
-    /**
-     * **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@2.22/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
-     *
-     * You can use this API to list the set of OAuth applications that have been granted access to your account. Unlike the [list your authorizations](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations#list-your-authorizations) API, this API does not manage individual tokens. This API will return one entry for each OAuth application that has been granted access to your account, regardless of the number of tokens an application has generated for your user. The list of OAuth applications returned matches what is shown on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized). The `scopes` returned are the union of scopes authorized for the application. For example, if an application has one token with `repo` scope and another token with `user` scope, the grant will return `["repo", "user"]`.
-     */
-    get: operations["oauth-authorizations/list-grants"];
-  };
-  "/applications/grants/{grant_id}": {
-    /** **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/). */
-    get: operations["oauth-authorizations/get-grant"];
-    /**
-     * **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@2.22/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations/) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
-     *
-     * Deleting an OAuth application's grant will also delete all OAuth tokens associated with the application for your user. Once deleted, the application has no access to your account and is no longer listed on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized).
-     */
-    delete: operations["oauth-authorizations/delete-grant"];
-  };
   "/applications/{client_id}/grant": {
     /**
-     * OAuth application owners can revoke a grant for their OAuth application and a specific user. You must use [Basic Authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. You must also provide a valid OAuth `access_token` as an input parameter and the grant for the token's owner will be deleted.
+     * OAuth application owners can revoke a grant for their OAuth application and a specific user. You must use [Basic Authentication](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. You must also provide a valid OAuth `access_token` as an input parameter and the grant for the token's owner will be deleted.
      * Deleting an OAuth application's grant will also delete all OAuth tokens associated with the application for the user. Once deleted, the application will have no access to the user's account and will no longer be listed on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized).
      */
     delete: operations["apps/delete-authorization"];
   };
   "/applications/{client_id}/grants/{access_token}": {
     /**
-     * **Deprecation Notice:** GitHub Enterprise Server will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
+     * **Deprecation Notice:** GitHub AE will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
      *
-     * OAuth application owners can revoke a grant for their OAuth application and a specific user. You must use [Basic Authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. You must also provide a valid token as `:access_token` and the grant for the token's owner will be deleted.
+     * OAuth application owners can revoke a grant for their OAuth application and a specific user. You must use [Basic Authentication](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. You must also provide a valid token as `:access_token` and the grant for the token's owner will be deleted.
      *
-     * Deleting an OAuth application's grant will also delete all OAuth tokens associated with the application for the user. Once deleted, the application will have no access to the user's account and will no longer be listed on [the Applications settings page under "Authorized OAuth Apps" on GitHub Enterprise Server](https://github.com/settings/applications#authorized).
+     * Deleting an OAuth application's grant will also delete all OAuth tokens associated with the application for the user. Once deleted, the application will have no access to the user's account and will no longer be listed on [the Applications settings page under "Authorized OAuth Apps" on GitHub AE](https://github.com/settings/applications#authorized).
      */
     delete: operations["apps/revoke-grant-for-application"];
   };
   "/applications/{client_id}/token": {
-    /** OAuth applications can use a special API method for checking OAuth token validity without exceeding the normal rate limits for failed login attempts. Authentication works differently with this particular endpoint. You must use [Basic Authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#basic-authentication) to use this endpoint, where the username is the OAuth application `client_id` and the password is its `client_secret`. Invalid tokens will return `404 NOT FOUND`. */
+    /** OAuth applications can use a special API method for checking OAuth token validity without exceeding the normal rate limits for failed login attempts. Authentication works differently with this particular endpoint. You must use [Basic Authentication](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication) to use this endpoint, where the username is the OAuth application `client_id` and the password is its `client_secret`. Invalid tokens will return `404 NOT FOUND`. */
     post: operations["apps/check-token"];
-    /** OAuth application owners can revoke a single token for an OAuth application. You must use [Basic Authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. */
+    /** OAuth application owners can revoke a single token for an OAuth application. You must use [Basic Authentication](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. */
     delete: operations["apps/delete-token"];
-    /** OAuth applications can use this API method to reset a valid OAuth token without end-user involvement. Applications must save the "token" property in the response because changes take effect immediately. You must use [Basic Authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`. */
+    /** OAuth applications can use this API method to reset a valid OAuth token without end-user involvement. Applications must save the "token" property in the response because changes take effect immediately. You must use [Basic Authentication](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`. */
     patch: operations["apps/reset-token"];
   };
   "/applications/{client_id}/tokens/{access_token}": {
     /**
-     * **Deprecation Notice:** GitHub Enterprise Server will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
+     * **Deprecation Notice:** GitHub AE will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
      *
-     * OAuth applications can use a special API method for checking OAuth token validity without exceeding the normal rate limits for failed login attempts. Authentication works differently with this particular endpoint. You must use [Basic Authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.
+     * OAuth applications can use a special API method for checking OAuth token validity without exceeding the normal rate limits for failed login attempts. Authentication works differently with this particular endpoint. You must use [Basic Authentication](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.
      */
     get: operations["apps/check-authorization"];
     /**
-     * **Deprecation Notice:** GitHub Enterprise Server will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
+     * **Deprecation Notice:** GitHub AE will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
      *
-     * OAuth applications can use this API method to reset a valid OAuth token without end-user involvement. Applications must save the "token" property in the response because changes take effect immediately. You must use [Basic Authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.
+     * OAuth applications can use this API method to reset a valid OAuth token without end-user involvement. Applications must save the "token" property in the response because changes take effect immediately. You must use [Basic Authentication](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.
      */
     post: operations["apps/reset-authorization"];
     /**
-     * **Deprecation Notice:** GitHub Enterprise Server will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
+     * **Deprecation Notice:** GitHub AE will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
      *
-     * OAuth application owners can revoke a single token for an OAuth application. You must use [Basic Authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password.
+     * OAuth application owners can revoke a single token for an OAuth application. You must use [Basic Authentication](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password.
      */
     delete: operations["apps/revoke-authorization-for-application"];
   };
@@ -252,67 +233,9 @@ export interface paths {
     /**
      * **Note**: The `:app_slug` is just the URL-friendly name of your GitHub App. You can find this on the settings page for your GitHub App (e.g., `https://github.com/settings/apps/:app_slug`).
      *
-     * If the GitHub App you specify is public, you can access this endpoint without authenticating. If the GitHub App you specify is private, you must authenticate with a [personal access token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) or an [installation access token](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
+     * If the GitHub App you specify is public, you can access this endpoint without authenticating. If the GitHub App you specify is private, you must authenticate with a [personal access token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) or an [installation access token](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
      */
     get: operations["apps/get-by-slug"];
-  };
-  "/authorizations": {
-    /** **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/). */
-    get: operations["oauth-authorizations/list-authorizations"];
-    /**
-     * **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@2.22/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
-     *
-     * **Warning:** Apps must use the [web application flow](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub Enterprise Server SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub Enterprise Server SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).
-     *
-     * Creates OAuth tokens using [Basic Authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#basic-authentication). If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see "[Working with two-factor authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#working-with-two-factor-authentication)."
-     *
-     * To create tokens for a particular OAuth application using this endpoint, you must authenticate as the user you want to create an authorization for and provide the app's client ID and secret, found on your OAuth application's settings page. If your OAuth application intends to create multiple tokens for one user, use `fingerprint` to differentiate between them.
-     *
-     * You can also create tokens on GitHub Enterprise Server from the [personal access tokens settings](https://github.com/settings/tokens) page. Read more about these tokens in [the GitHub Help documentation](https://help.github.com/articles/creating-an-access-token-for-command-line-use).
-     *
-     * Organizations that enforce SAML SSO require personal access tokens to be allowed. Read more about allowing tokens in [the GitHub Help documentation](https://help.github.com/articles/about-identity-and-access-management-with-saml-single-sign-on).
-     */
-    post: operations["oauth-authorizations/create-authorization"];
-  };
-  "/authorizations/clients/{client_id}": {
-    /**
-     * **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@2.22/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
-     *
-     * **Warning:** Apps must use the [web application flow](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub Enterprise Server SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub Enterprise Server SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).
-     *
-     * Creates a new authorization for the specified OAuth application, only if an authorization for that application doesn't already exist for the user. The URL includes the 20 character client ID for the OAuth app that is requesting the token. It returns the user's existing authorization for the application if one is present. Otherwise, it creates and returns a new one.
-     *
-     * If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see "[Working with two-factor authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#working-with-two-factor-authentication)."
-     *
-     * **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@2.22/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
-     */
-    put: operations["oauth-authorizations/get-or-create-authorization-for-app"];
-  };
-  "/authorizations/clients/{client_id}/{fingerprint}": {
-    /**
-     * **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@2.22/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
-     *
-     * **Warning:** Apps must use the [web application flow](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub Enterprise Server SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub Enterprise Server SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).
-     *
-     * This method will create a new authorization for the specified OAuth application, only if an authorization for that application and fingerprint do not already exist for the user. The URL includes the 20 character client ID for the OAuth app that is requesting the token. `fingerprint` is a unique string to distinguish an authorization from others created for the same client ID and user. It returns the user's existing authorization for the application if one is present. Otherwise, it creates and returns a new one.
-     *
-     * If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see "[Working with two-factor authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#working-with-two-factor-authentication)."
-     */
-    put: operations["oauth-authorizations/get-or-create-authorization-for-app-and-fingerprint"];
-  };
-  "/authorizations/{authorization_id}": {
-    /** **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/). */
-    get: operations["oauth-authorizations/get-authorization"];
-    /** **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/). */
-    delete: operations["oauth-authorizations/delete-authorization"];
-    /**
-     * **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@2.22/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
-     *
-     * If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see "[Working with two-factor authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#working-with-two-factor-authentication)."
-     *
-     * You can only send one of these scope keys at a time.
-     */
-    patch: operations["oauth-authorizations/update-authorization"];
   };
   "/codes_of_conduct": {
     get: operations["codes-of-conduct/get-all-codes-of-conduct"];
@@ -321,8 +244,16 @@ export interface paths {
     get: operations["codes-of-conduct/get-conduct-code"];
   };
   "/emojis": {
-    /** Lists all the emojis available to use on GitHub Enterprise Server. */
+    /** Lists all the emojis available to use on GitHub AE. */
     get: operations["emojis/get"];
+  };
+  "/enterprise/announcement": {
+    /** Gets the current message and expiration date of the global announcement banner in your enterprise. */
+    get: operations["enterprise-admin/get-announcement"];
+    /** Removes the global announcement banner in your enterprise. */
+    delete: operations["enterprise-admin/remove-announcement"];
+    /** Sets the message and expiration time for the global announcement banner in your enterprise. */
+    patch: operations["enterprise-admin/set-announcement"];
   };
   "/enterprise/settings/license": {
     get: operations["enterprise-admin/get-license-information"];
@@ -360,6 +291,62 @@ export interface paths {
   "/enterprise/stats/users": {
     get: operations["enterprise-admin/get-user-stats"];
   };
+  "/enterprises/{enterprise}/actions/permissions": {
+    /**
+     * Gets the GitHub Actions permissions policy for organizations and allowed actions in an enterprise.
+     *
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     */
+    get: operations["enterprise-admin/get-github-actions-permissions-enterprise"];
+    /**
+     * Sets the GitHub Actions permissions policy for organizations and allowed actions in an enterprise.
+     *
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     */
+    put: operations["enterprise-admin/set-github-actions-permissions-enterprise"];
+  };
+  "/enterprises/{enterprise}/actions/permissions/organizations": {
+    /**
+     * Lists the organizations that are selected to have GitHub Actions enabled in an enterprise. To use this endpoint, the enterprise permission policy for `enabled_organizations` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
+     *
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     */
+    get: operations["enterprise-admin/list-selected-organizations-enabled-github-actions-enterprise"];
+    /**
+     * Replaces the list of selected organizations that are enabled for GitHub Actions in an enterprise. To use this endpoint, the enterprise permission policy for `enabled_organizations` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
+     *
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     */
+    put: operations["enterprise-admin/set-selected-organizations-enabled-github-actions-enterprise"];
+  };
+  "/enterprises/{enterprise}/actions/permissions/organizations/{org_id}": {
+    /**
+     * Adds an organization to the list of selected organizations that are enabled for GitHub Actions in an enterprise. To use this endpoint, the enterprise permission policy for `enabled_organizations` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
+     *
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     */
+    put: operations["enterprise-admin/enable-selected-organization-github-actions-enterprise"];
+    /**
+     * Removes an organization from the list of selected organizations that are enabled for GitHub Actions in an enterprise. To use this endpoint, the enterprise permission policy for `enabled_organizations` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
+     *
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     */
+    delete: operations["enterprise-admin/disable-selected-organization-github-actions-enterprise"];
+  };
+  "/enterprises/{enterprise}/actions/permissions/selected-actions": {
+    /**
+     * Gets the selected actions that are allowed in an enterprise. To use this endpoint, the enterprise permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
+     *
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     */
+    get: operations["enterprise-admin/get-allowed-actions-enterprise"];
+    /**
+     * Sets the actions that are allowed in an enterprise. To use this endpoint, the enterprise permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
+     *
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     */
+    put: operations["enterprise-admin/set-allowed-actions-enterprise"];
+  };
   "/enterprises/{enterprise}/actions/runner-groups": {
     /**
      * Lists all self-hosted runner groups for an enterprise.
@@ -393,34 +380,6 @@ export interface paths {
      * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
      */
     patch: operations["enterprise-admin/update-self-hosted-runner-group-for-enterprise"];
-  };
-  "/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/organizations": {
-    /**
-     * Lists the organizations with access to a self-hosted runner group.
-     *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
-     */
-    get: operations["enterprise-admin/list-org-access-to-self-hosted-runner-group-in-enterprise"];
-    /**
-     * Replaces the list of organizations that have access to a self-hosted runner configured in an enterprise.
-     *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
-     */
-    put: operations["enterprise-admin/set-org-access-to-self-hosted-runner-group-in-enterprise"];
-  };
-  "/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/organizations/{org_id}": {
-    /**
-     * Adds an organization to the list of selected organizations that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an enterprise](#create-a-self-hosted-runner-group-for-an-enterprise)."
-     *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
-     */
-    put: operations["enterprise-admin/add-org-access-to-self-hosted-runner-group-in-enterprise"];
-    /**
-     * Removes an organization from the list of selected organizations that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an enterprise](#create-a-self-hosted-runner-group-for-an-enterprise)."
-     *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
-     */
-    delete: operations["enterprise-admin/remove-org-access-to-self-hosted-runner-group-in-enterprise"];
   };
   "/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/runners": {
     /**
@@ -459,47 +418,6 @@ export interface paths {
      */
     get: operations["enterprise-admin/list-self-hosted-runners-for-enterprise"];
   };
-  "/enterprises/{enterprise}/actions/runners/downloads": {
-    /**
-     * Lists binaries for the runner application that you can download and run.
-     *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
-     */
-    get: operations["enterprise-admin/list-runner-applications-for-enterprise"];
-  };
-  "/enterprises/{enterprise}/actions/runners/registration-token": {
-    /**
-     * Returns a token that you can pass to the `config` script. The token expires after one hour.
-     *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
-     *
-     * #### Example using registration token
-     *
-     * Configure your self-hosted runner, replacing `TOKEN` with the registration token provided by this endpoint.
-     *
-     * ```
-     * ./config.sh --url https://github.com/enterprises/octo-enterprise --token TOKEN
-     * ```
-     */
-    post: operations["enterprise-admin/create-registration-token-for-enterprise"];
-  };
-  "/enterprises/{enterprise}/actions/runners/remove-token": {
-    /**
-     * Returns a token that you can pass to the `config` script to remove a self-hosted runner from an enterprise. The token expires after one hour.
-     *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
-     *
-     * #### Example using remove token
-     *
-     * To remove your self-hosted runner from an enterprise, replace `TOKEN` with the remove token provided by this
-     * endpoint.
-     *
-     * ```
-     * ./config.sh remove --token TOKEN
-     * ```
-     */
-    post: operations["enterprise-admin/create-remove-token-for-enterprise"];
-  };
   "/enterprises/{enterprise}/actions/runners/{runner_id}": {
     /**
      * Gets a specific self-hosted runner configured in an enterprise.
@@ -514,23 +432,19 @@ export interface paths {
      */
     delete: operations["enterprise-admin/delete-self-hosted-runner-from-enterprise"];
   };
-  "/events": {
-    /** We delay the public events feed by five minutes, which means the most recent event returned by the public events API actually occurred at least five minutes ago. */
-    get: operations["activity/list-public-events"];
-  };
   "/feeds": {
     /**
-     * GitHub Enterprise Server provides several timeline resources in [Atom](http://en.wikipedia.org/wiki/Atom_(standard)) format. The Feeds API lists all the feeds available to the authenticated user:
+     * GitHub AE provides several timeline resources in [Atom](http://en.wikipedia.org/wiki/Atom_(standard)) format. The Feeds API lists all the feeds available to the authenticated user:
      *
-     * *   **Timeline**: The GitHub Enterprise Server global public timeline
-     * *   **User**: The public timeline for any user, using [URI template](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#hypermedia)
+     * *   **Timeline**: The GitHub AE global public timeline
+     * *   **User**: The public timeline for any user, using [URI template](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#hypermedia)
      * *   **Current user public**: The public timeline for the authenticated user
      * *   **Current user**: The private timeline for the authenticated user
      * *   **Current user actor**: The private timeline for activity created by the authenticated user
      * *   **Current user organizations**: The private timeline for the organizations the authenticated user is a member of.
-     * *   **Security advisories**: A collection of public announcements that provide information about security-related vulnerabilities in software on GitHub Enterprise Server.
+     * *   **Security advisories**: A collection of public announcements that provide information about security-related vulnerabilities in software on GitHub AE.
      *
-     * **Note**: Private feeds are only returned when [authenticating via Basic Auth](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#basic-authentication) since current feed URIs use the older, non revocable auth tokens.
+     * **Note**: Private feeds are only returned when [authenticating via Basic Auth](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication) since current feed URIs use the older, non revocable auth tokens.
      */
     get: operations["activity/get-feeds"];
   };
@@ -548,7 +462,7 @@ export interface paths {
     /**
      * List public gists sorted by most recently updated to least recently updated.
      *
-     * Note: With [pagination](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#pagination), you can fetch up to 3000 gists. For example, you can fetch 100 pages with 30 gists per page or 30 pages with 100 gists per page.
+     * Note: With [pagination](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination), you can fetch up to 3000 gists. For example, you can fetch 100 pages with 30 gists per page or 30 pages with 100 gists per page.
      */
     get: operations["gists/list-public"];
   };
@@ -581,7 +495,7 @@ export interface paths {
   };
   "/gists/{gist_id}/star": {
     get: operations["gists/check-is-starred"];
-    /** Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs)." */
+    /** Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)." */
     put: operations["gists/star"];
     delete: operations["gists/unstar"];
   };
@@ -589,13 +503,13 @@ export interface paths {
     get: operations["gists/get-revision"];
   };
   "/gitignore/templates": {
-    /** List all templates available to pass as an option when [creating a repository](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#create-a-repository-for-the-authenticated-user). */
+    /** List all templates available to pass as an option when [creating a repository](https://docs.github.com/github-ae@latest/rest/reference/repos#create-a-repository-for-the-authenticated-user). */
     get: operations["gitignore/get-all-templates"];
   };
   "/gitignore/templates/{name}": {
     /**
      * The API also allows fetching the source of a single template.
-     * Use the raw [media type](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types/) to get the raw contents.
+     * Use the raw [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/) to get the raw contents.
      */
     get: operations["gitignore/get-template"];
   };
@@ -603,7 +517,7 @@ export interface paths {
     /**
      * List repositories that an app installation can access.
      *
-     * You must use an [installation access token](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
+     * You must use an [installation access token](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
      */
     get: operations["apps/list-repos-accessible-to-installation"];
   };
@@ -611,9 +525,9 @@ export interface paths {
     /**
      * Revokes the installation token you're using to authenticate as an installation and access this endpoint.
      *
-     * Once an installation token is revoked, the token is invalidated and cannot be used. Other endpoints that require the revoked installation token must have a new installation token to work. You can create a new token using the "[Create an installation access token for an app](https://docs.github.com/enterprise-server@2.22/rest/reference/apps#create-an-installation-access-token-for-an-app)" endpoint.
+     * Once an installation token is revoked, the token is invalidated and cannot be used. Other endpoints that require the revoked installation token must have a new installation token to work. You can create a new token using the "[Create an installation access token for an app](https://docs.github.com/github-ae@latest/rest/reference/apps#create-an-installation-access-token-for-an-app)" endpoint.
      *
-     * You must use an [installation access token](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
+     * You must use an [installation access token](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
      */
     delete: operations["apps/revoke-installation-access-token"];
   };
@@ -627,7 +541,7 @@ export interface paths {
      * **Note**: GitHub's REST API v3 considers every pull request an issue, but not every issue is a pull request. For this
      * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
      * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
-     * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#list-pull-requests)" endpoint.
+     * request id, use the "[List pull requests](https://docs.github.com/github-ae@latest/rest/reference/pulls#list-pull-requests)" endpoint.
      */
     get: operations["issues/list"];
   };
@@ -645,15 +559,17 @@ export interface paths {
     post: operations["markdown/render-raw"];
   };
   "/meta": {
+    /**
+     * Returns meta information about GitHub, including a list of GitHub's IP addresses. For more information, see "[About GitHub's IP addresses](https://help.github.com/articles/about-github-s-ip-addresses/)."
+     *
+     * **Note:** The IP addresses shown in the documentation's response are only example values. You must always query the API directly to get the latest list of IP addresses.
+     */
     get: operations["meta/get"];
-  };
-  "/networks/{owner}/{repo}/events": {
-    get: operations["activity/list-public-events-for-repo-network"];
   };
   "/notifications": {
     /** List all notifications for the current user, sorted by most recently updated. */
     get: operations["activity/list-notifications-for-authenticated-user"];
-    /** Marks all notifications as "read" removes it from the [default view on GitHub Enterprise Server](https://github.com/notifications). If the number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub Enterprise Server will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain, you can use the [List notifications for the authenticated user](https://docs.github.com/enterprise-server@2.22/rest/reference/activity#list-notifications-for-the-authenticated-user) endpoint and pass the query parameter `all=false`. */
+    /** Marks all notifications as "read" removes it from the [default view on GitHub AE](https://github.com/notifications). If the number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub AE will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain, you can use the [List notifications for the authenticated user](https://docs.github.com/github-ae@latest/rest/reference/activity#list-notifications-for-the-authenticated-user) endpoint and pass the query parameter `all=false`. */
     put: operations["activity/mark-notifications-as-read"];
   };
   "/notifications/threads/{thread_id}": {
@@ -662,7 +578,7 @@ export interface paths {
   };
   "/notifications/threads/{thread_id}/subscription": {
     /**
-     * This checks to see if the current user is subscribed to a thread. You can also [get a repository subscription](https://docs.github.com/enterprise-server@2.22/rest/reference/activity#get-a-repository-subscription).
+     * This checks to see if the current user is subscribed to a thread. You can also [get a repository subscription](https://docs.github.com/github-ae@latest/rest/reference/activity#get-a-repository-subscription).
      *
      * Note that subscriptions are only generated if a user is participating in a conversation--for example, they've replied to the thread, were **@mentioned**, or manually subscribe to a thread.
      */
@@ -672,10 +588,10 @@ export interface paths {
      *
      * You can also use this endpoint to subscribe to threads that you are currently not receiving notifications for or to subscribed to threads that you have previously ignored.
      *
-     * Unsubscribing from a conversation in a repository that you are not watching is functionally equivalent to the [Delete a thread subscription](https://docs.github.com/enterprise-server@2.22/rest/reference/activity#delete-a-thread-subscription) endpoint.
+     * Unsubscribing from a conversation in a repository that you are not watching is functionally equivalent to the [Delete a thread subscription](https://docs.github.com/github-ae@latest/rest/reference/activity#delete-a-thread-subscription) endpoint.
      */
     put: operations["activity/set-thread-subscription"];
-    /** Mutes all future notifications for a conversation until you comment on the thread or get an **@mention**. If you are watching the repository of the thread, you will still receive notifications. To ignore future notifications for a repository you are watching, use the [Set a thread subscription](https://docs.github.com/enterprise-server@2.22/rest/reference/activity#set-a-thread-subscription) endpoint and set `ignore` to `true`. */
+    /** Mutes all future notifications for a conversation until you comment on the thread or get an **@mention**. If you are watching the repository of the thread, you will still receive notifications. To ignore future notifications for a repository you are watching, use the [Set a thread subscription](https://docs.github.com/github-ae@latest/rest/reference/activity#set-a-thread-subscription) endpoint and set `ignore` to `true`. */
     delete: operations["activity/delete-thread-subscription"];
   };
   "/octocat": {
@@ -684,9 +600,9 @@ export interface paths {
   };
   "/organizations": {
     /**
-     * Lists all organizations, in the order that they were created on GitHub Enterprise Server.
+     * Lists all organizations, in the order that they were created on GitHub AE.
      *
-     * **Note:** Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of organizations.
+     * **Note:** Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of organizations.
      */
     get: operations["orgs/list"];
   };
@@ -694,22 +610,79 @@ export interface paths {
     /**
      * To see many of the organization response values, you need to be an authenticated organization owner with the `admin:org` scope. When the value of `two_factor_requirement_enabled` is `true`, the organization requires all members, billing managers, and outside collaborators to enable [two-factor authentication](https://help.github.com/articles/securing-your-account-with-two-factor-authentication-2fa/).
      *
-     * GitHub Apps with the `Organization plan` permission can use this endpoint to retrieve information about an organization's GitHub Enterprise Server plan. See "[Authenticating with GitHub Apps](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/)" for details. For an example response, see 'Response with GitHub Enterprise Server plan information' below."
+     * GitHub Apps with the `Organization plan` permission can use this endpoint to retrieve information about an organization's GitHub AE plan. See "[Authenticating with GitHub Apps](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/)" for details. For an example response, see 'Response with GitHub AE plan information' below."
      */
     get: operations["orgs/get"];
     /**
-     * **Parameter Deprecation Notice:** GitHub Enterprise Server will replace and discontinue `members_allowed_repository_creation_type` in favor of more granular permissions. The new input parameters are `members_can_create_public_repositories`, `members_can_create_private_repositories` for all organizations and `members_can_create_internal_repositories` for organizations associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes).
+     * **Parameter Deprecation Notice:** GitHub AE will replace and discontinue `members_allowed_repository_creation_type` in favor of more granular permissions. The new input parameters are `members_can_create_public_repositories`, `members_can_create_private_repositories` for all organizations and `members_can_create_internal_repositories` for organizations associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes).
      *
      * Enables an authenticated organization owner with the `admin:org` scope to update the organization's profile and member privileges.
      */
     patch: operations["orgs/update"];
   };
-  "/orgs/{org}/actions/runner-groups": {
+  "/orgs/{org}/actions/permissions": {
     /**
-     * Lists all self-hosted runner groups configured in an organization and inherited from an enterprise.
-     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+     * Gets the GitHub Actions permissions policy for repositories and allowed actions in an organization.
+     *
+     * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
      */
-    get: operations["actions/list-self-hosted-runner-groups-for-org"];
+    get: operations["actions/get-github-actions-permissions-organization"];
+    /**
+     * Sets the GitHub Actions permissions policy for repositories and allowed actions in an organization.
+     *
+     * If the organization belongs to an enterprise that has set restrictive permissions at the enterprise level, such as `allowed_actions` to `selected` actions, then you cannot override them for the organization.
+     *
+     * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+     */
+    put: operations["actions/set-github-actions-permissions-organization"];
+  };
+  "/orgs/{org}/actions/permissions/repositories": {
+    /**
+     * Lists the selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint, the organization permission policy for `enabled_repositories` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+     *
+     * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+     */
+    get: operations["actions/list-selected-repositories-enabled-github-actions-organization"];
+    /**
+     * Replaces the list of selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint, the organization permission policy for `enabled_repositories` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+     *
+     * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+     */
+    put: operations["actions/set-selected-repositories-enabled-github-actions-organization"];
+  };
+  "/orgs/{org}/actions/permissions/repositories/{repository_id}": {
+    /**
+     * Adds a repository to the list of selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint, the organization permission policy for `enabled_repositories` must be must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+     *
+     * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+     */
+    put: operations["actions/enable-selected-repository-github-actions-organization"];
+    /**
+     * Removes a repository from the list of selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint, the organization permission policy for `enabled_repositories` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+     *
+     * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+     */
+    delete: operations["actions/disable-selected-repository-github-actions-organization"];
+  };
+  "/orgs/{org}/actions/permissions/selected-actions": {
+    /**
+     * Gets the selected actions that are allowed in an organization. To use this endpoint, the organization permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization).""
+     *
+     * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+     */
+    get: operations["actions/get-allowed-actions-organization"];
+    /**
+     * Sets the actions that are allowed in an organization. To use this endpoint, the organization permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+     *
+     * If the organization belongs to an enterprise that has `selected` actions set at the enterprise level, then you cannot override any of the enterprise's allowed actions settings.
+     *
+     * To use the `patterns_allowed` setting for private repositories, the organization must belong to an enterprise. If the organization does not belong to an enterprise, then the `patterns_allowed` setting only applies to public repositories in the organization.
+     *
+     * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+     */
+    put: operations["actions/set-allowed-actions-organization"];
+  };
+  "/orgs/{org}/actions/runner-groups": {
     /**
      * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud and GitHub Enterprise Server. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
      *
@@ -721,128 +694,23 @@ export interface paths {
   };
   "/orgs/{org}/actions/runner-groups/{runner_group_id}": {
     /**
-     * Gets a specific self-hosted runner group for an organization.
-     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-     */
-    get: operations["actions/get-self-hosted-runner-group-for-org"];
-    /**
+     * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+     *
      * Deletes a self-hosted runner group for an organization.
+     *
      * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
      */
     delete: operations["actions/delete-self-hosted-runner-group-from-org"];
     /**
+     * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+     *
      * Updates the `name` and `visibility` of a self-hosted runner group in an organization.
+     *
      * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
      */
     patch: operations["actions/update-self-hosted-runner-group-for-org"];
   };
-  "/orgs/{org}/actions/runner-groups/{runner_group_id}/repositories": {
-    /**
-     * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud and GitHub Enterprise Server. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
-     *
-     * Lists the repositories with access to a self-hosted runner group configured in an organization.
-     *
-     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-     */
-    get: operations["actions/list-repo-access-to-self-hosted-runner-group-in-org"];
-    /**
-     * Replaces the list of repositories that have access to a self-hosted runner group configured in an organization.
-     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-     */
-    put: operations["actions/set-repo-access-to-self-hosted-runner-group-in-org"];
-  };
-  "/orgs/{org}/actions/runner-groups/{runner_group_id}/repositories/{repository_id}": {
-    /**
-     * Adds a repository to the list of selected repositories that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an organization](#create-a-self-hosted-runner-group-for-an-organization)."
-     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-     */
-    put: operations["actions/add-repo-access-to-self-hosted-runner-group-in-org"];
-    /**
-     * Removes a repository from the list of selected repositories that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an organization](#create-a-self-hosted-runner-group-for-an-organization)."
-     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-     */
-    delete: operations["actions/remove-repo-access-to-self-hosted-runner-group-in-org"];
-  };
-  "/orgs/{org}/actions/runner-groups/{runner_group_id}/runners": {
-    /**
-     * Lists self-hosted runners that are in a specific organization group.
-     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-     */
-    get: operations["actions/list-self-hosted-runners-in-group-for-org"];
-    /**
-     * Replaces the list of self-hosted runners that are part of an organization runner group.
-     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-     */
-    put: operations["actions/set-self-hosted-runners-in-group-for-org"];
-  };
-  "/orgs/{org}/actions/runner-groups/{runner_group_id}/runners/{runner_id}": {
-    /**
-     * Adds a self-hosted runner to a runner group configured in an organization.
-     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-     */
-    put: operations["actions/add-self-hosted-runner-to-group-for-org"];
-    /**
-     * Removes a self-hosted runner from a group configured in an organization. The runner is then returned to the default group.
-     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-     */
-    delete: operations["actions/remove-self-hosted-runner-from-group-for-org"];
-  };
-  "/orgs/{org}/actions/runners": {
-    /**
-     * Lists all self-hosted runners configured in an organization.
-     *
-     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-     */
-    get: operations["actions/list-self-hosted-runners-for-org"];
-  };
-  "/orgs/{org}/actions/runners/downloads": {
-    /**
-     * Lists binaries for the runner application that you can download and run.
-     *
-     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-     */
-    get: operations["actions/list-runner-applications-for-org"];
-  };
-  "/orgs/{org}/actions/runners/registration-token": {
-    /**
-     * Returns a token that you can pass to the `config` script. The token expires after one hour.
-     *
-     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-     *
-     * #### Example using registration token
-     *
-     * Configure your self-hosted runner, replacing `TOKEN` with the registration token provided by this endpoint.
-     *
-     * ```
-     * ./config.sh --url https://github.com/octo-org --token TOKEN
-     * ```
-     */
-    post: operations["actions/create-registration-token-for-org"];
-  };
-  "/orgs/{org}/actions/runners/remove-token": {
-    /**
-     * Returns a token that you can pass to the `config` script to remove a self-hosted runner from an organization. The token expires after one hour.
-     *
-     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-     *
-     * #### Example using remove token
-     *
-     * To remove your self-hosted runner from an organization, replace `TOKEN` with the remove token provided by this
-     * endpoint.
-     *
-     * ```
-     * ./config.sh remove --token TOKEN
-     * ```
-     */
-    post: operations["actions/create-remove-token-for-org"];
-  };
   "/orgs/{org}/actions/runners/{runner_id}": {
-    /**
-     * Gets a specific self-hosted runner configured in an organization.
-     *
-     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-     */
-    get: operations["actions/get-self-hosted-runner-for-org"];
     /**
      * Forces the removal of a self-hosted runner from an organization. You can use this endpoint to completely remove the runner when the machine you were using no longer exists.
      *
@@ -945,17 +813,14 @@ export interface paths {
   "/orgs/{org}/actions/secrets/{secret_name}/repositories": {
     /** Lists all repositories that have been selected when the `visibility` for repository access to a secret is set to `selected`. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint. */
     get: operations["actions/list-selected-repos-for-org-secret"];
-    /** Replaces all repositories for an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-server@2.22/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint. */
+    /** Replaces all repositories for an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/github-ae@latest/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint. */
     put: operations["actions/set-selected-repos-for-org-secret"];
   };
   "/orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id}": {
-    /** Adds a repository to an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-server@2.22/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint. */
+    /** Adds a repository to an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/github-ae@latest/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint. */
     put: operations["actions/add-selected-repo-to-org-secret"];
-    /** Removes a repository from an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-server@2.22/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint. */
+    /** Removes a repository from an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/github-ae@latest/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint. */
     delete: operations["actions/remove-selected-repo-from-org-secret"];
-  };
-  "/orgs/{org}/events": {
-    get: operations["activity/list-public-org-events"];
   };
   "/orgs/{org}/hooks": {
     get: operations["orgs/list-webhooks"];
@@ -969,15 +834,37 @@ export interface paths {
     /** Updates a webhook configured in an organization. When you update a webhook, the `secret` will be overwritten. If you previously had a `secret` set, you must provide the same `secret` or set a new `secret` or the secret will be removed. If you are only updating individual webhook `config` properties, use "[Update a webhook configuration for an organization](/rest/reference/orgs#update-a-webhook-configuration-for-an-organization)." */
     patch: operations["orgs/update-webhook"];
   };
+  "/orgs/{org}/hooks/{hook_id}/config": {
+    /**
+     * Returns the webhook configuration for an organization. To get more information about the webhook, including the `active` state and `events`, use "[Get an organization webhook ](/rest/reference/orgs#get-an-organization-webhook)."
+     *
+     * Access tokens must have the `admin:org_hook` scope, and GitHub Apps must have the `organization_hooks:read` permission.
+     */
+    get: operations["orgs/get-webhook-config-for-org"];
+    /**
+     * Updates the webhook configuration for an organization. To update more information about the webhook, including the `active` state and `events`, use "[Update an organization webhook ](/rest/reference/orgs#update-an-organization-webhook)."
+     *
+     * Access tokens must have the `admin:org_hook` scope, and GitHub Apps must have the `organization_hooks:write` permission.
+     */
+    patch: operations["orgs/update-webhook-config-for-org"];
+  };
+  "/orgs/{org}/hooks/{hook_id}/deliveries/{delivery_id}": {
+    /** Returns a delivery for a webhook configured in an organization. */
+    get: operations["orgs/get-webhook-delivery"];
+  };
+  "/orgs/{org}/hooks/{hook_id}/deliveries/{delivery_id}/attempts": {
+    /** Redeliver a delivery for a webhook configured in an organization. */
+    post: operations["orgs/redeliver-webhook-delivery"];
+  };
   "/orgs/{org}/hooks/{hook_id}/pings": {
-    /** This will trigger a [ping event](https://docs.github.com/enterprise-server@2.22/webhooks/#ping-event) to be sent to the hook. */
+    /** This will trigger a [ping event](https://docs.github.com/github-ae@latest/webhooks/#ping-event) to be sent to the hook. */
     post: operations["orgs/ping-webhook"];
   };
   "/orgs/{org}/installation": {
     /**
      * Enables an authenticated GitHub App to find the organization's installation information.
      *
-     * You must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+     * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
      */
     get: operations["apps/get-org-installation"];
   };
@@ -992,7 +879,7 @@ export interface paths {
      * **Note**: GitHub's REST API v3 considers every pull request an issue, but not every issue is a pull request. For this
      * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
      * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
-     * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#list-pull-requests)" endpoint.
+     * request id, use the "[List pull requests](https://docs.github.com/github-ae@latest/rest/reference/pulls#list-pull-requests)" endpoint.
      */
     get: operations["issues/list-for-org"];
   };
@@ -1012,7 +899,7 @@ export interface paths {
     /**
      * Only authenticated organization owners can add a member to the organization or update the member's role.
      *
-     * *   If the authenticated user is _adding_ a member to the organization, the invited user will receive an email inviting them to the organization. The user's [membership status](https://docs.github.com/enterprise-server@2.22/rest/reference/orgs#get-organization-membership-for-a-user) will be `pending` until they accept the invitation.
+     * *   If the authenticated user is _adding_ a member to the organization, the invited user will receive an email inviting them to the organization. The user's [membership status](https://docs.github.com/github-ae@latest/rest/reference/orgs#get-organization-membership-for-a-user) will be `pending` until they accept the invitation.
      *
      * *   Authenticated users can _update_ a user's membership by passing the `role` parameter. If the authenticated user changes a member's role to `admin`, the affected user will receive an email notifying them that they've been made an organization owner. If the authenticated user changes an owner's role to `member`, no email will be sent.
      *
@@ -1038,36 +925,11 @@ export interface paths {
     /** Removing a user from this list will remove them from all the organization's repositories. */
     delete: operations["orgs/remove-outside-collaborator"];
   };
-  "/orgs/{org}/pre-receive-hooks": {
-    /** List all pre-receive hooks that are enabled or testing for this organization as well as any disabled hooks that can be configured at the organization level. Globally disabled pre-receive hooks that do not allow downstream configuration are not listed. */
-    get: operations["enterprise-admin/list-pre-receive-hooks-for-org"];
-  };
-  "/orgs/{org}/pre-receive-hooks/{pre_receive_hook_id}": {
-    get: operations["enterprise-admin/get-pre-receive-hook-for-org"];
-    /** Removes any overrides for this hook at the org level for this org. */
-    delete: operations["enterprise-admin/remove-pre-receive-hook-enforcement-for-org"];
-    /** For pre-receive hooks which are allowed to be configured at the org level, you can set `enforcement` and `allow_downstream_configuration` */
-    patch: operations["enterprise-admin/update-pre-receive-hook-enforcement-for-org"];
-  };
   "/orgs/{org}/projects": {
     /** Lists the projects in an organization. Returns a `404 Not Found` status if projects are disabled in the organization. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
     get: operations["projects/list-for-org"];
     /** Creates an organization project board. Returns a `404 Not Found` status if projects are disabled in the organization. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
     post: operations["projects/create-for-org"];
-  };
-  "/orgs/{org}/public_members": {
-    /** Members of an organization can choose to have their membership publicized or not. */
-    get: operations["orgs/list-public-members"];
-  };
-  "/orgs/{org}/public_members/{username}": {
-    get: operations["orgs/check-public-membership-for-user"];
-    /**
-     * The user can publicize their own membership. (A user cannot publicize the membership for another user.)
-     *
-     * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs)."
-     */
-    put: operations["orgs/set-public-membership-for-authenticated-user"];
-    delete: operations["orgs/remove-public-membership-for-authenticated-user"];
   };
   "/orgs/{org}/repos": {
     /** Lists repositories for the specified organization. */
@@ -1077,7 +939,7 @@ export interface paths {
      *
      * **OAuth scope requirements**
      *
-     * When using [OAuth](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
+     * When using [OAuth](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
      *
      * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.
      * *   `repo` scope to create a private repository
@@ -1096,7 +958,7 @@ export interface paths {
   };
   "/orgs/{org}/teams/{team_slug}": {
     /**
-     * Gets a team using the team's `slug`. GitHub Enterprise Server generates the `slug` from the team `name`.
+     * Gets a team using the team's `slug`. GitHub AE generates the `slug` from the team `name`.
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}`.
      */
@@ -1118,15 +980,15 @@ export interface paths {
   };
   "/orgs/{org}/teams/{team_slug}/discussions": {
     /**
-     * List all discussions on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * List all discussions on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions`.
      */
     get: operations["teams/list-discussions-in-org"];
     /**
-     * Creates a new discussion post on a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * Creates a new discussion post on a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      *
-     * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+     * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/{org_id}/team/{team_id}/discussions`.
      */
@@ -1134,19 +996,19 @@ export interface paths {
   };
   "/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}": {
     /**
-     * Get a specific discussion on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * Get a specific discussion on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
      */
     get: operations["teams/get-discussion-in-org"];
     /**
-     * Delete a discussion from a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * Delete a discussion from a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
      */
     delete: operations["teams/delete-discussion-in-org"];
     /**
-     * Edits the title and body text of a discussion post. Only the parameters you provide are updated. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * Edits the title and body text of a discussion post. Only the parameters you provide are updated. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `PATCH /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
      */
@@ -1154,15 +1016,15 @@ export interface paths {
   };
   "/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments": {
     /**
-     * List all comments on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * List all comments on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
      */
     get: operations["teams/list-discussion-comments-in-org"];
     /**
-     * Creates a new comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * Creates a new comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      *
-     * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+     * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
      */
@@ -1170,19 +1032,19 @@ export interface paths {
   };
   "/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}": {
     /**
-     * Get a specific comment on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * Get a specific comment on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
      */
     get: operations["teams/get-discussion-comment-in-org"];
     /**
-     * Deletes a comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * Deletes a comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
      */
     delete: operations["teams/delete-discussion-comment-in-org"];
     /**
-     * Edits the body text of a discussion comment. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * Edits the body text of a discussion comment. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `PATCH /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
      */
@@ -1190,13 +1052,13 @@ export interface paths {
   };
   "/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions": {
     /**
-     * List the reactions to a [team discussion comment](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#discussion-comments/). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * List the reactions to a [team discussion comment](https://docs.github.com/github-ae@latest/rest/reference/teams#discussion-comments/). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions`.
      */
     get: operations["reactions/list-for-team-discussion-comment-in-org"];
     /**
-     * Create a reaction to a [team discussion comment](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#discussion-comments). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
+     * Create a reaction to a [team discussion comment](https://docs.github.com/github-ae@latest/rest/reference/teams#discussion-comments). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions`.
      */
@@ -1206,19 +1068,19 @@ export interface paths {
     /**
      * **Note:** You can also specify a team or organization with `team_id` and `org_id` using the route `DELETE /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions/:reaction_id`.
      *
-     * Delete a reaction to a [team discussion comment](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#discussion-comments). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * Delete a reaction to a [team discussion comment](https://docs.github.com/github-ae@latest/rest/reference/teams#discussion-comments). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
     delete: operations["reactions/delete-for-team-discussion-comment"];
   };
   "/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions": {
     /**
-     * List the reactions to a [team discussion](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#discussions). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * List the reactions to a [team discussion](https://docs.github.com/github-ae@latest/rest/reference/teams#discussions). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions`.
      */
     get: operations["reactions/list-for-team-discussion-in-org"];
     /**
-     * Create a reaction to a [team discussion](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion.
+     * Create a reaction to a [team discussion](https://docs.github.com/github-ae@latest/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion.
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions`.
      */
@@ -1228,7 +1090,7 @@ export interface paths {
     /**
      * **Note:** You can also specify a team or organization with `team_id` and `org_id` using the route `DELETE /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions/:reaction_id`.
      *
-     * Delete a reaction to a [team discussion](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * Delete a reaction to a [team discussion](https://docs.github.com/github-ae@latest/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
     delete: operations["reactions/delete-for-team-discussion"];
   };
@@ -1251,7 +1113,7 @@ export interface paths {
      * **Note:**
      * The response contains the `state` of the membership and the member's `role`.
      *
-     * The `role` for organization owners is set to `maintainer`. For more information about `maintainer` roles, see see [Create a team](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#create-a-team).
+     * The `role` for organization owners is set to `maintainer`. For more information about `maintainer` roles, see see [Create a team](https://docs.github.com/github-ae@latest/rest/reference/teams#create-a-team).
      */
     get: operations["teams/get-membership-for-user-in-org"];
     /**
@@ -1259,7 +1121,7 @@ export interface paths {
      *
      * Adds an organization member to a team. An authenticated organization owner or team maintainer can add organization members to a team.
      *
-     * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub Enterprise Server team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub Enterprise Server](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+     * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub AE team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub AE](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
      *
      * An organization owner can add someone who is not part of the team's organization to a team. When an organization owner adds someone to a team who is not an organization member, this endpoint will send an invitation to the person via email. This newly-created membership will be in the "pending" state until the person accepts the invitation, at which point the membership will transition to the "active" state and the user will be added as a member of the team.
      *
@@ -1273,7 +1135,7 @@ export interface paths {
      *
      * To remove a membership between a user and a team, the authenticated user must have 'admin' permissions to the team or be an owner of the organization that the team is associated with. Removing team membership does not delete the user, it just removes their membership from the team.
      *
-     * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub Enterprise Server team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub Enterprise Server](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+     * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub AE team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub AE](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}/memberships/{username}`.
      */
@@ -1319,7 +1181,7 @@ export interface paths {
     /**
      * Checks whether a team has `admin`, `push`, `maintain`, `triage`, or `pull` permission for a repository. Repositories inherited through a parent team will also be checked.
      *
-     * You can also get information about the specified repository, including what permissions the team grants on it, by passing the following custom [media type](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types/) via the `application/vnd.github.v3.repository+json` accept header.
+     * You can also get information about the specified repository, including what permissions the team grants on it, by passing the following custom [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/) via the `application/vnd.github.v3.repository+json` accept header.
      *
      * If a team doesn't have permission for the repository, you will receive a `404 Not Found` response status.
      *
@@ -1327,7 +1189,7 @@ export interface paths {
      */
     get: operations["teams/check-permissions-for-repo-in-org"];
     /**
-     * To add a repository to a team or update the team's permission on a repository, the authenticated user must have admin access to the repository, and must be able to see the team. The repository must be owned by the organization, or a direct fork of a repository owned by the organization. You will get a `422 Unprocessable Entity` status if you attempt to add a repository to a team that is not owned by the organization. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs)."
+     * To add a repository to a team or update the team's permission on a repository, the authenticated user must have admin access to the repository, and must be able to see the team. The repository must be owned by the organization, or a direct fork of a repository owned by the organization. You will get a `422 Unprocessable Entity` status if you attempt to add a repository to a team that is not owned by the organization. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `PUT /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo}`.
      *
@@ -1407,7 +1269,7 @@ export interface paths {
     /**
      * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Reactions API. We recommend migrating your existing code to use the new delete reactions endpoints. For more information, see this [blog post](https://developer.github.com/changes/2020-02-26-new-delete-reactions-endpoints/).
      *
-     * OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), when deleting a [team discussion](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#discussions) or [team discussion comment](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#discussion-comments).
+     * OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), when deleting a [team discussion](https://docs.github.com/github-ae@latest/rest/reference/teams#discussions) or [team discussion comment](https://docs.github.com/github-ae@latest/rest/reference/teams#discussion-comments).
      */
     delete: operations["reactions/delete-legacy"];
   };
@@ -1425,7 +1287,7 @@ export interface paths {
      * repositories, you will get a `403 Forbidden` response.
      */
     delete: operations["repos/delete"];
-    /** **Note**: To edit a repository's topics, use the [Replace all repository topics](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#replace-all-repository-topics) endpoint. */
+    /** **Note**: To edit a repository's topics, use the [Replace all repository topics](https://docs.github.com/github-ae@latest/rest/reference/repos#replace-all-repository-topics) endpoint. */
     patch: operations["repos/update"];
   };
   "/repos/{owner}/{repo}/actions/artifacts": {
@@ -1460,56 +1322,46 @@ export interface paths {
      */
     get: operations["actions/download-job-logs-for-workflow-run"];
   };
+  "/repos/{owner}/{repo}/actions/permissions": {
+    /**
+     * Gets the GitHub Actions permissions policy for a repository, including whether GitHub Actions is enabled and the actions allowed to run in the repository.
+     *
+     * You must authenticate using an access token with the `repo` scope to use this
+     * endpoint. GitHub Apps must have the `administration` repository permission to use this API.
+     */
+    get: operations["actions/get-github-actions-permissions-repository"];
+    /**
+     * Sets the GitHub Actions permissions policy for enabling GitHub Actions and allowed actions in the repository.
+     *
+     * If the repository belongs to an organization or enterprise that has set restrictive permissions at the organization or enterprise levels, such as `allowed_actions` to `selected` actions, then you cannot override them for the repository.
+     *
+     * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration` repository permission to use this API.
+     */
+    put: operations["actions/set-github-actions-permissions-repository"];
+  };
+  "/repos/{owner}/{repo}/actions/permissions/selected-actions": {
+    /**
+     * Gets the settings for selected actions that are allowed in a repository. To use this endpoint, the repository policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for a repository](#set-github-actions-permissions-for-a-repository)."
+     *
+     * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration` repository permission to use this API.
+     */
+    get: operations["actions/get-allowed-actions-repository"];
+    /**
+     * Sets the actions that are allowed in a repository. To use this endpoint, the repository permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for a repository](#set-github-actions-permissions-for-a-repository)."
+     *
+     * If the repository belongs to an organization or enterprise that has `selected` actions set at the organization or enterprise levels, then you cannot override any of the allowed actions settings.
+     *
+     * To use the `patterns_allowed` setting for private repositories, the repository must belong to an enterprise. If the repository does not belong to an enterprise, then the `patterns_allowed` setting only applies to public repositories.
+     *
+     * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration` repository permission to use this API.
+     */
+    put: operations["actions/set-allowed-actions-repository"];
+  };
   "/repos/{owner}/{repo}/actions/runners": {
     /** Lists all self-hosted runners configured in a repository. You must authenticate using an access token with the `repo` scope to use this endpoint. */
     get: operations["actions/list-self-hosted-runners-for-repo"];
   };
-  "/repos/{owner}/{repo}/actions/runners/downloads": {
-    /**
-     * Lists binaries for the runner application that you can download and run.
-     *
-     * You must authenticate using an access token with the `repo` scope to use this endpoint.
-     */
-    get: operations["actions/list-runner-applications-for-repo"];
-  };
-  "/repos/{owner}/{repo}/actions/runners/registration-token": {
-    /**
-     * Returns a token that you can pass to the `config` script. The token expires after one hour. You must authenticate
-     * using an access token with the `repo` scope to use this endpoint.
-     *
-     * #### Example using registration token
-     *
-     * Configure your self-hosted runner, replacing `TOKEN` with the registration token provided by this endpoint.
-     *
-     * ```
-     * ./config.sh --url https://github.com/octo-org/octo-repo-artifacts --token TOKEN
-     * ```
-     */
-    post: operations["actions/create-registration-token-for-repo"];
-  };
-  "/repos/{owner}/{repo}/actions/runners/remove-token": {
-    /**
-     * Returns a token that you can pass to remove a self-hosted runner from a repository. The token expires after one hour.
-     * You must authenticate using an access token with the `repo` scope to use this endpoint.
-     *
-     * #### Example using remove token
-     *
-     * To remove your self-hosted runner from a repository, replace TOKEN with the remove token provided by this endpoint.
-     *
-     * ```
-     * ./config.sh remove --token TOKEN
-     * ```
-     */
-    post: operations["actions/create-remove-token-for-repo"];
-  };
   "/repos/{owner}/{repo}/actions/runners/{runner_id}": {
-    /**
-     * Gets a specific self-hosted runner configured in a repository.
-     *
-     * You must authenticate using an access token with the `repo` scope to use this
-     * endpoint.
-     */
-    get: operations["actions/get-self-hosted-runner-for-repo"];
     /**
      * Forces the removal of a self-hosted runner from a repository. You can use this endpoint to completely remove the runner when the machine you were using no longer exists.
      *
@@ -1520,7 +1372,7 @@ export interface paths {
   };
   "/repos/{owner}/{repo}/actions/runs": {
     /**
-     * Lists all workflow runs for a repository. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#parameters).
+     * Lists all workflow runs for a repository. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#parameters).
      *
      * Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
      */
@@ -1545,7 +1397,7 @@ export interface paths {
     post: operations["actions/cancel-workflow-run"];
   };
   "/repos/{owner}/{repo}/actions/runs/{run_id}/jobs": {
-    /** Lists jobs for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#parameters). */
+    /** Lists jobs for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#parameters). */
     get: operations["actions/list-jobs-for-workflow-run"];
   };
   "/repos/{owner}/{repo}/actions/runs/{run_id}/logs": {
@@ -1562,6 +1414,14 @@ export interface paths {
   "/repos/{owner}/{repo}/actions/runs/{run_id}/rerun": {
     /** Re-runs your workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint. */
     post: operations["actions/re-run-workflow"];
+  };
+  "/repos/{owner}/{repo}/actions/runs/{run_id}/timing": {
+    /**
+     * Gets the number of billable minutes and total run time for a specific workflow run. Billable minutes only apply to workflows in private repositories that use GitHub AE-hosted runners. Usage is listed for each GitHub AE-hosted runner operating system in milliseconds. Any job re-runs are also included in the usage. The usage does not include the multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
+     *
+     * Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+     */
+    get: operations["actions/get-workflow-run-usage"];
   };
   "/repos/{owner}/{repo}/actions/secrets": {
     /** Lists all secrets available in a repository without revealing their encrypted values. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint. */
@@ -1663,6 +1523,14 @@ export interface paths {
     /** Gets a specific workflow. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. */
     get: operations["actions/get-workflow"];
   };
+  "/repos/{owner}/{repo}/actions/workflows/{workflow_id}/disable": {
+    /**
+     * Disables a workflow and sets the `state` of the workflow to `disabled_manually`. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`.
+     *
+     * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+     */
+    put: operations["actions/disable-workflow"];
+  };
   "/repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches": {
     /**
      * You can use this endpoint to manually trigger a GitHub Actions workflow run. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`.
@@ -1673,13 +1541,29 @@ export interface paths {
      */
     post: operations["actions/create-workflow-dispatch"];
   };
+  "/repos/{owner}/{repo}/actions/workflows/{workflow_id}/enable": {
+    /**
+     * Enables a workflow and sets the `state` of the workflow to `active`. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`.
+     *
+     * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+     */
+    put: operations["actions/enable-workflow"];
+  };
   "/repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs": {
     /**
-     * List all workflow runs for a workflow. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#parameters).
+     * List all workflow runs for a workflow. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#parameters).
      *
      * Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope.
      */
     get: operations["actions/list-workflow-runs"];
+  };
+  "/repos/{owner}/{repo}/actions/workflows/{workflow_id}/timing": {
+    /**
+     * Gets the number of billable minutes used by a specific workflow during the current billing cycle. Billable minutes only apply to workflows in private repositories that use GitHub AE-hosted runners. Usage is listed for each GitHub AE-hosted runner operating system in milliseconds. Any job re-runs are also included in the usage. The usage does not include the multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
+     *
+     * You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+     */
+    get: operations["actions/get-workflow-usage"];
   };
   "/repos/{owner}/{repo}/assignees": {
     /** Lists the [available assignees](https://help.github.com/articles/assigning-issues-and-pull-requests-to-other-github-users/) for issues in a repository. */
@@ -1953,12 +1837,12 @@ export interface paths {
     /**
      * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
      *
-     * By default, check suites are automatically created when you create a [check run](https://docs.github.com/enterprise-server@2.22/rest/reference/checks#check-runs). You only need to use this endpoint for manually creating check suites when you've disabled automatic creation using "[Update repository preferences for check suites](https://docs.github.com/enterprise-server@2.22/rest/reference/checks#update-repository-preferences-for-check-suites)". Your GitHub App must have the `checks:write` permission to create check suites.
+     * By default, check suites are automatically created when you create a [check run](https://docs.github.com/github-ae@latest/rest/reference/checks#check-runs). You only need to use this endpoint for manually creating check suites when you've disabled automatic creation using "[Update repository preferences for check suites](https://docs.github.com/github-ae@latest/rest/reference/checks#update-repository-preferences-for-check-suites)". Your GitHub App must have the `checks:write` permission to create check suites.
      */
     post: operations["checks/create-suite"];
   };
   "/repos/{owner}/{repo}/check-suites/preferences": {
-    /** Changes the default automatic flow when creating check suites. By default, a check suite is automatically created each time code is pushed to a repository. When you disable the automatic creation of check suites, you can manually [Create a check suite](https://docs.github.com/enterprise-server@2.22/rest/reference/checks#create-a-check-suite). You must have admin permissions in the repository to set preferences for check suites. */
+    /** Changes the default automatic flow when creating check suites. By default, a check suite is automatically created each time code is pushed to a repository. When you disable the automatic creation of check suites, you can manually [Create a check suite](https://docs.github.com/github-ae@latest/rest/reference/checks#create-a-check-suite). You must have admin permissions in the repository to set preferences for check suites. */
     patch: operations["checks/set-suites-preferences"];
   };
   "/repos/{owner}/{repo}/check-suites/{check_suite_id}": {
@@ -1979,7 +1863,7 @@ export interface paths {
   };
   "/repos/{owner}/{repo}/check-suites/{check_suite_id}/rerequest": {
     /**
-     * Triggers GitHub to rerequest an existing check suite, without pushing new code to a repository. This endpoint will trigger the [`check_suite` webhook](https://docs.github.com/enterprise-server@2.22/webhooks/event-payloads/#check_suite) event with the action `rerequested`. When a check suite is `rerequested`, its `status` is reset to `queued` and the `conclusion` is cleared.
+     * Triggers GitHub to rerequest an existing check suite, without pushing new code to a repository. This endpoint will trigger the [`check_suite` webhook](https://docs.github.com/github-ae@latest/webhooks/event-payloads/#check_suite) event with the action `rerequested`. When a check suite is `rerequested`, its `status` is reset to `queued` and the `conclusion` is cleared.
      *
      * To rerequest a check suite, your GitHub App must have the `checks:read` permission on a private repository or pull access to a public repository.
      */
@@ -1991,6 +1875,11 @@ export interface paths {
      * or `master`). You must use an access token with the `security_events` scope to use
      * this endpoint. GitHub Apps must have the `security_events` read permission to use
      * this endpoint.
+     *
+     * The response includes a `most_recent_instance` object.
+     * This provides details of the most recent instance of this alert
+     * for the default branch or for the specified Git reference
+     * (if you used `ref` in the request).
      */
     get: operations["code-scanning/list-alerts-for-repo"];
   };
@@ -1999,11 +1888,15 @@ export interface paths {
      * Gets a single code scanning alert. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint.
      *
      * **Deprecation notice**:
-     * The instances field is deprecated and will, in future, not be included in the response for this endpoint. From GitHub Enterprise Server 3.0, the same information can be retrieved via a GET request to the URL specified by `instances_url`, added in that release.
+     * The instances field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The same information can now be retrieved via a GET request to the URL specified by `instances_url`.
      */
     get: operations["code-scanning/get-alert"];
     /** Updates the status of a single code scanning alert. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` write permission to use this endpoint. */
     patch: operations["code-scanning/update-alert"];
+  };
+  "/repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances": {
+    /** Lists all instances of the specified code scanning alert. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint. */
+    get: operations["code-scanning/list-alert-instances"];
   };
   "/repos/{owner}/{repo}/code-scanning/analyses": {
     /**
@@ -2026,13 +1919,39 @@ export interface paths {
      */
     get: operations["code-scanning/list-recent-analyses"];
   };
+  "/repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}": {
+    /**
+     * Gets a specified code scanning analysis for a repository.
+     * You must use an access token with the `security_events` scope to use this endpoint.
+     * GitHub Apps must have the `security_events` read permission to use this endpoint.
+     *
+     * The default JSON response contains fields that describe the analysis.
+     * This includes the Git reference and commit SHA to which the analysis relates,
+     * the datetime of the analysis, the name of the code scanning tool,
+     * and the number of alerts.
+     *
+     * The `rules_count` field in the default response give the number of rules
+     * that were run in the analysis.
+     * For very old analyses this data is not available,
+     * and `0` is returned in this field.
+     *
+     * If you use the Accept header `application/sarif+json`,
+     * the response contains the analysis data that was uploaded.
+     * This is formatted as
+     * [SARIF version 2.1.0](https://docs.oasis-open.org/sarif/sarif/v2.1.0/cs01/sarif-v2.1.0-cs01.html).
+     *
+     * **Deprecation notice**:
+     * The `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the `tool` field.
+     */
+    get: operations["code-scanning/get-analysis"];
+  };
   "/repos/{owner}/{repo}/code-scanning/sarifs": {
     /**
      * Uploads SARIF data containing the results of a code scanning analysis to make the results available in a repository. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` write permission to use this endpoint.
      *
      * There are two places where you can upload code scanning results.
-     *  - If you upload to a pull request, for example `--ref refs/pull/42/merge` or `--ref refs/pull/42/head`, then the results appear as alerts in a pull request check. For more information, see "[Triaging code scanning alerts in pull requests](/github/finding-security-vulnerabilities-and-errors-in-your-code/automatically-scanning-your-code-for-vulnerabilities-and-errors/triaging-code-scanning-alerts-in-pull-requests)."
-     *  - If you upload to a branch, for example `--ref refs/heads/my-branch`, then the results appear in the **Security** tab for your repository. For more information, see "[Managing code scanning alerts for your repository](/github/finding-security-vulnerabilities-and-errors-in-your-code/automatically-scanning-your-code-for-vulnerabilities-and-errors/managing-code-scanning-alerts-for-your-repository#viewing-the-alerts-for-a-repository)."
+     *  - If you upload to a pull request, for example `--ref refs/pull/42/merge` or `--ref refs/pull/42/head`, then the results appear as alerts in a pull request check. For more information, see "[Triaging code scanning alerts in pull requests](/code-security/secure-coding/triaging-code-scanning-alerts-in-pull-requests)."
+     *  - If you upload to a branch, for example `--ref refs/heads/my-branch`, then the results appear in the **Security** tab for your repository. For more information, see "[Managing code scanning alerts for your repository](/code-security/secure-coding/managing-code-scanning-alerts-for-your-repository#viewing-the-alerts-for-a-repository)."
      *
      * You must compress the SARIF-formatted analysis data that you want to upload, using `gzip`, and then encode it as a Base64 format string. For example:
      *
@@ -2047,6 +1966,10 @@ export interface paths {
      * For more information, see "[Get information about a SARIF upload](/rest/reference/code-scanning#get-information-about-a-sarif-upload)."
      */
     post: operations["code-scanning/upload-sarif"];
+  };
+  "/repos/{owner}/{repo}/code-scanning/sarifs/{sarif_id}": {
+    /** Gets information about a SARIF upload, including the status and the URL of the analysis that was uploaded so that you can retrieve details of the analysis. For more information, see "[Get a code scanning analysis for a repository](/rest/reference/code-scanning#get-a-code-scanning-analysis-for-a-repository)." You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint. */
+    get: operations["code-scanning/get-sarif"];
   };
   "/repos/{owner}/{repo}/collaborators": {
     /**
@@ -2064,13 +1987,13 @@ export interface paths {
      */
     get: operations["repos/check-collaborator"];
     /**
-     * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+     * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
      *
      * For more information the permission levels, see "[Repository permission levels for an organization](https://help.github.com/en/github/setting-up-and-managing-organizations-and-teams/repository-permission-levels-for-an-organization#permission-levels-for-repositories-owned-by-an-organization)".
      *
-     * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs)."
+     * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
      *
-     * The invitee will receive a notification that they have been invited to the repository, which they must accept or decline. They may do this via the notifications page, the email they receive, or by using the [repository invitations API endpoints](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#invitations).
+     * The invitee will receive a notification that they have been invited to the repository, which they must accept or decline. They may do this via the notifications page, the email they receive, or by using the [repository invitations API endpoints](https://docs.github.com/github-ae@latest/rest/reference/repos#invitations).
      *
      * **Rate limits**
      *
@@ -2085,7 +2008,7 @@ export interface paths {
   };
   "/repos/{owner}/{repo}/comments": {
     /**
-     * Commit Comments use [these custom media types](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#custom-media-types). You can read more about the use of media types in the API [here](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types/).
+     * Commit Comments use [these custom media types](https://docs.github.com/github-ae@latest/rest/reference/repos#custom-media-types). You can read more about the use of media types in the API [here](https://docs.github.com/github-ae@latest/rest/overview/media-types/).
      *
      * Comments are ordered by ascending ID.
      */
@@ -2097,16 +2020,16 @@ export interface paths {
     patch: operations["repos/update-commit-comment"];
   };
   "/repos/{owner}/{repo}/comments/{comment_id}/reactions": {
-    /** List the reactions to a [commit comment](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#comments). */
+    /** List the reactions to a [commit comment](https://docs.github.com/github-ae@latest/rest/reference/repos#comments). */
     get: operations["reactions/list-for-commit-comment"];
-    /** Create a reaction to a [commit comment](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#comments). A response with an HTTP `200` status means that you already added the reaction type to this commit comment. */
+    /** Create a reaction to a [commit comment](https://docs.github.com/github-ae@latest/rest/reference/repos#comments). A response with an HTTP `200` status means that you already added the reaction type to this commit comment. */
     post: operations["reactions/create-for-commit-comment"];
   };
   "/repos/{owner}/{repo}/comments/{comment_id}/reactions/{reaction_id}": {
     /**
      * **Note:** You can also specify a repository by `repository_id` using the route `DELETE /repositories/:repository_id/comments/:comment_id/reactions/:reaction_id`.
      *
-     * Delete a reaction to a [commit comment](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#comments).
+     * Delete a reaction to a [commit comment](https://docs.github.com/github-ae@latest/rest/reference/repos#comments).
      */
     delete: operations["reactions/delete-for-commit-comment"];
   };
@@ -2157,12 +2080,12 @@ export interface paths {
     /**
      * Create a comment for a commit using its `:commit_sha`.
      *
-     * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+     * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
      */
     post: operations["repos/create-commit-comment"];
   };
   "/repos/{owner}/{repo}/commits/{commit_sha}/pulls": {
-    /** Lists the merged pull request that introduced the commit to the repository. If the commit is not present in the default branch, additionally returns open pull requests associated with the commit. The results may include open and closed pull requests. Additional preview headers may be required to see certain details for associated pull requests, such as whether a pull request is in a draft state. For more information about previews that might affect this endpoint, see the [List pull requests](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#list-pull-requests) endpoint. */
+    /** Lists the merged pull request that introduced the commit to the repository. If the commit is not present in the default branch, additionally returns open pull requests associated with the commit. The results may include open and closed pull requests. Additional preview headers may be required to see certain details for associated pull requests, such as whether a pull request is in a draft state. For more information about previews that might affect this endpoint, see the [List pull requests](https://docs.github.com/github-ae@latest/rest/reference/pulls#list-pull-requests) endpoint. */
     get: operations["repos/list-pull-requests-associated-with-commit"];
   };
   "/repos/{owner}/{repo}/commits/{ref}": {
@@ -2171,9 +2094,9 @@ export interface paths {
      *
      * **Note:** If there are more than 300 files in the commit diff, the response will include pagination link headers for the remaining files, up to a limit of 3000 files. Each page contains the static commit information, and the only changes are to the file listing.
      *
-     * You can pass the appropriate [media type](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to  fetch `diff` and `patch` formats. Diffs with binary data will have no `patch` property.
+     * You can pass the appropriate [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to  fetch `diff` and `patch` formats. Diffs with binary data will have no `patch` property.
      *
-     * To return only the SHA-1 hash of the commit reference, you can provide the `sha` custom [media type](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) in the `Accept` header. You can use this endpoint to check if a remote reference's SHA-1 hash is the same as your local reference's SHA-1 hash by providing the local SHA-1 reference as the ETag.
+     * To return only the SHA-1 hash of the commit reference, you can provide the `sha` custom [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) in the `Accept` header. You can use this endpoint to check if a remote reference's SHA-1 hash is the same as your local reference's SHA-1 hash by providing the local SHA-1 reference as the ETag.
      *
      * **Signature verification object**
      *
@@ -2226,7 +2149,7 @@ export interface paths {
     /**
      * Users with pull access in a repository can access a combined view of commit statuses for a given ref. The ref can be a SHA, a branch name, or a tag name.
      *
-     * The most recent status for each context is returned, up to 100. This field [paginates](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#pagination) if there are over 100 contexts.
+     * The most recent status for each context is returned, up to 100. This field [paginates](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination) if there are over 100 contexts.
      *
      * Additionally, a combined `state` is returned. The `state` is one of:
      *
@@ -2248,16 +2171,15 @@ export interface paths {
     /**
      * The `basehead` param is comprised of two parts: `base` and `head`. Both must be branch names in `repo`. To compare branches across other repositories in the same network as `repo`, use the format `<USERNAME>:branch`.
      *
-     * The response from the API is equivalent to running the `git log base..head` command; however, commits are returned in chronological order. Pass the appropriate [media type](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.
+     * The response from the API is equivalent to running the `git log base..head` command; however, commits are returned in chronological order. Pass the appropriate [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.
      *
      * The response also includes details on the files that were changed between the two commits. This includes the status of the change (for example, if a file was added, removed, modified, or renamed), and details of the change itself. For example, files with a `renamed` status have a `previous_filename` field showing the previous filename of the file, and files with a `modified` status have a `patch` field showing the changes made to the file.
      *
      * **Working with large comparisons**
      *
-     * The response will include a comparison of up to 250 commits. If you are working with a larger commit range, you can use the [List commits](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#list-commits) to enumerate all commits in the range.
+     * To process a response with a large number of commits, you can use (`per_page` or `page`) to paginate the results. When using paging, the list of changed files is only returned with page 1, but includes all changed files for the entire comparison. For more information on working with pagination, see "[Traversing with pagination](/rest/guides/traversing-with-pagination)."
      *
-     * For comparisons with extremely large diffs, you may receive an error response indicating that the diff took too long
-     * to generate. You can typically resolve this error by using a smaller commit range.
+     * When calling this API without any paging parameters (`per_page` or `page`), the returned list is limited to 250 commits and the last commit in the list is the most recent of the entire comparison. When a paging parameter is specified, the first commit in the returned list of each page is the earliest.
      *
      * **Signature verification object**
      *
@@ -2292,11 +2214,11 @@ export interface paths {
   };
   "/repos/{owner}/{repo}/content_references/{content_reference_id}/attachments": {
     /**
-     * Creates an attachment under a content reference URL in the body or comment of an issue or pull request. Use the `id` and `repository` `full_name` of the content reference from the [`content_reference` event](https://docs.github.com/enterprise-server@2.22/webhooks/event-payloads/#content_reference) to create an attachment.
+     * Creates an attachment under a content reference URL in the body or comment of an issue or pull request. Use the `id` and `repository` `full_name` of the content reference from the [`content_reference` event](https://docs.github.com/github-ae@latest/webhooks/event-payloads/#content_reference) to create an attachment.
      *
-     * The app must create a content attachment within six hours of the content reference URL being posted. See "[Using content attachments](https://docs.github.com/enterprise-server@2.22/apps/using-content-attachments/)" for details about content attachments.
+     * The app must create a content attachment within six hours of the content reference URL being posted. See "[Using content attachments](https://docs.github.com/github-ae@latest/apps/using-content-attachments/)" for details about content attachments.
      *
-     * You must use an [installation access token](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
+     * You must use an [installation access token](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
      */
     post: operations["apps/create-content-attachment-for-repo"];
   };
@@ -2305,15 +2227,15 @@ export interface paths {
      * Gets the contents of a file or directory in a repository. Specify the file path or directory in `:path`. If you omit
      * `:path`, you will receive the contents of the repository's root directory. See the description below regarding what the API response includes for directories.
      *
-     * Files and symlinks support [a custom media type](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#custom-media-types) for
+     * Files and symlinks support [a custom media type](https://docs.github.com/github-ae@latest/rest/reference/repos#custom-media-types) for
      * retrieving the raw content or rendered HTML (when supported). All content types support [a custom media
-     * type](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#custom-media-types) to ensure the content is returned in a consistent
+     * type](https://docs.github.com/github-ae@latest/rest/reference/repos#custom-media-types) to ensure the content is returned in a consistent
      * object format.
      *
      * **Note**:
-     * *   To get a repository's contents recursively, you can [recursively get the tree](https://docs.github.com/enterprise-server@2.22/rest/reference/git#trees).
+     * *   To get a repository's contents recursively, you can [recursively get the tree](https://docs.github.com/github-ae@latest/rest/reference/git#trees).
      * *   This API has an upper limit of 1,000 files for a directory. If you need to retrieve more files, use the [Git Trees
-     * API](https://docs.github.com/enterprise-server@2.22/rest/reference/git#get-a-tree).
+     * API](https://docs.github.com/github-ae@latest/rest/reference/git#get-a-tree).
      * *   This API supports files up to 1 megabyte in size.
      *
      * #### If the content is a directory
@@ -2363,7 +2285,7 @@ export interface paths {
     /**
      * Deployments offer a few configurable parameters with certain defaults.
      *
-     * The `ref` parameter can be any named branch, tag, or SHA. At GitHub Enterprise Server we often deploy branches and verify them
+     * The `ref` parameter can be any named branch, tag, or SHA. At GitHub AE we often deploy branches and verify them
      * before we merge a pull request.
      *
      * The `environment` parameter allows deployments to be issued to different runtime environments. Teams often have
@@ -2375,7 +2297,7 @@ export interface paths {
      * the API will return a successful merge commit. If merge conflicts prevent the merge from succeeding, the API will
      * return a failure response.
      *
-     * By default, [commit statuses](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#statuses) for every submitted context must be in a `success`
+     * By default, [commit statuses](https://docs.github.com/github-ae@latest/rest/reference/repos#statuses) for every submitted context must be in a `success`
      * state. The `required_contexts` parameter allows you to specify a subset of contexts that must be `success`, or to
      * specify contexts that have not yet been submitted. You are not required to use commit statuses to deploy. If you do
      * not require any contexts or create any commit statuses, the deployment will always succeed.
@@ -2419,7 +2341,7 @@ export interface paths {
      * *   Create a new deployment that is active so that the system has a record of the current state, then delete the previously active deployment.
      * *   Mark the active deployment as inactive by adding any non-successful deployment status.
      *
-     * For more information, see "[Create a deployment](https://docs.github.com/enterprise-server@2.22/rest/reference/repos/#create-a-deployment)" and "[Create a deployment status](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#create-a-deployment-status)."
+     * For more information, see "[Create a deployment](https://docs.github.com/github-ae@latest/rest/reference/repos/#create-a-deployment)" and "[Create a deployment status](https://docs.github.com/github-ae@latest/rest/reference/repos#create-a-deployment-status)."
      */
     delete: operations["repos/delete-deployment"];
   };
@@ -2437,21 +2359,6 @@ export interface paths {
     /** Users with pull access can view a deployment status for a deployment: */
     get: operations["repos/get-deployment-status"];
   };
-  "/repos/{owner}/{repo}/dispatches": {
-    /**
-     * You can use this endpoint to trigger a webhook event called `repository_dispatch` when you want activity that happens outside of GitHub Enterprise Server to trigger a GitHub Actions workflow or GitHub App webhook. You must configure your GitHub Actions workflow or GitHub App to run when the `repository_dispatch` event occurs. For an example `repository_dispatch` webhook payload, see "[RepositoryDispatchEvent](https://docs.github.com/enterprise-server@2.22/webhooks/event-payloads/#repository_dispatch)."
-     *
-     * The `client_payload` parameter is available for any extra information that your workflow might need. This parameter is a JSON payload that will be passed on when the webhook event is dispatched. For example, the `client_payload` can include a message that a user would like to send using a GitHub Actions workflow. Or the `client_payload` can be used as a test to debug your workflow.
-     *
-     * This endpoint requires write access to the repository by providing either:
-     *
-     *   - Personal access tokens with `repo` scope. For more information, see "[Creating a personal access token for the command line](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line)" in the GitHub Help documentation.
-     *   - GitHub Apps with both `metadata:read` and `contents:read&write` permissions.
-     *
-     * This input example shows how you can use the `client_payload` as a test to debug your workflow.
-     */
-    post: operations["repos/create-dispatch-event"];
-  };
   "/repos/{owner}/{repo}/events": {
     get: operations["activity/list-repo-events"];
   };
@@ -2460,7 +2367,7 @@ export interface paths {
     /**
      * Create a fork for the authenticated user.
      *
-     * **Note**: Forking a Repository happens asynchronously. You may have to wait a short period of time before you can access the git objects. If this takes longer than 5 minutes, be sure to contact [GitHub Enterprise Server Support](https://support.github.com/contact) or [GitHub Enterprise Server Premium Support](https://premium.githubsupport.com).
+     * **Note**: Forking a Repository happens asynchronously. You may have to wait a short period of time before you can access the git objects. If this takes longer than 5 minutes, be sure to contact [GitHub AE Support](https://support.github.com/contact) or [GitHub AE Premium Support](https://premium.githubsupport.com).
      */
     post: operations["repos/create-fork"];
   };
@@ -2551,7 +2458,7 @@ export interface paths {
      *
      * When you use this endpoint without providing a `:ref`, it will return an array of all the references from your Git database, including notes and stashes if they exist on the server. Anything in the namespace is returned, not just `heads` and `tags`.
      *
-     * **Note:** You need to explicitly [request a pull request](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#get-a-pull-request) to trigger a test merge commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/enterprise-server@2.22/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
+     * **Note:** You need to explicitly [request a pull request](https://docs.github.com/github-ae@latest/rest/reference/pulls#get-a-pull-request) to trigger a test merge commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
      *
      * If you request matching references for a branch named `feature` but the branch `feature` doesn't exist, the response can still include other matching head refs that start with the word `feature`, such as `featureA` and `featureB`.
      */
@@ -2561,7 +2468,7 @@ export interface paths {
     /**
      * Returns a single reference from your Git database. The `:ref` in the URL must be formatted as `heads/<branch name>` for branches and `tags/<tag name>` for tags. If the `:ref` doesn't match an existing ref, a `404` is returned.
      *
-     * **Note:** You need to explicitly [request a pull request](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#get-a-pull-request) to trigger a test merge commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/enterprise-server@2.22/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
+     * **Note:** You need to explicitly [request a pull request](https://docs.github.com/github-ae@latest/rest/reference/pulls#get-a-pull-request) to trigger a test merge commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
      */
     get: operations["git/get-ref"];
   };
@@ -2575,7 +2482,7 @@ export interface paths {
   };
   "/repos/{owner}/{repo}/git/tags": {
     /**
-     * Note that creating a tag object does not create the reference that makes a tag in Git. If you want to create an annotated tag in Git, you have to do this call to create the tag object, and then [create](https://docs.github.com/enterprise-server@2.22/rest/reference/git#create-a-reference) the `refs/tags/[tag]` reference. If you want to create a lightweight tag, you only have to [create](https://docs.github.com/enterprise-server@2.22/rest/reference/git#create-a-reference) the tag reference - this call would be unnecessary.
+     * Note that creating a tag object does not create the reference that makes a tag in Git. If you want to create an annotated tag in Git, you have to do this call to create the tag object, and then [create](https://docs.github.com/github-ae@latest/rest/reference/git#create-a-reference) the `refs/tags/[tag]` reference. If you want to create a lightweight tag, you only have to [create](https://docs.github.com/github-ae@latest/rest/reference/git#create-a-reference) the tag reference - this call would be unnecessary.
      *
      * **Signature verification object**
      *
@@ -2645,7 +2552,7 @@ export interface paths {
     /**
      * The tree creation API accepts nested entries. If you specify both a tree and a nested path modifying that tree, this endpoint will overwrite the contents of the tree with the new path contents, and create a new tree structure.
      *
-     * If you use this endpoint to add, delete, or modify the file contents in a tree, you will need to commit the tree and then update a branch to point to the commit. For more information see "[Create a commit](https://docs.github.com/enterprise-server@2.22/rest/reference/git#create-a-commit)" and "[Update a reference](https://docs.github.com/enterprise-server@2.22/rest/reference/git#update-a-reference)."
+     * If you use this endpoint to add, delete, or modify the file contents in a tree, you will need to commit the tree and then update a branch to point to the commit. For more information see "[Create a commit](https://docs.github.com/github-ae@latest/rest/reference/git#create-a-commit)" and "[Update a reference](https://docs.github.com/github-ae@latest/rest/reference/git#update-a-reference)."
      */
     post: operations["git/create-tree"];
   };
@@ -2672,8 +2579,34 @@ export interface paths {
     /** Updates a webhook configured in a repository. If you previously had a `secret` set, you must provide the same `secret` or set a new `secret` or the secret will be removed. If you are only updating individual webhook `config` properties, use "[Update a webhook configuration for a repository](/rest/reference/repos#update-a-webhook-configuration-for-a-repository)." */
     patch: operations["repos/update-webhook"];
   };
+  "/repos/{owner}/{repo}/hooks/{hook_id}/config": {
+    /**
+     * Returns the webhook configuration for a repository. To get more information about the webhook, including the `active` state and `events`, use "[Get a repository webhook](/rest/reference/orgs#get-a-repository-webhook)."
+     *
+     * Access tokens must have the `read:repo_hook` or `repo` scope, and GitHub Apps must have the `repository_hooks:read` permission.
+     */
+    get: operations["repos/get-webhook-config-for-repo"];
+    /**
+     * Updates the webhook configuration for a repository. To update more information about the webhook, including the `active` state and `events`, use "[Update a repository webhook](/rest/reference/orgs#update-a-repository-webhook)."
+     *
+     * Access tokens must have the `write:repo_hook` or `repo` scope, and GitHub Apps must have the `repository_hooks:write` permission.
+     */
+    patch: operations["repos/update-webhook-config-for-repo"];
+  };
+  "/repos/{owner}/{repo}/hooks/{hook_id}/deliveries": {
+    /** Returns a list of webhook deliveries for a webhook configured in a repository. */
+    get: operations["repos/list-webhook-deliveries"];
+  };
+  "/repos/{owner}/{repo}/hooks/{hook_id}/deliveries/{delivery_id}": {
+    /** Returns a delivery for a webhook configured in a repository. */
+    get: operations["repos/get-webhook-delivery"];
+  };
+  "/repos/{owner}/{repo}/hooks/{hook_id}/deliveries/{delivery_id}/attempts": {
+    /** Redeliver a webhook delivery for a webhook configured in a repository. */
+    post: operations["repos/redeliver-webhook-delivery"];
+  };
   "/repos/{owner}/{repo}/hooks/{hook_id}/pings": {
-    /** This will trigger a [ping event](https://docs.github.com/enterprise-server@2.22/webhooks/#ping-event) to be sent to the hook. */
+    /** This will trigger a [ping event](https://docs.github.com/github-ae@latest/webhooks/#ping-event) to be sent to the hook. */
     post: operations["repos/ping-webhook"];
   };
   "/repos/{owner}/{repo}/hooks/{hook_id}/tests": {
@@ -2688,7 +2621,7 @@ export interface paths {
     /**
      * Enables an authenticated GitHub App to find the repository's installation information. The installation's account type will be either an organization or a user account, depending which account the repository belongs to.
      *
-     * You must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+     * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
      */
     get: operations["apps/get-repo-installation"];
   };
@@ -2707,13 +2640,13 @@ export interface paths {
      * **Note**: GitHub's REST API v3 considers every pull request an issue, but not every issue is a pull request. For this
      * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
      * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
-     * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#list-pull-requests)" endpoint.
+     * request id, use the "[List pull requests](https://docs.github.com/github-ae@latest/rest/reference/pulls#list-pull-requests)" endpoint.
      */
     get: operations["issues/list-for-repo"];
     /**
      * Any user with pull access to a repository can create an issue. If [issues are disabled in the repository](https://help.github.com/articles/disabling-issues/), the API returns a `410 Gone` status.
      *
-     * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-abuse-rate-limits)" for details.
+     * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-abuse-rate-limits)" for details.
      */
     post: operations["issues/create"];
   };
@@ -2727,16 +2660,16 @@ export interface paths {
     patch: operations["issues/update-comment"];
   };
   "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
-    /** List the reactions to an [issue comment](https://docs.github.com/enterprise-server@2.22/rest/reference/issues#comments). */
+    /** List the reactions to an [issue comment](https://docs.github.com/github-ae@latest/rest/reference/issues#comments). */
     get: operations["reactions/list-for-issue-comment"];
-    /** Create a reaction to an [issue comment](https://docs.github.com/enterprise-server@2.22/rest/reference/issues#comments). A response with an HTTP `200` status means that you already added the reaction type to this issue comment. */
+    /** Create a reaction to an [issue comment](https://docs.github.com/github-ae@latest/rest/reference/issues#comments). A response with an HTTP `200` status means that you already added the reaction type to this issue comment. */
     post: operations["reactions/create-for-issue-comment"];
   };
   "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions/{reaction_id}": {
     /**
      * **Note:** You can also specify a repository by `repository_id` using the route `DELETE delete /repositories/:repository_id/issues/comments/:comment_id/reactions/:reaction_id`.
      *
-     * Delete a reaction to an [issue comment](https://docs.github.com/enterprise-server@2.22/rest/reference/issues#comments).
+     * Delete a reaction to an [issue comment](https://docs.github.com/github-ae@latest/rest/reference/issues#comments).
      */
     delete: operations["reactions/delete-for-issue-comment"];
   };
@@ -2748,17 +2681,17 @@ export interface paths {
   };
   "/repos/{owner}/{repo}/issues/{issue_number}": {
     /**
-     * The API returns a [`301 Moved Permanently` status](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-redirects-redirects) if the issue was
+     * The API returns a [`301 Moved Permanently` status](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-redirects-redirects) if the issue was
      * [transferred](https://help.github.com/articles/transferring-an-issue-to-another-repository/) to another repository. If
      * the issue was transferred to or deleted from a repository where the authenticated user lacks read access, the API
      * returns a `404 Not Found` status. If the issue was deleted from a repository where the authenticated user has read
      * access, the API returns a `410 Gone` status. To receive webhook events for transferred and deleted issues, subscribe
-     * to the [`issues`](https://docs.github.com/enterprise-server@2.22/webhooks/event-payloads/#issues) webhook.
+     * to the [`issues`](https://docs.github.com/github-ae@latest/webhooks/event-payloads/#issues) webhook.
      *
      * **Note**: GitHub's REST API v3 considers every pull request an issue, but not every issue is a pull request. For this
      * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
      * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
-     * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#list-pull-requests)" endpoint.
+     * request id, use the "[List pull requests](https://docs.github.com/github-ae@latest/rest/reference/pulls#list-pull-requests)" endpoint.
      */
     get: operations["issues/get"];
     /** Issue owners and users with push access can edit an issue. */
@@ -2773,7 +2706,7 @@ export interface paths {
   "/repos/{owner}/{repo}/issues/{issue_number}/comments": {
     /** Issue Comments are ordered by ascending ID. */
     get: operations["issues/list-comments"];
-    /** This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-abuse-rate-limits)" for details. */
+    /** This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-abuse-rate-limits)" for details. */
     post: operations["issues/create-comment"];
   };
   "/repos/{owner}/{repo}/issues/{issue_number}/events": {
@@ -2794,23 +2727,23 @@ export interface paths {
     /**
      * Users with push access can lock an issue or pull request's conversation.
      *
-     * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs)."
+     * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
      */
     put: operations["issues/lock"];
     /** Users with push access can unlock an issue's conversation. */
     delete: operations["issues/unlock"];
   };
   "/repos/{owner}/{repo}/issues/{issue_number}/reactions": {
-    /** List the reactions to an [issue](https://docs.github.com/enterprise-server@2.22/rest/reference/issues). */
+    /** List the reactions to an [issue](https://docs.github.com/github-ae@latest/rest/reference/issues). */
     get: operations["reactions/list-for-issue"];
-    /** Create a reaction to an [issue](https://docs.github.com/enterprise-server@2.22/rest/reference/issues/). A response with an HTTP `200` status means that you already added the reaction type to this issue. */
+    /** Create a reaction to an [issue](https://docs.github.com/github-ae@latest/rest/reference/issues/). A response with an HTTP `200` status means that you already added the reaction type to this issue. */
     post: operations["reactions/create-for-issue"];
   };
   "/repos/{owner}/{repo}/issues/{issue_number}/reactions/{reaction_id}": {
     /**
      * **Note:** You can also specify a repository by `repository_id` using the route `DELETE /repositories/:repository_id/issues/:issue_number/reactions/:reaction_id`.
      *
-     * Delete a reaction to an [issue](https://docs.github.com/enterprise-server@2.22/rest/reference/issues/).
+     * Delete a reaction to an [issue](https://docs.github.com/github-ae@latest/rest/reference/issues/).
      */
     delete: operations["reactions/delete-for-issue"];
   };
@@ -2844,7 +2777,7 @@ export interface paths {
     /**
      * This method returns the contents of the repository's license file, if one is detected.
      *
-     * Similar to [Get repository content](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#get-repository-content), this method also supports [custom media types](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types) for retrieving the raw license content or rendered license HTML.
+     * Similar to [Get repository content](https://docs.github.com/github-ae@latest/rest/reference/repos#get-repository-content), this method also supports [custom media types](https://docs.github.com/github-ae@latest/rest/overview/media-types) for retrieving the raw license content or rendered license HTML.
      */
     get: operations["licenses/get-for-repo"];
   };
@@ -2866,14 +2799,14 @@ export interface paths {
   "/repos/{owner}/{repo}/notifications": {
     /** List all notifications for the current user. */
     get: operations["activity/list-repo-notifications-for-authenticated-user"];
-    /** Marks all notifications in a repository as "read" removes them from the [default view on GitHub Enterprise Server](https://github.com/notifications). If the number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub Enterprise Server will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain, you can use the [List repository notifications for the authenticated user](https://docs.github.com/enterprise-server@2.22/rest/reference/activity#list-repository-notifications-for-the-authenticated-user) endpoint and pass the query parameter `all=false`. */
+    /** Marks all notifications in a repository as "read" removes them from the [default view on GitHub AE](https://github.com/notifications). If the number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub AE will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain, you can use the [List repository notifications for the authenticated user](https://docs.github.com/github-ae@latest/rest/reference/activity#list-repository-notifications-for-the-authenticated-user) endpoint and pass the query parameter `all=false`. */
     put: operations["activity/mark-repo-notifications-as-read"];
   };
   "/repos/{owner}/{repo}/pages": {
     get: operations["repos/get-pages"];
-    /** Updates information for a GitHub Enterprise Server Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages). */
+    /** Updates information for a GitHub AE Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages). */
     put: operations["repos/update-information-about-pages-site"];
-    /** Configures a GitHub Enterprise Server Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages)." */
+    /** Configures a GitHub AE Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages)." */
     post: operations["repos/create-pages-site"];
     delete: operations["repos/delete-pages-site"];
   };
@@ -2892,21 +2825,6 @@ export interface paths {
   "/repos/{owner}/{repo}/pages/builds/{build_id}": {
     get: operations["repos/get-pages-build"];
   };
-  "/repos/{owner}/{repo}/pre-receive-hooks": {
-    /** List all pre-receive hooks that are enabled or testing for this repository as well as any disabled hooks that are allowed to be enabled at the repository level. Pre-receive hooks that are disabled at a higher level and are not configurable will not be listed. */
-    get: operations["enterprise-admin/list-pre-receive-hooks-for-repo"];
-  };
-  "/repos/{owner}/{repo}/pre-receive-hooks/{pre_receive_hook_id}": {
-    get: operations["enterprise-admin/get-pre-receive-hook-for-repo"];
-    /**
-     * Deletes any overridden enforcement on this repository for the specified hook.
-     *
-     * Responds with effective values inherited from owner and/or global level.
-     */
-    delete: operations["enterprise-admin/remove-pre-receive-hook-enforcement-for-repo"];
-    /** For pre-receive hooks which are allowed to be configured at the repo level, you can set `enforcement` */
-    patch: operations["enterprise-admin/update-pre-receive-hook-enforcement-for-repo"];
-  };
   "/repos/{owner}/{repo}/projects": {
     /** Lists the projects in a repository. Returns a `404 Not Found` status if projects are disabled in the repository. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
     get: operations["projects/list-for-repo"];
@@ -2923,7 +2841,7 @@ export interface paths {
      *
      * You can create a new pull request.
      *
-     * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+     * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
      */
     post: operations["pulls/create"];
   };
@@ -2940,16 +2858,16 @@ export interface paths {
     patch: operations["pulls/update-review-comment"];
   };
   "/repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions": {
-    /** List the reactions to a [pull request review comment](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#review-comments). */
+    /** List the reactions to a [pull request review comment](https://docs.github.com/github-ae@latest/rest/reference/pulls#review-comments). */
     get: operations["reactions/list-for-pull-request-review-comment"];
-    /** Create a reaction to a [pull request review comment](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#comments). A response with an HTTP `200` status means that you already added the reaction type to this pull request review comment. */
+    /** Create a reaction to a [pull request review comment](https://docs.github.com/github-ae@latest/rest/reference/pulls#comments). A response with an HTTP `200` status means that you already added the reaction type to this pull request review comment. */
     post: operations["reactions/create-for-pull-request-review-comment"];
   };
   "/repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions/{reaction_id}": {
     /**
      * **Note:** You can also specify a repository by `repository_id` using the route `DELETE /repositories/:repository_id/pulls/comments/:comment_id/reactions/:reaction_id.`
      *
-     * Delete a reaction to a [pull request review comment](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#review-comments).
+     * Delete a reaction to a [pull request review comment](https://docs.github.com/github-ae@latest/rest/reference/pulls#review-comments).
      */
     delete: operations["reactions/delete-for-pull-request-comment"];
   };
@@ -2959,9 +2877,9 @@ export interface paths {
      *
      * Lists details of a pull request by providing its number.
      *
-     * When you get, [create](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls/#create-a-pull-request), or [edit](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#update-a-pull-request) a pull request, GitHub Enterprise Server creates a merge commit to test whether the pull request can be automatically merged into the base branch. This test commit is not added to the base branch or the head branch. You can review the status of the test commit using the `mergeable` key. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/enterprise-server@2.22/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
+     * When you get, [create](https://docs.github.com/github-ae@latest/rest/reference/pulls/#create-a-pull-request), or [edit](https://docs.github.com/github-ae@latest/rest/reference/pulls#update-a-pull-request) a pull request, GitHub AE creates a merge commit to test whether the pull request can be automatically merged into the base branch. This test commit is not added to the base branch or the head branch. You can review the status of the test commit using the `mergeable` key. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
      *
-     * The value of the `mergeable` attribute can be `true`, `false`, or `null`. If the value is `null`, then GitHub Enterprise Server has started a background job to compute the mergeability. After giving the job time to complete, resubmit the request. When the job finishes, you will see a non-`null` value for the `mergeable` attribute in the response. If `mergeable` is `true`, then `merge_commit_sha` will be the SHA of the _test_ merge commit.
+     * The value of the `mergeable` attribute can be `true`, `false`, or `null`. If the value is `null`, then GitHub AE has started a background job to compute the mergeability. After giving the job time to complete, resubmit the request. When the job finishes, you will see a non-`null` value for the `mergeable` attribute in the response. If `mergeable` is `true`, then `merge_commit_sha` will be the SHA of the _test_ merge commit.
      *
      * The value of the `merge_commit_sha` attribute changes depending on the state of the pull request. Before merging a pull request, the `merge_commit_sha` attribute holds the SHA of the _test_ merge commit. After merging a pull request, the `merge_commit_sha` attribute changes depending on how you merged the pull request:
      *
@@ -2969,7 +2887,7 @@ export interface paths {
      * *   If merged via a [squash](https://help.github.com/articles/about-merge-methods-on-github/#squashing-your-merge-commits), `merge_commit_sha` represents the SHA of the squashed commit on the base branch.
      * *   If [rebased](https://help.github.com/articles/about-merge-methods-on-github/#rebasing-and-merging-your-commits), `merge_commit_sha` represents the commit that the base branch was updated to.
      *
-     * Pass the appropriate [media type](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.
+     * Pass the appropriate [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.
      */
     get: operations["pulls/get"];
     /**
@@ -2983,13 +2901,13 @@ export interface paths {
     /** Lists all review comments for a pull request. By default, review comments are in ascending order by ID. */
     get: operations["pulls/list-review-comments"];
     /**
-     * Creates a review comment in the pull request diff. To add a regular comment to a pull request timeline, see "[Create an issue comment](https://docs.github.com/enterprise-server@2.22/rest/reference/issues#create-an-issue-comment)." We recommend creating a review comment using `line`, `side`, and optionally `start_line` and `start_side` if your comment applies to more than one line in the pull request diff.
+     * Creates a review comment in the pull request diff. To add a regular comment to a pull request timeline, see "[Create an issue comment](https://docs.github.com/github-ae@latest/rest/reference/issues#create-an-issue-comment)." We recommend creating a review comment using `line`, `side`, and optionally `start_line` and `start_side` if your comment applies to more than one line in the pull request diff.
      *
-     * You can still create a review comment using the `position` parameter. When you use `position`, the `line`, `side`, `start_line`, and `start_side` parameters are not required. For more information, see the [`comfort-fade` preview notice](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#create-a-review-comment-for-a-pull-request-preview-notices).
+     * You can still create a review comment using the `position` parameter. When you use `position`, the `line`, `side`, `start_line`, and `start_side` parameters are not required. For more information, see the [`comfort-fade` preview notice](https://docs.github.com/github-ae@latest/rest/reference/pulls#create-a-review-comment-for-a-pull-request-preview-notices).
      *
      * **Note:** The position value equals the number of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.
      *
-     * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+     * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
      */
     post: operations["pulls/create-review-comment"];
   };
@@ -2997,12 +2915,12 @@ export interface paths {
     /**
      * Creates a reply to a review comment for a pull request. For the `comment_id`, provide the ID of the review comment you are replying to. This must be the ID of a _top-level review comment_, not a reply to that comment. Replies to replies are not supported.
      *
-     * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+     * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
      */
     post: operations["pulls/create-reply-for-review-comment"];
   };
   "/repos/{owner}/{repo}/pulls/{pull_number}/commits": {
-    /** Lists a maximum of 250 commits for a pull request. To receive a complete commit list for pull requests with more than 250 commits, use the [List commits](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#list-commits) endpoint. */
+    /** Lists a maximum of 250 commits for a pull request. To receive a complete commit list for pull requests with more than 250 commits, use the [List commits](https://docs.github.com/github-ae@latest/rest/reference/repos#list-commits) endpoint. */
     get: operations["pulls/list-commits"];
   };
   "/repos/{owner}/{repo}/pulls/{pull_number}/files": {
@@ -3011,12 +2929,12 @@ export interface paths {
   };
   "/repos/{owner}/{repo}/pulls/{pull_number}/merge": {
     get: operations["pulls/check-if-merged"];
-    /** This endpoint triggers [notifications](https://docs.github.com/enterprise-server@2.22/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-abuse-rate-limits)" for details. */
+    /** This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-abuse-rate-limits)" for details. */
     put: operations["pulls/merge"];
   };
   "/repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers": {
     get: operations["pulls/list-requested-reviewers"];
-    /** This endpoint triggers [notifications](https://docs.github.com/enterprise-server@2.22/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-abuse-rate-limits)" for details. */
+    /** This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-abuse-rate-limits)" for details. */
     post: operations["pulls/request-reviewers"];
     delete: operations["pulls/remove-requested-reviewers"];
   };
@@ -3024,11 +2942,11 @@ export interface paths {
     /** The list of reviews returns in chronological order. */
     get: operations["pulls/list-reviews"];
     /**
-     * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+     * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
      *
      * Pull request reviews created in the `PENDING` state do not include the `submitted_at` property in the response.
      *
-     * **Note:** To comment on a specific line in a file, you need to first determine the _position_ of that line in the diff. The GitHub REST API v3 offers the `application/vnd.github.v3.diff` [media type](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types#commits-commit-comparison-and-pull-requests). To see a pull request diff, add this media type to the `Accept` header of a call to the [single pull request](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#get-a-pull-request) endpoint.
+     * **Note:** To comment on a specific line in a file, you need to first determine the _position_ of that line in the diff. The GitHub REST API v3 offers the `application/vnd.github.v3.diff` [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types#commits-commit-comparison-and-pull-requests). To see a pull request diff, add this media type to the `Accept` header of a call to the [single pull request](https://docs.github.com/github-ae@latest/rest/reference/pulls#get-a-pull-request) endpoint.
      *
      * The `position` value equals the number of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.
      */
@@ -3045,7 +2963,7 @@ export interface paths {
     get: operations["pulls/list-comments-for-review"];
   };
   "/repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/dismissals": {
-    /** **Note:** To dismiss a pull request review on a [protected branch](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#branches), you must be a repository administrator or be included in the list of people or teams who can dismiss pull request reviews. */
+    /** **Note:** To dismiss a pull request review on a [protected branch](https://docs.github.com/github-ae@latest/rest/reference/repos#branches), you must be a repository administrator or be included in the list of people or teams who can dismiss pull request reviews. */
     put: operations["pulls/dismiss-review"];
   };
   "/repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/events": {
@@ -3059,7 +2977,7 @@ export interface paths {
     /**
      * Gets the preferred README for a repository.
      *
-     * READMEs support [custom media types](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#custom-media-types) for retrieving the raw content or rendered HTML.
+     * READMEs support [custom media types](https://docs.github.com/github-ae@latest/rest/reference/repos#custom-media-types) for retrieving the raw content or rendered HTML.
      */
     get: operations["repos/get-readme"];
   };
@@ -3067,13 +2985,13 @@ export interface paths {
     /**
      * Gets the README from a repository directory.
      *
-     * READMEs support [custom media types](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#custom-media-types) for retrieving the raw content or rendered HTML.
+     * READMEs support [custom media types](https://docs.github.com/github-ae@latest/rest/reference/repos#custom-media-types) for retrieving the raw content or rendered HTML.
      */
     get: operations["repos/get-readme-in-directory"];
   };
   "/repos/{owner}/{repo}/releases": {
     /**
-     * This returns a list of releases, which does not include regular Git tags that have not been associated with a release. To get a list of Git tags, use the [Repository Tags API](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#list-repository-tags).
+     * This returns a list of releases, which does not include regular Git tags that have not been associated with a release. To get a list of Git tags, use the [Repository Tags API](https://docs.github.com/github-ae@latest/rest/reference/repos#list-repository-tags).
      *
      * Information about published releases are available to everyone. Only users with push access will receive listings for draft releases.
      */
@@ -3081,12 +2999,12 @@ export interface paths {
     /**
      * Users with push access to the repository can create a release.
      *
-     * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+     * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
      */
     post: operations["repos/create-release"];
   };
   "/repos/{owner}/{repo}/releases/assets/{asset_id}": {
-    /** To download the asset's binary content, set the `Accept` header of the request to [`application/octet-stream`](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types). The API will either redirect the client to the location, or stream it directly if possible. API clients should handle both a `200` or `302` response. */
+    /** To download the asset's binary content, set the `Accept` header of the request to [`application/octet-stream`](https://docs.github.com/github-ae@latest/rest/overview/media-types). The API will either redirect the client to the location, or stream it directly if possible. API clients should handle both a `200` or `302` response. */
     get: operations["repos/get-release-asset"];
     delete: operations["repos/delete-release-asset"];
     /** Users with push access to the repository can edit a release asset. */
@@ -3105,7 +3023,7 @@ export interface paths {
     get: operations["repos/get-release-by-tag"];
   };
   "/repos/{owner}/{repo}/releases/{release_id}": {
-    /** **Note:** This returns an `upload_url` key corresponding to the endpoint for uploading release assets. This key is a [hypermedia resource](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#hypermedia). */
+    /** **Note:** This returns an `upload_url` key corresponding to the endpoint for uploading release assets. This key is a [hypermedia resource](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#hypermedia). */
     get: operations["repos/get-release"];
     /** Users with push access to the repository can delete a release. */
     delete: operations["repos/delete-release"];
@@ -3115,8 +3033,8 @@ export interface paths {
   "/repos/{owner}/{repo}/releases/{release_id}/assets": {
     get: operations["repos/list-release-assets"];
     /**
-     * This endpoint makes use of [a Hypermedia relation](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#hypermedia) to determine which URL to access. The endpoint you call to upload release assets is specific to your release. Use the `upload_url` returned in
-     * the response of the [Create a release endpoint](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#create-a-release) to upload a release asset.
+     * This endpoint makes use of [a Hypermedia relation](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#hypermedia) to determine which URL to access. The endpoint you call to upload release assets is specific to your release. Use the `upload_url` returned in
+     * the response of the [Create a release endpoint](https://docs.github.com/github-ae@latest/rest/reference/repos#create-a-release) to upload a release asset.
      *
      * You need to use an HTTP client which supports [SNI](http://en.wikipedia.org/wiki/Server_Name_Indication) to make calls to this endpoint.
      *
@@ -3124,23 +3042,27 @@ export interface paths {
      *
      * `application/zip`
      *
-     * GitHub Enterprise Server expects the asset data in its raw binary form, rather than JSON. You will send the raw binary content of the asset as the request body. Everything else about the endpoint is the same as the rest of the API. For example,
+     * GitHub AE expects the asset data in its raw binary form, rather than JSON. You will send the raw binary content of the asset as the request body. Everything else about the endpoint is the same as the rest of the API. For example,
      * you'll still need to pass your authentication to be able to upload an asset.
      *
      * When an upstream failure occurs, you will receive a `502 Bad Gateway` status. This may leave an empty asset with a state of `starter`. It can be safely deleted.
      *
      * **Notes:**
-     * *   GitHub Enterprise Server renames asset filenames that have special characters, non-alphanumeric characters, and leading or trailing periods. The "[List assets for a release](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#list-assets-for-a-release)"
-     * endpoint lists the renamed filenames. For more information and help, contact [GitHub Enterprise Server Support](https://support.github.com/contact).
+     * *   GitHub AE renames asset filenames that have special characters, non-alphanumeric characters, and leading or trailing periods. The "[List assets for a release](https://docs.github.com/github-ae@latest/rest/reference/repos#list-assets-for-a-release)"
+     * endpoint lists the renamed filenames. For more information and help, contact [GitHub AE Support](https://support.github.com/contact).
      * *   If you upload an asset with the same filename as another uploaded asset, you'll receive an error and must delete the old file before you can re-upload the new asset.
      */
     post: operations["repos/upload-release-asset"];
+  };
+  "/repos/{owner}/{repo}/releases/{release_id}/reactions": {
+    /** Create a reaction to a [release](https://docs.github.com/github-ae@latest/rest/reference/repos#releases). A response with a `Status: 200 OK` means that you already added the reaction type to this release. */
+    post: operations["reactions/create-for-release"];
   };
   "/repos/{owner}/{repo}/stargazers": {
     /**
      * Lists the people that have starred the repository.
      *
-     * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types/) via the `Accept` header:
+     * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/) via the `Accept` header:
      */
     get: operations["activity/list-stargazers-for-repo"];
   };
@@ -3197,9 +3119,9 @@ export interface paths {
   };
   "/repos/{owner}/{repo}/subscription": {
     get: operations["activity/get-repo-subscription"];
-    /** If you would like to watch a repository, set `subscribed` to `true`. If you would like to ignore notifications made within a repository, set `ignored` to `true`. If you would like to stop watching a repository, [delete the repository's subscription](https://docs.github.com/enterprise-server@2.22/rest/reference/activity#delete-a-repository-subscription) completely. */
+    /** If you would like to watch a repository, set `subscribed` to `true`. If you would like to ignore notifications made within a repository, set `ignored` to `true`. If you would like to stop watching a repository, [delete the repository's subscription](https://docs.github.com/github-ae@latest/rest/reference/activity#delete-a-repository-subscription) completely. */
     put: operations["activity/set-repo-subscription"];
-    /** This endpoint should only be used to stop watching a repository. To control whether or not you wish to receive notifications from a repository, [set the repository's subscription manually](https://docs.github.com/enterprise-server@2.22/rest/reference/activity#set-a-repository-subscription). */
+    /** This endpoint should only be used to stop watching a repository. To control whether or not you wish to receive notifications from a repository, [set the repository's subscription manually](https://docs.github.com/github-ae@latest/rest/reference/activity#set-a-repository-subscription). */
     delete: operations["activity/delete-repo-subscription"];
   };
   "/repos/{owner}/{repo}/tags": {
@@ -3236,32 +3158,50 @@ export interface paths {
   };
   "/repos/{template_owner}/{template_repo}/generate": {
     /**
-     * Creates a new repository using a repository template. Use the `template_owner` and `template_repo` route parameters to specify the repository to use as the template. The authenticated user must own or be a member of an organization that owns the repository. To check if a repository is available to use as a template, get the repository's information using the [Get a repository](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#get-a-repository) endpoint and check that the `is_template` key is `true`.
+     * Creates a new repository using a repository template. Use the `template_owner` and `template_repo` route parameters to specify the repository to use as the template. The authenticated user must own or be a member of an organization that owns the repository. To check if a repository is available to use as a template, get the repository's information using the [Get a repository](https://docs.github.com/github-ae@latest/rest/reference/repos#get-a-repository) endpoint and check that the `is_template` key is `true`.
      *
      * **OAuth scope requirements**
      *
-     * When using [OAuth](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
+     * When using [OAuth](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
      *
      * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.
      * *   `repo` scope to create a private repository
      */
     post: operations["repos/create-using-template"];
   };
-  "/repositories": {
+  "/scim/v2/enterprises/{enterprise}/Groups": {
+    /** **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change. */
+    get: operations["enterprise-admin/list-provisioned-groups-enterprise"];
     /**
-     * Lists all public repositories in the order that they were created.
+     * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
      *
-     * Note:
-     * - For GitHub Enterprise Server, this endpoint will only list repositories available to all users on the enterprise.
-     * - Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of repositories.
+     * Provision an enterprise group, and invite users to the group. This sends invitation emails to the email address of the invited users to join the GitHub organization that the SCIM group corresponds to.
      */
-    get: operations["repos/list-public"];
+    post: operations["enterprise-admin/provision-and-invite-enterprise-group"];
+  };
+  "/scim/v2/enterprises/{enterprise}/Groups/{scim_group_id}": {
+    /** **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change. */
+    get: operations["enterprise-admin/get-provisioning-information-for-enterprise-group"];
+    /**
+     * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+     *
+     * Replaces an existing provisioned group’s information. You must provide all the information required for the group as if you were provisioning it for the first time. Any existing group information that you don't provide will be removed, including group membership. If you want to only update a specific attribute, use the [Update an attribute for a SCIM enterprise group](#update-an-attribute-for-a-scim-enterprise-group) endpoint instead.
+     */
+    put: operations["enterprise-admin/set-information-for-provisioned-enterprise-group"];
+    /** **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change. */
+    delete: operations["enterprise-admin/delete-scim-group-from-enterprise"];
+    /**
+     * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+     *
+     * Allows you to change a provisioned group’s individual attributes. To change a group’s values, you must provide a specific Operations JSON format that contains at least one of the add, remove, or replace operations. For examples and more information on the SCIM operations format, see the [SCIM specification](https://tools.ietf.org/html/rfc7644#section-3.5.2).
+     */
+    patch: operations["enterprise-admin/update-attribute-for-enterprise-group"];
   };
   "/search/code": {
     /**
-     * Searches for query terms inside of a file. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#pagination).
+     * Searches for query terms inside of a file. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).
      *
-     * When searching for code, you can get text match metadata for the file **content** and file **path** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@2.22/rest/reference/search#text-match-metadata).
+     * When searching for code, you can get text match metadata for the file **content** and file **path** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/reference/search#text-match-metadata).
      *
      * For example, if you want to find the definition of the `addClass` function inside [jQuery](https://github.com/jquery/jquery) repository, your query would look something like this:
      *
@@ -3282,10 +3222,10 @@ export interface paths {
   };
   "/search/commits": {
     /**
-     * Find commits via various criteria on the default branch (usually `master`). This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#pagination).
+     * Find commits via various criteria on the default branch (usually `master`). This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).
      *
      * When searching for commits, you can get text match metadata for the **message** field when you provide the `text-match` media type. For more details about how to receive highlighted search results, see [Text match
-     * metadata](https://docs.github.com/enterprise-server@2.22/rest/reference/search#text-match-metadata).
+     * metadata](https://docs.github.com/github-ae@latest/rest/reference/search#text-match-metadata).
      *
      * For example, if you want to find commits related to CSS in the [octocat/Spoon-Knife](https://github.com/octocat/Spoon-Knife) repository. Your query would look something like this:
      *
@@ -3295,10 +3235,10 @@ export interface paths {
   };
   "/search/issues": {
     /**
-     * Find issues by state and keyword. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#pagination).
+     * Find issues by state and keyword. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).
      *
      * When searching for issues, you can get text match metadata for the issue **title**, issue **body**, and issue **comment body** fields when you pass the `text-match` media type. For more details about how to receive highlighted
-     * search results, see [Text match metadata](https://docs.github.com/enterprise-server@2.22/rest/reference/search#text-match-metadata).
+     * search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/reference/search#text-match-metadata).
      *
      * For example, if you want to find the oldest unresolved Python bugs on Windows. Your query might look something like this.
      *
@@ -3312,9 +3252,9 @@ export interface paths {
   };
   "/search/labels": {
     /**
-     * Find labels in a repository with names or descriptions that match search keywords. Returns up to 100 results [per page](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#pagination).
+     * Find labels in a repository with names or descriptions that match search keywords. Returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).
      *
-     * When searching for labels, you can get text match metadata for the label **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@2.22/rest/reference/search#text-match-metadata).
+     * When searching for labels, you can get text match metadata for the label **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/reference/search#text-match-metadata).
      *
      * For example, if you want to find labels in the `linguist` repository that match `bug`, `defect`, or `enhancement`. Your query might look like this:
      *
@@ -3326,9 +3266,9 @@ export interface paths {
   };
   "/search/repositories": {
     /**
-     * Find repositories via various criteria. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#pagination).
+     * Find repositories via various criteria. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).
      *
-     * When searching for repositories, you can get text match metadata for the **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@2.22/rest/reference/search#text-match-metadata).
+     * When searching for repositories, you can get text match metadata for the **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/reference/search#text-match-metadata).
      *
      * For example, if you want to search for popular Tetris repositories written in assembly code, your query might look like this:
      *
@@ -3344,9 +3284,9 @@ export interface paths {
   };
   "/search/topics": {
     /**
-     * Find topics via various criteria. Results are sorted by best match. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#pagination). See "[Searching topics](https://help.github.com/articles/searching-topics/)" for a detailed list of qualifiers.
+     * Find topics via various criteria. Results are sorted by best match. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination). See "[Searching topics](https://help.github.com/articles/searching-topics/)" for a detailed list of qualifiers.
      *
-     * When searching for topics, you can get text match metadata for the topic's **short\_description**, **description**, **name**, or **display\_name** field when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@2.22/rest/reference/search#text-match-metadata).
+     * When searching for topics, you can get text match metadata for the topic's **short\_description**, **description**, **name**, or **display\_name** field when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/reference/search#text-match-metadata).
      *
      * For example, if you want to search for topics related to Ruby that are featured on https://github.com/topics. Your query might look like this:
      *
@@ -3358,9 +3298,9 @@ export interface paths {
   };
   "/search/users": {
     /**
-     * Find users via various criteria. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#pagination).
+     * Find users via various criteria. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).
      *
-     * When searching for users, you can get text match metadata for the issue **login**, **email**, and **name** fields when you pass the `text-match` media type. For more details about highlighting search results, see [Text match metadata](https://docs.github.com/enterprise-server@2.22/rest/reference/search#text-match-metadata). For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@2.22/rest/reference/search#text-match-metadata).
+     * When searching for users, you can get text match metadata for the issue **login**, **email**, and **name** fields when you pass the `text-match` media type. For more details about highlighting search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/reference/search#text-match-metadata). For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/reference/search#text-match-metadata).
      *
      * For example, if you're looking for a list of popular users, you might try this query:
      *
@@ -3370,77 +3310,11 @@ export interface paths {
      */
     get: operations["search/users"];
   };
-  "/setup/api/configcheck": {
-    /**
-     * This endpoint allows you to check the status of the most recent configuration process:
-     *
-     * Note that you may need to wait several seconds after you start a process before you can check its status.
-     *
-     * The different statuses are:
-     *
-     * | Status        | Description                       |
-     * | ------------- | --------------------------------- |
-     * | `PENDING`     | The job has not started yet       |
-     * | `CONFIGURING` | The job is running                |
-     * | `DONE`        | The job has finished correctly    |
-     * | `FAILED`      | The job has finished unexpectedly |
-     */
-    get: operations["enterprise-admin/get-configuration-status"];
-  };
-  "/setup/api/configure": {
-    /** This endpoint allows you to start a configuration process at any time for your updated settings to take effect: */
-    post: operations["enterprise-admin/start-configuration-process"];
-  };
-  "/setup/api/maintenance": {
-    /** Check your installation's maintenance status: */
-    get: operations["enterprise-admin/get-maintenance-status"];
-    /** **Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode). */
-    post: operations["enterprise-admin/enable-or-disable-maintenance-mode"];
-  };
-  "/setup/api/settings": {
-    get: operations["enterprise-admin/get-settings"];
-    /**
-     * For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@2.22/rest/reference/enterprise-admin#get-settings).
-     *
-     * **Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode).
-     */
-    put: operations["enterprise-admin/set-settings"];
-  };
-  "/setup/api/settings/authorized-keys": {
-    get: operations["enterprise-admin/get-all-authorized-ssh-keys"];
-    /** **Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode). */
-    post: operations["enterprise-admin/add-authorized-ssh-key"];
-    /** **Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode). */
-    delete: operations["enterprise-admin/remove-authorized-ssh-key"];
-  };
-  "/setup/api/start": {
-    /**
-     * When you boot a GitHub instance for the first time, you can use the following endpoint to upload a license.
-     *
-     * Note that you need to `POST` to [`/setup/api/configure`](https://docs.github.com/enterprise-server@2.22/rest/reference/enterprise-admin#start-a-configuration-process) to start the actual configuration process.
-     *
-     * When using this endpoint, your GitHub instance must have a password set. This can be accomplished two ways:
-     *
-     * 1.  If you're working directly with the API before accessing the web interface, you must pass in the password parameter to set your password.
-     * 2.  If you set up your instance via the web interface before accessing the API, your calls to this endpoint do not need the password parameter.
-     *
-     * **Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode).
-     */
-    post: operations["enterprise-admin/create-enterprise-server-license"];
-  };
-  "/setup/api/upgrade": {
-    /**
-     * This API upgrades your license and also triggers the configuration process.
-     *
-     * **Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode).
-     */
-    post: operations["enterprise-admin/upgrade-license"];
-  };
   "/teams/{team_id}": {
-    /** **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the [Get a team by name](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#get-a-team-by-name) endpoint. */
+    /** **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the [Get a team by name](https://docs.github.com/github-ae@latest/rest/reference/teams#get-a-team-by-name) endpoint. */
     get: operations["teams/get-legacy"];
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a team](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#delete-a-team) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a team](https://docs.github.com/github-ae@latest/rest/reference/teams#delete-a-team) endpoint.
      *
      * To delete a team, the authenticated user must be an organization owner or team maintainer.
      *
@@ -3448,7 +3322,7 @@ export interface paths {
      */
     delete: operations["teams/delete-legacy"];
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a team](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#update-a-team) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a team](https://docs.github.com/github-ae@latest/rest/reference/teams#update-a-team) endpoint.
      *
      * To edit a team, the authenticated user must either be an organization owner or a team maintainer.
      *
@@ -3458,107 +3332,107 @@ export interface paths {
   };
   "/teams/{team_id}/discussions": {
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List discussions`](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#list-discussions) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List discussions`](https://docs.github.com/github-ae@latest/rest/reference/teams#list-discussions) endpoint.
      *
-     * List all discussions on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * List all discussions on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
     get: operations["teams/list-discussions-legacy"];
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create a discussion`](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#create-a-discussion) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create a discussion`](https://docs.github.com/github-ae@latest/rest/reference/teams#create-a-discussion) endpoint.
      *
-     * Creates a new discussion post on a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * Creates a new discussion post on a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      *
-     * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+     * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
      */
     post: operations["teams/create-discussion-legacy"];
   };
   "/teams/{team_id}/discussions/{discussion_number}": {
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#get-a-discussion) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion](https://docs.github.com/github-ae@latest/rest/reference/teams#get-a-discussion) endpoint.
      *
-     * Get a specific discussion on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * Get a specific discussion on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
     get: operations["teams/get-discussion-legacy"];
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Delete a discussion`](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#delete-a-discussion) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Delete a discussion`](https://docs.github.com/github-ae@latest/rest/reference/teams#delete-a-discussion) endpoint.
      *
-     * Delete a discussion from a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * Delete a discussion from a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
     delete: operations["teams/delete-discussion-legacy"];
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#update-a-discussion) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion](https://docs.github.com/github-ae@latest/rest/reference/teams#update-a-discussion) endpoint.
      *
-     * Edits the title and body text of a discussion post. Only the parameters you provide are updated. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * Edits the title and body text of a discussion post. Only the parameters you provide are updated. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
     patch: operations["teams/update-discussion-legacy"];
   };
   "/teams/{team_id}/discussions/{discussion_number}/comments": {
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [List discussion comments](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#list-discussion-comments) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [List discussion comments](https://docs.github.com/github-ae@latest/rest/reference/teams#list-discussion-comments) endpoint.
      *
-     * List all comments on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * List all comments on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
     get: operations["teams/list-discussion-comments-legacy"];
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Create a discussion comment](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#create-a-discussion-comment) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Create a discussion comment](https://docs.github.com/github-ae@latest/rest/reference/teams#create-a-discussion-comment) endpoint.
      *
-     * Creates a new comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * Creates a new comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      *
-     * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+     * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
      */
     post: operations["teams/create-discussion-comment-legacy"];
   };
   "/teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}": {
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion comment](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#get-a-discussion-comment) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion comment](https://docs.github.com/github-ae@latest/rest/reference/teams#get-a-discussion-comment) endpoint.
      *
-     * Get a specific comment on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * Get a specific comment on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
     get: operations["teams/get-discussion-comment-legacy"];
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a discussion comment](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#delete-a-discussion-comment) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a discussion comment](https://docs.github.com/github-ae@latest/rest/reference/teams#delete-a-discussion-comment) endpoint.
      *
-     * Deletes a comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * Deletes a comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
     delete: operations["teams/delete-discussion-comment-legacy"];
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion comment](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#update-a-discussion-comment) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion comment](https://docs.github.com/github-ae@latest/rest/reference/teams#update-a-discussion-comment) endpoint.
      *
-     * Edits the body text of a discussion comment. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * Edits the body text of a discussion comment. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
     patch: operations["teams/update-discussion-comment-legacy"];
   };
   "/teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}/reactions": {
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion comment`](https://docs.github.com/enterprise-server@2.22/rest/reference/reactions#list-reactions-for-a-team-discussion-comment) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion comment`](https://docs.github.com/github-ae@latest/rest/reference/reactions#list-reactions-for-a-team-discussion-comment) endpoint.
      *
-     * List the reactions to a [team discussion comment](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#discussion-comments). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * List the reactions to a [team discussion comment](https://docs.github.com/github-ae@latest/rest/reference/teams#discussion-comments). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
     get: operations["reactions/list-for-team-discussion-comment-legacy"];
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new "[Create reaction for a team discussion comment](https://docs.github.com/enterprise-server@2.22/rest/reference/reactions#create-reaction-for-a-team-discussion-comment)" endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new "[Create reaction for a team discussion comment](https://docs.github.com/github-ae@latest/rest/reference/reactions#create-reaction-for-a-team-discussion-comment)" endpoint.
      *
-     * Create a reaction to a [team discussion comment](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#discussion-comments). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
+     * Create a reaction to a [team discussion comment](https://docs.github.com/github-ae@latest/rest/reference/teams#discussion-comments). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
      */
     post: operations["reactions/create-for-team-discussion-comment-legacy"];
   };
   "/teams/{team_id}/discussions/{discussion_number}/reactions": {
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion`](https://docs.github.com/enterprise-server@2.22/rest/reference/reactions#list-reactions-for-a-team-discussion) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion`](https://docs.github.com/github-ae@latest/rest/reference/reactions#list-reactions-for-a-team-discussion) endpoint.
      *
-     * List the reactions to a [team discussion](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#discussions). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * List the reactions to a [team discussion](https://docs.github.com/github-ae@latest/rest/reference/teams#discussions). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
     get: operations["reactions/list-for-team-discussion-legacy"];
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create reaction for a team discussion`](https://docs.github.com/enterprise-server@2.22/rest/reference/reactions#create-reaction-for-a-team-discussion) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create reaction for a team discussion`](https://docs.github.com/github-ae@latest/rest/reference/reactions#create-reaction-for-a-team-discussion) endpoint.
      *
-     * Create a reaction to a [team discussion](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion.
+     * Create a reaction to a [team discussion](https://docs.github.com/github-ae@latest/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion.
      */
     post: operations["reactions/create-for-team-discussion-legacy"];
   };
   "/teams/{team_id}/members": {
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List team members`](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#list-team-members) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List team members`](https://docs.github.com/github-ae@latest/rest/reference/teams#list-team-members) endpoint.
      *
      * Team members will include the members of child teams.
      */
@@ -3568,7 +3442,7 @@ export interface paths {
     /**
      * The "Get team member" endpoint (described below) is deprecated.
      *
-     * We recommend using the [Get team membership for a user](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#get-team-membership-for-a-user) endpoint instead. It allows you to get both active and pending memberships.
+     * We recommend using the [Get team membership for a user](https://docs.github.com/github-ae@latest/rest/reference/teams#get-team-membership-for-a-user) endpoint instead. It allows you to get both active and pending memberships.
      *
      * To list members in a team, the team must be visible to the authenticated user.
      */
@@ -3576,33 +3450,33 @@ export interface paths {
     /**
      * The "Add team member" endpoint (described below) is deprecated.
      *
-     * We recommend using the [Add or update team membership for a user](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#add-or-update-team-membership-for-a-user) endpoint instead. It allows you to invite new organization members to your teams.
+     * We recommend using the [Add or update team membership for a user](https://docs.github.com/github-ae@latest/rest/reference/teams#add-or-update-team-membership-for-a-user) endpoint instead. It allows you to invite new organization members to your teams.
      *
      * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
      *
      * To add someone to a team, the authenticated user must be an organization owner or a team maintainer in the team they're changing. The person being added to the team must be a member of the team's organization.
      *
-     * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub Enterprise Server team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub Enterprise Server](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+     * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub AE team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub AE](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
      *
-     * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs)."
+     * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
      */
     put: operations["teams/add-member-legacy"];
     /**
      * The "Remove team member" endpoint (described below) is deprecated.
      *
-     * We recommend using the [Remove team membership for a user](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#remove-team-membership-for-a-user) endpoint instead. It allows you to remove both active and pending memberships.
+     * We recommend using the [Remove team membership for a user](https://docs.github.com/github-ae@latest/rest/reference/teams#remove-team-membership-for-a-user) endpoint instead. It allows you to remove both active and pending memberships.
      *
      * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
      *
      * To remove a team member, the authenticated user must have 'admin' permissions to the team or be an owner of the org that the team is associated with. Removing a team member does not delete the user, it just removes them from the team.
      *
-     * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub Enterprise Server team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub Enterprise Server](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+     * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub AE team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub AE](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
      */
     delete: operations["teams/remove-member-legacy"];
   };
   "/teams/{team_id}/memberships/{username}": {
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get team membership for a user](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#get-team-membership-for-a-user) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get team membership for a user](https://docs.github.com/github-ae@latest/rest/reference/teams#get-team-membership-for-a-user) endpoint.
      *
      * Team members will include the members of child teams.
      *
@@ -3611,17 +3485,17 @@ export interface paths {
      * **Note:**
      * The response contains the `state` of the membership and the member's `role`.
      *
-     * The `role` for organization owners is set to `maintainer`. For more information about `maintainer` roles, see [Create a team](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#create-a-team).
+     * The `role` for organization owners is set to `maintainer`. For more information about `maintainer` roles, see [Create a team](https://docs.github.com/github-ae@latest/rest/reference/teams#create-a-team).
      */
     get: operations["teams/get-membership-for-user-legacy"];
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Add or update team membership for a user](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#add-or-update-team-membership-for-a-user) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Add or update team membership for a user](https://docs.github.com/github-ae@latest/rest/reference/teams#add-or-update-team-membership-for-a-user) endpoint.
      *
      * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
      *
      * If the user is already a member of the team's organization, this endpoint will add the user to the team. To add a membership between an organization member and a team, the authenticated user must be an organization owner or a team maintainer.
      *
-     * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub Enterprise Server team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub Enterprise Server](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+     * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub AE team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub AE](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
      *
      * If the user is unaffiliated with the team's organization, this endpoint will send an invitation to the user via email. This newly-created membership will be in the "pending" state until the user accepts the invitation, at which point the membership will transition to the "active" state and the user will be added as a member of the team. To add a membership between an unaffiliated user and a team, the authenticated user must be an organization owner.
      *
@@ -3629,19 +3503,19 @@ export interface paths {
      */
     put: operations["teams/add-or-update-membership-for-user-legacy"];
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove team membership for a user](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#remove-team-membership-for-a-user) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove team membership for a user](https://docs.github.com/github-ae@latest/rest/reference/teams#remove-team-membership-for-a-user) endpoint.
      *
      * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
      *
      * To remove a membership between a user and a team, the authenticated user must have 'admin' permissions to the team or be an owner of the organization that the team is associated with. Removing team membership does not delete the user, it just removes their membership from the team.
      *
-     * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub Enterprise Server team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub Enterprise Server](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+     * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub AE team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub AE](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
      */
     delete: operations["teams/remove-membership-for-user-legacy"];
   };
   "/teams/{team_id}/projects": {
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List team projects`](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#list-team-projects) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List team projects`](https://docs.github.com/github-ae@latest/rest/reference/teams#list-team-projects) endpoint.
      *
      * Lists the organization projects for a team.
      */
@@ -3649,54 +3523,54 @@ export interface paths {
   };
   "/teams/{team_id}/projects/{project_id}": {
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Check team permissions for a project](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#check-team-permissions-for-a-project) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Check team permissions for a project](https://docs.github.com/github-ae@latest/rest/reference/teams#check-team-permissions-for-a-project) endpoint.
      *
      * Checks whether a team has `read`, `write`, or `admin` permissions for an organization project. The response includes projects inherited from a parent team.
      */
     get: operations["teams/check-permissions-for-project-legacy"];
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Add or update team project permissions](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#add-or-update-team-project-permissions) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Add or update team project permissions](https://docs.github.com/github-ae@latest/rest/reference/teams#add-or-update-team-project-permissions) endpoint.
      *
      * Adds an organization project to a team. To add a project to a team or update the team's permission on a project, the authenticated user must have `admin` permissions for the project. The project and team must be part of the same organization.
      */
     put: operations["teams/add-or-update-project-permissions-legacy"];
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove a project from a team](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#remove-a-project-from-a-team) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove a project from a team](https://docs.github.com/github-ae@latest/rest/reference/teams#remove-a-project-from-a-team) endpoint.
      *
      * Removes an organization project from a team. An organization owner or a team maintainer can remove any project from the team. To remove a project from a team as an organization member, the authenticated user must have `read` access to both the team and project, or `admin` access to the team or project. **Note:** This endpoint removes the project from the team, but does not delete it.
      */
     delete: operations["teams/remove-project-legacy"];
   };
   "/teams/{team_id}/repos": {
-    /** **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [List team repositories](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#list-team-repositories) endpoint. */
+    /** **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [List team repositories](https://docs.github.com/github-ae@latest/rest/reference/teams#list-team-repositories) endpoint. */
     get: operations["teams/list-repos-legacy"];
   };
   "/teams/{team_id}/repos/{owner}/{repo}": {
     /**
      * **Note**: Repositories inherited through a parent team will also be checked.
      *
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Check team permissions for a repository](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#check-team-permissions-for-a-repository) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Check team permissions for a repository](https://docs.github.com/github-ae@latest/rest/reference/teams#check-team-permissions-for-a-repository) endpoint.
      *
-     * You can also get information about the specified repository, including what permissions the team grants on it, by passing the following custom [media type](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types/) via the `Accept` header:
+     * You can also get information about the specified repository, including what permissions the team grants on it, by passing the following custom [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/) via the `Accept` header:
      */
     get: operations["teams/check-permissions-for-repo-legacy"];
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new "[Add or update team repository permissions](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#add-or-update-team-repository-permissions)" endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new "[Add or update team repository permissions](https://docs.github.com/github-ae@latest/rest/reference/teams#add-or-update-team-repository-permissions)" endpoint.
      *
      * To add a repository to a team or update the team's permission on a repository, the authenticated user must have admin access to the repository, and must be able to see the team. The repository must be owned by the organization, or a direct fork of a repository owned by the organization. You will get a `422 Unprocessable Entity` status if you attempt to add a repository to a team that is not owned by the organization.
      *
-     * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs)."
+     * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
      */
     put: operations["teams/add-or-update-repo-permissions-legacy"];
     /**
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove a repository from a team](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#remove-a-repository-from-a-team) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove a repository from a team](https://docs.github.com/github-ae@latest/rest/reference/teams#remove-a-repository-from-a-team) endpoint.
      *
      * If the authenticated user is an organization owner or a team maintainer, they can remove any repositories from the team. To remove a repository from a team as an organization member, the authenticated user must have admin access to the repository and must be able to see the team. NOTE: This does not delete the repository, it just removes it from the team.
      */
     delete: operations["teams/remove-repo-legacy"];
   };
   "/teams/{team_id}/teams": {
-    /** **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List child teams`](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#list-child-teams) endpoint. */
+    /** **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List child teams`](https://docs.github.com/github-ae@latest/rest/reference/teams#list-child-teams) endpoint. */
     get: operations["teams/list-child-legacy"];
   };
   "/user": {
@@ -3709,14 +3583,6 @@ export interface paths {
     /** **Note:** If your email is set to private and you send an `email` parameter as part of this request to update your profile, your privacy settings are still enforced: the email address will not be displayed on your public profile or via the API. */
     patch: operations["users/update-authenticated"];
   };
-  "/user/emails": {
-    /** Lists all of your email addresses, and specifies which one is visible to the public. This endpoint is accessible with the `user:email` scope. */
-    get: operations["users/list-emails-for-authenticated"];
-    /** This endpoint is accessible with the `user` scope. */
-    post: operations["users/add-email-for-authenticated"];
-    /** This endpoint is accessible with the `user` scope. */
-    delete: operations["users/delete-email-for-authenticated"];
-  };
   "/user/followers": {
     /** Lists the people following the authenticated user. */
     get: operations["users/list-followers-for-authenticated-user"];
@@ -3728,7 +3594,7 @@ export interface paths {
   "/user/following/{username}": {
     get: operations["users/check-person-is-followed-by-authenticated"];
     /**
-     * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs)."
+     * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
      *
      * Following a user requires the user to be logged in and authenticated with basic auth or OAuth with the `user:follow` scope.
      */
@@ -3737,22 +3603,22 @@ export interface paths {
     delete: operations["users/unfollow"];
   };
   "/user/gpg_keys": {
-    /** Lists the current user's GPG keys. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:gpg_key` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
+    /** Lists the current user's GPG keys. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:gpg_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
     get: operations["users/list-gpg-keys-for-authenticated"];
-    /** Adds a GPG key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or OAuth with at least `write:gpg_key` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
+    /** Adds a GPG key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or OAuth with at least `write:gpg_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
     post: operations["users/create-gpg-key-for-authenticated"];
   };
   "/user/gpg_keys/{gpg_key_id}": {
-    /** View extended details for a single GPG key. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:gpg_key` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
+    /** View extended details for a single GPG key. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:gpg_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
     get: operations["users/get-gpg-key-for-authenticated"];
-    /** Removes a GPG key from the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `admin:gpg_key` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
+    /** Removes a GPG key from the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `admin:gpg_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
     delete: operations["users/delete-gpg-key-for-authenticated"];
   };
   "/user/installations": {
     /**
      * Lists installations of your GitHub App that the authenticated user has explicit permission (`:read`, `:write`, or `:admin`) to access.
      *
-     * You must use a [user-to-server OAuth access token](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint.
+     * You must use a [user-to-server OAuth access token](https://docs.github.com/github-ae@latest/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint.
      *
      * The authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator, and repositories that they can access through an organization membership.
      *
@@ -3766,7 +3632,7 @@ export interface paths {
      *
      * The authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator, and repositories that they can access through an organization membership.
      *
-     * You must use a [user-to-server OAuth access token](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint.
+     * You must use a [user-to-server OAuth access token](https://docs.github.com/github-ae@latest/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint.
      *
      * The access the user has to each repository is included in the hash under the `permissions` key.
      */
@@ -3776,13 +3642,13 @@ export interface paths {
     /**
      * Add a single repository to an installation. The authenticated user must have admin access to the repository.
      *
-     * You must use a personal access token (which you can create via the [command line](https://docs.github.com/enterprise-server@2.22/github/authenticating-to-github/creating-a-personal-access-token) or [Basic Authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#basic-authentication)) to access this endpoint.
+     * You must use a personal access token (which you can create via the [command line](https://docs.github.com/github-ae@latest/github/authenticating-to-github/creating-a-personal-access-token) or [Basic Authentication](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication)) to access this endpoint.
      */
     put: operations["apps/add-repo-to-installation"];
     /**
      * Remove a single repository from an installation. The authenticated user must have admin access to the repository.
      *
-     * You must use a personal access token (which you can create via the [command line](https://docs.github.com/enterprise-server@2.22/github/authenticating-to-github/creating-a-personal-access-token) or [Basic Authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#basic-authentication)) to access this endpoint.
+     * You must use a personal access token (which you can create via the [command line](https://docs.github.com/github-ae@latest/github/authenticating-to-github/creating-a-personal-access-token) or [Basic Authentication](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication)) to access this endpoint.
      */
     delete: operations["apps/remove-repo-from-installation"];
   };
@@ -3793,20 +3659,20 @@ export interface paths {
      * **Note**: GitHub's REST API v3 considers every pull request an issue, but not every issue is a pull request. For this
      * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
      * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
-     * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#list-pull-requests)" endpoint.
+     * request id, use the "[List pull requests](https://docs.github.com/github-ae@latest/rest/reference/pulls#list-pull-requests)" endpoint.
      */
     get: operations["issues/list-for-authenticated-user"];
   };
   "/user/keys": {
-    /** Lists the public SSH keys for the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:public_key` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
+    /** Lists the public SSH keys for the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:public_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
     get: operations["users/list-public-ssh-keys-for-authenticated"];
-    /** Adds a public SSH key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or OAuth with at least `write:public_key` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
+    /** Adds a public SSH key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or OAuth with at least `write:public_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
     post: operations["users/create-public-ssh-key-for-authenticated"];
   };
   "/user/keys/{key_id}": {
-    /** View extended details for a single public SSH key. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:public_key` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
+    /** View extended details for a single public SSH key. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:public_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
     get: operations["users/get-public-ssh-key-for-authenticated"];
-    /** Removes a public SSH key from the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `admin:public_key` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
+    /** Removes a public SSH key from the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `admin:public_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
     delete: operations["users/delete-public-ssh-key-for-authenticated"];
   };
   "/user/memberships/orgs": {
@@ -3829,10 +3695,6 @@ export interface paths {
   "/user/projects": {
     post: operations["projects/create-for-authenticated-user"];
   };
-  "/user/public_emails": {
-    /** Lists your publicly visible email address, which you can set with the [Set primary email visibility for the authenticated user](https://docs.github.com/enterprise-server@2.22/rest/reference/users#set-primary-email-visibility-for-the-authenticated-user) endpoint. This endpoint is accessible with the `user:email` scope. */
-    get: operations["users/list-public-emails-for-authenticated"];
-  };
   "/user/repos": {
     /**
      * Lists repositories that the authenticated user has explicit permission (`:read`, `:write`, or `:admin`) to access.
@@ -3845,7 +3707,7 @@ export interface paths {
      *
      * **OAuth scope requirements**
      *
-     * When using [OAuth](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
+     * When using [OAuth](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
      *
      * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.
      * *   `repo` scope to create a private repository.
@@ -3864,13 +3726,13 @@ export interface paths {
     /**
      * Lists repositories the authenticated user has starred.
      *
-     * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types/) via the `Accept` header:
+     * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/) via the `Accept` header:
      */
     get: operations["activity/list-repos-starred-by-authenticated-user"];
   };
   "/user/starred/{owner}/{repo}": {
     get: operations["activity/check-repo-is-starred-by-authenticated-user"];
-    /** Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs)." */
+    /** Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)." */
     put: operations["activity/star-repo-for-authenticated-user"];
     delete: operations["activity/unstar-repo-for-authenticated-user"];
   };
@@ -3879,14 +3741,14 @@ export interface paths {
     get: operations["activity/list-watched-repos-for-authenticated-user"];
   };
   "/user/teams": {
-    /** List all of the teams across all of the organizations to which the authenticated user belongs. This method requires `user`, `repo`, or `read:org` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/) when authenticating via [OAuth](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/). */
+    /** List all of the teams across all of the organizations to which the authenticated user belongs. This method requires `user`, `repo`, or `read:org` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/) when authenticating via [OAuth](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/). */
     get: operations["teams/list-for-authenticated-user"];
   };
   "/users": {
     /**
-     * Lists all users, in the order that they signed up on GitHub Enterprise Server. This list includes personal user accounts and organization accounts.
+     * Lists all users, in the order that they signed up on GitHub AE. This list includes personal user accounts and organization accounts.
      *
-     * Note: Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of users.
+     * Note: Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of users.
      */
     get: operations["users/list"];
   };
@@ -3894,11 +3756,11 @@ export interface paths {
     /**
      * Provides publicly available information about someone with a GitHub account.
      *
-     * GitHub Apps with the `Plan` user permission can use this endpoint to retrieve information about a user's GitHub Enterprise Server plan. The GitHub App must be authenticated as a user. See "[Identifying and authorizing users for GitHub Apps](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/)" for details about authentication. For an example response, see 'Response with GitHub Enterprise Server plan information' below"
+     * GitHub Apps with the `Plan` user permission can use this endpoint to retrieve information about a user's GitHub AE plan. The GitHub App must be authenticated as a user. See "[Identifying and authorizing users for GitHub Apps](https://docs.github.com/github-ae@latest/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/)" for details about authentication. For an example response, see 'Response with GitHub AE plan information' below"
      *
-     * The `email` key in the following response is the publicly visible email address from your GitHub Enterprise Server [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be “public” which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub Enterprise Server. For more information, see [Authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#authentication).
+     * The `email` key in the following response is the publicly visible email address from your GitHub AE [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be “public” which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub AE. For more information, see [Authentication](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#authentication).
      *
-     * The Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see "[Emails API](https://docs.github.com/enterprise-server@2.22/rest/reference/users#emails)".
+     * The Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see "[Emails API](https://docs.github.com/github-ae@latest/rest/reference/users#emails)".
      */
     get: operations["users/get-by-username"];
   };
@@ -3909,9 +3771,6 @@ export interface paths {
   "/users/{username}/events/orgs/{org}": {
     /** This is the user's organization dashboard. You must be authenticated as the user to view this. */
     get: operations["activity/list-org-events-for-authenticated-user"];
-  };
-  "/users/{username}/events/public": {
-    get: operations["activity/list-public-events-for-user"];
   };
   "/users/{username}/followers": {
     /** Lists the people following the specified user. */
@@ -3949,7 +3808,7 @@ export interface paths {
     /**
      * Enables an authenticated GitHub App to find the user’s installation information.
      *
-     * You must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+     * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
      */
     get: operations["apps/get-user-installation"];
   };
@@ -3961,35 +3820,22 @@ export interface paths {
     /**
      * List [public organization memberships](https://help.github.com/articles/publicizing-or-concealing-organization-membership) for the specified user.
      *
-     * This method only lists _public_ memberships, regardless of authentication. If you need to fetch all of the organization memberships (public and private) for the authenticated user, use the [List organizations for the authenticated user](https://docs.github.com/enterprise-server@2.22/rest/reference/orgs#list-organizations-for-the-authenticated-user) API instead.
+     * This method only lists _public_ memberships, regardless of authentication. If you need to fetch all of the organization memberships (public and private) for the authenticated user, use the [List organizations for the authenticated user](https://docs.github.com/github-ae@latest/rest/reference/orgs#list-organizations-for-the-authenticated-user) API instead.
      */
     get: operations["orgs/list-for-user"];
   };
   "/users/{username}/projects": {
     get: operations["projects/list-for-user"];
   };
-  "/users/{username}/received_events": {
-    /** These are events that you've received by watching repos and following users. If you are authenticated as the given user, you will see private events. Otherwise, you'll only see public events. */
-    get: operations["activity/list-received-events-for-user"];
-  };
-  "/users/{username}/received_events/public": {
-    get: operations["activity/list-received-public-events-for-user"];
-  };
   "/users/{username}/repos": {
     /** Lists public repositories for the specified user. Note: For GitHub AE, this endpoint will list internal repositories for the specified user. */
     get: operations["repos/list-for-user"];
-  };
-  "/users/{username}/site_admin": {
-    /** Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs)." */
-    put: operations["enterprise-admin/promote-user-to-be-site-administrator"];
-    /** You can demote any user account except your own. */
-    delete: operations["enterprise-admin/demote-site-administrator"];
   };
   "/users/{username}/starred": {
     /**
      * Lists repositories a user has starred.
      *
-     * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types/) via the `Accept` header:
+     * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/) via the `Accept` header:
      */
     get: operations["activity/list-repos-starred-by-user"];
   };
@@ -4003,7 +3849,7 @@ export interface paths {
      *
      * You can suspend any user account except your own.
      *
-     * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs)."
+     * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
      */
     put: operations["enterprise-admin/suspend-user"];
     /** If your GitHub instance uses [LDAP Sync with Active Directory LDAP servers](https://help.github.com/enterprise/admin/guides/user-management/using-ldap), this API is disabled and will return a `403` response. Active Directory LDAP-authenticated users cannot be unsuspended using the API. */
@@ -4117,71 +3963,6 @@ export interface components {
       created_at: string;
       last_used: string | null;
     };
-    "ldap-mapping-team": {
-      ldap_dn?: string;
-      id?: number;
-      node_id?: string;
-      url?: string;
-      html_url?: string;
-      name?: string;
-      slug?: string;
-      description?: string | null;
-      privacy?: string;
-      permission?: string;
-      members_url?: string;
-      repositories_url?: string;
-      parent?: { [key: string]: unknown } | null;
-    };
-    /** Ldap Private User */
-    "ldap-mapping-user": {
-      ldap_dn?: string;
-      login: string;
-      id: number;
-      node_id: string;
-      avatar_url: string;
-      gravatar_id: string | null;
-      url: string;
-      html_url: string;
-      followers_url: string;
-      following_url: string;
-      gists_url: string;
-      starred_url: string;
-      subscriptions_url: string;
-      organizations_url: string;
-      repos_url: string;
-      events_url: string;
-      received_events_url: string;
-      type: string;
-      site_admin: boolean;
-      name: string | null;
-      company: string | null;
-      blog: string | null;
-      location: string | null;
-      email: string | null;
-      hireable: boolean | null;
-      bio: string | null;
-      twitter_username?: string | null;
-      public_repos: number;
-      public_gists: number;
-      followers: number;
-      following: number;
-      created_at: string;
-      updated_at: string;
-      private_gists: number;
-      total_private_repos: number;
-      owned_private_repos: number;
-      disk_usage: number;
-      collaborators: number;
-      two_factor_authentication: boolean;
-      plan?: {
-        collaborators: number;
-        name: string;
-        space: number;
-        private_repos: number;
-      };
-      suspended_at?: string | null;
-      business_plus?: boolean;
-    };
     /** Organization Simple */
     "organization-simple": {
       login: string;
@@ -4218,35 +3999,6 @@ export interface components {
       state?: string;
       downloaded_at?: string | null;
       message?: string | null;
-    };
-    "pre-receive-hook": {
-      id?: number;
-      name?: string;
-      enforcement?: string;
-      script?: string;
-      script_repository?: {
-        id?: number;
-        full_name?: string;
-        url?: string;
-        html_url?: string;
-      };
-      environment?: {
-        id?: number;
-        name?: string;
-        image_url?: string;
-        url?: string;
-        html_url?: string;
-        default_environment?: boolean;
-        created_at?: string;
-        hooks_count?: number;
-        download?: {
-          url?: string;
-          state?: string;
-          downloaded_at?: string | null;
-          message?: string | null;
-        };
-      };
-      allow_downstream_configuration?: boolean;
     };
     /** Simple User */
     "simple-user": {
@@ -4414,6 +4166,104 @@ export interface components {
       documentation_url: string;
       errors?: string[];
     };
+    /** The URL to which the payloads will be delivered. */
+    "webhook-config-url": string;
+    /** The media type used to serialize the payloads. Supported values include `json` and `form`. The default is `form`. */
+    "webhook-config-content-type": string;
+    /** If provided, the `secret` will be used as the `key` to generate the HMAC hex digest value for [delivery signature headers](https://docs.github.com/github-ae@latest/webhooks/event-payloads/#delivery-headers). */
+    "webhook-config-secret": string;
+    "webhook-config-insecure-ssl": string | number;
+    /** Configuration object of the webhook */
+    "webhook-config": {
+      url?: components["schemas"]["webhook-config-url"];
+      content_type?: components["schemas"]["webhook-config-content-type"];
+      secret?: components["schemas"]["webhook-config-secret"];
+      insecure_ssl?: components["schemas"]["webhook-config-insecure-ssl"];
+    };
+    /** Delivery made by a webhook, without request and response information. */
+    "hook-delivery-item": {
+      /** Unique identifier of the webhook delivery. */
+      id: number;
+      /** Unique identifier for the event (shared with all deliveries for all webhooks that subscribe to this event). */
+      guid: string;
+      /** Time when the webhook delivery occurred. */
+      delivered_at: string;
+      /** Whether the webhook delivery is a redelivery. */
+      redelivery: boolean;
+      /** Time spent delivering. */
+      duration: number;
+      /** Describes the response returned after attempting the delivery. */
+      status: string;
+      /** Status code received when delivery was made. */
+      status_code: number;
+      /** The event that triggered the delivery. */
+      event: string;
+      /** The type of activity for the event that triggered the delivery. */
+      action: string | null;
+      /** The id of the GitHub App installation associated with this event. */
+      installation_id: number | null;
+      /** The id of the repository associated with this event. */
+      repository_id: number | null;
+    };
+    /** Scim Error */
+    "scim-error": {
+      message?: string | null;
+      documentation_url?: string | null;
+      detail?: string | null;
+      status?: number;
+      scimType?: string | null;
+      schemas?: string[];
+    };
+    /** Validation Error */
+    "validation-error": {
+      message: string;
+      documentation_url: string;
+      errors?: {
+        resource?: string;
+        field?: string;
+        message?: string;
+        code: string;
+        index?: number;
+        value?: (string | null) | (number | null) | (string[] | null);
+      }[];
+    };
+    /** Delivery made by a webhook. */
+    "hook-delivery": {
+      /** Unique identifier of the delivery. */
+      id: number;
+      /** Unique identifier for the event (shared with all deliveries for all webhooks that subscribe to this event). */
+      guid: string;
+      /** Time when the delivery was delivered. */
+      delivered_at: string;
+      /** Whether the delivery is a redelivery. */
+      redelivery: boolean;
+      /** Time spent delivering. */
+      duration: number;
+      /** Description of the status of the attempted delivery */
+      status: string;
+      /** Status code received when delivery was made. */
+      status_code: number;
+      /** The event that triggered the delivery. */
+      event: string;
+      /** The type of activity for the event that triggered the delivery. */
+      action: string | null;
+      /** The id of the GitHub App installation associated with this event. */
+      installation_id: number | null;
+      /** The id of the repository associated with this event. */
+      repository_id: number | null;
+      request: {
+        /** The request headers sent with the webhook delivery. */
+        headers: { [key: string]: any } | null;
+        /** The webhook payload. */
+        payload: { [key: string]: any } | null;
+      };
+      response: {
+        /** The response headers received when the delivery was made. */
+        headers: { [key: string]: any } | null;
+        /** The response payload received. */
+        payload: string | null;
+      };
+    };
     /** An enterprise account */
     enterprise: {
       /** A short description of the enterprise. */
@@ -4433,7 +4283,7 @@ export interface components {
       avatar_url: string;
     };
     /** Installation */
-    "installation-ghes-2": {
+    installation: {
       /** The ID of the installation. */
       id: number;
       account:
@@ -4449,23 +4299,16 @@ export interface components {
       /** The ID of the user or organization this token is being scoped to. */
       target_id: number;
       target_type: string;
-      permissions: {
-        deployments?: string;
-        checks?: string;
-        metadata?: string;
-        contents?: string;
-        pull_requests?: string;
-        statuses?: string;
-        issues?: string;
-        organization_administration?: string;
-      };
+      permissions: components["schemas"]["app-permissions"];
       events: string[];
       created_at: string;
       updated_at: string;
       single_file_name: string | null;
+      has_multiple_single_files?: boolean;
+      single_file_paths?: string[];
       app_slug: string;
-      suspended_by?: components["schemas"]["simple-user"] | null;
-      suspended_at?: string | null;
+      suspended_by: components["schemas"]["simple-user"] | null;
+      suspended_at: string | null;
       contact_email?: string | null;
     };
     /** License Simple */
@@ -4705,33 +4548,6 @@ export interface components {
       has_multiple_single_files?: boolean;
       single_file_paths?: string[];
     };
-    /** Validation Error */
-    "validation-error": {
-      message: string;
-      documentation_url: string;
-      errors?: {
-        resource?: string;
-        field?: string;
-        message?: string;
-        code: string;
-        index?: number;
-        value?: (string | null) | (number | null) | (string[] | null);
-      }[];
-    };
-    /** The authorization associated with an OAuth Access. */
-    "application-grant": {
-      id: number;
-      url: string;
-      app: {
-        client_id: string;
-        name: string;
-        url: string;
-      };
-      created_at: string;
-      updated_at: string;
-      scopes: string[];
-      user?: components["schemas"]["simple-user"] | null;
-    };
     /** Code Of Conduct */
     "code-of-conduct": {
       key: string;
@@ -4739,6 +4555,15 @@ export interface components {
       url: string;
       body?: string;
       html_url: string | null;
+    };
+    /** The announcement text in GitHub Flavored Markdown. For more information about GitHub Flavored Markdown, see "[Mastering markdown](https://guides.github.com/features/mastering-markdown/)." */
+    "announcement-message": string;
+    /** The time at which the announcement expires. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. To set an announcement that never expires, omit this parameter, set it to `null`, or set it to an empty string. */
+    "announcement-expiration": string | null;
+    /** Enterprise global announcement */
+    announcement: {
+      announcement: components["schemas"]["announcement-message"];
+      expires_at?: components["schemas"]["announcement-expiration"];
     };
     "license-info": {
       seats?: string | number;
@@ -4814,6 +4639,27 @@ export interface components {
       gists?: components["schemas"]["enterprise-gist-overview"];
       comments?: components["schemas"]["enterprise-comment-overview"];
     };
+    /** The policy that controls the organizations in the enterprise that are allowed to run GitHub Actions. Can be one of: `all`, `none`, or `selected`. */
+    "enabled-organizations": "all" | "none" | "selected";
+    /** The permissions policy that controls the actions that are allowed to run. Can be one of: `all`, `local_only`, or `selected`. */
+    "allowed-actions": "all" | "local_only" | "selected";
+    /** The API URL to use to get or set the actions that are allowed to run, when `allowed_actions` is set to `selected`. */
+    "selected-actions-url": string;
+    "actions-enterprise-permissions": {
+      enabled_organizations: components["schemas"]["enabled-organizations"];
+      /** The API URL to use to get or set the selected organizations that are allowed to run GitHub Actions, when `enabled_organizations` is set to `selected`. */
+      selected_organizations_url?: string;
+      allowed_actions?: components["schemas"]["allowed-actions"];
+      selected_actions_url?: components["schemas"]["selected-actions-url"];
+    };
+    "selected-actions": {
+      /** Whether GitHub-owned actions are allowed. For example, this includes the actions in the `actions` organization. */
+      github_owned_allowed?: boolean;
+      /** Whether actions in GitHub Marketplace from verified creators are allowed. Set to `true` to allow all GitHub Marketplace actions by verified creators. */
+      verified_allowed?: boolean;
+      /** Specifies a list of string-matching patterns to allow specific action(s). Wildcards, tags, and SHAs are allowed. For example, `monalisa/octocat@*`, `monalisa/octocat@v2`, `monalisa/*`." */
+      patterns_allowed?: string[];
+    };
     "runner-groups-enterprise": {
       id: number;
       name: string;
@@ -4823,187 +4669,25 @@ export interface components {
       runners_url: string;
       allows_public_repositories: boolean;
     };
-    "runner-no-labels": {
-      id?: number;
-      name?: string;
-      os?: string;
-      status?: string;
-      busy?: boolean;
-    };
-    /** Runner Application */
-    "runner-application": {
-      os: string;
-      architecture: string;
-      download_url: string;
-      filename: string;
-      /** A short lived bearer token used to download the runner, if needed. */
-      temp_download_token?: string;
-      sha256_checksum?: string;
-    };
-    /** Authentication Token */
-    "authentication-token": {
-      /** The token used for authentication */
-      token: string;
-      /** The time this token expires */
-      expires_at: string;
-      permissions?: { [key: string]: unknown };
-      /** The repositories this token has access to */
-      repositories?: components["schemas"]["repository"][];
-      single_file?: string | null;
-      /** Describe whether all repositories have been selected or there's a selection involved */
-      repository_selection?: "all" | "selected";
-    };
-    /** Actor */
-    actor: {
+    /** A self hosted runner */
+    runner: {
+      /** The id of the runner. */
       id: number;
-      login: string;
-      display_login?: string;
-      gravatar_id: string | null;
-      url: string;
-      avatar_url: string;
-    };
-    /** Color-coded labels help you categorize and filter your issues (just like labels in Gmail). */
-    label: {
-      id: number;
-      node_id: string;
-      /** URL for the label */
-      url: string;
-      /** The name of the label. */
+      /** The name of the runner. */
       name: string;
-      description: string | null;
-      /** 6-character hex code, without the leading #, identifying the color */
-      color: string;
-      default: boolean;
-    };
-    /** A collection of related issues and pull requests. */
-    milestone: {
-      url: string;
-      html_url: string;
-      labels_url: string;
-      id: number;
-      node_id: string;
-      /** The number of the milestone. */
-      number: number;
-      /** The state of the milestone. */
-      state: "open" | "closed";
-      /** The title of the milestone. */
-      title: string;
-      description: string | null;
-      creator: components["schemas"]["simple-user"] | null;
-      open_issues: number;
-      closed_issues: number;
-      created_at: string;
-      updated_at: string;
-      closed_at: string | null;
-      due_on: string | null;
-    };
-    /** How the author is associated with the repository. */
-    author_association:
-      | "COLLABORATOR"
-      | "CONTRIBUTOR"
-      | "FIRST_TIMER"
-      | "FIRST_TIME_CONTRIBUTOR"
-      | "MANNEQUIN"
-      | "MEMBER"
-      | "NONE"
-      | "OWNER";
-    /** Issue Simple */
-    "issue-simple": {
-      id: number;
-      node_id: string;
-      url: string;
-      repository_url: string;
-      labels_url: string;
-      comments_url: string;
-      events_url: string;
-      html_url: string;
-      number: number;
-      state: string;
-      title: string;
-      body?: string;
-      user: components["schemas"]["simple-user"] | null;
-      labels: components["schemas"]["label"][];
-      assignee: components["schemas"]["simple-user"] | null;
-      assignees?: components["schemas"]["simple-user"][] | null;
-      milestone: components["schemas"]["milestone"] | null;
-      locked: boolean;
-      active_lock_reason?: string | null;
-      comments: number;
-      pull_request?: {
-        merged_at?: string | null;
-        diff_url: string | null;
-        html_url: string | null;
-        patch_url: string | null;
-        url: string | null;
-      };
-      closed_at: string | null;
-      created_at: string;
-      updated_at: string;
-      author_association: components["schemas"]["author_association"];
-      body_html?: string;
-      body_text?: string;
-      timeline_url?: string;
-      repository?: components["schemas"]["repository"];
-      performed_via_github_app?: components["schemas"]["integration"] | null;
-    };
-    "reaction-rollup": {
-      url: string;
-      total_count: number;
-      "+1": number;
-      "-1": number;
-      laugh: number;
-      confused: number;
-      heart: number;
-      hooray: number;
-      eyes: number;
-      rocket: number;
-    };
-    /** Comments provide a way for people to collaborate on an issue. */
-    "issue-comment": {
-      /** Unique identifier of the issue comment */
-      id: number;
-      node_id: string;
-      /** URL for the issue comment */
-      url: string;
-      /** Contents of the issue comment */
-      body?: string;
-      body_text?: string;
-      body_html?: string;
-      html_url: string;
-      user: components["schemas"]["simple-user"] | null;
-      created_at: string;
-      updated_at: string;
-      issue_url: string;
-      author_association: components["schemas"]["author_association"];
-      performed_via_github_app?: components["schemas"]["integration"] | null;
-      reactions?: components["schemas"]["reaction-rollup"];
-    };
-    /** Event */
-    event: {
-      id: string;
-      type: string | null;
-      actor: components["schemas"]["actor"];
-      repo: {
-        id: number;
-        name: string;
-        url: string;
-      };
-      org?: components["schemas"]["actor"];
-      payload: {
-        action?: string;
-        issue?: components["schemas"]["issue-simple"];
-        comment?: components["schemas"]["issue-comment"];
-        pages?: {
-          page_name?: string;
-          title?: string;
-          summary?: string | null;
-          action?: string;
-          sha?: string;
-          html_url?: string;
-        }[];
-      };
-      public: boolean;
-      created_at: string | null;
+      /** The Operating System of the runner. */
+      os: string;
+      /** The status of the runner. */
+      status: string;
+      busy: boolean;
+      labels: {
+        /** Unique identifier of the label. */
+        id?: number;
+        /** Name of the label. */
+        name?: string;
+        /** The type of label. Read-only labels are applied automatically when the runner is configured. */
+        type?: "read-only" | "custom";
+      }[];
     };
     /** Hypermedia Link with Type */
     "link-with-type": {
@@ -5019,6 +4703,7 @@ export interface components {
       current_user_actor_url?: string;
       current_user_organization_url?: string;
       current_user_organization_urls?: string[];
+      security_advisories_url?: string;
       _links: {
         timeline: components["schemas"]["link-with-type"];
         user: components["schemas"]["link-with-type"];
@@ -5088,6 +4773,7 @@ export interface components {
       email: string | null;
       hireable: boolean | null;
       bio: string | null;
+      twitter_username?: string | null;
       public_repos: number;
       public_gists: number;
       followers: number;
@@ -5191,6 +4877,16 @@ export interface components {
       owner?: components["schemas"]["simple-user"];
       truncated?: boolean;
     };
+    /** How the author is associated with the repository. */
+    author_association:
+      | "COLLABORATOR"
+      | "CONTRIBUTOR"
+      | "FIRST_TIMER"
+      | "FIRST_TIME_CONTRIBUTOR"
+      | "MANNEQUIN"
+      | "MEMBER"
+      | "NONE"
+      | "OWNER";
     /** A comment made to a gist. */
     "gist-comment": {
       id: number;
@@ -5219,6 +4915,40 @@ export interface components {
     "gitignore-template": {
       name: string;
       source: string;
+    };
+    /** A collection of related issues and pull requests. */
+    milestone: {
+      url: string;
+      html_url: string;
+      labels_url: string;
+      id: number;
+      node_id: string;
+      /** The number of the milestone. */
+      number: number;
+      /** The state of the milestone. */
+      state: "open" | "closed";
+      /** The title of the milestone. */
+      title: string;
+      description: string | null;
+      creator: components["schemas"]["simple-user"] | null;
+      open_issues: number;
+      closed_issues: number;
+      created_at: string;
+      updated_at: string;
+      closed_at: string | null;
+      due_on: string | null;
+    };
+    "reaction-rollup": {
+      url: string;
+      total_count: number;
+      "+1": number;
+      "-1": number;
+      laugh: number;
+      confused: number;
+      heart: number;
+      hooray: number;
+      eyes: number;
+      rocket: number;
     };
     /** Issues are a great way to keep track of tasks, enhancements, and bugs for your projects. */
     issue: {
@@ -5297,9 +5027,19 @@ export interface components {
     /** Api Overview */
     "api-overview": {
       verifiable_password_authentication: boolean;
+      ssh_key_fingerprints?: {
+        SHA256_RSA?: string;
+        SHA256_DSA?: string;
+      };
+      hooks?: string[];
+      web?: string[];
+      api?: string[];
+      git?: string[];
       packages?: string[];
+      pages?: string[];
+      importer?: string[];
+      actions?: string[];
       dependabot?: string[];
-      installed_version?: string;
     };
     /** Minimal Repository */
     "minimal-repository": {
@@ -5481,6 +5221,15 @@ export interface components {
       members_can_create_private_pages?: boolean;
       updated_at: string;
     };
+    /** The policy that controls the repositories in the organization that are allowed to run GitHub Actions. Can be one of: `all`, `none`, or `selected`. */
+    "enabled-repositories": "all" | "none" | "selected";
+    "actions-organization-permissions": {
+      enabled_repositories: components["schemas"]["enabled-repositories"];
+      /** The API URL to use to get or set the selected repositories that are allowed to run GitHub Actions, when `enabled_repositories` is set to `selected`. */
+      selected_repositories_url?: string;
+      allowed_actions?: components["schemas"]["allowed-actions"];
+      selected_actions_url?: components["schemas"]["selected-actions-url"];
+    };
     "runner-groups-org": {
       id: number;
       name: string;
@@ -5521,6 +5270,7 @@ export interface components {
       id: number;
       url: string;
       ping_url: string;
+      deliveries_url?: string;
       name: string;
       events: string[];
       active: boolean;
@@ -5534,13 +5284,6 @@ export interface components {
       created_at: string;
       type: string;
     };
-    /** The URL to which the payloads will be delivered. */
-    "webhook-config-url": string;
-    /** The media type used to serialize the payloads. Supported values include `json` and `form`. The default is `form`. */
-    "webhook-config-content-type": string;
-    /** If provided, the `secret` will be used as the `key` to generate the HMAC hex digest value for [delivery signature headers](https://docs.github.com/enterprise-server@2.22/webhooks/event-payloads/#delivery-headers). */
-    "webhook-config-secret": string;
-    "webhook-config-insecure-ssl": string | number;
     /** Org Membership */
     "org-membership": {
       url: string;
@@ -5554,13 +5297,6 @@ export interface components {
       permissions?: {
         can_create_repository: boolean;
       };
-    };
-    "org-pre-receive-hook": {
-      id?: number;
-      name?: string;
-      enforcement?: string;
-      configuration_url?: string;
-      allow_downstream_configuration?: boolean;
     };
     /** Projects are a way to organize columns and cards of work. */
     project: {
@@ -6024,6 +5760,14 @@ export interface components {
       /** Whether anonymous git access is allowed. */
       anonymous_access_enabled?: boolean;
       code_of_conduct?: components["schemas"]["code-of-conduct-simple"];
+      security_and_analysis?: {
+        advanced_security?: {
+          status?: "enabled" | "disabled";
+        };
+        secret_scanning?: {
+          status?: "enabled" | "disabled";
+        };
+      } | null;
     };
     /** An artifact */
     artifact: {
@@ -6078,6 +5822,13 @@ export interface components {
         completed_at?: string | null;
       }[];
       check_run_url: string;
+    };
+    /** Whether GitHub Actions is enabled on the repository. */
+    "actions-enabled": boolean;
+    "actions-repository-permissions": {
+      enabled: components["schemas"]["actions-enabled"];
+      allowed_actions?: components["schemas"]["allowed-actions"];
+      selected_actions_url?: components["schemas"]["selected-actions-url"];
     };
     "pull-request-minimal": {
       id: number;
@@ -6163,6 +5914,24 @@ export interface components {
       head_repository: components["schemas"]["minimal-repository"];
       head_repository_id?: number;
     };
+    /** Workflow Run Usage */
+    "workflow-run-usage": {
+      billable: {
+        UBUNTU?: {
+          total_ms: number;
+          jobs: number;
+        };
+        MACOS?: {
+          total_ms: number;
+          jobs: number;
+        };
+        WINDOWS?: {
+          total_ms: number;
+          jobs: number;
+        };
+      };
+      run_duration_ms?: number;
+    };
     /** Set secrets for GitHub Actions. */
     "actions-secret": {
       /** The name of the secret. */
@@ -6188,6 +5957,20 @@ export interface components {
       html_url: string;
       badge_url: string;
       deleted_at?: string;
+    };
+    /** Workflow Usage */
+    "workflow-usage": {
+      billable: {
+        UBUNTU?: {
+          total_ms?: number;
+        };
+        MACOS?: {
+          total_ms?: number;
+        };
+        WINDOWS?: {
+          total_ms?: number;
+        };
+      };
     };
     /** Protected Branch Admin Enforced */
     "protected-branch-admin-enforced": {
@@ -6592,6 +6375,8 @@ export interface components {
     "alert-url": string;
     /** The GitHub URL of the alert resource. */
     "alert-html-url": string;
+    /** The REST API URL for fetching the list of instances for an alert. */
+    "alert-instances-url": string;
     /** The time that the alert was dismissed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
     "code-scanning-alert-dismissed-at": string | null;
     /** **Required when the state is dismissed.** The reason for dismissing or closing the alert. Can be one of: `false positive`, `won't fix`, and `used in tests`. */
@@ -6653,14 +6438,14 @@ export interface components {
       created_at: components["schemas"]["alert-created-at"];
       url: components["schemas"]["alert-url"];
       html_url: components["schemas"]["alert-html-url"];
+      instances_url: components["schemas"]["alert-instances-url"];
       state: components["schemas"]["code-scanning-alert-state"];
       dismissed_by: components["schemas"]["simple-user"];
       dismissed_at: components["schemas"]["code-scanning-alert-dismissed-at"];
       dismissed_reason: components["schemas"]["code-scanning-alert-dismissed-reason"];
       rule: components["schemas"]["code-scanning-alert-rule-summary"];
       tool: components["schemas"]["code-scanning-analysis-tool"];
-      instance: components["schemas"]["code-scanning-alert-instance"];
-      classification: components["schemas"]["code-scanning-alert-classification"];
+      most_recent_instance: components["schemas"]["code-scanning-alert-instance"];
     };
     "code-scanning-alert-rule": {
       /** A unique identifier for the rule used to detect the alert. */
@@ -6669,6 +6454,8 @@ export interface components {
       name?: string;
       /** The severity of the alert. */
       severity?: ("none" | "note" | "warning" | "error") | null;
+      /** The security severity of the alert. */
+      security_severity_level?: ("low" | "medium" | "high" | "critical") | null;
       /** A short description of the rule used to detect the alert. */
       description?: string;
       /** description of the rule used to detect the alert. */
@@ -6684,12 +6471,14 @@ export interface components {
       url: components["schemas"]["alert-url"];
       html_url: components["schemas"]["alert-html-url"];
       instances?: { [key: string]: unknown };
+      instances_url: components["schemas"]["alert-instances-url"];
       state: components["schemas"]["code-scanning-alert-state"];
       dismissed_by: components["schemas"]["simple-user"];
       dismissed_at: components["schemas"]["code-scanning-alert-dismissed-at"];
       dismissed_reason: components["schemas"]["code-scanning-alert-dismissed-reason"];
       rule: components["schemas"]["code-scanning-alert-rule"];
       tool: components["schemas"]["code-scanning-analysis-tool"];
+      most_recent_instance: components["schemas"]["code-scanning-alert-instance"];
     };
     /** Sets the state of the code scanning alert. Can be one of `open` or `dismissed`. You must provide `dismissed_reason` when you set the state to `dismissed`. */
     "code-scanning-alert-set-state": "open" | "dismissed";
@@ -6727,12 +6516,18 @@ export interface components {
       warning: string;
       tool_name?: string;
     };
-    /** A Base64 string representing the SARIF file to upload. You must first compress your SARIF file using [`gzip`](http://www.gnu.org/software/gzip/manual/gzip.html) and then translate the contents of the file into a Base64 encoding string. For more information, see "[SARIF support for code scanning](https://docs.github.com/enterprise-server@2.22/github/finding-security-vulnerabilities-and-errors-in-your-code/integrating-with-code-scanning/sarif-support-for-code-scanning)." */
-    "code-scanning-analysis-sarif-file-2": string;
+    /** A Base64 string representing the SARIF file to upload. You must first compress your SARIF file using [`gzip`](http://www.gnu.org/software/gzip/manual/gzip.html) and then translate the contents of the file into a Base64 encoding string. For more information, see "[SARIF support for code scanning](https://docs.github.com/github-ae@latest/code-security/secure-coding/sarif-support-for-code-scanning)." */
+    "code-scanning-analysis-sarif-file": string;
     "code-scanning-sarifs-receipt": {
       id?: components["schemas"]["code-scanning-analysis-sarif-id"];
       /** The REST API URL for checking the status of the upload. */
       url?: string;
+    };
+    "code-scanning-sarifs-status": {
+      /** `pending` files have not yet been processed, while `complete` means all results in the SARIF have been stored. */
+      processing_status?: "pending" | "complete";
+      /** The REST API URL for getting the analyses associated with the upload. */
+      analyses_url?: string | null;
     };
     /** Collaborator */
     collaborator: {
@@ -6796,15 +6591,6 @@ export interface components {
       author_association: components["schemas"]["author_association"];
       reactions?: components["schemas"]["reaction-rollup"];
     };
-    /** Scim Error */
-    "scim-error": {
-      message?: string | null;
-      documentation_url?: string | null;
-      detail?: string | null;
-      status?: number;
-      scimType?: string | null;
-      schemas?: string[];
-    };
     /** Branch Short */
     "branch-short": {
       name: string;
@@ -6818,6 +6604,16 @@ export interface components {
     link: {
       href: string;
     };
+    /** The status of auto merging a pull request. */
+    auto_merge: {
+      enabled_by: components["schemas"]["simple-user"];
+      /** The merge method to use. */
+      merge_method: "merge" | "squash" | "rebase";
+      /** Title for the merge commit message. */
+      commit_title: string;
+      /** Commit message for the merge commit. */
+      commit_message: string;
+    } | null;
     /** Pull Request Simple */
     "pull-request-simple": {
       url: string;
@@ -6883,6 +6679,7 @@ export interface components {
         self: components["schemas"]["link"];
       };
       author_association: components["schemas"]["author_association"];
+      auto_merge: components["schemas"]["auto_merge"];
       /** Indicates whether or not the pull request is a draft. */
       draft?: boolean;
     };
@@ -7209,6 +7006,114 @@ export interface components {
       log_url?: string;
       performed_via_github_app?: components["schemas"]["integration"] | null;
     };
+    /** Actor */
+    actor: {
+      id: number;
+      login: string;
+      display_login?: string;
+      gravatar_id: string | null;
+      url: string;
+      avatar_url: string;
+    };
+    /** Color-coded labels help you categorize and filter your issues (just like labels in Gmail). */
+    label: {
+      id: number;
+      node_id: string;
+      /** URL for the label */
+      url: string;
+      /** The name of the label. */
+      name: string;
+      description: string | null;
+      /** 6-character hex code, without the leading #, identifying the color */
+      color: string;
+      default: boolean;
+    };
+    /** Issue Simple */
+    "issue-simple": {
+      id: number;
+      node_id: string;
+      url: string;
+      repository_url: string;
+      labels_url: string;
+      comments_url: string;
+      events_url: string;
+      html_url: string;
+      number: number;
+      state: string;
+      title: string;
+      body?: string;
+      user: components["schemas"]["simple-user"] | null;
+      labels: components["schemas"]["label"][];
+      assignee: components["schemas"]["simple-user"] | null;
+      assignees?: components["schemas"]["simple-user"][] | null;
+      milestone: components["schemas"]["milestone"] | null;
+      locked: boolean;
+      active_lock_reason?: string | null;
+      comments: number;
+      pull_request?: {
+        merged_at?: string | null;
+        diff_url: string | null;
+        html_url: string | null;
+        patch_url: string | null;
+        url: string | null;
+      };
+      closed_at: string | null;
+      created_at: string;
+      updated_at: string;
+      author_association: components["schemas"]["author_association"];
+      body_html?: string;
+      body_text?: string;
+      timeline_url?: string;
+      repository?: components["schemas"]["repository"];
+      performed_via_github_app?: components["schemas"]["integration"] | null;
+    };
+    /** Comments provide a way for people to collaborate on an issue. */
+    "issue-comment": {
+      /** Unique identifier of the issue comment */
+      id: number;
+      node_id: string;
+      /** URL for the issue comment */
+      url: string;
+      /** Contents of the issue comment */
+      body?: string;
+      body_text?: string;
+      body_html?: string;
+      html_url: string;
+      user: components["schemas"]["simple-user"] | null;
+      created_at: string;
+      updated_at: string;
+      issue_url: string;
+      author_association: components["schemas"]["author_association"];
+      performed_via_github_app?: components["schemas"]["integration"] | null;
+      reactions?: components["schemas"]["reaction-rollup"];
+    };
+    /** Event */
+    event: {
+      id: string;
+      type: string | null;
+      actor: components["schemas"]["actor"];
+      repo: {
+        id: number;
+        name: string;
+        url: string;
+      };
+      org?: components["schemas"]["actor"];
+      payload: {
+        action?: string;
+        issue?: components["schemas"]["issue-simple"];
+        comment?: components["schemas"]["issue-comment"];
+        pages?: {
+          page_name?: string;
+          title?: string;
+          summary?: string | null;
+          action?: string;
+          sha?: string;
+          html_url?: string;
+        }[];
+      };
+      public: boolean;
+      created_at: string | null;
+    };
     /** Short Blob */
     "short-blob": {
       url: string;
@@ -7351,6 +7256,7 @@ export interface components {
       url: string;
       test_url: string;
       ping_url: string;
+      deliveries_url?: string;
       last_response: components["schemas"]["hook-response"];
     };
     /** Issue Event Label */
@@ -7994,12 +7900,6 @@ export interface components {
       url: string;
       status: string;
     };
-    "repository-pre-receive-hook": {
-      id?: number;
-      name?: string;
-      enforcement?: string;
-      configuration_url?: string;
-    };
     /** Pull requests let you tell others about changes you've pushed to a repository on GitHub. Once a pull request is sent, interested parties can review the set of changes, discuss potential modifications, and even push follow-up commits if necessary. */
     "pull-request": {
       url: string;
@@ -8320,6 +8220,7 @@ export interface components {
         self: components["schemas"]["link"];
       };
       author_association: components["schemas"]["author_association"];
+      auto_merge: components["schemas"]["auto_merge"];
       /** Indicates whether or not the pull request is a draft. */
       draft?: boolean;
       merged: boolean;
@@ -8458,6 +8359,8 @@ export interface components {
       assets: components["schemas"]["release-asset"][];
       body_html?: string;
       body_text?: string;
+      /** The URL of the release discussion. */
+      discussion_url?: string;
       reactions?: components["schemas"]["reaction-rollup"];
     };
     /** Stargazer */
@@ -8513,6 +8416,46 @@ export interface components {
     /** A topic aggregates entities that are related to a subject. */
     topic: {
       names: string[];
+    };
+    "scim-group-list-enterprise": {
+      schemas: string[];
+      totalResults: number;
+      itemsPerPage: number;
+      startIndex: number;
+      Resources: {
+        schemas: string[];
+        id: string;
+        externalId?: string | null;
+        displayName?: string;
+        members?: {
+          value?: string;
+          $ref?: string;
+          display?: string;
+        }[];
+        meta?: {
+          resourceType?: string;
+          created?: string;
+          lastModified?: string;
+          location?: string;
+        };
+      }[];
+    };
+    "scim-enterprise-group": {
+      schemas: string[];
+      id: string;
+      externalId?: string | null;
+      displayName?: string;
+      members?: {
+        value?: string;
+        $ref?: string;
+        display?: string;
+      }[];
+      meta?: {
+        resourceType?: string;
+        created?: string;
+        lastModified?: string;
+        location?: string;
+      };
     };
     "search-result-text-matches": {
       object_url?: string;
@@ -8801,163 +8744,6 @@ export interface components {
       company?: string | null;
       suspended_at?: string | null;
     };
-    "configuration-status": {
-      status?: string;
-      progress?: {
-        status: string;
-        key: string;
-      }[];
-    };
-    "maintenance-status": {
-      status?: string;
-      scheduled_time?: string;
-      connection_services?: {
-        name: string;
-        number: number;
-      }[];
-    };
-    "enterprise-settings": {
-      enterprise?: {
-        private_mode?: boolean;
-        public_pages?: boolean;
-        subdomain_isolation?: boolean;
-        signup_enabled?: boolean;
-        github_hostname?: string;
-        identicons_host?: string;
-        http_proxy?: string | null;
-        auth_mode?: string;
-        expire_sessions?: boolean;
-        admin_password?: string | null;
-        configuration_id?: number;
-        configuration_run_count?: number;
-        avatar?: {
-          enabled?: boolean;
-          uri?: string;
-        };
-        customer?: {
-          name?: string;
-          email?: string;
-          uuid?: string;
-          secret_key_data?: string;
-          public_key_data?: string;
-        };
-        license?: {
-          seats?: number;
-          evaluation?: boolean;
-          perpetual?: boolean;
-          unlimited_seating?: boolean;
-          support_key?: string;
-          ssh_allowed?: boolean;
-          cluster_support?: boolean;
-          expire_at?: string;
-        };
-        github_ssl?: {
-          enabled?: boolean;
-          cert?: string | null;
-          key?: string | null;
-        };
-        ldap?: {
-          host?: string | null;
-          port?: number;
-          base?: { [key: string]: unknown }[];
-          uid?: string | null;
-          bind_dn?: string | null;
-          password?: string | null;
-          method?: string;
-          search_strategy?: string;
-          user_groups?: { [key: string]: unknown }[];
-          admin_group?: string | null;
-          virtual_attribute_enabled?: boolean;
-          recursive_group_search?: boolean;
-          posix_support?: boolean;
-          user_sync_emails?: boolean;
-          user_sync_keys?: boolean;
-          user_sync_interval?: number;
-          team_sync_interval?: number;
-          sync_enabled?: boolean;
-          reconciliation?: {
-            user?: string | null;
-            org?: string | null;
-          };
-          profile?: {
-            uid?: string;
-            name?: string | null;
-            mail?: string | null;
-            key?: string | null;
-          };
-        };
-        cas?: {
-          url?: string | null;
-        };
-        saml?: {
-          sso_url?: string | null;
-          certificate?: string | null;
-          certificate_path?: string | null;
-          issuer?: string | null;
-          idp_initiated_sso?: boolean;
-          disable_admin_demote?: boolean;
-        };
-        github_oauth?: {
-          client_id?: string;
-          client_secret?: string;
-          organization_name?: string;
-          organization_team?: string;
-        };
-        smtp?: {
-          enabled?: boolean;
-          address?: string;
-          authentication?: string;
-          port?: string;
-          domain?: string;
-          username?: string;
-          user_name?: string;
-          enable_starttls_auto?: boolean;
-          password?: string;
-          "discard-to-noreply-address"?: boolean;
-          support_address?: string;
-          support_address_type?: string;
-          noreply_address?: string;
-        };
-        ntp?: {
-          primary_server?: string;
-          secondary_server?: string;
-        };
-        timezone?: string | null;
-        snmp?: {
-          enabled?: boolean;
-          community?: string;
-        };
-        syslog?: {
-          enabled?: boolean;
-          server?: string | null;
-          protocol_name?: string;
-        };
-        assets?: string | null;
-        pages?: {
-          enabled?: boolean;
-        };
-        collectd?: {
-          enabled?: boolean;
-          server?: string | null;
-          port?: number;
-          encryption?: string | null;
-          username?: string | null;
-          password?: string | null;
-        };
-        mapping?: {
-          enabled?: boolean;
-          tileserver?: string | null;
-          basemap?: string;
-          token?: string | null;
-        };
-        load_balancer?: string | null;
-      };
-      run_list?: string[];
-    };
-    "ssh-key": {
-      key?: string;
-      "pretty-print"?: string;
-    };
     /** Private User */
     "private-user": {
       login: string;
@@ -8985,6 +8771,7 @@ export interface components {
       email: string | null;
       hireable: boolean | null;
       bio: string | null;
+      twitter_username?: string | null;
       public_repos: number;
       public_gists: number;
       followers: number;
@@ -9006,13 +8793,6 @@ export interface components {
       suspended_at?: string | null;
       business_plus?: boolean;
       ldap_dn?: string;
-    };
-    /** Email */
-    email: {
-      email: string;
-      primary: boolean;
-      verified: boolean;
-      visibility: string | null;
     };
     /** A unique encryption key */
     "gpg-key": {
@@ -9088,6 +8868,25 @@ export interface components {
         "application/json": components["schemas"]["validation-error-simple"];
       };
     };
+    /** Bad Request */
+    bad_request: {
+      content: {
+        "application/json": components["schemas"]["basic-error"];
+        "application/scim+json": components["schemas"]["scim-error"];
+      };
+    };
+    /** Validation failed */
+    validation_failed: {
+      content: {
+        "application/json": components["schemas"]["validation-error"];
+      };
+    };
+    /** Accepted */
+    accepted: {
+      content: {
+        "application/json": { [key: string]: unknown };
+      };
+    };
     /** Preview header missing */
     preview_header_missing: {
       content: {
@@ -9109,30 +8908,8 @@ export interface components {
         "application/json": components["schemas"]["basic-error"];
       };
     };
-    /** Validation failed */
-    validation_failed: {
-      content: {
-        "application/json": components["schemas"]["validation-error"];
-      };
-    };
     /** Not modified */
     not_modified: unknown;
-    /** Gone */
-    gone: {
-      content: {
-        "application/json": components["schemas"]["basic-error"];
-      };
-    };
-    /** Service unavailable */
-    service_unavailable: {
-      content: {
-        "application/json": {
-          code?: string;
-          message?: string;
-          documentation_url?: string;
-        };
-      };
-    };
     /** Forbidden Gist */
     forbidden_gist: {
       content: {
@@ -9147,14 +8924,20 @@ export interface components {
         };
       };
     };
-    /** Moved permanently */
-    moved_permanently: {
+    /** Conflict */
+    conflict: {
       content: {
         "application/json": components["schemas"]["basic-error"];
       };
     };
-    /** Conflict */
-    conflict: {
+    /** Gone */
+    gone: {
+      content: {
+        "application/json": components["schemas"]["basic-error"];
+      };
+    };
+    /** Moved permanently */
+    moved_permanently: {
       content: {
         "application/json": components["schemas"]["basic-error"];
       };
@@ -9165,27 +8948,36 @@ export interface components {
         "application/json": components["schemas"]["basic-error"];
       };
     };
+    /** Response if GitHub Advanced Security is not enabled for this repository */
+    code_scanning_forbidden_read: {
+      content: {
+        "application/json": components["schemas"]["basic-error"];
+      };
+    };
+    /** Service unavailable */
+    service_unavailable: {
+      content: {
+        "application/json": {
+          code?: string;
+          message?: string;
+          documentation_url?: string;
+        };
+      };
+    };
+    /** Response if the repository is archived or if github advanced security is not enabled for this repository */
+    code_scanning_forbidden_write: {
+      content: {
+        "application/json": components["schemas"]["basic-error"];
+      };
+    };
     /** Internal Error */
     internal_error: {
       content: {
         "application/json": components["schemas"]["basic-error"];
       };
     };
-    /** Bad Request */
-    bad_request: {
-      content: {
-        "application/json": components["schemas"]["basic-error"];
-        "application/scim+json": components["schemas"]["scim-error"];
-      };
-    };
     /** Found */
     found: unknown;
-    /** Accepted */
-    accepted: {
-      content: {
-        "application/json": { [key: string]: unknown };
-      };
-    };
     /** A header with no content is returned. */
     no_content: unknown;
   };
@@ -9198,31 +8990,27 @@ export interface components {
     /** One of `asc` (ascending) or `desc` (descending). */
     direction: "asc" | "desc";
     "key-ids": string;
-    "team-id": number;
-    username: string;
     org: string;
     "pre-receive-environment-id": number;
-    /** pre_receive_hook_id parameter */
-    "pre-receive-hook-id": number;
     "token-id": number;
+    username: string;
+    /** Used for pagination: the starting delivery from which the page of deliveries is fetched. Refer to the `link` header for the next and previous page cursors. */
+    cursor: string;
+    "delivery-id": number;
     /** Only show notifications updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
     since: string;
     /** installation_id parameter */
     "installation-id": number;
-    /** grant_id parameter */
-    "grant-id": number;
     /** The client ID of your GitHub app. */
     "client-id": string;
     "access-token": string;
     "app-slug": string;
-    /** authorization_id parameter */
-    "authorization-id": number;
     /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
     enterprise: string;
-    /** Unique identifier of the self-hosted runner group. */
-    "runner-group-id": number;
     /** Unique identifier of an organization. */
     "org-id": number;
+    /** Unique identifier of the self-hosted runner group. */
+    "runner-group-id": number;
     /** Unique identifier of the self-hosted runner. */
     "runner-id": number;
     /** gist_id parameter */
@@ -9231,8 +9019,6 @@ export interface components {
     "comment-id": number;
     /** A list of comma separated label names. Example: `bug,ui,@high` */
     labels: string;
-    owner: string;
-    repo: string;
     /** If `true`, show notifications marked as read. */
     all: boolean;
     /** If `true`, only shows notifications in which the user is directly participating or mentioned. */
@@ -9252,6 +9038,8 @@ export interface components {
     "comment-number": number;
     "reaction-id": number;
     "project-id": number;
+    owner: string;
+    repo: string;
     /** card_id parameter */
     "card-id": number;
     /** column_id parameter */
@@ -9266,7 +9054,7 @@ export interface components {
     "workflow-run-branch": string;
     /** Returns workflow run triggered by the event you specify. For example, `push`, `pull_request` or `issue`. For more information, see "[Events that trigger workflows](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows)." */
     event: string;
-    /** Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. For a list of the possible `status` and `conclusion` options, see "[Create a check run](https://docs.github.com/enterprise-server@2.22/rest/reference/checks#create-a-check-run)." */
+    /** Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. For a list of the possible `status` and `conclusion` options, see "[Create a check run](https://docs.github.com/github-ae@latest/rest/reference/checks#create-a-check-run)." */
     "workflow-run-status":
       | "completed"
       | "action_required"
@@ -9325,10 +9113,15 @@ export interface components {
     "asset-id": number;
     /** release_id parameter */
     "release-id": number;
-    /** A repository ID. Only return repositories with an ID greater than this ID. */
-    "since-repo": number;
+    /** Used for pagination: the index of the first result to return. */
+    "start-index": number;
+    /** Used for pagination: the number of results to return. */
+    count: number;
+    /** Identifier generated by the GitHub SCIM endpoint. */
+    "scim-group-id": string;
     /** Determines whether the first search result returned is the highest number of matches (`desc`) or lowest number of matches (`asc`). This parameter is ignored unless you provide `sort`. */
     order: "desc" | "asc";
+    "team-id": number;
     /** gpg_key_id parameter */
     "gpg-key-id": number;
     /** A user ID. Only return users with an ID greater than this ID. */
@@ -9440,12 +9233,12 @@ export interface operations {
             url: string;
             /** The media type used to serialize the payloads. Supported values include `json` and `form`. The default is `form`. */
             content_type?: string;
-            /** If provided, the `secret` will be used as the `key` to generate the HMAC hex digest value in the [`X-Hub-Signature`](https://docs.github.com/enterprise-server@2.22/webhooks/event-payloads/#delivery-headers) header. */
+            /** If provided, the `secret` will be used as the `key` to generate the HMAC hex digest value in the [`X-Hub-Signature`](https://docs.github.com/github-ae@latest/webhooks/event-payloads/#delivery-headers) header. */
             secret?: string;
             /** Determines whether the SSL certificate of the host for `url` will be verified when delivering payloads. Supported values include `0` (verification is performed) and `1` (verification is not performed). The default is `0`. **We strongly recommend not setting this to `1` as you are subject to man-in-the-middle and other attacks.** */
             insecure_ssl?: string;
           };
-          /** The [events](https://docs.github.com/enterprise-server@2.22/webhooks/event-payloads) that trigger this webhook. A global webhook can be triggered by `user` and `organization` events. Default: `user` and `organization`. */
+          /** The [events](https://docs.github.com/github-ae@latest/webhooks/event-payloads) that trigger this webhook. A global webhook can be triggered by `user` and `organization` events. Default: `user` and `organization`. */
           events?: string[];
           /** Determines if notifications are sent when the webhook is triggered. Set to `true` to send notifications. */
           active?: boolean;
@@ -9515,12 +9308,12 @@ export interface operations {
             url: string;
             /** The media type used to serialize the payloads. Supported values include `json` and `form`. The default is `form`. */
             content_type?: string;
-            /** If provided, the `secret` will be used as the `key` to generate the HMAC hex digest value in the [`X-Hub-Signature`](https://docs.github.com/enterprise-server@2.22/webhooks/event-payloads/#delivery-headers) header. */
+            /** If provided, the `secret` will be used as the `key` to generate the HMAC hex digest value in the [`X-Hub-Signature`](https://docs.github.com/github-ae@latest/webhooks/event-payloads/#delivery-headers) header. */
             secret?: string;
             /** Determines whether the SSL certificate of the host for `url` will be verified when delivering payloads. Supported values include `0` (verification is performed) and `1` (verification is not performed). The default is `0`. **We strongly recommend not setting this to `1` as you are subject to man-in-the-middle and other attacks.** */
             insecure_ssl?: string;
           };
-          /** The [events](https://docs.github.com/enterprise-server@2.22/webhooks/event-payloads) that trigger this webhook. A global webhook can be triggered by `user` and `organization` events. Default: `user` and `organization`. */
+          /** The [events](https://docs.github.com/github-ae@latest/webhooks/event-payloads) that trigger this webhook. A global webhook can be triggered by `user` and `organization` events. Default: `user` and `organization`. */
           events?: string[];
           /** Determines if notifications are sent when the webhook is triggered. Set to `true` to send notifications. */
           active?: boolean;
@@ -9528,7 +9321,7 @@ export interface operations {
       };
     };
   };
-  /** This will trigger a [ping event](https://docs.github.com/enterprise-server@2.22/webhooks/#ping-event) to be sent to the webhook. */
+  /** This will trigger a [ping event](https://docs.github.com/github-ae@latest/webhooks/#ping-event) to be sent to the webhook. */
   "enterprise-admin/ping-global-webhook": {
     parameters: {
       header: {
@@ -9577,93 +9370,6 @@ export interface operations {
     responses: {
       /** Response */
       204: never;
-    };
-  };
-  /**
-   * Updates the [distinguished name](https://www.ldap.com/ldap-dns-and-rdns) (DN) of the LDAP entry to map to a team. [LDAP synchronization](https://help.github.com/enterprise/admin/guides/user-management/using-ldap/#enabling-ldap-sync) must be enabled to map LDAP entries to a team. Use the [Create a team](https://docs.github.com/enterprise-server@2.22/rest/reference/teams/#create-a-team) endpoint to create a team with LDAP mapping.
-   *
-   * If you pass the `hellcat-preview` media type, you can also update the LDAP mapping of a child team.
-   */
-  "enterprise-admin/update-ldap-mapping-for-team": {
-    parameters: {
-      path: {
-        team_id: components["parameters"]["team-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["ldap-mapping-team"];
-        };
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** The [distinguished name](https://www.ldap.com/ldap-dns-and-rdns) (DN) of the LDAP entry to map to a team. */
-          ldap_dn?: string;
-        };
-      };
-    };
-  };
-  /** Note that this API call does not automatically initiate an LDAP sync. Rather, if a `201` is returned, the sync job is queued successfully, and is performed when the instance is ready. */
-  "enterprise-admin/sync-ldap-mapping-for-team": {
-    parameters: {
-      path: {
-        team_id: components["parameters"]["team-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      201: {
-        content: {
-          "application/json": {
-            status?: string;
-          };
-        };
-      };
-    };
-  };
-  "enterprise-admin/update-ldap-mapping-for-user": {
-    parameters: {
-      path: {
-        username: components["parameters"]["username"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["ldap-mapping-user"];
-        };
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** The [distinguished name](https://www.ldap.com/ldap-dns-and-rdns) (DN) of the LDAP entry to map to a team. */
-          ldap_dn?: string;
-        };
-      };
-    };
-  };
-  /** Note that this API call does not automatically initiate an LDAP sync. Rather, if a `201` is returned, the sync job is queued successfully, and is performed when the instance is ready. */
-  "enterprise-admin/sync-ldap-mapping-for-user": {
-    parameters: {
-      path: {
-        username: components["parameters"]["username"];
-      };
-    };
-    responses: {
-      /** Response */
-      201: {
-        content: {
-          "application/json": {
-            status?: string;
-          };
-        };
-      };
     };
   };
   "enterprise-admin/create-org": {
@@ -9896,118 +9602,6 @@ export interface operations {
       };
     };
   };
-  "enterprise-admin/list-pre-receive-hooks": {
-    parameters: {
-      query: {
-        /** Results per page (max 100) */
-        per_page?: components["parameters"]["per-page"];
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
-        /** One of `asc` (ascending) or `desc` (descending). */
-        direction?: components["parameters"]["direction"];
-        /** One of `created` (when the repository was starred) or `updated` (when it was last pushed to) or `name`. */
-        sort?: "created" | "updated" | "name";
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["pre-receive-hook"][];
-        };
-      };
-    };
-  };
-  "enterprise-admin/create-pre-receive-hook": {
-    responses: {
-      /** Response */
-      201: {
-        content: {
-          "application/json": components["schemas"]["pre-receive-hook"];
-        };
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** The name of the hook. */
-          name: string;
-          /** The script that the hook runs. */
-          script: string;
-          /** The GitHub repository where the script is kept. */
-          script_repository: { [key: string]: any };
-          /** The pre-receive environment where the script is executed. */
-          environment: { [key: string]: any };
-          /** The state of enforcement for this hook. default: `disabled` */
-          enforcement?: string;
-          /** Whether enforcement can be overridden at the org or repo level. default: `false` */
-          allow_downstream_configuration?: boolean;
-        };
-      };
-    };
-  };
-  "enterprise-admin/get-pre-receive-hook": {
-    parameters: {
-      path: {
-        /** pre_receive_hook_id parameter */
-        pre_receive_hook_id: components["parameters"]["pre-receive-hook-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["pre-receive-hook"];
-        };
-      };
-    };
-  };
-  "enterprise-admin/delete-pre-receive-hook": {
-    parameters: {
-      path: {
-        /** pre_receive_hook_id parameter */
-        pre_receive_hook_id: components["parameters"]["pre-receive-hook-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      204: never;
-    };
-  };
-  "enterprise-admin/update-pre-receive-hook": {
-    parameters: {
-      path: {
-        /** pre_receive_hook_id parameter */
-        pre_receive_hook_id: components["parameters"]["pre-receive-hook-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["pre-receive-hook"];
-        };
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** The name of the hook. */
-          name?: string;
-          /** The script that the hook runs. */
-          script?: string;
-          /** The GitHub repository where the script is kept. */
-          script_repository?: { [key: string]: any };
-          /** The pre-receive environment where the script is executed. */
-          environment?: { [key: string]: any };
-          /** The state of enforcement for this hook. */
-          enforcement?: string;
-          /** Whether enforcement can be overridden at the org or repo level. */
-          allow_downstream_configuration?: boolean;
-        };
-      };
-    };
-  };
   /** Lists personal access tokens for all users, including admin users. */
   "enterprise-admin/list-personal-access-tokens": {
     parameters: {
@@ -10041,34 +9635,7 @@ export interface operations {
     };
   };
   /**
-   * If an external authentication mechanism is used, the login name should match the login name in the external system. If you are using LDAP authentication, you should also [update the LDAP mapping](https://docs.github.com/enterprise-server@2.22/rest/reference/enterprise-admin#update-ldap-mapping-for-a-user) for the user.
-   *
-   * The login name will be normalized to only contain alphanumeric characters or single hyphens. For example, if you send `"octo_cat"` as the login, a user named `"octo-cat"` will be created.
-   *
-   * If the login name or email address is already associated with an account, the server will return a `422` response.
-   */
-  "enterprise-admin/create-user": {
-    responses: {
-      /** Response */
-      201: {
-        content: {
-          "application/json": components["schemas"]["simple-user"];
-        };
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** The user's username. */
-          login: string;
-          /** **Required for built-in authentication.** The user's email address. This parameter can be omitted when using CAS, LDAP, or SAML. For details on built-in and centrally-managed authentication, see the the [GitHub authentication guide](https://help.github.com/enterprise/2.18/admin/guides/user-management/authenticating-users-for-your-github-enterprise-server-instance/). */
-          email?: string;
-        };
-      };
-    };
-  };
-  /**
-   * Deleting a user will delete all their repositories, gists, applications, and personal settings. [Suspending a user](https://docs.github.com/enterprise-server@2.22/rest/reference/enterprise-admin#suspend-a-user) is often a better option.
+   * Deleting a user will delete all their repositories, gists, applications, and personal settings. [Suspending a user](https://docs.github.com/github-ae@latest/rest/reference/enterprise-admin#suspend-a-user) is often a better option.
    *
    * You can delete any user account except your own.
    */
@@ -10081,32 +9648,6 @@ export interface operations {
     responses: {
       /** Response */
       204: never;
-    };
-  };
-  "enterprise-admin/update-username-for-user": {
-    parameters: {
-      path: {
-        username: components["parameters"]["username"];
-      };
-    };
-    responses: {
-      /** Response */
-      202: {
-        content: {
-          "application/json": {
-            message?: string;
-            url?: string;
-          };
-        };
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** The user's new username. */
-          login: string;
-        };
-      };
     };
   };
   "enterprise-admin/create-impersonation-o-auth-token": {
@@ -10126,7 +9667,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** A list of [scopes](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
+          /** A list of [scopes](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
           scopes?: string[];
         };
       };
@@ -10144,9 +9685,9 @@ export interface operations {
     };
   };
   /**
-   * Returns the GitHub App associated with the authentication credentials used. To see how many app installations are associated with this GitHub App, see the `installations_count` in the response. For more details about your app's installations, see the "[List installations for the authenticated app](https://docs.github.com/enterprise-server@2.22/rest/reference/apps#list-installations-for-the-authenticated-app)" endpoint.
+   * Returns the GitHub App associated with the authentication credentials used. To see how many app installations are associated with this GitHub App, see the `installations_count` in the response. For more details about your app's installations, see the "[List installations for the authenticated app](https://docs.github.com/github-ae@latest/rest/reference/apps#list-installations-for-the-authenticated-app)" endpoint.
    *
-   * You must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
    */
   "apps/get-authenticated": {
     parameters: {};
@@ -10159,7 +9700,7 @@ export interface operations {
       };
     };
   };
-  /** Use this endpoint to complete the handshake necessary when implementing the [GitHub App Manifest flow](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/creating-github-apps-from-a-manifest/). When you create a GitHub App with the manifest flow, you receive a temporary `code` used to retrieve the GitHub App's `id`, `pem` (private key), and `webhook_secret`. */
+  /** Use this endpoint to complete the handshake necessary when implementing the [GitHub App Manifest flow](https://docs.github.com/github-ae@latest/apps/building-github-apps/creating-github-apps-from-a-manifest/). When you create a GitHub App with the manifest flow, you receive a temporary `code` used to retrieve the GitHub App's `id`, `pem` (private key), and `webhook_secret`. */
   "apps/create-from-manifest": {
     parameters: {
       path: {
@@ -10189,7 +9730,111 @@ export interface operations {
     };
   };
   /**
-   * You must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   * Returns the webhook configuration for a GitHub App. For more information about configuring a webhook for your app, see "[Creating a GitHub App](/developers/apps/creating-a-github-app)."
+   *
+   * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   */
+  "apps/get-webhook-config-for-app": {
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["webhook-config"];
+        };
+      };
+    };
+  };
+  /**
+   * Updates the webhook configuration for a GitHub App. For more information about configuring a webhook for your app, see "[Creating a GitHub App](/developers/apps/creating-a-github-app)."
+   *
+   * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   */
+  "apps/update-webhook-config-for-app": {
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["webhook-config"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          url?: components["schemas"]["webhook-config-url"];
+          content_type?: components["schemas"]["webhook-config-content-type"];
+          secret?: components["schemas"]["webhook-config-secret"];
+          insecure_ssl?: components["schemas"]["webhook-config-insecure-ssl"];
+        };
+      };
+    };
+  };
+  /**
+   * Returns a list of webhook deliveries for the webhook configured for a GitHub App.
+   *
+   * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   */
+  "apps/list-webhook-deliveries": {
+    parameters: {
+      query: {
+        /** Results per page (max 100) */
+        per_page?: components["parameters"]["per-page"];
+        /** Used for pagination: the starting delivery from which the page of deliveries is fetched. Refer to the `link` header for the next and previous page cursors. */
+        cursor?: components["parameters"]["cursor"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["hook-delivery-item"][];
+        };
+      };
+      400: components["responses"]["bad_request"];
+      422: components["responses"]["validation_failed"];
+    };
+  };
+  /**
+   * Returns a delivery for the webhook configured for a GitHub App.
+   *
+   * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   */
+  "apps/get-webhook-delivery": {
+    parameters: {
+      path: {
+        delivery_id: components["parameters"]["delivery-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["hook-delivery"];
+        };
+      };
+      400: components["responses"]["bad_request"];
+      422: components["responses"]["validation_failed"];
+    };
+  };
+  /**
+   * Redeliver a delivery for the webhook configured for a GitHub App.
+   *
+   * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   */
+  "apps/redeliver-webhook-delivery": {
+    parameters: {
+      path: {
+        delivery_id: components["parameters"]["delivery-id"];
+      };
+    };
+    responses: {
+      202: components["responses"]["accepted"];
+      400: components["responses"]["bad_request"];
+      422: components["responses"]["validation_failed"];
+    };
+  };
+  /**
+   * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
    *
    * The permissions the installation has are included under the `permissions` key.
    */
@@ -10210,7 +9855,7 @@ export interface operations {
       200: {
         headers: {};
         content: {
-          "application/json": components["schemas"]["installation-ghes-2"][];
+          "application/json": components["schemas"]["installation"][];
         };
       };
     };
@@ -10218,7 +9863,7 @@ export interface operations {
   /**
    * Enables an authenticated GitHub App to find an installation's information using the installation id. The installation's account type (`target_type`) will be either an organization or a user account, depending which account the repository belongs to.
    *
-   * You must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
    */
   "apps/get-installation": {
     parameters: {
@@ -10231,7 +9876,7 @@ export interface operations {
       /** Response */
       200: {
         content: {
-          "application/json": components["schemas"]["installation-ghes-2"];
+          "application/json": components["schemas"]["installation"];
         };
       };
       404: components["responses"]["not_found"];
@@ -10239,9 +9884,9 @@ export interface operations {
     };
   };
   /**
-   * Uninstalls a GitHub App on a user, organization, or business account. If you prefer to temporarily suspend an app's access to your account's resources, then we recommend the "[Suspend an app installation](https://docs.github.com/enterprise-server@2.22/rest/reference/apps/#suspend-an-app-installation)" endpoint.
+   * Uninstalls a GitHub App on a user, organization, or business account. If you prefer to temporarily suspend an app's access to your account's resources, then we recommend the "[Suspend an app installation](https://docs.github.com/github-ae@latest/rest/reference/apps/#suspend-an-app-installation)" endpoint.
    *
-   * You must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
    */
   "apps/delete-installation": {
     parameters: {
@@ -10259,7 +9904,7 @@ export interface operations {
   /**
    * Creates an installation access token that enables a GitHub App to make authenticated API requests for the app's installation on an organization or individual account. Installation tokens expire one hour from the time you create them. Using an expired token produces a status code of `401 - Unauthorized`, and requires creating a new installation token. By default the installation token has access to all repositories that the installation can access. To restrict the access to specific repositories, you can provide the `repository_ids` when creating the token. When you omit `repository_ids`, the response does not contain the `repositories` key.
    *
-   * You must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
    */
   "apps/create-installation-access-token": {
     parameters: {
@@ -10294,9 +9939,9 @@ export interface operations {
     };
   };
   /**
-   * Suspends a GitHub App on a user, organization, or business account, which blocks the app from accessing the account's resources. When a GitHub App is suspended, the app's access to the GitHub Enterprise Server API or webhook events is blocked for that account.
+   * Suspends a GitHub App on a user, organization, or business account, which blocks the app from accessing the account's resources. When a GitHub App is suspended, the app's access to the GitHub AE API or webhook events is blocked for that account.
    *
-   * You must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
    */
   "apps/suspend-installation": {
     parameters: {
@@ -10314,7 +9959,7 @@ export interface operations {
   /**
    * Removes a GitHub App installation suspension.
    *
-   * You must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
    */
   "apps/unsuspend-installation": {
     parameters: {
@@ -10330,77 +9975,7 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@2.22/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
-   *
-   * You can use this API to list the set of OAuth applications that have been granted access to your account. Unlike the [list your authorizations](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations#list-your-authorizations) API, this API does not manage individual tokens. This API will return one entry for each OAuth application that has been granted access to your account, regardless of the number of tokens an application has generated for your user. The list of OAuth applications returned matches what is shown on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized). The `scopes` returned are the union of scopes authorized for the application. For example, if an application has one token with `repo` scope and another token with `user` scope, the grant will return `["repo", "user"]`.
-   */
-  "oauth-authorizations/list-grants": {
-    parameters: {
-      query: {
-        /** Results per page (max 100) */
-        per_page?: components["parameters"]["per-page"];
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
-        /** The client ID of your GitHub app. */
-        client_id?: string;
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        headers: {};
-        content: {
-          "application/json": components["schemas"]["application-grant"][];
-        };
-      };
-      304: components["responses"]["not_modified"];
-      401: components["responses"]["requires_authentication"];
-      403: components["responses"]["forbidden"];
-      404: components["responses"]["not_found"];
-    };
-  };
-  /** **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/). */
-  "oauth-authorizations/get-grant": {
-    parameters: {
-      path: {
-        /** grant_id parameter */
-        grant_id: components["parameters"]["grant-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["application-grant"];
-        };
-      };
-      304: components["responses"]["not_modified"];
-      401: components["responses"]["requires_authentication"];
-      403: components["responses"]["forbidden"];
-    };
-  };
-  /**
-   * **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@2.22/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations/) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
-   *
-   * Deleting an OAuth application's grant will also delete all OAuth tokens associated with the application for your user. Once deleted, the application has no access to your account and is no longer listed on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized).
-   */
-  "oauth-authorizations/delete-grant": {
-    parameters: {
-      path: {
-        /** grant_id parameter */
-        grant_id: components["parameters"]["grant-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      204: never;
-      304: components["responses"]["not_modified"];
-      401: components["responses"]["requires_authentication"];
-      403: components["responses"]["forbidden"];
-    };
-  };
-  /**
-   * OAuth application owners can revoke a grant for their OAuth application and a specific user. You must use [Basic Authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. You must also provide a valid OAuth `access_token` as an input parameter and the grant for the token's owner will be deleted.
+   * OAuth application owners can revoke a grant for their OAuth application and a specific user. You must use [Basic Authentication](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. You must also provide a valid OAuth `access_token` as an input parameter and the grant for the token's owner will be deleted.
    * Deleting an OAuth application's grant will also delete all OAuth tokens associated with the application for the user. Once deleted, the application will have no access to the user's account and will no longer be listed on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized).
    */
   "apps/delete-authorization": {
@@ -10425,11 +10000,11 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** GitHub Enterprise Server will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
+   * **Deprecation Notice:** GitHub AE will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
    *
-   * OAuth application owners can revoke a grant for their OAuth application and a specific user. You must use [Basic Authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. You must also provide a valid token as `:access_token` and the grant for the token's owner will be deleted.
+   * OAuth application owners can revoke a grant for their OAuth application and a specific user. You must use [Basic Authentication](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. You must also provide a valid token as `:access_token` and the grant for the token's owner will be deleted.
    *
-   * Deleting an OAuth application's grant will also delete all OAuth tokens associated with the application for the user. Once deleted, the application will have no access to the user's account and will no longer be listed on [the Applications settings page under "Authorized OAuth Apps" on GitHub Enterprise Server](https://github.com/settings/applications#authorized).
+   * Deleting an OAuth application's grant will also delete all OAuth tokens associated with the application for the user. Once deleted, the application will have no access to the user's account and will no longer be listed on [the Applications settings page under "Authorized OAuth Apps" on GitHub AE](https://github.com/settings/applications#authorized).
    */
   "apps/revoke-grant-for-application": {
     parameters: {
@@ -10444,7 +10019,7 @@ export interface operations {
       204: never;
     };
   };
-  /** OAuth applications can use a special API method for checking OAuth token validity without exceeding the normal rate limits for failed login attempts. Authentication works differently with this particular endpoint. You must use [Basic Authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#basic-authentication) to use this endpoint, where the username is the OAuth application `client_id` and the password is its `client_secret`. Invalid tokens will return `404 NOT FOUND`. */
+  /** OAuth applications can use a special API method for checking OAuth token validity without exceeding the normal rate limits for failed login attempts. Authentication works differently with this particular endpoint. You must use [Basic Authentication](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication) to use this endpoint, where the username is the OAuth application `client_id` and the password is its `client_secret`. Invalid tokens will return `404 NOT FOUND`. */
   "apps/check-token": {
     parameters: {
       path: {
@@ -10471,7 +10046,7 @@ export interface operations {
       };
     };
   };
-  /** OAuth application owners can revoke a single token for an OAuth application. You must use [Basic Authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. */
+  /** OAuth application owners can revoke a single token for an OAuth application. You must use [Basic Authentication](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. */
   "apps/delete-token": {
     parameters: {
       path: {
@@ -10493,7 +10068,7 @@ export interface operations {
       };
     };
   };
-  /** OAuth applications can use this API method to reset a valid OAuth token without end-user involvement. Applications must save the "token" property in the response because changes take effect immediately. You must use [Basic Authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`. */
+  /** OAuth applications can use this API method to reset a valid OAuth token without end-user involvement. Applications must save the "token" property in the response because changes take effect immediately. You must use [Basic Authentication](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`. */
   "apps/reset-token": {
     parameters: {
       path: {
@@ -10520,9 +10095,9 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** GitHub Enterprise Server will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
+   * **Deprecation Notice:** GitHub AE will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
    *
-   * OAuth applications can use a special API method for checking OAuth token validity without exceeding the normal rate limits for failed login attempts. Authentication works differently with this particular endpoint. You must use [Basic Authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.
+   * OAuth applications can use a special API method for checking OAuth token validity without exceeding the normal rate limits for failed login attempts. Authentication works differently with this particular endpoint. You must use [Basic Authentication](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.
    */
   "apps/check-authorization": {
     parameters: {
@@ -10543,9 +10118,9 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** GitHub Enterprise Server will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
+   * **Deprecation Notice:** GitHub AE will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
    *
-   * OAuth applications can use this API method to reset a valid OAuth token without end-user involvement. Applications must save the "token" property in the response because changes take effect immediately. You must use [Basic Authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.
+   * OAuth applications can use this API method to reset a valid OAuth token without end-user involvement. Applications must save the "token" property in the response because changes take effect immediately. You must use [Basic Authentication](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.
    */
   "apps/reset-authorization": {
     parameters: {
@@ -10565,9 +10140,9 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** GitHub Enterprise Server will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
+   * **Deprecation Notice:** GitHub AE will discontinue OAuth endpoints that contain `access_token` in the path parameter. We have introduced new endpoints that allow you to securely manage tokens for OAuth Apps by moving `access_token` to the request body. For more information, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-app-endpoint/).
    *
-   * OAuth application owners can revoke a single token for an OAuth application. You must use [Basic Authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password.
+   * OAuth application owners can revoke a single token for an OAuth application. You must use [Basic Authentication](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password.
    */
   "apps/revoke-authorization-for-application": {
     parameters: {
@@ -10585,7 +10160,7 @@ export interface operations {
   /**
    * **Note**: The `:app_slug` is just the URL-friendly name of your GitHub App. You can find this on the settings page for your GitHub App (e.g., `https://github.com/settings/apps/:app_slug`).
    *
-   * If the GitHub App you specify is public, you can access this endpoint without authenticating. If the GitHub App you specify is private, you must authenticate with a [personal access token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) or an [installation access token](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
+   * If the GitHub App you specify is public, you can access this endpoint without authenticating. If the GitHub App you specify is private, you must authenticate with a [personal access token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) or an [installation access token](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
    */
   "apps/get-by-slug": {
     parameters: {
@@ -10603,272 +10178,6 @@ export interface operations {
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
       415: components["responses"]["preview_header_missing"];
-    };
-  };
-  /** **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/). */
-  "oauth-authorizations/list-authorizations": {
-    parameters: {
-      query: {
-        /** Results per page (max 100) */
-        per_page?: components["parameters"]["per-page"];
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
-        /** The client ID of your GitHub app. */
-        client_id?: string;
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        headers: {};
-        content: {
-          "application/json": components["schemas"]["authorization"][];
-        };
-      };
-      304: components["responses"]["not_modified"];
-      401: components["responses"]["requires_authentication"];
-      403: components["responses"]["forbidden"];
-      404: components["responses"]["not_found"];
-    };
-  };
-  /**
-   * **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@2.22/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
-   *
-   * **Warning:** Apps must use the [web application flow](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub Enterprise Server SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub Enterprise Server SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).
-   *
-   * Creates OAuth tokens using [Basic Authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#basic-authentication). If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see "[Working with two-factor authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#working-with-two-factor-authentication)."
-   *
-   * To create tokens for a particular OAuth application using this endpoint, you must authenticate as the user you want to create an authorization for and provide the app's client ID and secret, found on your OAuth application's settings page. If your OAuth application intends to create multiple tokens for one user, use `fingerprint` to differentiate between them.
-   *
-   * You can also create tokens on GitHub Enterprise Server from the [personal access tokens settings](https://github.com/settings/tokens) page. Read more about these tokens in [the GitHub Help documentation](https://help.github.com/articles/creating-an-access-token-for-command-line-use).
-   *
-   * Organizations that enforce SAML SSO require personal access tokens to be allowed. Read more about allowing tokens in [the GitHub Help documentation](https://help.github.com/articles/about-identity-and-access-management-with-saml-single-sign-on).
-   */
-  "oauth-authorizations/create-authorization": {
-    parameters: {};
-    responses: {
-      /** Response */
-      201: {
-        headers: {
-          Location?: string;
-        };
-        content: {
-          "application/json": components["schemas"]["authorization"];
-        };
-      };
-      304: components["responses"]["not_modified"];
-      401: components["responses"]["requires_authentication"];
-      403: components["responses"]["forbidden"];
-      410: components["responses"]["gone"];
-      422: components["responses"]["validation_failed"];
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** A list of scopes that this authorization is in. */
-          scopes?: string[] | null;
-          /** A note to remind you what the OAuth token is for. */
-          note?: string;
-          /** A URL to remind you what app the OAuth token is for. */
-          note_url?: string;
-          /** The OAuth app client key for which to create the token. */
-          client_id?: string;
-          /** The OAuth app client secret for which to create the token. */
-          client_secret?: string;
-          /** A unique string to distinguish an authorization from others created for the same client ID and user. */
-          fingerprint?: string;
-        };
-      };
-    };
-  };
-  /**
-   * **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@2.22/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
-   *
-   * **Warning:** Apps must use the [web application flow](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub Enterprise Server SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub Enterprise Server SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).
-   *
-   * Creates a new authorization for the specified OAuth application, only if an authorization for that application doesn't already exist for the user. The URL includes the 20 character client ID for the OAuth app that is requesting the token. It returns the user's existing authorization for the application if one is present. Otherwise, it creates and returns a new one.
-   *
-   * If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see "[Working with two-factor authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#working-with-two-factor-authentication)."
-   *
-   * **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@2.22/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
-   */
-  "oauth-authorizations/get-or-create-authorization-for-app": {
-    parameters: {
-      path: {
-        /** The client ID of your GitHub app. */
-        client_id: components["parameters"]["client-id"];
-      };
-    };
-    responses: {
-      /** if returning an existing token */
-      200: {
-        headers: {
-          Location?: string;
-        };
-        content: {
-          "application/json": components["schemas"]["authorization"];
-        };
-      };
-      /** **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/). */
-      201: {
-        headers: {
-          Location?: string;
-        };
-        content: {
-          "application/json": components["schemas"]["authorization"];
-        };
-      };
-      304: components["responses"]["not_modified"];
-      401: components["responses"]["requires_authentication"];
-      403: components["responses"]["forbidden"];
-      422: components["responses"]["validation_failed"];
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** The OAuth app client secret for which to create the token. */
-          client_secret: string;
-          /** A list of scopes that this authorization is in. */
-          scopes?: string[] | null;
-          /** A note to remind you what the OAuth token is for. */
-          note?: string;
-          /** A URL to remind you what app the OAuth token is for. */
-          note_url?: string;
-          /** A unique string to distinguish an authorization from others created for the same client ID and user. */
-          fingerprint?: string;
-        };
-      };
-    };
-  };
-  /**
-   * **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@2.22/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
-   *
-   * **Warning:** Apps must use the [web application flow](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub Enterprise Server SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub Enterprise Server SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).
-   *
-   * This method will create a new authorization for the specified OAuth application, only if an authorization for that application and fingerprint do not already exist for the user. The URL includes the 20 character client ID for the OAuth app that is requesting the token. `fingerprint` is a unique string to distinguish an authorization from others created for the same client ID and user. It returns the user's existing authorization for the application if one is present. Otherwise, it creates and returns a new one.
-   *
-   * If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see "[Working with two-factor authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#working-with-two-factor-authentication)."
-   */
-  "oauth-authorizations/get-or-create-authorization-for-app-and-fingerprint": {
-    parameters: {
-      path: {
-        /** The client ID of your GitHub app. */
-        client_id: components["parameters"]["client-id"];
-        fingerprint: string;
-      };
-    };
-    responses: {
-      /** if returning an existing token */
-      200: {
-        headers: {
-          Location?: string;
-        };
-        content: {
-          "application/json": components["schemas"]["authorization"];
-        };
-      };
-      /** Response if returning a new token */
-      201: {
-        headers: {
-          Location?: string;
-        };
-        content: {
-          "application/json": components["schemas"]["authorization"];
-        };
-      };
-      422: components["responses"]["validation_failed"];
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** The OAuth app client secret for which to create the token. */
-          client_secret: string;
-          /** A list of scopes that this authorization is in. */
-          scopes?: string[] | null;
-          /** A note to remind you what the OAuth token is for. */
-          note?: string;
-          /** A URL to remind you what app the OAuth token is for. */
-          note_url?: string;
-        };
-      };
-    };
-  };
-  /** **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/). */
-  "oauth-authorizations/get-authorization": {
-    parameters: {
-      path: {
-        /** authorization_id parameter */
-        authorization_id: components["parameters"]["authorization-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["authorization"];
-        };
-      };
-      304: components["responses"]["not_modified"];
-      401: components["responses"]["requires_authentication"];
-      403: components["responses"]["forbidden"];
-    };
-  };
-  /** **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/). */
-  "oauth-authorizations/delete-authorization": {
-    parameters: {
-      path: {
-        /** authorization_id parameter */
-        authorization_id: components["parameters"]["authorization-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      204: never;
-      304: components["responses"]["not_modified"];
-      401: components["responses"]["requires_authentication"];
-      403: components["responses"]["forbidden"];
-    };
-  };
-  /**
-   * **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@2.22/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@2.22/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
-   *
-   * If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see "[Working with two-factor authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#working-with-two-factor-authentication)."
-   *
-   * You can only send one of these scope keys at a time.
-   */
-  "oauth-authorizations/update-authorization": {
-    parameters: {
-      path: {
-        /** authorization_id parameter */
-        authorization_id: components["parameters"]["authorization-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["authorization"];
-        };
-      };
-      422: components["responses"]["validation_failed"];
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** A list of scopes that this authorization is in. */
-          scopes?: string[] | null;
-          /** A list of scopes to add to this authorization. */
-          add_scopes?: string[];
-          /** A list of scopes to remove from this authorization. */
-          remove_scopes?: string[];
-          /** A note to remind you what the OAuth token is for. */
-          note?: string;
-          /** A URL to remind you what app the OAuth token is for. */
-          note_url?: string;
-          /** A unique string to distinguish an authorization from others created for the same client ID and user. */
-          fingerprint?: string;
-        };
-      };
     };
   };
   "codes-of-conduct/get-all-codes-of-conduct": {
@@ -10900,7 +10209,7 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Lists all the emojis available to use on GitHub Enterprise Server. */
+  /** Lists all the emojis available to use on GitHub AE. */
   "emojis/get": {
     parameters: {};
     responses: {
@@ -10911,6 +10220,40 @@ export interface operations {
         };
       };
       304: components["responses"]["not_modified"];
+    };
+  };
+  /** Gets the current message and expiration date of the global announcement banner in your enterprise. */
+  "enterprise-admin/get-announcement": {
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["announcement"];
+        };
+      };
+    };
+  };
+  /** Removes the global announcement banner in your enterprise. */
+  "enterprise-admin/remove-announcement": {
+    responses: {
+      /** Response */
+      204: never;
+    };
+  };
+  /** Sets the message and expiration time for the global announcement banner in your enterprise. */
+  "enterprise-admin/set-announcement": {
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["announcement"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["announcement"];
+      };
     };
   };
   "enterprise-admin/get-license-information": {
@@ -11020,6 +10363,188 @@ export interface operations {
         content: {
           "application/json": components["schemas"]["enterprise-user-overview"];
         };
+      };
+    };
+  };
+  /**
+   * Gets the GitHub Actions permissions policy for organizations and allowed actions in an enterprise.
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   */
+  "enterprise-admin/get-github-actions-permissions-enterprise": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["actions-enterprise-permissions"];
+        };
+      };
+    };
+  };
+  /**
+   * Sets the GitHub Actions permissions policy for organizations and allowed actions in an enterprise.
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   */
+  "enterprise-admin/set-github-actions-permissions-enterprise": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          enabled_organizations: components["schemas"]["enabled-organizations"];
+          allowed_actions?: components["schemas"]["allowed-actions"];
+        };
+      };
+    };
+  };
+  /**
+   * Lists the organizations that are selected to have GitHub Actions enabled in an enterprise. To use this endpoint, the enterprise permission policy for `enabled_organizations` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   */
+  "enterprise-admin/list-selected-organizations-enabled-github-actions-enterprise": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+      };
+      query: {
+        /** Results per page (max 100) */
+        per_page?: components["parameters"]["per-page"];
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": {
+            total_count: number;
+            organizations: components["schemas"]["organization-simple"][];
+          };
+        };
+      };
+    };
+  };
+  /**
+   * Replaces the list of selected organizations that are enabled for GitHub Actions in an enterprise. To use this endpoint, the enterprise permission policy for `enabled_organizations` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   */
+  "enterprise-admin/set-selected-organizations-enabled-github-actions-enterprise": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** List of organization IDs to enable for GitHub Actions. */
+          selected_organization_ids: number[];
+        };
+      };
+    };
+  };
+  /**
+   * Adds an organization to the list of selected organizations that are enabled for GitHub Actions in an enterprise. To use this endpoint, the enterprise permission policy for `enabled_organizations` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   */
+  "enterprise-admin/enable-selected-organization-github-actions-enterprise": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+        /** Unique identifier of an organization. */
+        org_id: components["parameters"]["org-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+    };
+  };
+  /**
+   * Removes an organization from the list of selected organizations that are enabled for GitHub Actions in an enterprise. To use this endpoint, the enterprise permission policy for `enabled_organizations` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   */
+  "enterprise-admin/disable-selected-organization-github-actions-enterprise": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+        /** Unique identifier of an organization. */
+        org_id: components["parameters"]["org-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+    };
+  };
+  /**
+   * Gets the selected actions that are allowed in an enterprise. To use this endpoint, the enterprise permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   */
+  "enterprise-admin/get-allowed-actions-enterprise": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["selected-actions"];
+        };
+      };
+    };
+  };
+  /**
+   * Sets the actions that are allowed in an enterprise. To use this endpoint, the enterprise permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an enterprise](#set-github-actions-permissions-for-an-enterprise)."
+   *
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   */
+  "enterprise-admin/set-allowed-actions-enterprise": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["selected-actions"];
       };
     };
   };
@@ -11164,107 +10689,6 @@ export interface operations {
     };
   };
   /**
-   * Lists the organizations with access to a self-hosted runner group.
-   *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
-   */
-  "enterprise-admin/list-org-access-to-self-hosted-runner-group-in-enterprise": {
-    parameters: {
-      path: {
-        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
-        enterprise: components["parameters"]["enterprise"];
-        /** Unique identifier of the self-hosted runner group. */
-        runner_group_id: components["parameters"]["runner-group-id"];
-      };
-      query: {
-        /** Results per page (max 100) */
-        per_page?: components["parameters"]["per-page"];
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": {
-            total_count: number;
-            organizations: components["schemas"]["organization-simple"][];
-          };
-        };
-      };
-    };
-  };
-  /**
-   * Replaces the list of organizations that have access to a self-hosted runner configured in an enterprise.
-   *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
-   */
-  "enterprise-admin/set-org-access-to-self-hosted-runner-group-in-enterprise": {
-    parameters: {
-      path: {
-        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
-        enterprise: components["parameters"]["enterprise"];
-        /** Unique identifier of the self-hosted runner group. */
-        runner_group_id: components["parameters"]["runner-group-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      204: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** List of organization IDs that can access the runner group. */
-          selected_organization_ids: number[];
-        };
-      };
-    };
-  };
-  /**
-   * Adds an organization to the list of selected organizations that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an enterprise](#create-a-self-hosted-runner-group-for-an-enterprise)."
-   *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
-   */
-  "enterprise-admin/add-org-access-to-self-hosted-runner-group-in-enterprise": {
-    parameters: {
-      path: {
-        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
-        enterprise: components["parameters"]["enterprise"];
-        /** Unique identifier of the self-hosted runner group. */
-        runner_group_id: components["parameters"]["runner-group-id"];
-        /** Unique identifier of an organization. */
-        org_id: components["parameters"]["org-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      204: never;
-    };
-  };
-  /**
-   * Removes an organization from the list of selected organizations that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an enterprise](#create-a-self-hosted-runner-group-for-an-enterprise)."
-   *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
-   */
-  "enterprise-admin/remove-org-access-to-self-hosted-runner-group-in-enterprise": {
-    parameters: {
-      path: {
-        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
-        enterprise: components["parameters"]["enterprise"];
-        /** Unique identifier of the self-hosted runner group. */
-        runner_group_id: components["parameters"]["runner-group-id"];
-        /** Unique identifier of an organization. */
-        org_id: components["parameters"]["org-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      204: never;
-    };
-  };
-  /**
    * Lists the self-hosted runners that are in a specific enterprise group.
    *
    * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
@@ -11291,7 +10715,7 @@ export interface operations {
         content: {
           "application/json": {
             total_count: number;
-            runners: components["schemas"]["runner-no-labels"][];
+            runners: components["schemas"]["runner"][];
           };
         };
       };
@@ -11392,88 +10816,8 @@ export interface operations {
         content: {
           "application/json": {
             total_count?: number;
-            runners?: components["schemas"]["runner-no-labels"][];
+            runners?: components["schemas"]["runner"][];
           };
-        };
-      };
-    };
-  };
-  /**
-   * Lists binaries for the runner application that you can download and run.
-   *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
-   */
-  "enterprise-admin/list-runner-applications-for-enterprise": {
-    parameters: {
-      path: {
-        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
-        enterprise: components["parameters"]["enterprise"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["runner-application"][];
-        };
-      };
-    };
-  };
-  /**
-   * Returns a token that you can pass to the `config` script. The token expires after one hour.
-   *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
-   *
-   * #### Example using registration token
-   *
-   * Configure your self-hosted runner, replacing `TOKEN` with the registration token provided by this endpoint.
-   *
-   * ```
-   * ./config.sh --url https://github.com/enterprises/octo-enterprise --token TOKEN
-   * ```
-   */
-  "enterprise-admin/create-registration-token-for-enterprise": {
-    parameters: {
-      path: {
-        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
-        enterprise: components["parameters"]["enterprise"];
-      };
-    };
-    responses: {
-      /** Response */
-      201: {
-        content: {
-          "application/json": components["schemas"]["authentication-token"];
-        };
-      };
-    };
-  };
-  /**
-   * Returns a token that you can pass to the `config` script to remove a self-hosted runner from an enterprise. The token expires after one hour.
-   *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
-   *
-   * #### Example using remove token
-   *
-   * To remove your self-hosted runner from an enterprise, replace `TOKEN` with the remove token provided by this
-   * endpoint.
-   *
-   * ```
-   * ./config.sh remove --token TOKEN
-   * ```
-   */
-  "enterprise-admin/create-remove-token-for-enterprise": {
-    parameters: {
-      path: {
-        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
-        enterprise: components["parameters"]["enterprise"];
-      };
-    };
-    responses: {
-      /** Response */
-      201: {
-        content: {
-          "application/json": components["schemas"]["authentication-token"];
         };
       };
     };
@@ -11496,7 +10840,7 @@ export interface operations {
       /** Response */
       200: {
         content: {
-          "application/json": components["schemas"]["runner-no-labels"];
+          "application/json": components["schemas"]["runner"];
         };
       };
     };
@@ -11520,40 +10864,18 @@ export interface operations {
       204: never;
     };
   };
-  /** We delay the public events feed by five minutes, which means the most recent event returned by the public events API actually occurred at least five minutes ago. */
-  "activity/list-public-events": {
-    parameters: {
-      query: {
-        /** Results per page (max 100) */
-        per_page?: components["parameters"]["per-page"];
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["event"][];
-        };
-      };
-      304: components["responses"]["not_modified"];
-      403: components["responses"]["forbidden"];
-      503: components["responses"]["service_unavailable"];
-    };
-  };
   /**
-   * GitHub Enterprise Server provides several timeline resources in [Atom](http://en.wikipedia.org/wiki/Atom_(standard)) format. The Feeds API lists all the feeds available to the authenticated user:
+   * GitHub AE provides several timeline resources in [Atom](http://en.wikipedia.org/wiki/Atom_(standard)) format. The Feeds API lists all the feeds available to the authenticated user:
    *
-   * *   **Timeline**: The GitHub Enterprise Server global public timeline
-   * *   **User**: The public timeline for any user, using [URI template](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#hypermedia)
+   * *   **Timeline**: The GitHub AE global public timeline
+   * *   **User**: The public timeline for any user, using [URI template](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#hypermedia)
    * *   **Current user public**: The public timeline for the authenticated user
    * *   **Current user**: The private timeline for the authenticated user
    * *   **Current user actor**: The private timeline for activity created by the authenticated user
    * *   **Current user organizations**: The private timeline for the organizations the authenticated user is a member of.
-   * *   **Security advisories**: A collection of public announcements that provide information about security-related vulnerabilities in software on GitHub Enterprise Server.
+   * *   **Security advisories**: A collection of public announcements that provide information about security-related vulnerabilities in software on GitHub AE.
    *
-   * **Note**: Private feeds are only returned when [authenticating via Basic Auth](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#basic-authentication) since current feed URIs use the older, non revocable auth tokens.
+   * **Note**: Private feeds are only returned when [authenticating via Basic Auth](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication) since current feed URIs use the older, non revocable auth tokens.
    */
   "activity/get-feeds": {
     parameters: {};
@@ -11632,7 +10954,7 @@ export interface operations {
   /**
    * List public gists sorted by most recently updated to least recently updated.
    *
-   * Note: With [pagination](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#pagination), you can fetch up to 3000 gists. For example, you can fetch 100 pages with 30 gists per page or 30 pages with 100 gists per page.
+   * Note: With [pagination](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination), you can fetch up to 3000 gists. For example, you can fetch 100 pages with 30 gists per page or 30 pages with 100 gists per page.
    */
   "gists/list-public": {
     parameters: {
@@ -11965,7 +11287,7 @@ export interface operations {
       };
     };
   };
-  /** Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs)." */
+  /** Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)." */
   "gists/star": {
     parameters: {
       path: {
@@ -12016,7 +11338,7 @@ export interface operations {
       422: components["responses"]["validation_failed"];
     };
   };
-  /** List all templates available to pass as an option when [creating a repository](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#create-a-repository-for-the-authenticated-user). */
+  /** List all templates available to pass as an option when [creating a repository](https://docs.github.com/github-ae@latest/rest/reference/repos#create-a-repository-for-the-authenticated-user). */
   "gitignore/get-all-templates": {
     parameters: {};
     responses: {
@@ -12031,7 +11353,7 @@ export interface operations {
   };
   /**
    * The API also allows fetching the source of a single template.
-   * Use the raw [media type](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types/) to get the raw contents.
+   * Use the raw [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/) to get the raw contents.
    */
   "gitignore/get-template": {
     parameters: {
@@ -12052,7 +11374,7 @@ export interface operations {
   /**
    * List repositories that an app installation can access.
    *
-   * You must use an [installation access token](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
+   * You must use an [installation access token](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
    */
   "apps/list-repos-accessible-to-installation": {
     parameters: {
@@ -12083,9 +11405,9 @@ export interface operations {
   /**
    * Revokes the installation token you're using to authenticate as an installation and access this endpoint.
    *
-   * Once an installation token is revoked, the token is invalidated and cannot be used. Other endpoints that require the revoked installation token must have a new installation token to work. You can create a new token using the "[Create an installation access token for an app](https://docs.github.com/enterprise-server@2.22/rest/reference/apps#create-an-installation-access-token-for-an-app)" endpoint.
+   * Once an installation token is revoked, the token is invalidated and cannot be used. Other endpoints that require the revoked installation token must have a new installation token to work. You can create a new token using the "[Create an installation access token for an app](https://docs.github.com/github-ae@latest/rest/reference/apps#create-an-installation-access-token-for-an-app)" endpoint.
    *
-   * You must use an [installation access token](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
+   * You must use an [installation access token](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
    */
   "apps/revoke-installation-access-token": {
     parameters: {};
@@ -12103,7 +11425,7 @@ export interface operations {
    * **Note**: GitHub's REST API v3 considers every pull request an issue, but not every issue is a pull request. For this
    * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
    * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
-   * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#list-pull-requests)" endpoint.
+   * request id, use the "[List pull requests](https://docs.github.com/github-ae@latest/rest/reference/pulls#list-pull-requests)" endpoint.
    */
   "issues/list": {
     parameters: {
@@ -12241,6 +11563,11 @@ export interface operations {
       };
     };
   };
+  /**
+   * Returns meta information about GitHub, including a list of GitHub's IP addresses. For more information, see "[About GitHub's IP addresses](https://help.github.com/articles/about-github-s-ip-addresses/)."
+   *
+   * **Note:** The IP addresses shown in the documentation's response are only example values. You must always query the API directly to get the latest list of IP addresses.
+   */
   "meta/get": {
     parameters: {};
     responses: {
@@ -12251,32 +11578,6 @@ export interface operations {
         };
       };
       304: components["responses"]["not_modified"];
-    };
-  };
-  "activity/list-public-events-for-repo-network": {
-    parameters: {
-      path: {
-        owner: components["parameters"]["owner"];
-        repo: components["parameters"]["repo"];
-      };
-      query: {
-        /** Results per page (max 100) */
-        per_page?: components["parameters"]["per-page"];
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["event"][];
-        };
-      };
-      301: components["responses"]["moved_permanently"];
-      304: components["responses"]["not_modified"];
-      403: components["responses"]["forbidden"];
-      404: components["responses"]["not_found"];
     };
   };
   /** List all notifications for the current user, sorted by most recently updated. */
@@ -12311,7 +11612,7 @@ export interface operations {
       422: components["responses"]["validation_failed"];
     };
   };
-  /** Marks all notifications as "read" removes it from the [default view on GitHub Enterprise Server](https://github.com/notifications). If the number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub Enterprise Server will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain, you can use the [List notifications for the authenticated user](https://docs.github.com/enterprise-server@2.22/rest/reference/activity#list-notifications-for-the-authenticated-user) endpoint and pass the query parameter `all=false`. */
+  /** Marks all notifications as "read" removes it from the [default view on GitHub AE](https://github.com/notifications). If the number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub AE will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain, you can use the [List notifications for the authenticated user](https://docs.github.com/github-ae@latest/rest/reference/activity#list-notifications-for-the-authenticated-user) endpoint and pass the query parameter `all=false`. */
   "activity/mark-notifications-as-read": {
     parameters: {};
     responses: {
@@ -12374,7 +11675,7 @@ export interface operations {
     };
   };
   /**
-   * This checks to see if the current user is subscribed to a thread. You can also [get a repository subscription](https://docs.github.com/enterprise-server@2.22/rest/reference/activity#get-a-repository-subscription).
+   * This checks to see if the current user is subscribed to a thread. You can also [get a repository subscription](https://docs.github.com/github-ae@latest/rest/reference/activity#get-a-repository-subscription).
    *
    * Note that subscriptions are only generated if a user is participating in a conversation--for example, they've replied to the thread, were **@mentioned**, or manually subscribe to a thread.
    */
@@ -12402,7 +11703,7 @@ export interface operations {
    *
    * You can also use this endpoint to subscribe to threads that you are currently not receiving notifications for or to subscribed to threads that you have previously ignored.
    *
-   * Unsubscribing from a conversation in a repository that you are not watching is functionally equivalent to the [Delete a thread subscription](https://docs.github.com/enterprise-server@2.22/rest/reference/activity#delete-a-thread-subscription) endpoint.
+   * Unsubscribing from a conversation in a repository that you are not watching is functionally equivalent to the [Delete a thread subscription](https://docs.github.com/github-ae@latest/rest/reference/activity#delete-a-thread-subscription) endpoint.
    */
   "activity/set-thread-subscription": {
     parameters: {
@@ -12431,7 +11732,7 @@ export interface operations {
       };
     };
   };
-  /** Mutes all future notifications for a conversation until you comment on the thread or get an **@mention**. If you are watching the repository of the thread, you will still receive notifications. To ignore future notifications for a repository you are watching, use the [Set a thread subscription](https://docs.github.com/enterprise-server@2.22/rest/reference/activity#set-a-thread-subscription) endpoint and set `ignore` to `true`. */
+  /** Mutes all future notifications for a conversation until you comment on the thread or get an **@mention**. If you are watching the repository of the thread, you will still receive notifications. To ignore future notifications for a repository you are watching, use the [Set a thread subscription](https://docs.github.com/github-ae@latest/rest/reference/activity#set-a-thread-subscription) endpoint and set `ignore` to `true`. */
   "activity/delete-thread-subscription": {
     parameters: {
       path: {
@@ -12465,9 +11766,9 @@ export interface operations {
     };
   };
   /**
-   * Lists all organizations, in the order that they were created on GitHub Enterprise Server.
+   * Lists all organizations, in the order that they were created on GitHub AE.
    *
-   * **Note:** Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of organizations.
+   * **Note:** Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of organizations.
    */
   "orgs/list": {
     parameters: {
@@ -12494,7 +11795,7 @@ export interface operations {
   /**
    * To see many of the organization response values, you need to be an authenticated organization owner with the `admin:org` scope. When the value of `two_factor_requirement_enabled` is `true`, the organization requires all members, billing managers, and outside collaborators to enable [two-factor authentication](https://help.github.com/articles/securing-your-account-with-two-factor-authentication-2fa/).
    *
-   * GitHub Apps with the `Organization plan` permission can use this endpoint to retrieve information about an organization's GitHub Enterprise Server plan. See "[Authenticating with GitHub Apps](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/)" for details. For an example response, see 'Response with GitHub Enterprise Server plan information' below."
+   * GitHub Apps with the `Organization plan` permission can use this endpoint to retrieve information about an organization's GitHub AE plan. See "[Authenticating with GitHub Apps](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/)" for details. For an example response, see 'Response with GitHub AE plan information' below."
    */
   "orgs/get": {
     parameters: {
@@ -12513,7 +11814,7 @@ export interface operations {
     };
   };
   /**
-   * **Parameter Deprecation Notice:** GitHub Enterprise Server will replace and discontinue `members_allowed_repository_creation_type` in favor of more granular permissions. The new input parameters are `members_can_create_public_repositories`, `members_can_create_private_repositories` for all organizations and `members_can_create_internal_repositories` for organizations associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes).
+   * **Parameter Deprecation Notice:** GitHub AE will replace and discontinue `members_allowed_repository_creation_type` in favor of more granular permissions. The new input parameters are `members_can_create_public_repositories`, `members_can_create_private_repositories` for all organizations and `members_can_create_internal_repositories` for organizations associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes).
    *
    * Enables an authenticated organization owner with the `admin:org` scope to update the organization's profile and member privileges.
    */
@@ -12607,16 +11908,81 @@ export interface operations {
            * **Note:** This parameter is deprecated and will be removed in the future. Its return value ignores internal repositories. Using this parameter overrides values set in `members_can_create_repositories`. See the parameter deprecation notice in the operation description for details.
            */
           members_allowed_repository_creation_type?: "all" | "private" | "none";
+          /**
+           * Toggles whether organization members can create GitHub Pages sites. Can be one of:
+           * \* `true` - all organization members can create GitHub Pages sites.
+           * \* `false` - no organization members can create GitHub Pages sites. Existing published sites will not be impacted.
+           */
+          members_can_create_pages?: boolean;
+          /**
+           * Toggles whether organization members can create public GitHub Pages sites. Can be one of:
+           * \* `true` - all organization members can create public GitHub Pages sites.
+           * \* `false` - no organization members can create public GitHub Pages sites. Existing published sites will not be impacted.
+           */
+          members_can_create_public_pages?: boolean;
+          /**
+           * Toggles whether organization members can create private GitHub Pages sites. Can be one of:
+           * \* `true` - all organization members can create private GitHub Pages sites.
+           * \* `false` - no organization members can create private GitHub Pages sites. Existing published sites will not be impacted.
+           */
+          members_can_create_private_pages?: boolean;
           blog?: string;
         };
       };
     };
   };
   /**
-   * Lists all self-hosted runner groups configured in an organization and inherited from an enterprise.
-   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * Gets the GitHub Actions permissions policy for repositories and allowed actions in an organization.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
    */
-  "actions/list-self-hosted-runner-groups-for-org": {
+  "actions/get-github-actions-permissions-organization": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["actions-organization-permissions"];
+        };
+      };
+    };
+  };
+  /**
+   * Sets the GitHub Actions permissions policy for repositories and allowed actions in an organization.
+   *
+   * If the organization belongs to an enterprise that has set restrictive permissions at the enterprise level, such as `allowed_actions` to `selected` actions, then you cannot override them for the organization.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+   */
+  "actions/set-github-actions-permissions-organization": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          enabled_repositories: components["schemas"]["enabled-repositories"];
+          allowed_actions?: components["schemas"]["allowed-actions"];
+        };
+      };
+    };
+  };
+  /**
+   * Lists the selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint, the organization permission policy for `enabled_repositories` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+   */
+  "actions/list-selected-repositories-enabled-github-actions-organization": {
     parameters: {
       path: {
         org: components["parameters"]["org"];
@@ -12634,9 +12000,112 @@ export interface operations {
         content: {
           "application/json": {
             total_count: number;
-            runner_groups: components["schemas"]["runner-groups-org"][];
+            repositories: components["schemas"]["repository"][];
           };
         };
+      };
+    };
+  };
+  /**
+   * Replaces the list of selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint, the organization permission policy for `enabled_repositories` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+   */
+  "actions/set-selected-repositories-enabled-github-actions-organization": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** List of repository IDs to enable for GitHub Actions. */
+          selected_repository_ids: number[];
+        };
+      };
+    };
+  };
+  /**
+   * Adds a repository to the list of selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint, the organization permission policy for `enabled_repositories` must be must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+   */
+  "actions/enable-selected-repository-github-actions-organization": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+        repository_id: components["parameters"]["repository-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+    };
+  };
+  /**
+   * Removes a repository from the list of selected repositories that are enabled for GitHub Actions in an organization. To use this endpoint, the organization permission policy for `enabled_repositories` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+   */
+  "actions/disable-selected-repository-github-actions-organization": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+        repository_id: components["parameters"]["repository-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+    };
+  };
+  /**
+   * Gets the selected actions that are allowed in an organization. To use this endpoint, the organization permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization).""
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+   */
+  "actions/get-allowed-actions-organization": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["selected-actions"];
+        };
+      };
+    };
+  };
+  /**
+   * Sets the actions that are allowed in an organization. To use this endpoint, the organization permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for an organization](#set-github-actions-permissions-for-an-organization)."
+   *
+   * If the organization belongs to an enterprise that has `selected` actions set at the enterprise level, then you cannot override any of the enterprise's allowed actions settings.
+   *
+   * To use the `patterns_allowed` setting for private repositories, the organization must belong to an enterprise. If the organization does not belong to an enterprise, then the `patterns_allowed` setting only applies to public repositories in the organization.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `administration` organization permission to use this API.
+   */
+  "actions/set-allowed-actions-organization": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["selected-actions"];
       };
     };
   };
@@ -12677,28 +12146,10 @@ export interface operations {
     };
   };
   /**
-   * Gets a specific self-hosted runner group for an organization.
-   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-   */
-  "actions/get-self-hosted-runner-group-for-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        /** Unique identifier of the self-hosted runner group. */
-        runner_group_id: components["parameters"]["runner-group-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["runner-groups-org"];
-        };
-      };
-    };
-  };
-  /**
+   * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+   *
    * Deletes a self-hosted runner group for an organization.
+   *
    * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
    */
   "actions/delete-self-hosted-runner-group-from-org": {
@@ -12715,7 +12166,10 @@ export interface operations {
     };
   };
   /**
+   * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
+   *
    * Updates the `name` and `visibility` of a self-hosted runner group in an organization.
+   *
    * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
    */
   "actions/update-self-hosted-runner-group-for-org": {
@@ -12741,323 +12195,6 @@ export interface operations {
           name?: string;
           /** Visibility of a runner group. You can select all repositories, select individual repositories, or all private repositories. Can be one of: `all`, `selected`, or `private`. */
           visibility?: "selected" | "all" | "private";
-        };
-      };
-    };
-  };
-  /**
-   * The self-hosted runner groups REST API is available with GitHub Enterprise Cloud and GitHub Enterprise Server. For more information, see "[GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products)."
-   *
-   * Lists the repositories with access to a self-hosted runner group configured in an organization.
-   *
-   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-   */
-  "actions/list-repo-access-to-self-hosted-runner-group-in-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        /** Unique identifier of the self-hosted runner group. */
-        runner_group_id: components["parameters"]["runner-group-id"];
-      };
-      query: {
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
-        /** Results per page (max 100) */
-        per_page?: components["parameters"]["per-page"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": {
-            total_count: number;
-            repositories: components["schemas"]["minimal-repository"][];
-          };
-        };
-      };
-    };
-  };
-  /**
-   * Replaces the list of repositories that have access to a self-hosted runner group configured in an organization.
-   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-   */
-  "actions/set-repo-access-to-self-hosted-runner-group-in-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        /** Unique identifier of the self-hosted runner group. */
-        runner_group_id: components["parameters"]["runner-group-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      204: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** List of repository IDs that can access the runner group. */
-          selected_repository_ids: number[];
-        };
-      };
-    };
-  };
-  /**
-   * Adds a repository to the list of selected repositories that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an organization](#create-a-self-hosted-runner-group-for-an-organization)."
-   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-   */
-  "actions/add-repo-access-to-self-hosted-runner-group-in-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        /** Unique identifier of the self-hosted runner group. */
-        runner_group_id: components["parameters"]["runner-group-id"];
-        repository_id: components["parameters"]["repository-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      204: never;
-    };
-  };
-  /**
-   * Removes a repository from the list of selected repositories that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an organization](#create-a-self-hosted-runner-group-for-an-organization)."
-   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-   */
-  "actions/remove-repo-access-to-self-hosted-runner-group-in-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        /** Unique identifier of the self-hosted runner group. */
-        runner_group_id: components["parameters"]["runner-group-id"];
-        repository_id: components["parameters"]["repository-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      204: never;
-    };
-  };
-  /**
-   * Lists self-hosted runners that are in a specific organization group.
-   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-   */
-  "actions/list-self-hosted-runners-in-group-for-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        /** Unique identifier of the self-hosted runner group. */
-        runner_group_id: components["parameters"]["runner-group-id"];
-      };
-      query: {
-        /** Results per page (max 100) */
-        per_page?: components["parameters"]["per-page"];
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        headers: {};
-        content: {
-          "application/json": {
-            total_count: number;
-            runners: components["schemas"]["runner-no-labels"][];
-          };
-        };
-      };
-    };
-  };
-  /**
-   * Replaces the list of self-hosted runners that are part of an organization runner group.
-   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-   */
-  "actions/set-self-hosted-runners-in-group-for-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        /** Unique identifier of the self-hosted runner group. */
-        runner_group_id: components["parameters"]["runner-group-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      204: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** List of runner IDs to add to the runner group. */
-          runners: number[];
-        };
-      };
-    };
-  };
-  /**
-   * Adds a self-hosted runner to a runner group configured in an organization.
-   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-   */
-  "actions/add-self-hosted-runner-to-group-for-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        /** Unique identifier of the self-hosted runner group. */
-        runner_group_id: components["parameters"]["runner-group-id"];
-        /** Unique identifier of the self-hosted runner. */
-        runner_id: components["parameters"]["runner-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      204: never;
-    };
-  };
-  /**
-   * Removes a self-hosted runner from a group configured in an organization. The runner is then returned to the default group.
-   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-   */
-  "actions/remove-self-hosted-runner-from-group-for-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        /** Unique identifier of the self-hosted runner group. */
-        runner_group_id: components["parameters"]["runner-group-id"];
-        /** Unique identifier of the self-hosted runner. */
-        runner_id: components["parameters"]["runner-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      204: never;
-    };
-  };
-  /**
-   * Lists all self-hosted runners configured in an organization.
-   *
-   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-   */
-  "actions/list-self-hosted-runners-for-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-      };
-      query: {
-        /** Results per page (max 100) */
-        per_page?: components["parameters"]["per-page"];
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        headers: {};
-        content: {
-          "application/json": {
-            total_count: number;
-            runners: components["schemas"]["runner-no-labels"][];
-          };
-        };
-      };
-    };
-  };
-  /**
-   * Lists binaries for the runner application that you can download and run.
-   *
-   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-   */
-  "actions/list-runner-applications-for-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["runner-application"][];
-        };
-      };
-    };
-  };
-  /**
-   * Returns a token that you can pass to the `config` script. The token expires after one hour.
-   *
-   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-   *
-   * #### Example using registration token
-   *
-   * Configure your self-hosted runner, replacing `TOKEN` with the registration token provided by this endpoint.
-   *
-   * ```
-   * ./config.sh --url https://github.com/octo-org --token TOKEN
-   * ```
-   */
-  "actions/create-registration-token-for-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-      };
-    };
-    responses: {
-      /** Response */
-      201: {
-        content: {
-          "application/json": components["schemas"]["authentication-token"];
-        };
-      };
-    };
-  };
-  /**
-   * Returns a token that you can pass to the `config` script to remove a self-hosted runner from an organization. The token expires after one hour.
-   *
-   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-   *
-   * #### Example using remove token
-   *
-   * To remove your self-hosted runner from an organization, replace `TOKEN` with the remove token provided by this
-   * endpoint.
-   *
-   * ```
-   * ./config.sh remove --token TOKEN
-   * ```
-   */
-  "actions/create-remove-token-for-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-      };
-    };
-    responses: {
-      /** Response */
-      201: {
-        content: {
-          "application/json": components["schemas"]["authentication-token"];
-        };
-      };
-    };
-  };
-  /**
-   * Gets a specific self-hosted runner configured in an organization.
-   *
-   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-   */
-  "actions/get-self-hosted-runner-for-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        /** Unique identifier of the self-hosted runner. */
-        runner_id: components["parameters"]["runner-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["runner-no-labels"];
         };
       };
     };
@@ -13238,7 +12375,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get an organization public key](https://docs.github.com/enterprise-server@2.22/rest/reference/actions#get-an-organization-public-key) endpoint. */
+          /** Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get an organization public key](https://docs.github.com/github-ae@latest/rest/reference/actions#get-an-organization-public-key) endpoint. */
           encrypted_value?: string;
           /** ID of the key you used to encrypt the secret. */
           key_id?: string;
@@ -13249,7 +12386,7 @@ export interface operations {
            * \- `selected` - Only specific repositories can access the secret.
            */
           visibility: "all" | "private" | "selected";
-          /** An array of repository ids that can access the organization secret. You can only provide a list of repository ids when the `visibility` is set to `selected`. You can manage the list of selected repositories using the [List selected repositories for an organization secret](https://docs.github.com/enterprise-server@2.22/rest/reference/actions#list-selected-repositories-for-an-organization-secret), [Set selected repositories for an organization secret](https://docs.github.com/enterprise-server@2.22/rest/reference/actions#set-selected-repositories-for-an-organization-secret), and [Remove selected repository from an organization secret](https://docs.github.com/enterprise-server@2.22/rest/reference/actions#remove-selected-repository-from-an-organization-secret) endpoints. */
+          /** An array of repository ids that can access the organization secret. You can only provide a list of repository ids when the `visibility` is set to `selected`. You can manage the list of selected repositories using the [List selected repositories for an organization secret](https://docs.github.com/github-ae@latest/rest/reference/actions#list-selected-repositories-for-an-organization-secret), [Set selected repositories for an organization secret](https://docs.github.com/github-ae@latest/rest/reference/actions#set-selected-repositories-for-an-organization-secret), and [Remove selected repository from an organization secret](https://docs.github.com/github-ae@latest/rest/reference/actions#remove-selected-repository-from-an-organization-secret) endpoints. */
           selected_repository_ids?: string[];
         };
       };
@@ -13296,7 +12433,7 @@ export interface operations {
       };
     };
   };
-  /** Replaces all repositories for an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-server@2.22/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint. */
+  /** Replaces all repositories for an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/github-ae@latest/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint. */
   "actions/set-selected-repos-for-org-secret": {
     parameters: {
       path: {
@@ -13312,13 +12449,13 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** An array of repository ids that can access the organization secret. You can only provide a list of repository ids when the `visibility` is set to `selected`. You can add and remove individual repositories using the [Set selected repositories for an organization secret](https://docs.github.com/enterprise-server@2.22/rest/reference/actions#set-selected-repositories-for-an-organization-secret) and [Remove selected repository from an organization secret](https://docs.github.com/enterprise-server@2.22/rest/reference/actions#remove-selected-repository-from-an-organization-secret) endpoints. */
+          /** An array of repository ids that can access the organization secret. You can only provide a list of repository ids when the `visibility` is set to `selected`. You can add and remove individual repositories using the [Set selected repositories for an organization secret](https://docs.github.com/github-ae@latest/rest/reference/actions#set-selected-repositories-for-an-organization-secret) and [Remove selected repository from an organization secret](https://docs.github.com/github-ae@latest/rest/reference/actions#remove-selected-repository-from-an-organization-secret) endpoints. */
           selected_repository_ids?: number[];
         };
       };
     };
   };
-  /** Adds a repository to an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-server@2.22/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint. */
+  /** Adds a repository to an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/github-ae@latest/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint. */
   "actions/add-selected-repo-to-org-secret": {
     parameters: {
       path: {
@@ -13335,7 +12472,7 @@ export interface operations {
       409: unknown;
     };
   };
-  /** Removes a repository from an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-server@2.22/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint. */
+  /** Removes a repository from an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/github-ae@latest/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint. */
   "actions/remove-selected-repo-from-org-secret": {
     parameters: {
       path: {
@@ -13350,27 +12487,6 @@ export interface operations {
       204: never;
       /** Conflict when visibility type not set to selected */
       409: unknown;
-    };
-  };
-  "activity/list-public-org-events": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-      };
-      query: {
-        /** Results per page (max 100) */
-        per_page?: components["parameters"]["per-page"];
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["event"][];
-        };
-      };
     };
   };
   "orgs/list-webhooks": {
@@ -13421,7 +12537,7 @@ export interface operations {
         "application/json": {
           /** Must be passed as "web". */
           name: string;
-          /** Key/value pairs to provide settings for this webhook. [These are defined below](https://docs.github.com/enterprise-server@2.22/rest/reference/orgs#create-hook-config-params). */
+          /** Key/value pairs to provide settings for this webhook. [These are defined below](https://docs.github.com/github-ae@latest/rest/reference/orgs#create-hook-config-params). */
           config: {
             url: components["schemas"]["webhook-config-url"];
             content_type?: components["schemas"]["webhook-config-content-type"];
@@ -13430,7 +12546,7 @@ export interface operations {
             username?: string;
             password?: string;
           };
-          /** Determines what [events](https://docs.github.com/enterprise-server@2.22/webhooks/event-payloads) the hook is triggered for. */
+          /** Determines what [events](https://docs.github.com/github-ae@latest/webhooks/event-payloads) the hook is triggered for. */
           events?: string[];
           /** Determines if notifications are sent when the webhook is triggered. Set to `true` to send notifications. */
           active?: boolean;
@@ -13490,14 +12606,14 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** Key/value pairs to provide settings for this webhook. [These are defined below](https://docs.github.com/enterprise-server@2.22/rest/reference/orgs#update-hook-config-params). */
+          /** Key/value pairs to provide settings for this webhook. [These are defined below](https://docs.github.com/github-ae@latest/rest/reference/orgs#update-hook-config-params). */
           config?: {
             url: components["schemas"]["webhook-config-url"];
             content_type?: components["schemas"]["webhook-config-content-type"];
             secret?: components["schemas"]["webhook-config-secret"];
             insecure_ssl?: components["schemas"]["webhook-config-insecure-ssl"];
           };
-          /** Determines what [events](https://docs.github.com/enterprise-server@2.22/webhooks/event-payloads) the hook is triggered for. */
+          /** Determines what [events](https://docs.github.com/github-ae@latest/webhooks/event-payloads) the hook is triggered for. */
           events?: string[];
           /** Determines if notifications are sent when the webhook is triggered. Set to `true` to send notifications. */
           active?: boolean;
@@ -13506,7 +12622,94 @@ export interface operations {
       };
     };
   };
-  /** This will trigger a [ping event](https://docs.github.com/enterprise-server@2.22/webhooks/#ping-event) to be sent to the hook. */
+  /**
+   * Returns the webhook configuration for an organization. To get more information about the webhook, including the `active` state and `events`, use "[Get an organization webhook ](/rest/reference/orgs#get-an-organization-webhook)."
+   *
+   * Access tokens must have the `admin:org_hook` scope, and GitHub Apps must have the `organization_hooks:read` permission.
+   */
+  "orgs/get-webhook-config-for-org": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+        hook_id: components["parameters"]["hook-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["webhook-config"];
+        };
+      };
+    };
+  };
+  /**
+   * Updates the webhook configuration for an organization. To update more information about the webhook, including the `active` state and `events`, use "[Update an organization webhook ](/rest/reference/orgs#update-an-organization-webhook)."
+   *
+   * Access tokens must have the `admin:org_hook` scope, and GitHub Apps must have the `organization_hooks:write` permission.
+   */
+  "orgs/update-webhook-config-for-org": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+        hook_id: components["parameters"]["hook-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["webhook-config"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          url?: components["schemas"]["webhook-config-url"];
+          content_type?: components["schemas"]["webhook-config-content-type"];
+          secret?: components["schemas"]["webhook-config-secret"];
+          insecure_ssl?: components["schemas"]["webhook-config-insecure-ssl"];
+        };
+      };
+    };
+  };
+  /** Returns a delivery for a webhook configured in an organization. */
+  "orgs/get-webhook-delivery": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+        hook_id: components["parameters"]["hook-id"];
+        delivery_id: components["parameters"]["delivery-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["hook-delivery"];
+        };
+      };
+      400: components["responses"]["bad_request"];
+      422: components["responses"]["validation_failed"];
+    };
+  };
+  /** Redeliver a delivery for a webhook configured in an organization. */
+  "orgs/redeliver-webhook-delivery": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+        hook_id: components["parameters"]["hook-id"];
+        delivery_id: components["parameters"]["delivery-id"];
+      };
+    };
+    responses: {
+      202: components["responses"]["accepted"];
+      400: components["responses"]["bad_request"];
+      422: components["responses"]["validation_failed"];
+    };
+  };
+  /** This will trigger a [ping event](https://docs.github.com/github-ae@latest/webhooks/#ping-event) to be sent to the hook. */
   "orgs/ping-webhook": {
     parameters: {
       path: {
@@ -13523,7 +12726,7 @@ export interface operations {
   /**
    * Enables an authenticated GitHub App to find the organization's installation information.
    *
-   * You must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
    */
   "apps/get-org-installation": {
     parameters: {
@@ -13535,7 +12738,7 @@ export interface operations {
       /** Response */
       200: {
         content: {
-          "application/json": components["schemas"]["installation-ghes-2"];
+          "application/json": components["schemas"]["installation"];
         };
       };
     };
@@ -13560,7 +12763,7 @@ export interface operations {
         content: {
           "application/json": {
             total_count: number;
-            installations: components["schemas"]["installation-ghes-2"][];
+            installations: components["schemas"]["installation"][];
           };
         };
       };
@@ -13572,7 +12775,7 @@ export interface operations {
    * **Note**: GitHub's REST API v3 considers every pull request an issue, but not every issue is a pull request. For this
    * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
    * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
-   * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#list-pull-requests)" endpoint.
+   * request id, use the "[List pull requests](https://docs.github.com/github-ae@latest/rest/reference/pulls#list-pull-requests)" endpoint.
    */
   "issues/list-for-org": {
     parameters: {
@@ -13714,7 +12917,7 @@ export interface operations {
   /**
    * Only authenticated organization owners can add a member to the organization or update the member's role.
    *
-   * *   If the authenticated user is _adding_ a member to the organization, the invited user will receive an email inviting them to the organization. The user's [membership status](https://docs.github.com/enterprise-server@2.22/rest/reference/orgs#get-organization-membership-for-a-user) will be `pending` until they accept the invitation.
+   * *   If the authenticated user is _adding_ a member to the organization, the invited user will receive an email inviting them to the organization. The user's [membership status](https://docs.github.com/github-ae@latest/rest/reference/orgs#get-organization-membership-for-a-user) will be `pending` until they accept the invitation.
    *
    * *   Authenticated users can _update_ a user's membership by passing the `role` parameter. If the authenticated user changes a member's role to `admin`, the affected user will receive an email notifying them that they've been made an organization owner. If the authenticated user changes an owner's role to `member`, no email will be sent.
    *
@@ -13844,95 +13047,6 @@ export interface operations {
       };
     };
   };
-  /** List all pre-receive hooks that are enabled or testing for this organization as well as any disabled hooks that can be configured at the organization level. Globally disabled pre-receive hooks that do not allow downstream configuration are not listed. */
-  "enterprise-admin/list-pre-receive-hooks-for-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-      };
-      query: {
-        /** Results per page (max 100) */
-        per_page?: components["parameters"]["per-page"];
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
-        /** One of `asc` (ascending) or `desc` (descending). */
-        direction?: components["parameters"]["direction"];
-        /** The sort order for the response collection. */
-        sort?: "created" | "updated" | "name";
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["org-pre-receive-hook"][];
-        };
-      };
-    };
-  };
-  "enterprise-admin/get-pre-receive-hook-for-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        /** pre_receive_hook_id parameter */
-        pre_receive_hook_id: components["parameters"]["pre-receive-hook-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["org-pre-receive-hook"];
-        };
-      };
-    };
-  };
-  /** Removes any overrides for this hook at the org level for this org. */
-  "enterprise-admin/remove-pre-receive-hook-enforcement-for-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        /** pre_receive_hook_id parameter */
-        pre_receive_hook_id: components["parameters"]["pre-receive-hook-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["org-pre-receive-hook"];
-        };
-      };
-    };
-  };
-  /** For pre-receive hooks which are allowed to be configured at the org level, you can set `enforcement` and `allow_downstream_configuration` */
-  "enterprise-admin/update-pre-receive-hook-enforcement-for-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        /** pre_receive_hook_id parameter */
-        pre_receive_hook_id: components["parameters"]["pre-receive-hook-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["org-pre-receive-hook"];
-        };
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** The state of enforcement for the hook on this repository. */
-          enforcement?: string;
-          /** Whether repositories can override enforcement. */
-          allow_downstream_configuration?: boolean;
-        };
-      };
-    };
-  };
   /** Lists the projects in an organization. Returns a `404 Not Found` status if projects are disabled in the organization. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
   "projects/list-for-org": {
     parameters: {
@@ -13990,73 +13104,6 @@ export interface operations {
       };
     };
   };
-  /** Members of an organization can choose to have their membership publicized or not. */
-  "orgs/list-public-members": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-      };
-      query: {
-        /** Results per page (max 100) */
-        per_page?: components["parameters"]["per-page"];
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        headers: {};
-        content: {
-          "application/json": components["schemas"]["simple-user"][];
-        };
-      };
-    };
-  };
-  "orgs/check-public-membership-for-user": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        username: components["parameters"]["username"];
-      };
-    };
-    responses: {
-      /** Response if user is a public member */
-      204: never;
-      /** Not Found if user is not a public member */
-      404: unknown;
-    };
-  };
-  /**
-   * The user can publicize their own membership. (A user cannot publicize the membership for another user.)
-   *
-   * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs)."
-   */
-  "orgs/set-public-membership-for-authenticated-user": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        username: components["parameters"]["username"];
-      };
-    };
-    responses: {
-      /** Response */
-      204: never;
-      403: components["responses"]["forbidden"];
-    };
-  };
-  "orgs/remove-public-membership-for-authenticated-user": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        username: components["parameters"]["username"];
-      };
-    };
-    responses: {
-      /** Response */
-      204: never;
-    };
-  };
   /** Lists repositories for the specified organization. */
   "repos/list-for-org": {
     parameters: {
@@ -14098,7 +13145,7 @@ export interface operations {
    *
    * **OAuth scope requirements**
    *
-   * When using [OAuth](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
+   * When using [OAuth](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
    *
    * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.
    * *   `repo` scope to create a private repository
@@ -14247,7 +13294,7 @@ export interface operations {
     };
   };
   /**
-   * Gets a team using the team's `slug`. GitHub Enterprise Server generates the `slug` from the team `name`.
+   * Gets a team using the team's `slug`. GitHub AE generates the `slug` from the team `name`.
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}`.
    */
@@ -14340,7 +13387,7 @@ export interface operations {
     };
   };
   /**
-   * List all discussions on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * List all discussions on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions`.
    */
@@ -14373,9 +13420,9 @@ export interface operations {
     };
   };
   /**
-   * Creates a new discussion post on a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Creates a new discussion post on a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
-   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/{org_id}/team/{team_id}/discussions`.
    */
@@ -14409,7 +13456,7 @@ export interface operations {
     };
   };
   /**
-   * Get a specific discussion on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Get a specific discussion on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
    */
@@ -14432,7 +13479,7 @@ export interface operations {
     };
   };
   /**
-   * Delete a discussion from a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Delete a discussion from a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
    */
@@ -14451,7 +13498,7 @@ export interface operations {
     };
   };
   /**
-   * Edits the title and body text of a discussion post. Only the parameters you provide are updated. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Edits the title and body text of a discussion post. Only the parameters you provide are updated. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `PATCH /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
    */
@@ -14484,7 +13531,7 @@ export interface operations {
     };
   };
   /**
-   * List all comments on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * List all comments on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
    */
@@ -14516,9 +13563,9 @@ export interface operations {
     };
   };
   /**
-   * Creates a new comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Creates a new comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
-   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
    */
@@ -14549,7 +13596,7 @@ export interface operations {
     };
   };
   /**
-   * Get a specific comment on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Get a specific comment on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
    */
@@ -14573,7 +13620,7 @@ export interface operations {
     };
   };
   /**
-   * Deletes a comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Deletes a comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
    */
@@ -14593,7 +13640,7 @@ export interface operations {
     };
   };
   /**
-   * Edits the body text of a discussion comment. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Edits the body text of a discussion comment. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `PATCH /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
    */
@@ -14625,7 +13672,7 @@ export interface operations {
     };
   };
   /**
-   * List the reactions to a [team discussion comment](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#discussion-comments/). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * List the reactions to a [team discussion comment](https://docs.github.com/github-ae@latest/rest/reference/teams#discussion-comments/). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions`.
    */
@@ -14639,7 +13686,7 @@ export interface operations {
         comment_number: components["parameters"]["comment-number"];
       };
       query: {
-        /** Returns a single [reaction type](https://docs.github.com/enterprise-server@2.22/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a team discussion comment. */
+        /** Returns a single [reaction type](https://docs.github.com/github-ae@latest/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a team discussion comment. */
         content?:
           | "+1"
           | "-1"
@@ -14666,7 +13713,7 @@ export interface operations {
     };
   };
   /**
-   * Create a reaction to a [team discussion comment](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#discussion-comments). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
+   * Create a reaction to a [team discussion comment](https://docs.github.com/github-ae@latest/rest/reference/teams#discussion-comments). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions`.
    */
@@ -14697,7 +13744,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** The [reaction type](https://docs.github.com/enterprise-server@2.22/rest/reference/reactions#reaction-types) to add to the team discussion comment. */
+          /** The [reaction type](https://docs.github.com/github-ae@latest/rest/reference/reactions#reaction-types) to add to the team discussion comment. */
           content:
             | "+1"
             | "-1"
@@ -14714,7 +13761,7 @@ export interface operations {
   /**
    * **Note:** You can also specify a team or organization with `team_id` and `org_id` using the route `DELETE /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions/:reaction_id`.
    *
-   * Delete a reaction to a [team discussion comment](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#discussion-comments). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Delete a reaction to a [team discussion comment](https://docs.github.com/github-ae@latest/rest/reference/teams#discussion-comments). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    */
   "reactions/delete-for-team-discussion-comment": {
     parameters: {
@@ -14733,7 +13780,7 @@ export interface operations {
     };
   };
   /**
-   * List the reactions to a [team discussion](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#discussions). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * List the reactions to a [team discussion](https://docs.github.com/github-ae@latest/rest/reference/teams#discussions). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions`.
    */
@@ -14746,7 +13793,7 @@ export interface operations {
         discussion_number: components["parameters"]["discussion-number"];
       };
       query: {
-        /** Returns a single [reaction type](https://docs.github.com/enterprise-server@2.22/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a team discussion. */
+        /** Returns a single [reaction type](https://docs.github.com/github-ae@latest/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a team discussion. */
         content?:
           | "+1"
           | "-1"
@@ -14773,7 +13820,7 @@ export interface operations {
     };
   };
   /**
-   * Create a reaction to a [team discussion](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion.
+   * Create a reaction to a [team discussion](https://docs.github.com/github-ae@latest/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion.
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions`.
    */
@@ -14803,7 +13850,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** The [reaction type](https://docs.github.com/enterprise-server@2.22/rest/reference/reactions#reaction-types) to add to the team discussion. */
+          /** The [reaction type](https://docs.github.com/github-ae@latest/rest/reference/reactions#reaction-types) to add to the team discussion. */
           content:
             | "+1"
             | "-1"
@@ -14820,7 +13867,7 @@ export interface operations {
   /**
    * **Note:** You can also specify a team or organization with `team_id` and `org_id` using the route `DELETE /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions/:reaction_id`.
    *
-   * Delete a reaction to a [team discussion](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Delete a reaction to a [team discussion](https://docs.github.com/github-ae@latest/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    */
   "reactions/delete-for-team-discussion": {
     parameters: {
@@ -14883,7 +13930,7 @@ export interface operations {
    * **Note:**
    * The response contains the `state` of the membership and the member's `role`.
    *
-   * The `role` for organization owners is set to `maintainer`. For more information about `maintainer` roles, see see [Create a team](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#create-a-team).
+   * The `role` for organization owners is set to `maintainer`. For more information about `maintainer` roles, see see [Create a team](https://docs.github.com/github-ae@latest/rest/reference/teams#create-a-team).
    */
   "teams/get-membership-for-user-in-org": {
     parameters: {
@@ -14910,7 +13957,7 @@ export interface operations {
    *
    * Adds an organization member to a team. An authenticated organization owner or team maintainer can add organization members to a team.
    *
-   * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub Enterprise Server team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub Enterprise Server](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+   * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub AE team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub AE](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
    *
    * An organization owner can add someone who is not part of the team's organization to a team. When an organization owner adds someone to a team who is not an organization member, this endpoint will send an invitation to the person via email. This newly-created membership will be in the "pending" state until the person accepts the invitation, at which point the membership will transition to the "active" state and the user will be added as a member of the team.
    *
@@ -14957,7 +14004,7 @@ export interface operations {
    *
    * To remove a membership between a user and a team, the authenticated user must have 'admin' permissions to the team or be an owner of the organization that the team is associated with. Removing team membership does not delete the user, it just removes their membership from the team.
    *
-   * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub Enterprise Server team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub Enterprise Server](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+   * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub AE team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub AE](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}/memberships/{username}`.
    */
@@ -15066,7 +14113,7 @@ export interface operations {
            * \* `read` - team members can read, but not write to or administer this project.
            * \* `write` - team members can read and write, but not administer this project.
            * \* `admin` - team members can read, write and administer this project.
-           * Default: the team's `permission` attribute will be used to determine what permission to grant the team on this project. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs)."
+           * Default: the team's `permission` attribute will be used to determine what permission to grant the team on this project. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
            */
           permission?: "read" | "write" | "admin";
         } | null;
@@ -15124,7 +14171,7 @@ export interface operations {
   /**
    * Checks whether a team has `admin`, `push`, `maintain`, `triage`, or `pull` permission for a repository. Repositories inherited through a parent team will also be checked.
    *
-   * You can also get information about the specified repository, including what permissions the team grants on it, by passing the following custom [media type](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types/) via the `application/vnd.github.v3.repository+json` accept header.
+   * You can also get information about the specified repository, including what permissions the team grants on it, by passing the following custom [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/) via the `application/vnd.github.v3.repository+json` accept header.
    *
    * If a team doesn't have permission for the repository, you will receive a `404 Not Found` response status.
    *
@@ -15154,7 +14201,7 @@ export interface operations {
     };
   };
   /**
-   * To add a repository to a team or update the team's permission on a repository, the authenticated user must have admin access to the repository, and must be able to see the team. The repository must be owned by the organization, or a direct fork of a repository owned by the organization. You will get a `422 Unprocessable Entity` status if you attempt to add a repository to a team that is not owned by the organization. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs)."
+   * To add a repository to a team or update the team's permission on a repository, the authenticated user must have admin access to the repository, and must be able to see the team. The repository must be owned by the organization, or a direct fork of a repository owned by the organization. You will get a `422 Unprocessable Entity` status if you attempt to add a repository to a team that is not owned by the organization. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `PUT /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo}`.
    *
@@ -15821,7 +14868,7 @@ export interface operations {
   /**
    * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Reactions API. We recommend migrating your existing code to use the new delete reactions endpoints. For more information, see this [blog post](https://developer.github.com/changes/2020-02-26-new-delete-reactions-endpoints/).
    *
-   * OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), when deleting a [team discussion](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#discussions) or [team discussion comment](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#discussion-comments).
+   * OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), when deleting a [team discussion](https://docs.github.com/github-ae@latest/rest/reference/teams#discussions) or [team discussion comment](https://docs.github.com/github-ae@latest/rest/reference/teams#discussion-comments).
    */
   "reactions/delete-legacy": {
     parameters: {
@@ -15892,7 +14939,7 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** **Note**: To edit a repository's topics, use the [Replace all repository topics](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#replace-all-repository-topics) endpoint. */
+  /** **Note**: To edit a repository's topics, use the [Replace all repository topics](https://docs.github.com/github-ae@latest/rest/reference/repos#replace-all-repository-topics) endpoint. */
   "repos/update": {
     parameters: {
       path: {
@@ -16073,6 +15120,102 @@ export interface operations {
       302: never;
     };
   };
+  /**
+   * Gets the GitHub Actions permissions policy for a repository, including whether GitHub Actions is enabled and the actions allowed to run in the repository.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this
+   * endpoint. GitHub Apps must have the `administration` repository permission to use this API.
+   */
+  "actions/get-github-actions-permissions-repository": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["actions-repository-permissions"];
+        };
+      };
+    };
+  };
+  /**
+   * Sets the GitHub Actions permissions policy for enabling GitHub Actions and allowed actions in the repository.
+   *
+   * If the repository belongs to an organization or enterprise that has set restrictive permissions at the organization or enterprise levels, such as `allowed_actions` to `selected` actions, then you cannot override them for the repository.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration` repository permission to use this API.
+   */
+  "actions/set-github-actions-permissions-repository": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          enabled: components["schemas"]["actions-enabled"];
+          allowed_actions?: components["schemas"]["allowed-actions"];
+        };
+      };
+    };
+  };
+  /**
+   * Gets the settings for selected actions that are allowed in a repository. To use this endpoint, the repository policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for a repository](#set-github-actions-permissions-for-a-repository)."
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration` repository permission to use this API.
+   */
+  "actions/get-allowed-actions-repository": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["selected-actions"];
+        };
+      };
+    };
+  };
+  /**
+   * Sets the actions that are allowed in a repository. To use this endpoint, the repository permission policy for `allowed_actions` must be configured to `selected`. For more information, see "[Set GitHub Actions permissions for a repository](#set-github-actions-permissions-for-a-repository)."
+   *
+   * If the repository belongs to an organization or enterprise that has `selected` actions set at the organization or enterprise levels, then you cannot override any of the allowed actions settings.
+   *
+   * To use the `patterns_allowed` setting for private repositories, the repository must belong to an enterprise. If the repository does not belong to an enterprise, then the `patterns_allowed` setting only applies to public repositories.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration` repository permission to use this API.
+   */
+  "actions/set-allowed-actions-repository": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["selected-actions"];
+      };
+    };
+  };
   /** Lists all self-hosted runners configured in a repository. You must authenticate using an access token with the `repo` scope to use this endpoint. */
   "actions/list-self-hosted-runners-for-repo": {
     parameters: {
@@ -16094,109 +15237,8 @@ export interface operations {
         content: {
           "application/json": {
             total_count: number;
-            runners: components["schemas"]["runner-no-labels"][];
+            runners: components["schemas"]["runner"][];
           };
-        };
-      };
-    };
-  };
-  /**
-   * Lists binaries for the runner application that you can download and run.
-   *
-   * You must authenticate using an access token with the `repo` scope to use this endpoint.
-   */
-  "actions/list-runner-applications-for-repo": {
-    parameters: {
-      path: {
-        owner: components["parameters"]["owner"];
-        repo: components["parameters"]["repo"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["runner-application"][];
-        };
-      };
-    };
-  };
-  /**
-   * Returns a token that you can pass to the `config` script. The token expires after one hour. You must authenticate
-   * using an access token with the `repo` scope to use this endpoint.
-   *
-   * #### Example using registration token
-   *
-   * Configure your self-hosted runner, replacing `TOKEN` with the registration token provided by this endpoint.
-   *
-   * ```
-   * ./config.sh --url https://github.com/octo-org/octo-repo-artifacts --token TOKEN
-   * ```
-   */
-  "actions/create-registration-token-for-repo": {
-    parameters: {
-      path: {
-        owner: components["parameters"]["owner"];
-        repo: components["parameters"]["repo"];
-      };
-    };
-    responses: {
-      /** Response */
-      201: {
-        content: {
-          "application/json": components["schemas"]["authentication-token"];
-        };
-      };
-    };
-  };
-  /**
-   * Returns a token that you can pass to remove a self-hosted runner from a repository. The token expires after one hour.
-   * You must authenticate using an access token with the `repo` scope to use this endpoint.
-   *
-   * #### Example using remove token
-   *
-   * To remove your self-hosted runner from a repository, replace TOKEN with the remove token provided by this endpoint.
-   *
-   * ```
-   * ./config.sh remove --token TOKEN
-   * ```
-   */
-  "actions/create-remove-token-for-repo": {
-    parameters: {
-      path: {
-        owner: components["parameters"]["owner"];
-        repo: components["parameters"]["repo"];
-      };
-    };
-    responses: {
-      /** Response */
-      201: {
-        content: {
-          "application/json": components["schemas"]["authentication-token"];
-        };
-      };
-    };
-  };
-  /**
-   * Gets a specific self-hosted runner configured in a repository.
-   *
-   * You must authenticate using an access token with the `repo` scope to use this
-   * endpoint.
-   */
-  "actions/get-self-hosted-runner-for-repo": {
-    parameters: {
-      path: {
-        owner: components["parameters"]["owner"];
-        repo: components["parameters"]["repo"];
-        /** Unique identifier of the self-hosted runner. */
-        runner_id: components["parameters"]["runner-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["runner-no-labels"];
         };
       };
     };
@@ -16222,7 +15264,7 @@ export interface operations {
     };
   };
   /**
-   * Lists all workflow runs for a repository. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#parameters).
+   * Lists all workflow runs for a repository. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#parameters).
    *
    * Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
    */
@@ -16239,7 +15281,7 @@ export interface operations {
         branch?: components["parameters"]["workflow-run-branch"];
         /** Returns workflow run triggered by the event you specify. For example, `push`, `pull_request` or `issue`. For more information, see "[Events that trigger workflows](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows)." */
         event?: components["parameters"]["event"];
-        /** Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. For a list of the possible `status` and `conclusion` options, see "[Create a check run](https://docs.github.com/enterprise-server@2.22/rest/reference/checks#create-a-check-run)." */
+        /** Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. For a list of the possible `status` and `conclusion` options, see "[Create a check run](https://docs.github.com/github-ae@latest/rest/reference/checks#create-a-check-run)." */
         status?: components["parameters"]["workflow-run-status"];
         /** Results per page (max 100) */
         per_page?: components["parameters"]["per-page"];
@@ -16347,7 +15389,7 @@ export interface operations {
       };
     };
   };
-  /** Lists jobs for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#parameters). */
+  /** Lists jobs for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#parameters). */
   "actions/list-jobs-for-workflow-run": {
     parameters: {
       path: {
@@ -16432,6 +15474,29 @@ export interface operations {
       201: {
         content: {
           "application/json": { [key: string]: unknown };
+        };
+      };
+    };
+  };
+  /**
+   * Gets the number of billable minutes and total run time for a specific workflow run. Billable minutes only apply to workflows in private repositories that use GitHub AE-hosted runners. Usage is listed for each GitHub AE-hosted runner operating system in milliseconds. Any job re-runs are also included in the usage. The usage does not include the multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
+   *
+   * Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+   */
+  "actions/get-workflow-run-usage": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        /** The id of the workflow run. */
+        run_id: components["parameters"]["run-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["workflow-run-usage"];
         };
       };
     };
@@ -16598,7 +15663,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get a repository public key](https://docs.github.com/enterprise-server@2.22/rest/reference/actions#get-a-repository-public-key) endpoint. */
+          /** Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get a repository public key](https://docs.github.com/github-ae@latest/rest/reference/actions#get-a-repository-public-key) endpoint. */
           encrypted_value?: string;
           /** ID of the key you used to encrypt the secret. */
           key_id?: string;
@@ -16668,6 +15733,25 @@ export interface operations {
     };
   };
   /**
+   * Disables a workflow and sets the `state` of the workflow to `disabled_manually`. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+   */
+  "actions/disable-workflow": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        /** The ID of the workflow. You can also pass the workflow file name as a string. */
+        workflow_id: components["parameters"]["workflow-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+    };
+  };
+  /**
    * You can use this endpoint to manually trigger a GitHub Actions workflow run. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`.
    *
    * You must configure your GitHub Actions workflow to run when the [`workflow_dispatch` webhook](/developers/webhooks-and-events/webhook-events-and-payloads#workflow_dispatch) event occurs. The `inputs` are configured in the workflow file. For more information about how to configure the `workflow_dispatch` event in the workflow file, see "[Events that trigger workflows](/actions/reference/events-that-trigger-workflows#workflow_dispatch)."
@@ -16699,7 +15783,26 @@ export interface operations {
     };
   };
   /**
-   * List all workflow runs for a workflow. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#parameters).
+   * Enables a workflow and sets the `state` of the workflow to `active`. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+   */
+  "actions/enable-workflow": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        /** The ID of the workflow. You can also pass the workflow file name as a string. */
+        workflow_id: components["parameters"]["workflow-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+    };
+  };
+  /**
+   * List all workflow runs for a workflow. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#parameters).
    *
    * Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope.
    */
@@ -16718,7 +15821,7 @@ export interface operations {
         branch?: components["parameters"]["workflow-run-branch"];
         /** Returns workflow run triggered by the event you specify. For example, `push`, `pull_request` or `issue`. For more information, see "[Events that trigger workflows](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows)." */
         event?: components["parameters"]["event"];
-        /** Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. For a list of the possible `status` and `conclusion` options, see "[Create a check run](https://docs.github.com/enterprise-server@2.22/rest/reference/checks#create-a-check-run)." */
+        /** Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. For a list of the possible `status` and `conclusion` options, see "[Create a check run](https://docs.github.com/github-ae@latest/rest/reference/checks#create-a-check-run)." */
         status?: components["parameters"]["workflow-run-status"];
         /** Results per page (max 100) */
         per_page?: components["parameters"]["per-page"];
@@ -16736,6 +15839,29 @@ export interface operations {
             total_count: number;
             workflow_runs: components["schemas"]["workflow-run"][];
           };
+        };
+      };
+    };
+  };
+  /**
+   * Gets the number of billable minutes used by a specific workflow during the current billing cycle. Billable minutes only apply to workflows in private repositories that use GitHub AE-hosted runners. Usage is listed for each GitHub AE-hosted runner operating system in milliseconds. Any job re-runs are also included in the usage. The usage does not include the multiplier for macOS and Windows runners and is not rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://help.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
+   *
+   * You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+   */
+  "actions/get-workflow-usage": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        /** The ID of the workflow. You can also pass the workflow file name as a string. */
+        workflow_id: components["parameters"]["workflow-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["workflow-usage"];
         };
       };
     };
@@ -17845,7 +16971,7 @@ export interface operations {
             | "timed_out";
           /** The time the check completed. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
           completed_at?: string;
-          /** Check runs can accept a variety of data in the `output` object, including a `title` and `summary` and can optionally provide descriptive details about the run. See the [`output` object](https://docs.github.com/enterprise-server@2.22/rest/reference/checks#output-object) description. */
+          /** Check runs can accept a variety of data in the `output` object, including a `title` and `summary` and can optionally provide descriptive details about the run. See the [`output` object](https://docs.github.com/github-ae@latest/rest/reference/checks#output-object) description. */
           output?: {
             /** The title of the check run. */
             title: string;
@@ -17853,7 +16979,7 @@ export interface operations {
             summary: string;
             /** The details of the check run. This parameter supports Markdown. */
             text?: string;
-            /** Adds information from your analysis to specific lines of code. Annotations are visible on GitHub in the **Checks** and **Files changed** tab of the pull request. The Checks API limits the number of annotations to a maximum of 50 per API request. To create more than 50 annotations, you have to make multiple requests to the [Update a check run](https://docs.github.com/enterprise-server@2.22/rest/reference/checks#update-a-check-run) endpoint. Each time you update the check run, annotations are appended to the list of annotations that already exist for the check run. For details about how you can view annotations on GitHub, see "[About status checks](https://help.github.com/articles/about-status-checks#checks)". See the [`annotations` object](https://docs.github.com/enterprise-server@2.22/rest/reference/checks#annotations-object) description for details about how to use this parameter. */
+            /** Adds information from your analysis to specific lines of code. Annotations are visible on GitHub in the **Checks** and **Files changed** tab of the pull request. The Checks API limits the number of annotations to a maximum of 50 per API request. To create more than 50 annotations, you have to make multiple requests to the [Update a check run](https://docs.github.com/github-ae@latest/rest/reference/checks#update-a-check-run) endpoint. Each time you update the check run, annotations are appended to the list of annotations that already exist for the check run. For details about how you can view annotations on GitHub, see "[About status checks](https://help.github.com/articles/about-status-checks#checks)". See the [`annotations` object](https://docs.github.com/github-ae@latest/rest/reference/checks#annotations-object) description for details about how to use this parameter. */
             annotations?: {
               /** The path of the file to add an annotation to. For example, `assets/css/main.css`. */
               path: string;
@@ -17874,7 +17000,7 @@ export interface operations {
               /** Details about this annotation. The maximum size is 64 KB. */
               raw_details?: string;
             }[];
-            /** Adds images to the output displayed in the GitHub pull request UI. See the [`images` object](https://docs.github.com/enterprise-server@2.22/rest/reference/checks#images-object) description for details. */
+            /** Adds images to the output displayed in the GitHub pull request UI. See the [`images` object](https://docs.github.com/github-ae@latest/rest/reference/checks#images-object) description for details. */
             images?: {
               /** The alternative text for the image. */
               alt: string;
@@ -17884,7 +17010,7 @@ export interface operations {
               caption?: string;
             }[];
           };
-          /** Displays a button on GitHub that can be clicked to alert your app to do additional tasks. For example, a code linting app can display a button that automatically fixes detected errors. The button created in this object is displayed after the check run completes. When a user clicks the button, GitHub sends the [`check_run.requested_action` webhook](https://docs.github.com/enterprise-server@2.22/webhooks/event-payloads/#check_run) to your app. Each action includes a `label`, `identifier` and `description`. A maximum of three actions are accepted. See the [`actions` object](https://docs.github.com/enterprise-server@2.22/rest/reference/checks#actions-object) description. To learn more about check runs and requested actions, see "[Check runs and requested actions](https://docs.github.com/enterprise-server@2.22/rest/reference/checks#check-runs-and-requested-actions)." To learn more about check runs and requested actions, see "[Check runs and requested actions](https://docs.github.com/enterprise-server@2.22/rest/reference/checks#check-runs-and-requested-actions)." */
+          /** Displays a button on GitHub that can be clicked to alert your app to do additional tasks. For example, a code linting app can display a button that automatically fixes detected errors. The button created in this object is displayed after the check run completes. When a user clicks the button, GitHub sends the [`check_run.requested_action` webhook](https://docs.github.com/github-ae@latest/webhooks/event-payloads/#check_run) to your app. Each action includes a `label`, `identifier` and `description`. A maximum of three actions are accepted. See the [`actions` object](https://docs.github.com/github-ae@latest/rest/reference/checks#actions-object) description. To learn more about check runs and requested actions, see "[Check runs and requested actions](https://docs.github.com/github-ae@latest/rest/reference/checks#check-runs-and-requested-actions)." To learn more about check runs and requested actions, see "[Check runs and requested actions](https://docs.github.com/github-ae@latest/rest/reference/checks#check-runs-and-requested-actions)." */
           actions?: {
             /** The text to be displayed on a button in the web UI. The maximum size is 20 characters. */
             label: string;
@@ -17981,7 +17107,7 @@ export interface operations {
             | "timed_out";
           /** The time the check completed. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
           completed_at?: string;
-          /** Check runs can accept a variety of data in the `output` object, including a `title` and `summary` and can optionally provide descriptive details about the run. See the [`output` object](https://docs.github.com/enterprise-server@2.22/rest/reference/checks#output-object-1) description. */
+          /** Check runs can accept a variety of data in the `output` object, including a `title` and `summary` and can optionally provide descriptive details about the run. See the [`output` object](https://docs.github.com/github-ae@latest/rest/reference/checks#output-object-1) description. */
           output?: {
             /** **Required**. */
             title?: string;
@@ -17989,7 +17115,7 @@ export interface operations {
             summary: string;
             /** Can contain Markdown. */
             text?: string;
-            /** Adds information from your analysis to specific lines of code. Annotations are visible in GitHub's pull request UI. Annotations are visible in GitHub's pull request UI. The Checks API limits the number of annotations to a maximum of 50 per API request. To create more than 50 annotations, you have to make multiple requests to the [Update a check run](https://docs.github.com/enterprise-server@2.22/rest/reference/checks#update-a-check-run) endpoint. Each time you update the check run, annotations are appended to the list of annotations that already exist for the check run. For details about annotations in the UI, see "[About status checks](https://help.github.com/articles/about-status-checks#checks)". See the [`annotations` object](https://docs.github.com/enterprise-server@2.22/rest/reference/checks#annotations-object-1) description for details. */
+            /** Adds information from your analysis to specific lines of code. Annotations are visible in GitHub's pull request UI. Annotations are visible in GitHub's pull request UI. The Checks API limits the number of annotations to a maximum of 50 per API request. To create more than 50 annotations, you have to make multiple requests to the [Update a check run](https://docs.github.com/github-ae@latest/rest/reference/checks#update-a-check-run) endpoint. Each time you update the check run, annotations are appended to the list of annotations that already exist for the check run. For details about annotations in the UI, see "[About status checks](https://help.github.com/articles/about-status-checks#checks)". See the [`annotations` object](https://docs.github.com/github-ae@latest/rest/reference/checks#annotations-object-1) description for details. */
             annotations?: {
               /** The path of the file to add an annotation to. For example, `assets/css/main.css`. */
               path: string;
@@ -18010,7 +17136,7 @@ export interface operations {
               /** Details about this annotation. The maximum size is 64 KB. */
               raw_details?: string;
             }[];
-            /** Adds images to the output displayed in the GitHub pull request UI. See the [`images` object](https://docs.github.com/enterprise-server@2.22/rest/reference/checks#annotations-object-1) description for details. */
+            /** Adds images to the output displayed in the GitHub pull request UI. See the [`images` object](https://docs.github.com/github-ae@latest/rest/reference/checks#annotations-object-1) description for details. */
             images?: {
               /** The alternative text for the image. */
               alt: string;
@@ -18020,7 +17146,7 @@ export interface operations {
               caption?: string;
             }[];
           };
-          /** Possible further actions the integrator can perform, which a user may trigger. Each action includes a `label`, `identifier` and `description`. A maximum of three actions are accepted. See the [`actions` object](https://docs.github.com/enterprise-server@2.22/rest/reference/checks#actions-object) description. To learn more about check runs and requested actions, see "[Check runs and requested actions](https://docs.github.com/enterprise-server@2.22/rest/reference/checks#check-runs-and-requested-actions)." */
+          /** Possible further actions the integrator can perform, which a user may trigger. Each action includes a `label`, `identifier` and `description`. A maximum of three actions are accepted. See the [`actions` object](https://docs.github.com/github-ae@latest/rest/reference/checks#actions-object) description. To learn more about check runs and requested actions, see "[Check runs and requested actions](https://docs.github.com/github-ae@latest/rest/reference/checks#check-runs-and-requested-actions)." */
           actions?: {
             /** The text to be displayed on a button in the web UI. The maximum size is 20 characters. */
             label: string;
@@ -18062,7 +17188,7 @@ export interface operations {
   /**
    * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
    *
-   * By default, check suites are automatically created when you create a [check run](https://docs.github.com/enterprise-server@2.22/rest/reference/checks#check-runs). You only need to use this endpoint for manually creating check suites when you've disabled automatic creation using "[Update repository preferences for check suites](https://docs.github.com/enterprise-server@2.22/rest/reference/checks#update-repository-preferences-for-check-suites)". Your GitHub App must have the `checks:write` permission to create check suites.
+   * By default, check suites are automatically created when you create a [check run](https://docs.github.com/github-ae@latest/rest/reference/checks#check-runs). You only need to use this endpoint for manually creating check suites when you've disabled automatic creation using "[Update repository preferences for check suites](https://docs.github.com/github-ae@latest/rest/reference/checks#update-repository-preferences-for-check-suites)". Your GitHub App must have the `checks:write` permission to create check suites.
    */
   "checks/create-suite": {
     parameters: {
@@ -18094,7 +17220,7 @@ export interface operations {
       };
     };
   };
-  /** Changes the default automatic flow when creating check suites. By default, a check suite is automatically created each time code is pushed to a repository. When you disable the automatic creation of check suites, you can manually [Create a check suite](https://docs.github.com/enterprise-server@2.22/rest/reference/checks#create-a-check-suite). You must have admin permissions in the repository to set preferences for check suites. */
+  /** Changes the default automatic flow when creating check suites. By default, a check suite is automatically created each time code is pushed to a repository. When you disable the automatic creation of check suites, you can manually [Create a check suite](https://docs.github.com/github-ae@latest/rest/reference/checks#create-a-check-suite). You must have admin permissions in the repository to set preferences for check suites. */
   "checks/set-suites-preferences": {
     parameters: {
       path: {
@@ -18113,7 +17239,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** Enables or disables automatic creation of CheckSuite events upon pushes to the repository. Enabled by default. See the [`auto_trigger_checks` object](https://docs.github.com/enterprise-server@2.22/rest/reference/checks#auto_trigger_checks-object) description for details. */
+          /** Enables or disables automatic creation of CheckSuite events upon pushes to the repository. Enabled by default. See the [`auto_trigger_checks` object](https://docs.github.com/github-ae@latest/rest/reference/checks#auto_trigger_checks-object) description for details. */
           auto_trigger_checks?: {
             /** The `id` of the GitHub App. */
             app_id: number;
@@ -18187,7 +17313,7 @@ export interface operations {
     };
   };
   /**
-   * Triggers GitHub to rerequest an existing check suite, without pushing new code to a repository. This endpoint will trigger the [`check_suite` webhook](https://docs.github.com/enterprise-server@2.22/webhooks/event-payloads/#check_suite) event with the action `rerequested`. When a check suite is `rerequested`, its `status` is reset to `queued` and the `conclusion` is cleared.
+   * Triggers GitHub to rerequest an existing check suite, without pushing new code to a repository. This endpoint will trigger the [`check_suite` webhook](https://docs.github.com/github-ae@latest/webhooks/event-payloads/#check_suite) event with the action `rerequested`. When a check suite is `rerequested`, its `status` is reset to `queued` and the `conclusion` is cleared.
    *
    * To rerequest a check suite, your GitHub App must have the `checks:read` permission on a private repository or pull access to a public repository.
    */
@@ -18214,6 +17340,11 @@ export interface operations {
    * or `master`). You must use an access token with the `security_events` scope to use
    * this endpoint. GitHub Apps must have the `security_events` read permission to use
    * this endpoint.
+   *
+   * The response includes a `most_recent_instance` object.
+   * This provides details of the most recent instance of this alert
+   * for the default branch or for the specified Git reference
+   * (if you used `ref` in the request).
    */
   "code-scanning/list-alerts-for-repo": {
     parameters: {
@@ -18243,7 +17374,7 @@ export interface operations {
           "application/json": components["schemas"]["code-scanning-alert-items"][];
         };
       };
-      403: components["responses"]["forbidden"];
+      403: components["responses"]["code_scanning_forbidden_read"];
       404: components["responses"]["not_found"];
       503: components["responses"]["service_unavailable"];
     };
@@ -18252,7 +17383,7 @@ export interface operations {
    * Gets a single code scanning alert. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint.
    *
    * **Deprecation notice**:
-   * The instances field is deprecated and will, in future, not be included in the response for this endpoint. From GitHub Enterprise Server 3.0, the same information can be retrieved via a GET request to the URL specified by `instances_url`, added in that release.
+   * The instances field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The same information can now be retrieved via a GET request to the URL specified by `instances_url`.
    */
   "code-scanning/get-alert": {
     parameters: {
@@ -18270,7 +17401,7 @@ export interface operations {
           "application/json": components["schemas"]["code-scanning-alert"];
         };
       };
-      403: components["responses"]["forbidden"];
+      403: components["responses"]["code_scanning_forbidden_read"];
       404: components["responses"]["not_found"];
       503: components["responses"]["service_unavailable"];
     };
@@ -18292,7 +17423,7 @@ export interface operations {
           "application/json": components["schemas"]["code-scanning-alert"];
         };
       };
-      403: components["responses"]["forbidden"];
+      403: components["responses"]["code_scanning_forbidden_write"];
       404: components["responses"]["not_found"];
       503: components["responses"]["service_unavailable"];
     };
@@ -18303,6 +17434,36 @@ export interface operations {
           dismissed_reason?: components["schemas"]["code-scanning-alert-dismissed-reason"];
         };
       };
+    };
+  };
+  /** Lists all instances of the specified code scanning alert. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint. */
+  "code-scanning/list-alert-instances": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        /** The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation. */
+        alert_number: components["parameters"]["alert-number"];
+      };
+      query: {
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
+        /** Results per page (max 100) */
+        per_page?: components["parameters"]["per-page"];
+        /** The Git reference for the results you want to list. The `ref` for a branch can be formatted either as `refs/heads/<branch name>` or simply `<branch name>`. To reference a pull request use `refs/pull/<number>/merge`. */
+        ref?: components["parameters"]["git-ref"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["code-scanning-alert-instance"][];
+        };
+      };
+      403: components["responses"]["code_scanning_forbidden_read"];
+      404: components["responses"]["not_found"];
+      503: components["responses"]["service_unavailable"];
     };
   };
   /**
@@ -18351,7 +17512,52 @@ export interface operations {
           "application/json": components["schemas"]["code-scanning-analysis"][];
         };
       };
-      403: components["responses"]["forbidden"];
+      403: components["responses"]["code_scanning_forbidden_read"];
+      404: components["responses"]["not_found"];
+      503: components["responses"]["service_unavailable"];
+    };
+  };
+  /**
+   * Gets a specified code scanning analysis for a repository.
+   * You must use an access token with the `security_events` scope to use this endpoint.
+   * GitHub Apps must have the `security_events` read permission to use this endpoint.
+   *
+   * The default JSON response contains fields that describe the analysis.
+   * This includes the Git reference and commit SHA to which the analysis relates,
+   * the datetime of the analysis, the name of the code scanning tool,
+   * and the number of alerts.
+   *
+   * The `rules_count` field in the default response give the number of rules
+   * that were run in the analysis.
+   * For very old analyses this data is not available,
+   * and `0` is returned in this field.
+   *
+   * If you use the Accept header `application/sarif+json`,
+   * the response contains the analysis data that was uploaded.
+   * This is formatted as
+   * [SARIF version 2.1.0](https://docs.oasis-open.org/sarif/sarif/v2.1.0/cs01/sarif-v2.1.0-cs01.html).
+   *
+   * **Deprecation notice**:
+   * The `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the `tool` field.
+   */
+  "code-scanning/get-analysis": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        /** The ID of the analysis, as returned from the `GET /repos/{owner}/{repo}/code-scanning/analyses` operation. */
+        analysis_id: number;
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json+sarif": string;
+          "application/json": components["schemas"]["code-scanning-analysis"];
+        };
+      };
+      403: components["responses"]["code_scanning_forbidden_read"];
       404: components["responses"]["not_found"];
       503: components["responses"]["service_unavailable"];
     };
@@ -18360,8 +17566,8 @@ export interface operations {
    * Uploads SARIF data containing the results of a code scanning analysis to make the results available in a repository. You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` write permission to use this endpoint.
    *
    * There are two places where you can upload code scanning results.
-   *  - If you upload to a pull request, for example `--ref refs/pull/42/merge` or `--ref refs/pull/42/head`, then the results appear as alerts in a pull request check. For more information, see "[Triaging code scanning alerts in pull requests](/github/finding-security-vulnerabilities-and-errors-in-your-code/automatically-scanning-your-code-for-vulnerabilities-and-errors/triaging-code-scanning-alerts-in-pull-requests)."
-   *  - If you upload to a branch, for example `--ref refs/heads/my-branch`, then the results appear in the **Security** tab for your repository. For more information, see "[Managing code scanning alerts for your repository](/github/finding-security-vulnerabilities-and-errors-in-your-code/automatically-scanning-your-code-for-vulnerabilities-and-errors/managing-code-scanning-alerts-for-your-repository#viewing-the-alerts-for-a-repository)."
+   *  - If you upload to a pull request, for example `--ref refs/pull/42/merge` or `--ref refs/pull/42/head`, then the results appear as alerts in a pull request check. For more information, see "[Triaging code scanning alerts in pull requests](/code-security/secure-coding/triaging-code-scanning-alerts-in-pull-requests)."
+   *  - If you upload to a branch, for example `--ref refs/heads/my-branch`, then the results appear in the **Security** tab for your repository. For more information, see "[Managing code scanning alerts for your repository](/code-security/secure-coding/managing-code-scanning-alerts-for-your-repository#viewing-the-alerts-for-a-repository)."
    *
    * You must compress the SARIF-formatted analysis data that you want to upload, using `gzip`, and then encode it as a Base64 format string. For example:
    *
@@ -18391,7 +17597,7 @@ export interface operations {
       };
       /** Bad Request if the sarif field is invalid */
       400: unknown;
-      403: components["responses"]["forbidden"];
+      403: components["responses"]["code_scanning_forbidden_write"];
       404: components["responses"]["not_found"];
       /** Payload Too Large if the sarif field is too large */
       413: unknown;
@@ -18402,7 +17608,7 @@ export interface operations {
         "application/json": {
           commit_sha: components["schemas"]["code-scanning-analysis-commit-sha"];
           ref: components["schemas"]["code-scanning-ref"];
-          sarif: components["schemas"]["code-scanning-analysis-sarif-file-2"];
+          sarif: components["schemas"]["code-scanning-analysis-sarif-file"];
           /**
            * The base directory used in the analysis, as it appears in the SARIF file.
            * This property is used to convert file paths from absolute to relative, so that alerts can be mapped to their correct location in the repository.
@@ -18414,6 +17620,29 @@ export interface operations {
           tool_name?: string;
         };
       };
+    };
+  };
+  /** Gets information about a SARIF upload, including the status and the URL of the analysis that was uploaded so that you can retrieve details of the analysis. For more information, see "[Get a code scanning analysis for a repository](/rest/reference/code-scanning#get-a-code-scanning-analysis-for-a-repository)." You must use an access token with the `security_events` scope to use this endpoint. GitHub Apps must have the `security_events` read permission to use this endpoint. */
+  "code-scanning/get-sarif": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        /** The SARIF ID obtained after uploading. */
+        sarif_id: string;
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["code-scanning-sarifs-status"];
+        };
+      };
+      403: components["responses"]["code_scanning_forbidden_read"];
+      /** Not Found if the sarif id does not match any upload */
+      404: unknown;
+      503: components["responses"]["service_unavailable"];
     };
   };
   /**
@@ -18473,13 +17702,13 @@ export interface operations {
     };
   };
   /**
-   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    *
    * For more information the permission levels, see "[Repository permission levels for an organization](https://help.github.com/en/github/setting-up-and-managing-organizations-and-teams/repository-permission-levels-for-an-organization#permission-levels-for-repositories-owned-by-an-organization)".
    *
-   * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs)."
+   * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
    *
-   * The invitee will receive a notification that they have been invited to the repository, which they must accept or decline. They may do this via the notifications page, the email they receive, or by using the [repository invitations API endpoints](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#invitations).
+   * The invitee will receive a notification that they have been invited to the repository, which they must accept or decline. They may do this via the notifications page, the email they receive, or by using the [repository invitations API endpoints](https://docs.github.com/github-ae@latest/rest/reference/repos#invitations).
    *
    * **Rate limits**
    *
@@ -18555,7 +17784,7 @@ export interface operations {
     };
   };
   /**
-   * Commit Comments use [these custom media types](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#custom-media-types). You can read more about the use of media types in the API [here](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types/).
+   * Commit Comments use [these custom media types](https://docs.github.com/github-ae@latest/rest/reference/repos#custom-media-types). You can read more about the use of media types in the API [here](https://docs.github.com/github-ae@latest/rest/overview/media-types/).
    *
    * Comments are ordered by ascending ID.
    */
@@ -18643,7 +17872,7 @@ export interface operations {
       };
     };
   };
-  /** List the reactions to a [commit comment](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#comments). */
+  /** List the reactions to a [commit comment](https://docs.github.com/github-ae@latest/rest/reference/repos#comments). */
   "reactions/list-for-commit-comment": {
     parameters: {
       path: {
@@ -18653,7 +17882,7 @@ export interface operations {
         comment_id: components["parameters"]["comment-id"];
       };
       query: {
-        /** Returns a single [reaction type](https://docs.github.com/enterprise-server@2.22/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a commit comment. */
+        /** Returns a single [reaction type](https://docs.github.com/github-ae@latest/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a commit comment. */
         content?:
           | "+1"
           | "-1"
@@ -18681,7 +17910,7 @@ export interface operations {
       415: components["responses"]["preview_header_missing"];
     };
   };
-  /** Create a reaction to a [commit comment](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#comments). A response with an HTTP `200` status means that you already added the reaction type to this commit comment. */
+  /** Create a reaction to a [commit comment](https://docs.github.com/github-ae@latest/rest/reference/repos#comments). A response with an HTTP `200` status means that you already added the reaction type to this commit comment. */
   "reactions/create-for-commit-comment": {
     parameters: {
       path: {
@@ -18710,7 +17939,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** The [reaction type](https://docs.github.com/enterprise-server@2.22/rest/reference/reactions#reaction-types) to add to the commit comment. */
+          /** The [reaction type](https://docs.github.com/github-ae@latest/rest/reference/reactions#reaction-types) to add to the commit comment. */
           content:
             | "+1"
             | "-1"
@@ -18727,7 +17956,7 @@ export interface operations {
   /**
    * **Note:** You can also specify a repository by `repository_id` using the route `DELETE /repositories/:repository_id/comments/:comment_id/reactions/:reaction_id`.
    *
-   * Delete a reaction to a [commit comment](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#comments).
+   * Delete a reaction to a [commit comment](https://docs.github.com/github-ae@latest/rest/reference/repos#comments).
    */
   "reactions/delete-for-commit-comment": {
     parameters: {
@@ -18865,7 +18094,7 @@ export interface operations {
   /**
    * Create a comment for a commit using its `:commit_sha`.
    *
-   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    */
   "repos/create-commit-comment": {
     parameters: {
@@ -18904,7 +18133,7 @@ export interface operations {
       };
     };
   };
-  /** Lists the merged pull request that introduced the commit to the repository. If the commit is not present in the default branch, additionally returns open pull requests associated with the commit. The results may include open and closed pull requests. Additional preview headers may be required to see certain details for associated pull requests, such as whether a pull request is in a draft state. For more information about previews that might affect this endpoint, see the [List pull requests](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#list-pull-requests) endpoint. */
+  /** Lists the merged pull request that introduced the commit to the repository. If the commit is not present in the default branch, additionally returns open pull requests associated with the commit. The results may include open and closed pull requests. Additional preview headers may be required to see certain details for associated pull requests, such as whether a pull request is in a draft state. For more information about previews that might affect this endpoint, see the [List pull requests](https://docs.github.com/github-ae@latest/rest/reference/pulls#list-pull-requests) endpoint. */
   "repos/list-pull-requests-associated-with-commit": {
     parameters: {
       path: {
@@ -18936,9 +18165,9 @@ export interface operations {
    *
    * **Note:** If there are more than 300 files in the commit diff, the response will include pagination link headers for the remaining files, up to a limit of 3000 files. Each page contains the static commit information, and the only changes are to the file listing.
    *
-   * You can pass the appropriate [media type](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to  fetch `diff` and `patch` formats. Diffs with binary data will have no `patch` property.
+   * You can pass the appropriate [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to  fetch `diff` and `patch` formats. Diffs with binary data will have no `patch` property.
    *
-   * To return only the SHA-1 hash of the commit reference, you can provide the `sha` custom [media type](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) in the `Accept` header. You can use this endpoint to check if a remote reference's SHA-1 hash is the same as your local reference's SHA-1 hash by providing the local SHA-1 reference as the ETag.
+   * To return only the SHA-1 hash of the commit reference, you can provide the `sha` custom [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) in the `Accept` header. You can use this endpoint to check if a remote reference's SHA-1 hash is the same as your local reference's SHA-1 hash by providing the local SHA-1 reference as the ETag.
    *
    * **Signature verification object**
    *
@@ -19076,7 +18305,7 @@ export interface operations {
   /**
    * Users with pull access in a repository can access a combined view of commit statuses for a given ref. The ref can be a SHA, a branch name, or a tag name.
    *
-   * The most recent status for each context is returned, up to 100. This field [paginates](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#pagination) if there are over 100 contexts.
+   * The most recent status for each context is returned, up to 100. This field [paginates](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination) if there are over 100 contexts.
    *
    * Additionally, a combined `state` is returned. The `state` is one of:
    *
@@ -19143,16 +18372,15 @@ export interface operations {
   /**
    * The `basehead` param is comprised of two parts: `base` and `head`. Both must be branch names in `repo`. To compare branches across other repositories in the same network as `repo`, use the format `<USERNAME>:branch`.
    *
-   * The response from the API is equivalent to running the `git log base..head` command; however, commits are returned in chronological order. Pass the appropriate [media type](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.
+   * The response from the API is equivalent to running the `git log base..head` command; however, commits are returned in chronological order. Pass the appropriate [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.
    *
    * The response also includes details on the files that were changed between the two commits. This includes the status of the change (for example, if a file was added, removed, modified, or renamed), and details of the change itself. For example, files with a `renamed` status have a `previous_filename` field showing the previous filename of the file, and files with a `modified` status have a `patch` field showing the changes made to the file.
    *
    * **Working with large comparisons**
    *
-   * The response will include a comparison of up to 250 commits. If you are working with a larger commit range, you can use the [List commits](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#list-commits) to enumerate all commits in the range.
+   * To process a response with a large number of commits, you can use (`per_page` or `page`) to paginate the results. When using paging, the list of changed files is only returned with page 1, but includes all changed files for the entire comparison. For more information on working with pagination, see "[Traversing with pagination](/rest/guides/traversing-with-pagination)."
    *
-   * For comparisons with extremely large diffs, you may receive an error response indicating that the diff took too long
-   * to generate. You can typically resolve this error by using a smaller commit range.
+   * When calling this API without any paging parameters (`per_page` or `page`), the returned list is limited to 250 commits and the last commit in the list is the most recent of the entire comparison. When a paging parameter is specified, the first commit in the returned list of each page is the earliest.
    *
    * **Signature verification object**
    *
@@ -19191,6 +18419,12 @@ export interface operations {
         /** The base branch and head branch to compare. This parameter expects the format `{base}...{head}`. */
         basehead: string;
       };
+      query: {
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
+        /** Results per page (max 100) */
+        per_page?: components["parameters"]["per-page"];
+      };
     };
     responses: {
       /** Response */
@@ -19204,11 +18438,11 @@ export interface operations {
     };
   };
   /**
-   * Creates an attachment under a content reference URL in the body or comment of an issue or pull request. Use the `id` and `repository` `full_name` of the content reference from the [`content_reference` event](https://docs.github.com/enterprise-server@2.22/webhooks/event-payloads/#content_reference) to create an attachment.
+   * Creates an attachment under a content reference URL in the body or comment of an issue or pull request. Use the `id` and `repository` `full_name` of the content reference from the [`content_reference` event](https://docs.github.com/github-ae@latest/webhooks/event-payloads/#content_reference) to create an attachment.
    *
-   * The app must create a content attachment within six hours of the content reference URL being posted. See "[Using content attachments](https://docs.github.com/enterprise-server@2.22/apps/using-content-attachments/)" for details about content attachments.
+   * The app must create a content attachment within six hours of the content reference URL being posted. See "[Using content attachments](https://docs.github.com/github-ae@latest/apps/using-content-attachments/)" for details about content attachments.
    *
-   * You must use an [installation access token](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
+   * You must use an [installation access token](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
    */
   "apps/create-content-attachment-for-repo": {
     parameters: {
@@ -19250,15 +18484,15 @@ export interface operations {
    * Gets the contents of a file or directory in a repository. Specify the file path or directory in `:path`. If you omit
    * `:path`, you will receive the contents of the repository's root directory. See the description below regarding what the API response includes for directories.
    *
-   * Files and symlinks support [a custom media type](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#custom-media-types) for
+   * Files and symlinks support [a custom media type](https://docs.github.com/github-ae@latest/rest/reference/repos#custom-media-types) for
    * retrieving the raw content or rendered HTML (when supported). All content types support [a custom media
-   * type](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#custom-media-types) to ensure the content is returned in a consistent
+   * type](https://docs.github.com/github-ae@latest/rest/reference/repos#custom-media-types) to ensure the content is returned in a consistent
    * object format.
    *
    * **Note**:
-   * *   To get a repository's contents recursively, you can [recursively get the tree](https://docs.github.com/enterprise-server@2.22/rest/reference/git#trees).
+   * *   To get a repository's contents recursively, you can [recursively get the tree](https://docs.github.com/github-ae@latest/rest/reference/git#trees).
    * *   This API has an upper limit of 1,000 files for a directory. If you need to retrieve more files, use the [Git Trees
-   * API](https://docs.github.com/enterprise-server@2.22/rest/reference/git#get-a-tree).
+   * API](https://docs.github.com/github-ae@latest/rest/reference/git#get-a-tree).
    * *   This API supports files up to 1 megabyte in size.
    *
    * #### If the content is a directory
@@ -19494,7 +18728,7 @@ export interface operations {
   /**
    * Deployments offer a few configurable parameters with certain defaults.
    *
-   * The `ref` parameter can be any named branch, tag, or SHA. At GitHub Enterprise Server we often deploy branches and verify them
+   * The `ref` parameter can be any named branch, tag, or SHA. At GitHub AE we often deploy branches and verify them
    * before we merge a pull request.
    *
    * The `environment` parameter allows deployments to be issued to different runtime environments. Teams often have
@@ -19506,7 +18740,7 @@ export interface operations {
    * the API will return a successful merge commit. If merge conflicts prevent the merge from succeeding, the API will
    * return a failure response.
    *
-   * By default, [commit statuses](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#statuses) for every submitted context must be in a `success`
+   * By default, [commit statuses](https://docs.github.com/github-ae@latest/rest/reference/repos#statuses) for every submitted context must be in a `success`
    * state. The `required_contexts` parameter allows you to specify a subset of contexts that must be `success`, or to
    * specify contexts that have not yet been submitted. You are not required to use commit statuses to deploy. If you do
    * not require any contexts or create any commit statuses, the deployment will always succeed.
@@ -19573,7 +18807,7 @@ export interface operations {
           task?: string;
           /** Attempts to automatically merge the default branch into the requested ref, if it's behind the default branch. */
           auto_merge?: boolean;
-          /** The [status](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#statuses) contexts to verify against commit status checks. If you omit this parameter, GitHub verifies all unique contexts before creating a deployment. To bypass checking entirely, pass an empty array. Defaults to all unique contexts. */
+          /** The [status](https://docs.github.com/github-ae@latest/rest/reference/repos#statuses) contexts to verify against commit status checks. If you omit this parameter, GitHub verifies all unique contexts before creating a deployment. To bypass checking entirely, pass an empty array. Defaults to all unique contexts. */
           required_contexts?: string[];
           payload?: { [key: string]: any } | string;
           /** Name for the target deployment environment (e.g., `production`, `staging`, `qa`). */
@@ -19582,12 +18816,12 @@ export interface operations {
           description?: string | null;
           /**
            * Specifies if the given environment is specific to the deployment and will no longer exist at some point in the future. Default: `false`
-           * **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/enterprise-server@2.22/rest/overview/api-previews#enhanced-deployments) custom media type.
+           * **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/github-ae@latest/rest/overview/api-previews#enhanced-deployments) custom media type.
            */
           transient_environment?: boolean;
           /**
            * Specifies if the given environment is one that end-users directly interact with. Default: `true` when `environment` is `production` and `false` otherwise.
-           * **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/enterprise-server@2.22/rest/overview/api-previews#enhanced-deployments) custom media type.
+           * **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/github-ae@latest/rest/overview/api-previews#enhanced-deployments) custom media type.
            */
           production_environment?: boolean;
         };
@@ -19621,7 +18855,7 @@ export interface operations {
    * *   Create a new deployment that is active so that the system has a record of the current state, then delete the previously active deployment.
    * *   Mark the active deployment as inactive by adding any non-successful deployment status.
    *
-   * For more information, see "[Create a deployment](https://docs.github.com/enterprise-server@2.22/rest/reference/repos/#create-a-deployment)" and "[Create a deployment status](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#create-a-deployment-status)."
+   * For more information, see "[Create a deployment](https://docs.github.com/github-ae@latest/rest/reference/repos/#create-a-deployment)" and "[Create a deployment status](https://docs.github.com/github-ae@latest/rest/reference/repos#create-a-deployment-status)."
    */
   "repos/delete-deployment": {
     parameters: {
@@ -19695,7 +18929,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** The state of the status. Can be one of `error`, `failure`, `inactive`, `in_progress`, `queued` `pending`, or `success`. **Note:** To use the `inactive` state, you must provide the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/enterprise-server@2.22/rest/overview/api-previews#enhanced-deployments) custom media type. To use the `in_progress` and `queued` states, you must provide the [`application/vnd.github.flash-preview+json`](https://docs.github.com/enterprise-server@2.22/rest/overview/api-previews#deployment-statuses) custom media type. When you set a transient deployment to `inactive`, the deployment will be shown as `destroyed` in GitHub. */
+          /** The state of the status. Can be one of `error`, `failure`, `inactive`, `in_progress`, `queued` `pending`, or `success`. **Note:** To use the `inactive` state, you must provide the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/github-ae@latest/rest/overview/api-previews#enhanced-deployments) custom media type. To use the `in_progress` and `queued` states, you must provide the [`application/vnd.github.flash-preview+json`](https://docs.github.com/github-ae@latest/rest/overview/api-previews#deployment-statuses) custom media type. When you set a transient deployment to `inactive`, the deployment will be shown as `destroyed` in GitHub. */
           state:
             | "error"
             | "failure"
@@ -19708,22 +18942,22 @@ export interface operations {
           target_url?: string;
           /**
            * The full URL of the deployment's output. This parameter replaces `target_url`. We will continue to accept `target_url` to support legacy uses, but we recommend replacing `target_url` with `log_url`. Setting `log_url` will automatically set `target_url` to the same value. Default: `""`
-           * **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/enterprise-server@2.22/rest/overview/api-previews#enhanced-deployments) custom media type.
+           * **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/github-ae@latest/rest/overview/api-previews#enhanced-deployments) custom media type.
            */
           log_url?: string;
           /** A short description of the status. The maximum description length is 140 characters. */
           description?: string;
-          /** Name for the target deployment environment, which can be changed when setting a deploy status. For example, `production`, `staging`, or `qa`. **Note:** This parameter requires you to use the [`application/vnd.github.flash-preview+json`](https://docs.github.com/enterprise-server@2.22/rest/overview/api-previews#deployment-statuses) custom media type. */
+          /** Name for the target deployment environment, which can be changed when setting a deploy status. For example, `production`, `staging`, or `qa`. **Note:** This parameter requires you to use the [`application/vnd.github.flash-preview+json`](https://docs.github.com/github-ae@latest/rest/overview/api-previews#deployment-statuses) custom media type. */
           environment?: "production" | "staging" | "qa";
           /**
            * Sets the URL for accessing your environment. Default: `""`
-           * **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/enterprise-server@2.22/rest/overview/api-previews#enhanced-deployments) custom media type.
+           * **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/github-ae@latest/rest/overview/api-previews#enhanced-deployments) custom media type.
            */
           environment_url?: string;
           /**
            * Adds a new `inactive` status to all prior non-transient, non-production environment deployments with the same repository and `environment` name as the created status's deployment. An `inactive` status is only added to deployments that had a `success` state. Default: `true`
-           * **Note:** To add an `inactive` status to `production` environments, you must use the [`application/vnd.github.flash-preview+json`](https://docs.github.com/enterprise-server@2.22/rest/overview/api-previews#deployment-statuses) custom media type.
-           * **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/enterprise-server@2.22/rest/overview/api-previews#enhanced-deployments) custom media type.
+           * **Note:** To add an `inactive` status to `production` environments, you must use the [`application/vnd.github.flash-preview+json`](https://docs.github.com/github-ae@latest/rest/overview/api-previews#deployment-statuses) custom media type.
+           * **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/github-ae@latest/rest/overview/api-previews#enhanced-deployments) custom media type.
            */
           auto_inactive?: boolean;
         };
@@ -19750,41 +18984,6 @@ export interface operations {
       };
       404: components["responses"]["not_found"];
       415: components["responses"]["preview_header_missing"];
-    };
-  };
-  /**
-   * You can use this endpoint to trigger a webhook event called `repository_dispatch` when you want activity that happens outside of GitHub Enterprise Server to trigger a GitHub Actions workflow or GitHub App webhook. You must configure your GitHub Actions workflow or GitHub App to run when the `repository_dispatch` event occurs. For an example `repository_dispatch` webhook payload, see "[RepositoryDispatchEvent](https://docs.github.com/enterprise-server@2.22/webhooks/event-payloads/#repository_dispatch)."
-   *
-   * The `client_payload` parameter is available for any extra information that your workflow might need. This parameter is a JSON payload that will be passed on when the webhook event is dispatched. For example, the `client_payload` can include a message that a user would like to send using a GitHub Actions workflow. Or the `client_payload` can be used as a test to debug your workflow.
-   *
-   * This endpoint requires write access to the repository by providing either:
-   *
-   *   - Personal access tokens with `repo` scope. For more information, see "[Creating a personal access token for the command line](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line)" in the GitHub Help documentation.
-   *   - GitHub Apps with both `metadata:read` and `contents:read&write` permissions.
-   *
-   * This input example shows how you can use the `client_payload` as a test to debug your workflow.
-   */
-  "repos/create-dispatch-event": {
-    parameters: {
-      path: {
-        owner: components["parameters"]["owner"];
-        repo: components["parameters"]["repo"];
-      };
-    };
-    responses: {
-      /** Response */
-      204: never;
-      422: components["responses"]["validation_failed"];
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** A custom webhook event name. */
-          event_type: string;
-          /** JSON payload with extra information about the webhook event that your action or worklow may use. */
-          client_payload?: { [key: string]: any };
-        };
-      };
     };
   };
   "activity/list-repo-events": {
@@ -19838,7 +19037,7 @@ export interface operations {
   /**
    * Create a fork for the authenticated user.
    *
-   * **Note**: Forking a Repository happens asynchronously. You may have to wait a short period of time before you can access the git objects. If this takes longer than 5 minutes, be sure to contact [GitHub Enterprise Server Support](https://support.github.com/contact) or [GitHub Enterprise Server Premium Support](https://premium.githubsupport.com).
+   * **Note**: Forking a Repository happens asynchronously. You may have to wait a short period of time before you can access the git objects. If this takes longer than 5 minutes, be sure to contact [GitHub AE Support](https://support.github.com/contact) or [GitHub AE Premium Support](https://premium.githubsupport.com).
    */
   "repos/create-fork": {
     parameters: {
@@ -20067,7 +19266,7 @@ export interface operations {
    *
    * When you use this endpoint without providing a `:ref`, it will return an array of all the references from your Git database, including notes and stashes if they exist on the server. Anything in the namespace is returned, not just `heads` and `tags`.
    *
-   * **Note:** You need to explicitly [request a pull request](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#get-a-pull-request) to trigger a test merge commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/enterprise-server@2.22/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
+   * **Note:** You need to explicitly [request a pull request](https://docs.github.com/github-ae@latest/rest/reference/pulls#get-a-pull-request) to trigger a test merge commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
    *
    * If you request matching references for a branch named `feature` but the branch `feature` doesn't exist, the response can still include other matching head refs that start with the word `feature`, such as `featureA` and `featureB`.
    */
@@ -20099,7 +19298,7 @@ export interface operations {
   /**
    * Returns a single reference from your Git database. The `:ref` in the URL must be formatted as `heads/<branch name>` for branches and `tags/<tag name>` for tags. If the `:ref` doesn't match an existing ref, a `404` is returned.
    *
-   * **Note:** You need to explicitly [request a pull request](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#get-a-pull-request) to trigger a test merge commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/enterprise-server@2.22/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
+   * **Note:** You need to explicitly [request a pull request](https://docs.github.com/github-ae@latest/rest/reference/pulls#get-a-pull-request) to trigger a test merge commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
    */
   "git/get-ref": {
     parameters: {
@@ -20197,7 +19396,7 @@ export interface operations {
     };
   };
   /**
-   * Note that creating a tag object does not create the reference that makes a tag in Git. If you want to create an annotated tag in Git, you have to do this call to create the tag object, and then [create](https://docs.github.com/enterprise-server@2.22/rest/reference/git#create-a-reference) the `refs/tags/[tag]` reference. If you want to create a lightweight tag, you only have to [create](https://docs.github.com/enterprise-server@2.22/rest/reference/git#create-a-reference) the tag reference - this call would be unnecessary.
+   * Note that creating a tag object does not create the reference that makes a tag in Git. If you want to create an annotated tag in Git, you have to do this call to create the tag object, and then [create](https://docs.github.com/github-ae@latest/rest/reference/git#create-a-reference) the `refs/tags/[tag]` reference. If you want to create a lightweight tag, you only have to [create](https://docs.github.com/github-ae@latest/rest/reference/git#create-a-reference) the tag reference - this call would be unnecessary.
    *
    * **Signature verification object**
    *
@@ -20322,7 +19521,7 @@ export interface operations {
   /**
    * The tree creation API accepts nested entries. If you specify both a tree and a nested path modifying that tree, this endpoint will overwrite the contents of the tree with the new path contents, and create a new tree structure.
    *
-   * If you use this endpoint to add, delete, or modify the file contents in a tree, you will need to commit the tree and then update a branch to point to the commit. For more information see "[Create a commit](https://docs.github.com/enterprise-server@2.22/rest/reference/git#create-a-commit)" and "[Update a reference](https://docs.github.com/enterprise-server@2.22/rest/reference/git#update-a-reference)."
+   * If you use this endpoint to add, delete, or modify the file contents in a tree, you will need to commit the tree and then update a branch to point to the commit. For more information see "[Create a commit](https://docs.github.com/github-ae@latest/rest/reference/git#create-a-commit)" and "[Update a reference](https://docs.github.com/github-ae@latest/rest/reference/git#update-a-reference)."
    */
   "git/create-tree": {
     parameters: {
@@ -20460,7 +19659,7 @@ export interface operations {
         "application/json": {
           /** Use `web` to create a webhook. Default: `web`. This parameter only accepts the value `web`. */
           name?: string;
-          /** Key/value pairs to provide settings for this webhook. [These are defined below](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#create-hook-config-params). */
+          /** Key/value pairs to provide settings for this webhook. [These are defined below](https://docs.github.com/github-ae@latest/rest/reference/repos#create-hook-config-params). */
           config?: {
             url?: components["schemas"]["webhook-config-url"];
             content_type?: components["schemas"]["webhook-config-content-type"];
@@ -20469,7 +19668,7 @@ export interface operations {
             token?: string;
             digest?: string;
           };
-          /** Determines what [events](https://docs.github.com/enterprise-server@2.22/webhooks/event-payloads) the hook is triggered for. */
+          /** Determines what [events](https://docs.github.com/github-ae@latest/webhooks/event-payloads) the hook is triggered for. */
           events?: string[];
           /** Determines if notifications are sent when the webhook is triggered. Set to `true` to send notifications. */
           active?: boolean;
@@ -20532,7 +19731,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** Key/value pairs to provide settings for this webhook. [These are defined below](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#create-hook-config-params). */
+          /** Key/value pairs to provide settings for this webhook. [These are defined below](https://docs.github.com/github-ae@latest/rest/reference/repos#create-hook-config-params). */
           config?: {
             url: components["schemas"]["webhook-config-url"];
             content_type?: components["schemas"]["webhook-config-content-type"];
@@ -20541,7 +19740,7 @@ export interface operations {
             address?: string;
             room?: string;
           };
-          /** Determines what [events](https://docs.github.com/enterprise-server@2.22/webhooks/event-payloads) the hook is triggered for. This replaces the entire array of events. */
+          /** Determines what [events](https://docs.github.com/github-ae@latest/webhooks/event-payloads) the hook is triggered for. This replaces the entire array of events. */
           events?: string[];
           /** Determines a list of events to be added to the list of events that the Hook triggers for. */
           add_events?: string[];
@@ -20553,7 +19752,124 @@ export interface operations {
       };
     };
   };
-  /** This will trigger a [ping event](https://docs.github.com/enterprise-server@2.22/webhooks/#ping-event) to be sent to the hook. */
+  /**
+   * Returns the webhook configuration for a repository. To get more information about the webhook, including the `active` state and `events`, use "[Get a repository webhook](/rest/reference/orgs#get-a-repository-webhook)."
+   *
+   * Access tokens must have the `read:repo_hook` or `repo` scope, and GitHub Apps must have the `repository_hooks:read` permission.
+   */
+  "repos/get-webhook-config-for-repo": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        hook_id: components["parameters"]["hook-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["webhook-config"];
+        };
+      };
+    };
+  };
+  /**
+   * Updates the webhook configuration for a repository. To update more information about the webhook, including the `active` state and `events`, use "[Update a repository webhook](/rest/reference/orgs#update-a-repository-webhook)."
+   *
+   * Access tokens must have the `write:repo_hook` or `repo` scope, and GitHub Apps must have the `repository_hooks:write` permission.
+   */
+  "repos/update-webhook-config-for-repo": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        hook_id: components["parameters"]["hook-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["webhook-config"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          url?: components["schemas"]["webhook-config-url"];
+          content_type?: components["schemas"]["webhook-config-content-type"];
+          secret?: components["schemas"]["webhook-config-secret"];
+          insecure_ssl?: components["schemas"]["webhook-config-insecure-ssl"];
+        };
+      };
+    };
+  };
+  /** Returns a list of webhook deliveries for a webhook configured in a repository. */
+  "repos/list-webhook-deliveries": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        hook_id: components["parameters"]["hook-id"];
+      };
+      query: {
+        /** Results per page (max 100) */
+        per_page?: components["parameters"]["per-page"];
+        /** Used for pagination: the starting delivery from which the page of deliveries is fetched. Refer to the `link` header for the next and previous page cursors. */
+        cursor?: components["parameters"]["cursor"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["hook-delivery-item"][];
+        };
+      };
+      400: components["responses"]["bad_request"];
+      422: components["responses"]["validation_failed"];
+    };
+  };
+  /** Returns a delivery for a webhook configured in a repository. */
+  "repos/get-webhook-delivery": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        hook_id: components["parameters"]["hook-id"];
+        delivery_id: components["parameters"]["delivery-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["hook-delivery"];
+        };
+      };
+      400: components["responses"]["bad_request"];
+      422: components["responses"]["validation_failed"];
+    };
+  };
+  /** Redeliver a webhook delivery for a webhook configured in a repository. */
+  "repos/redeliver-webhook-delivery": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        hook_id: components["parameters"]["hook-id"];
+        delivery_id: components["parameters"]["delivery-id"];
+      };
+    };
+    responses: {
+      202: components["responses"]["accepted"];
+      400: components["responses"]["bad_request"];
+      422: components["responses"]["validation_failed"];
+    };
+  };
+  /** This will trigger a [ping event](https://docs.github.com/github-ae@latest/webhooks/#ping-event) to be sent to the hook. */
   "repos/ping-webhook": {
     parameters: {
       path: {
@@ -20590,7 +19906,7 @@ export interface operations {
   /**
    * Enables an authenticated GitHub App to find the repository's installation information. The installation's account type will be either an organization or a user account, depending which account the repository belongs to.
    *
-   * You must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
    */
   "apps/get-repo-installation": {
     parameters: {
@@ -20603,7 +19919,7 @@ export interface operations {
       /** Response */
       200: {
         content: {
-          "application/json": components["schemas"]["installation-ghes-2"];
+          "application/json": components["schemas"]["installation"];
         };
       };
       301: components["responses"]["moved_permanently"];
@@ -20680,7 +19996,7 @@ export interface operations {
    * **Note**: GitHub's REST API v3 considers every pull request an issue, but not every issue is a pull request. For this
    * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
    * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
-   * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#list-pull-requests)" endpoint.
+   * request id, use the "[List pull requests](https://docs.github.com/github-ae@latest/rest/reference/pulls#list-pull-requests)" endpoint.
    */
   "issues/list-for-repo": {
     parameters: {
@@ -20729,7 +20045,7 @@ export interface operations {
   /**
    * Any user with pull access to a repository can create an issue. If [issues are disabled in the repository](https://help.github.com/articles/disabling-issues/), the API returns a `410 Gone` status.
    *
-   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-abuse-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-abuse-rate-limits)" for details.
    */
   "issues/create": {
     parameters: {
@@ -20872,7 +20188,7 @@ export interface operations {
       };
     };
   };
-  /** List the reactions to an [issue comment](https://docs.github.com/enterprise-server@2.22/rest/reference/issues#comments). */
+  /** List the reactions to an [issue comment](https://docs.github.com/github-ae@latest/rest/reference/issues#comments). */
   "reactions/list-for-issue-comment": {
     parameters: {
       path: {
@@ -20882,7 +20198,7 @@ export interface operations {
         comment_id: components["parameters"]["comment-id"];
       };
       query: {
-        /** Returns a single [reaction type](https://docs.github.com/enterprise-server@2.22/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to an issue comment. */
+        /** Returns a single [reaction type](https://docs.github.com/github-ae@latest/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to an issue comment. */
         content?:
           | "+1"
           | "-1"
@@ -20910,7 +20226,7 @@ export interface operations {
       415: components["responses"]["preview_header_missing"];
     };
   };
-  /** Create a reaction to an [issue comment](https://docs.github.com/enterprise-server@2.22/rest/reference/issues#comments). A response with an HTTP `200` status means that you already added the reaction type to this issue comment. */
+  /** Create a reaction to an [issue comment](https://docs.github.com/github-ae@latest/rest/reference/issues#comments). A response with an HTTP `200` status means that you already added the reaction type to this issue comment. */
   "reactions/create-for-issue-comment": {
     parameters: {
       path: {
@@ -20939,7 +20255,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** The [reaction type](https://docs.github.com/enterprise-server@2.22/rest/reference/reactions#reaction-types) to add to the issue comment. */
+          /** The [reaction type](https://docs.github.com/github-ae@latest/rest/reference/reactions#reaction-types) to add to the issue comment. */
           content:
             | "+1"
             | "-1"
@@ -20956,7 +20272,7 @@ export interface operations {
   /**
    * **Note:** You can also specify a repository by `repository_id` using the route `DELETE delete /repositories/:repository_id/issues/comments/:comment_id/reactions/:reaction_id`.
    *
-   * Delete a reaction to an [issue comment](https://docs.github.com/enterprise-server@2.22/rest/reference/issues#comments).
+   * Delete a reaction to an [issue comment](https://docs.github.com/github-ae@latest/rest/reference/issues#comments).
    */
   "reactions/delete-for-issue-comment": {
     parameters: {
@@ -21018,17 +20334,17 @@ export interface operations {
     };
   };
   /**
-   * The API returns a [`301 Moved Permanently` status](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-redirects-redirects) if the issue was
+   * The API returns a [`301 Moved Permanently` status](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-redirects-redirects) if the issue was
    * [transferred](https://help.github.com/articles/transferring-an-issue-to-another-repository/) to another repository. If
    * the issue was transferred to or deleted from a repository where the authenticated user lacks read access, the API
    * returns a `404 Not Found` status. If the issue was deleted from a repository where the authenticated user has read
    * access, the API returns a `410 Gone` status. To receive webhook events for transferred and deleted issues, subscribe
-   * to the [`issues`](https://docs.github.com/enterprise-server@2.22/webhooks/event-payloads/#issues) webhook.
+   * to the [`issues`](https://docs.github.com/github-ae@latest/webhooks/event-payloads/#issues) webhook.
    *
    * **Note**: GitHub's REST API v3 considers every pull request an issue, but not every issue is a pull request. For this
    * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
    * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
-   * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#list-pull-requests)" endpoint.
+   * request id, use the "[List pull requests](https://docs.github.com/github-ae@latest/rest/reference/pulls#list-pull-requests)" endpoint.
    */
   "issues/get": {
     parameters: {
@@ -21188,7 +20504,7 @@ export interface operations {
       410: components["responses"]["gone"];
     };
   };
-  /** This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-abuse-rate-limits)" for details. */
+  /** This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-abuse-rate-limits)" for details. */
   "issues/create-comment": {
     parameters: {
       path: {
@@ -21382,7 +20698,7 @@ export interface operations {
   /**
    * Users with push access can lock an issue or pull request's conversation.
    *
-   * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs)."
+   * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
    */
   "issues/lock": {
     parameters: {
@@ -21433,7 +20749,7 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** List the reactions to an [issue](https://docs.github.com/enterprise-server@2.22/rest/reference/issues). */
+  /** List the reactions to an [issue](https://docs.github.com/github-ae@latest/rest/reference/issues). */
   "reactions/list-for-issue": {
     parameters: {
       path: {
@@ -21443,7 +20759,7 @@ export interface operations {
         issue_number: components["parameters"]["issue-number"];
       };
       query: {
-        /** Returns a single [reaction type](https://docs.github.com/enterprise-server@2.22/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to an issue. */
+        /** Returns a single [reaction type](https://docs.github.com/github-ae@latest/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to an issue. */
         content?:
           | "+1"
           | "-1"
@@ -21472,7 +20788,7 @@ export interface operations {
       415: components["responses"]["preview_header_missing"];
     };
   };
-  /** Create a reaction to an [issue](https://docs.github.com/enterprise-server@2.22/rest/reference/issues/). A response with an HTTP `200` status means that you already added the reaction type to this issue. */
+  /** Create a reaction to an [issue](https://docs.github.com/github-ae@latest/rest/reference/issues/). A response with an HTTP `200` status means that you already added the reaction type to this issue. */
   "reactions/create-for-issue": {
     parameters: {
       path: {
@@ -21501,7 +20817,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** The [reaction type](https://docs.github.com/enterprise-server@2.22/rest/reference/reactions#reaction-types) to add to the issue. */
+          /** The [reaction type](https://docs.github.com/github-ae@latest/rest/reference/reactions#reaction-types) to add to the issue. */
           content:
             | "+1"
             | "-1"
@@ -21518,7 +20834,7 @@ export interface operations {
   /**
    * **Note:** You can also specify a repository by `repository_id` using the route `DELETE /repositories/:repository_id/issues/:issue_number/reactions/:reaction_id`.
    *
-   * Delete a reaction to an [issue](https://docs.github.com/enterprise-server@2.22/rest/reference/issues/).
+   * Delete a reaction to an [issue](https://docs.github.com/github-ae@latest/rest/reference/issues/).
    */
   "reactions/delete-for-issue": {
     parameters: {
@@ -21794,7 +21110,7 @@ export interface operations {
   /**
    * This method returns the contents of the repository's license file, if one is detected.
    *
-   * Similar to [Get repository content](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#get-repository-content), this method also supports [custom media types](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types) for retrieving the raw license content or rendered license HTML.
+   * Similar to [Get repository content](https://docs.github.com/github-ae@latest/rest/reference/repos#get-repository-content), this method also supports [custom media types](https://docs.github.com/github-ae@latest/rest/overview/media-types) for retrieving the raw license content or rendered license HTML.
    */
   "licenses/get-for-repo": {
     parameters: {
@@ -22036,7 +21352,7 @@ export interface operations {
       };
     };
   };
-  /** Marks all notifications in a repository as "read" removes them from the [default view on GitHub Enterprise Server](https://github.com/notifications). If the number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub Enterprise Server will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain, you can use the [List repository notifications for the authenticated user](https://docs.github.com/enterprise-server@2.22/rest/reference/activity#list-repository-notifications-for-the-authenticated-user) endpoint and pass the query parameter `all=false`. */
+  /** Marks all notifications in a repository as "read" removes them from the [default view on GitHub AE](https://github.com/notifications). If the number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub AE will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain, you can use the [List repository notifications for the authenticated user](https://docs.github.com/github-ae@latest/rest/reference/activity#list-repository-notifications-for-the-authenticated-user) endpoint and pass the query parameter `all=false`. */
   "activity/mark-repo-notifications-as-read": {
     parameters: {
       path: {
@@ -22083,7 +21399,7 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Updates information for a GitHub Enterprise Server Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages). */
+  /** Updates information for a GitHub AE Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages). */
   "repos/update-information-about-pages-site": {
     parameters: {
       path: {
@@ -22117,7 +21433,7 @@ export interface operations {
       };
     };
   };
-  /** Configures a GitHub Enterprise Server Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages)." */
+  /** Configures a GitHub AE Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages)." */
   "repos/create-pages-site": {
     parameters: {
       path: {
@@ -22242,100 +21558,6 @@ export interface operations {
       };
     };
   };
-  /** List all pre-receive hooks that are enabled or testing for this repository as well as any disabled hooks that are allowed to be enabled at the repository level. Pre-receive hooks that are disabled at a higher level and are not configurable will not be listed. */
-  "enterprise-admin/list-pre-receive-hooks-for-repo": {
-    parameters: {
-      path: {
-        owner: components["parameters"]["owner"];
-        repo: components["parameters"]["repo"];
-      };
-      query: {
-        /** Results per page (max 100) */
-        per_page?: components["parameters"]["per-page"];
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
-        /** One of `asc` (ascending) or `desc` (descending). */
-        direction?: components["parameters"]["direction"];
-        sort?: "created" | "updated" | "name";
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["repository-pre-receive-hook"][];
-        };
-      };
-    };
-  };
-  "enterprise-admin/get-pre-receive-hook-for-repo": {
-    parameters: {
-      path: {
-        owner: components["parameters"]["owner"];
-        repo: components["parameters"]["repo"];
-        /** pre_receive_hook_id parameter */
-        pre_receive_hook_id: components["parameters"]["pre-receive-hook-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["repository-pre-receive-hook"];
-        };
-      };
-    };
-  };
-  /**
-   * Deletes any overridden enforcement on this repository for the specified hook.
-   *
-   * Responds with effective values inherited from owner and/or global level.
-   */
-  "enterprise-admin/remove-pre-receive-hook-enforcement-for-repo": {
-    parameters: {
-      path: {
-        owner: components["parameters"]["owner"];
-        repo: components["parameters"]["repo"];
-        /** pre_receive_hook_id parameter */
-        pre_receive_hook_id: components["parameters"]["pre-receive-hook-id"];
-      };
-    };
-    responses: {
-      /** Responds with effective values inherited from owner and/or global level. */
-      200: {
-        content: {
-          "application/json": components["schemas"]["repository-pre-receive-hook"];
-        };
-      };
-    };
-  };
-  /** For pre-receive hooks which are allowed to be configured at the repo level, you can set `enforcement` */
-  "enterprise-admin/update-pre-receive-hook-enforcement-for-repo": {
-    parameters: {
-      path: {
-        owner: components["parameters"]["owner"];
-        repo: components["parameters"]["repo"];
-        /** pre_receive_hook_id parameter */
-        pre_receive_hook_id: components["parameters"]["pre-receive-hook-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["repository-pre-receive-hook"];
-        };
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** The state of enforcement for the hook on this repository. */
-          enforcement?: "enabled" | "disabled" | "testing";
-        };
-      };
-    };
-  };
   /** Lists the projects in a repository. Returns a `404 Not Found` status if projects are disabled in the repository. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
   "projects/list-for-repo": {
     parameters: {
@@ -22442,7 +21664,7 @@ export interface operations {
    *
    * You can create a new pull request.
    *
-   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    */
   "pulls/create": {
     parameters: {
@@ -22576,7 +21798,7 @@ export interface operations {
       };
     };
   };
-  /** List the reactions to a [pull request review comment](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#review-comments). */
+  /** List the reactions to a [pull request review comment](https://docs.github.com/github-ae@latest/rest/reference/pulls#review-comments). */
   "reactions/list-for-pull-request-review-comment": {
     parameters: {
       path: {
@@ -22586,7 +21808,7 @@ export interface operations {
         comment_id: components["parameters"]["comment-id"];
       };
       query: {
-        /** Returns a single [reaction type](https://docs.github.com/enterprise-server@2.22/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a pull request review comment. */
+        /** Returns a single [reaction type](https://docs.github.com/github-ae@latest/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a pull request review comment. */
         content?:
           | "+1"
           | "-1"
@@ -22614,7 +21836,7 @@ export interface operations {
       415: components["responses"]["preview_header_missing"];
     };
   };
-  /** Create a reaction to a [pull request review comment](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#comments). A response with an HTTP `200` status means that you already added the reaction type to this pull request review comment. */
+  /** Create a reaction to a [pull request review comment](https://docs.github.com/github-ae@latest/rest/reference/pulls#comments). A response with an HTTP `200` status means that you already added the reaction type to this pull request review comment. */
   "reactions/create-for-pull-request-review-comment": {
     parameters: {
       path: {
@@ -22643,7 +21865,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** The [reaction type](https://docs.github.com/enterprise-server@2.22/rest/reference/reactions#reaction-types) to add to the pull request review comment. */
+          /** The [reaction type](https://docs.github.com/github-ae@latest/rest/reference/reactions#reaction-types) to add to the pull request review comment. */
           content:
             | "+1"
             | "-1"
@@ -22660,7 +21882,7 @@ export interface operations {
   /**
    * **Note:** You can also specify a repository by `repository_id` using the route `DELETE /repositories/:repository_id/pulls/comments/:comment_id/reactions/:reaction_id.`
    *
-   * Delete a reaction to a [pull request review comment](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#review-comments).
+   * Delete a reaction to a [pull request review comment](https://docs.github.com/github-ae@latest/rest/reference/pulls#review-comments).
    */
   "reactions/delete-for-pull-request-comment": {
     parameters: {
@@ -22682,9 +21904,9 @@ export interface operations {
    *
    * Lists details of a pull request by providing its number.
    *
-   * When you get, [create](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls/#create-a-pull-request), or [edit](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#update-a-pull-request) a pull request, GitHub Enterprise Server creates a merge commit to test whether the pull request can be automatically merged into the base branch. This test commit is not added to the base branch or the head branch. You can review the status of the test commit using the `mergeable` key. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/enterprise-server@2.22/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
+   * When you get, [create](https://docs.github.com/github-ae@latest/rest/reference/pulls/#create-a-pull-request), or [edit](https://docs.github.com/github-ae@latest/rest/reference/pulls#update-a-pull-request) a pull request, GitHub AE creates a merge commit to test whether the pull request can be automatically merged into the base branch. This test commit is not added to the base branch or the head branch. You can review the status of the test commit using the `mergeable` key. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
    *
-   * The value of the `mergeable` attribute can be `true`, `false`, or `null`. If the value is `null`, then GitHub Enterprise Server has started a background job to compute the mergeability. After giving the job time to complete, resubmit the request. When the job finishes, you will see a non-`null` value for the `mergeable` attribute in the response. If `mergeable` is `true`, then `merge_commit_sha` will be the SHA of the _test_ merge commit.
+   * The value of the `mergeable` attribute can be `true`, `false`, or `null`. If the value is `null`, then GitHub AE has started a background job to compute the mergeability. After giving the job time to complete, resubmit the request. When the job finishes, you will see a non-`null` value for the `mergeable` attribute in the response. If `mergeable` is `true`, then `merge_commit_sha` will be the SHA of the _test_ merge commit.
    *
    * The value of the `merge_commit_sha` attribute changes depending on the state of the pull request. Before merging a pull request, the `merge_commit_sha` attribute holds the SHA of the _test_ merge commit. After merging a pull request, the `merge_commit_sha` attribute changes depending on how you merged the pull request:
    *
@@ -22692,7 +21914,7 @@ export interface operations {
    * *   If merged via a [squash](https://help.github.com/articles/about-merge-methods-on-github/#squashing-your-merge-commits), `merge_commit_sha` represents the SHA of the squashed commit on the base branch.
    * *   If [rebased](https://help.github.com/articles/about-merge-methods-on-github/#rebasing-and-merging-your-commits), `merge_commit_sha` represents the commit that the base branch was updated to.
    *
-   * Pass the appropriate [media type](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.
+   * Pass the appropriate [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.
    */
   "pulls/get": {
     parameters: {
@@ -22703,7 +21925,7 @@ export interface operations {
       };
     };
     responses: {
-      /** Pass the appropriate [media type](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats. */
+      /** Pass the appropriate [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats. */
       200: {
         content: {
           "application/json": components["schemas"]["pull-request"];
@@ -22786,13 +22008,13 @@ export interface operations {
     };
   };
   /**
-   * Creates a review comment in the pull request diff. To add a regular comment to a pull request timeline, see "[Create an issue comment](https://docs.github.com/enterprise-server@2.22/rest/reference/issues#create-an-issue-comment)." We recommend creating a review comment using `line`, `side`, and optionally `start_line` and `start_side` if your comment applies to more than one line in the pull request diff.
+   * Creates a review comment in the pull request diff. To add a regular comment to a pull request timeline, see "[Create an issue comment](https://docs.github.com/github-ae@latest/rest/reference/issues#create-an-issue-comment)." We recommend creating a review comment using `line`, `side`, and optionally `start_line` and `start_side` if your comment applies to more than one line in the pull request diff.
    *
-   * You can still create a review comment using the `position` parameter. When you use `position`, the `line`, `side`, `start_line`, and `start_side` parameters are not required. For more information, see the [`comfort-fade` preview notice](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#create-a-review-comment-for-a-pull-request-preview-notices).
+   * You can still create a review comment using the `position` parameter. When you use `position`, the `line`, `side`, `start_line`, and `start_side` parameters are not required. For more information, see the [`comfort-fade` preview notice](https://docs.github.com/github-ae@latest/rest/reference/pulls#create-a-review-comment-for-a-pull-request-preview-notices).
    *
    * **Note:** The position value equals the number of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.
    *
-   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    */
   "pulls/create-review-comment": {
     parameters: {
@@ -22842,7 +22064,7 @@ export interface operations {
   /**
    * Creates a reply to a review comment for a pull request. For the `comment_id`, provide the ID of the review comment you are replying to. This must be the ID of a _top-level review comment_, not a reply to that comment. Replies to replies are not supported.
    *
-   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    */
   "pulls/create-reply-for-review-comment": {
     parameters: {
@@ -22875,7 +22097,7 @@ export interface operations {
       };
     };
   };
-  /** Lists a maximum of 250 commits for a pull request. To receive a complete commit list for pull requests with more than 250 commits, use the [List commits](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#list-commits) endpoint. */
+  /** Lists a maximum of 250 commits for a pull request. To receive a complete commit list for pull requests with more than 250 commits, use the [List commits](https://docs.github.com/github-ae@latest/rest/reference/repos#list-commits) endpoint. */
   "pulls/list-commits": {
     parameters: {
       path: {
@@ -22942,7 +22164,7 @@ export interface operations {
       404: unknown;
     };
   };
-  /** This endpoint triggers [notifications](https://docs.github.com/enterprise-server@2.22/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-abuse-rate-limits)" for details. */
+  /** This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-abuse-rate-limits)" for details. */
   "pulls/merge": {
     parameters: {
       path: {
@@ -23019,7 +22241,7 @@ export interface operations {
       };
     };
   };
-  /** This endpoint triggers [notifications](https://docs.github.com/enterprise-server@2.22/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-abuse-rate-limits)" for details. */
+  /** This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-abuse-rate-limits)" for details. */
   "pulls/request-reviewers": {
     parameters: {
       path: {
@@ -23104,11 +22326,11 @@ export interface operations {
     };
   };
   /**
-   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    *
    * Pull request reviews created in the `PENDING` state do not include the `submitted_at` property in the response.
    *
-   * **Note:** To comment on a specific line in a file, you need to first determine the _position_ of that line in the diff. The GitHub REST API v3 offers the `application/vnd.github.v3.diff` [media type](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types#commits-commit-comparison-and-pull-requests). To see a pull request diff, add this media type to the `Accept` header of a call to the [single pull request](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#get-a-pull-request) endpoint.
+   * **Note:** To comment on a specific line in a file, you need to first determine the _position_ of that line in the diff. The GitHub REST API v3 offers the `application/vnd.github.v3.diff` [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types#commits-commit-comparison-and-pull-requests). To see a pull request diff, add this media type to the `Accept` header of a call to the [single pull request](https://docs.github.com/github-ae@latest/rest/reference/pulls#get-a-pull-request) endpoint.
    *
    * The `position` value equals the number of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.
    */
@@ -23137,7 +22359,7 @@ export interface operations {
           commit_id?: string;
           /** **Required** when using `REQUEST_CHANGES` or `COMMENT` for the `event` parameter. The body text of the pull request review. */
           body?: string;
-          /** The review action you want to perform. The review actions include: `APPROVE`, `REQUEST_CHANGES`, or `COMMENT`. By leaving this blank, you set the review action state to `PENDING`, which means you will need to [submit the pull request review](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#submit-a-review-for-a-pull-request) when you are ready. */
+          /** The review action you want to perform. The review actions include: `APPROVE`, `REQUEST_CHANGES`, or `COMMENT`. By leaving this blank, you set the review action state to `PENDING`, which means you will need to [submit the pull request review](https://docs.github.com/github-ae@latest/rest/reference/pulls#submit-a-review-for-a-pull-request) when you are ready. */
           event?: "APPROVE" | "REQUEST_CHANGES" | "COMMENT";
           /** Use the following table to specify the location, destination, and contents of the draft review comment. */
           comments?: {
@@ -23254,7 +22476,7 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** **Note:** To dismiss a pull request review on a [protected branch](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#branches), you must be a repository administrator or be included in the list of people or teams who can dismiss pull request reviews. */
+  /** **Note:** To dismiss a pull request review on a [protected branch](https://docs.github.com/github-ae@latest/rest/reference/repos#branches), you must be a repository administrator or be included in the list of people or teams who can dismiss pull request reviews. */
   "pulls/dismiss-review": {
     parameters: {
       path: {
@@ -23343,7 +22565,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** The expected SHA of the pull request's HEAD ref. This is the most recent commit on the pull request's branch. If the expected SHA does not match the pull request's HEAD, you will receive a `422 Unprocessable Entity` status. You can use the "[List commits](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#list-commits)" endpoint to find the most recent commit SHA. Default: SHA of the pull request's current HEAD ref. */
+          /** The expected SHA of the pull request's HEAD ref. This is the most recent commit on the pull request's branch. If the expected SHA does not match the pull request's HEAD, you will receive a `422 Unprocessable Entity` status. You can use the "[List commits](https://docs.github.com/github-ae@latest/rest/reference/repos#list-commits)" endpoint to find the most recent commit SHA. Default: SHA of the pull request's current HEAD ref. */
           expected_head_sha?: string;
         } | null;
       };
@@ -23352,7 +22574,7 @@ export interface operations {
   /**
    * Gets the preferred README for a repository.
    *
-   * READMEs support [custom media types](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#custom-media-types) for retrieving the raw content or rendered HTML.
+   * READMEs support [custom media types](https://docs.github.com/github-ae@latest/rest/reference/repos#custom-media-types) for retrieving the raw content or rendered HTML.
    */
   "repos/get-readme": {
     parameters: {
@@ -23379,7 +22601,7 @@ export interface operations {
   /**
    * Gets the README from a repository directory.
    *
-   * READMEs support [custom media types](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#custom-media-types) for retrieving the raw content or rendered HTML.
+   * READMEs support [custom media types](https://docs.github.com/github-ae@latest/rest/reference/repos#custom-media-types) for retrieving the raw content or rendered HTML.
    */
   "repos/get-readme-in-directory": {
     parameters: {
@@ -23406,7 +22628,7 @@ export interface operations {
     };
   };
   /**
-   * This returns a list of releases, which does not include regular Git tags that have not been associated with a release. To get a list of Git tags, use the [Repository Tags API](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#list-repository-tags).
+   * This returns a list of releases, which does not include regular Git tags that have not been associated with a release. To get a list of Git tags, use the [Repository Tags API](https://docs.github.com/github-ae@latest/rest/reference/repos#list-repository-tags).
    *
    * Information about published releases are available to everyone. Only users with push access will receive listings for draft releases.
    */
@@ -23437,7 +22659,7 @@ export interface operations {
   /**
    * Users with push access to the repository can create a release.
    *
-   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    */
   "repos/create-release": {
     parameters: {
@@ -23477,7 +22699,7 @@ export interface operations {
       };
     };
   };
-  /** To download the asset's binary content, set the `Accept` header of the request to [`application/octet-stream`](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types). The API will either redirect the client to the location, or stream it directly if possible. API clients should handle both a `200` or `302` response. */
+  /** To download the asset's binary content, set the `Accept` header of the request to [`application/octet-stream`](https://docs.github.com/github-ae@latest/rest/overview/media-types). The API will either redirect the client to the location, or stream it directly if possible. API clients should handle both a `200` or `302` response. */
   "repos/get-release-asset": {
     parameters: {
       path: {
@@ -23488,7 +22710,7 @@ export interface operations {
       };
     };
     responses: {
-      /** To download the asset's binary content, set the `Accept` header of the request to [`application/octet-stream`](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types). The API will either redirect the client to the location, or stream it directly if possible. API clients should handle both a `200` or `302` response. */
+      /** To download the asset's binary content, set the `Accept` header of the request to [`application/octet-stream`](https://docs.github.com/github-ae@latest/rest/overview/media-types). The API will either redirect the client to the location, or stream it directly if possible. API clients should handle both a `200` or `302` response. */
       200: {
         content: {
           "application/json": components["schemas"]["release-asset"];
@@ -23584,7 +22806,7 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** **Note:** This returns an `upload_url` key corresponding to the endpoint for uploading release assets. This key is a [hypermedia resource](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#hypermedia). */
+  /** **Note:** This returns an `upload_url` key corresponding to the endpoint for uploading release assets. This key is a [hypermedia resource](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#hypermedia). */
   "repos/get-release": {
     parameters: {
       path: {
@@ -23595,7 +22817,7 @@ export interface operations {
       };
     };
     responses: {
-      /** **Note:** This returns an `upload_url` key corresponding to the endpoint for uploading release assets. This key is a [hypermedia resource](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#hypermedia). */
+      /** **Note:** This returns an `upload_url` key corresponding to the endpoint for uploading release assets. This key is a [hypermedia resource](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#hypermedia). */
       200: {
         content: {
           "application/json": components["schemas"]["release"];
@@ -23682,8 +22904,8 @@ export interface operations {
     };
   };
   /**
-   * This endpoint makes use of [a Hypermedia relation](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#hypermedia) to determine which URL to access. The endpoint you call to upload release assets is specific to your release. Use the `upload_url` returned in
-   * the response of the [Create a release endpoint](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#create-a-release) to upload a release asset.
+   * This endpoint makes use of [a Hypermedia relation](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#hypermedia) to determine which URL to access. The endpoint you call to upload release assets is specific to your release. Use the `upload_url` returned in
+   * the response of the [Create a release endpoint](https://docs.github.com/github-ae@latest/rest/reference/repos#create-a-release) to upload a release asset.
    *
    * You need to use an HTTP client which supports [SNI](http://en.wikipedia.org/wiki/Server_Name_Indication) to make calls to this endpoint.
    *
@@ -23691,14 +22913,14 @@ export interface operations {
    *
    * `application/zip`
    *
-   * GitHub Enterprise Server expects the asset data in its raw binary form, rather than JSON. You will send the raw binary content of the asset as the request body. Everything else about the endpoint is the same as the rest of the API. For example,
+   * GitHub AE expects the asset data in its raw binary form, rather than JSON. You will send the raw binary content of the asset as the request body. Everything else about the endpoint is the same as the rest of the API. For example,
    * you'll still need to pass your authentication to be able to upload an asset.
    *
    * When an upstream failure occurs, you will receive a `502 Bad Gateway` status. This may leave an empty asset with a state of `starter`. It can be safely deleted.
    *
    * **Notes:**
-   * *   GitHub Enterprise Server renames asset filenames that have special characters, non-alphanumeric characters, and leading or trailing periods. The "[List assets for a release](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#list-assets-for-a-release)"
-   * endpoint lists the renamed filenames. For more information and help, contact [GitHub Enterprise Server Support](https://support.github.com/contact).
+   * *   GitHub AE renames asset filenames that have special characters, non-alphanumeric characters, and leading or trailing periods. The "[List assets for a release](https://docs.github.com/github-ae@latest/rest/reference/repos#list-assets-for-a-release)"
+   * endpoint lists the renamed filenames. For more information and help, contact [GitHub AE Support](https://support.github.com/contact).
    * *   If you upload an asset with the same filename as another uploaded asset, you'll receive an error and must delete the old file before you can re-upload the new asset.
    */
   "repos/upload-release-asset": {
@@ -23728,10 +22950,45 @@ export interface operations {
       };
     };
   };
+  /** Create a reaction to a [release](https://docs.github.com/github-ae@latest/rest/reference/repos#releases). A response with a `Status: 200 OK` means that you already added the reaction type to this release. */
+  "reactions/create-for-release": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        /** release_id parameter */
+        release_id: components["parameters"]["release-id"];
+      };
+    };
+    responses: {
+      /** Reaction exists */
+      200: {
+        content: {
+          "application/json": components["schemas"]["reaction"];
+        };
+      };
+      /** Reaction created */
+      201: {
+        content: {
+          "application/json": components["schemas"]["reaction"];
+        };
+      };
+      415: components["responses"]["preview_header_missing"];
+      422: components["responses"]["validation_failed"];
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** The [reaction type](https://docs.github.com/github-ae@latest/rest/reference/reactions#reaction-types) to add to the release. */
+          content: "+1" | "laugh" | "heart" | "hooray" | "rocket" | "eyes";
+        };
+      };
+    };
+  };
   /**
    * Lists the people that have starred the repository.
    *
-   * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types/) via the `Accept` header:
+   * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/) via the `Accept` header:
    */
   "activity/list-stargazers-for-repo": {
     parameters: {
@@ -23961,7 +23218,7 @@ export interface operations {
       404: unknown;
     };
   };
-  /** If you would like to watch a repository, set `subscribed` to `true`. If you would like to ignore notifications made within a repository, set `ignored` to `true`. If you would like to stop watching a repository, [delete the repository's subscription](https://docs.github.com/enterprise-server@2.22/rest/reference/activity#delete-a-repository-subscription) completely. */
+  /** If you would like to watch a repository, set `subscribed` to `true`. If you would like to ignore notifications made within a repository, set `ignored` to `true`. If you would like to stop watching a repository, [delete the repository's subscription](https://docs.github.com/github-ae@latest/rest/reference/activity#delete-a-repository-subscription) completely. */
   "activity/set-repo-subscription": {
     parameters: {
       path: {
@@ -23988,7 +23245,7 @@ export interface operations {
       };
     };
   };
-  /** This endpoint should only be used to stop watching a repository. To control whether or not you wish to receive notifications from a repository, [set the repository's subscription manually](https://docs.github.com/enterprise-server@2.22/rest/reference/activity#set-a-repository-subscription). */
+  /** This endpoint should only be used to stop watching a repository. To control whether or not you wish to receive notifications from a repository, [set the repository's subscription manually](https://docs.github.com/github-ae@latest/rest/reference/activity#set-a-repository-subscription). */
   "activity/delete-repo-subscription": {
     parameters: {
       path: {
@@ -24164,11 +23421,11 @@ export interface operations {
     };
   };
   /**
-   * Creates a new repository using a repository template. Use the `template_owner` and `template_repo` route parameters to specify the repository to use as the template. The authenticated user must own or be a member of an organization that owns the repository. To check if a repository is available to use as a template, get the repository's information using the [Get a repository](https://docs.github.com/enterprise-server@2.22/rest/reference/repos#get-a-repository) endpoint and check that the `is_template` key is `true`.
+   * Creates a new repository using a repository template. Use the `template_owner` and `template_repo` route parameters to specify the repository to use as the template. The authenticated user must own or be a member of an organization that owns the repository. To check if a repository is available to use as a template, get the repository's information using the [Get a repository](https://docs.github.com/github-ae@latest/rest/reference/repos#get-a-repository) endpoint and check that the `is_template` key is `true`.
    *
    * **OAuth scope requirements**
    *
-   * When using [OAuth](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
+   * When using [OAuth](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
    *
    * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.
    * *   `repo` scope to create a private repository
@@ -24208,40 +23465,184 @@ export interface operations {
       };
     };
   };
-  /**
-   * Lists all public repositories in the order that they were created.
-   *
-   * Note:
-   * - For GitHub Enterprise Server, this endpoint will only list repositories available to all users on the enterprise.
-   * - Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of repositories.
-   */
-  "repos/list-public": {
+  /** **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change. */
+  "enterprise-admin/list-provisioned-groups-enterprise": {
     parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+      };
       query: {
-        /** A repository ID. Only return repositories with an ID greater than this ID. */
-        since?: components["parameters"]["since-repo"];
-        /** Specifies the types of repositories to return. Can be one of `all` or `public`. Default: `public`. Note: For GitHub Enterprise Server and GitHub AE, this endpoint will only list repositories available to all users on the enterprise. */
-        visibility?: "all" | "public";
+        /** Used for pagination: the index of the first result to return. */
+        startIndex?: components["parameters"]["start-index"];
+        /** Used for pagination: the number of results to return. */
+        count?: components["parameters"]["count"];
+        /** filter results */
+        filter?: string;
+        /** attributes to exclude */
+        excludedAttributes?: string;
       };
     };
     responses: {
       /** Response */
       200: {
-        headers: {
-          Link?: string;
-        };
         content: {
-          "application/json": components["schemas"]["minimal-repository"][];
+          "application/json": components["schemas"]["scim-group-list-enterprise"];
         };
       };
-      304: components["responses"]["not_modified"];
-      422: components["responses"]["validation_failed"];
     };
   };
   /**
-   * Searches for query terms inside of a file. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#pagination).
+   * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
    *
-   * When searching for code, you can get text match metadata for the file **content** and file **path** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@2.22/rest/reference/search#text-match-metadata).
+   * Provision an enterprise group, and invite users to the group. This sends invitation emails to the email address of the invited users to join the GitHub organization that the SCIM group corresponds to.
+   */
+  "enterprise-admin/provision-and-invite-enterprise-group": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+      };
+    };
+    responses: {
+      /** Response */
+      201: {
+        content: {
+          "application/json": components["schemas"]["scim-enterprise-group"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** The SCIM schema URIs. */
+          schemas: string[];
+          /** The name of the SCIM group. This must match the GitHub organization that the group maps to. */
+          displayName: string;
+          members?: {
+            /** The SCIM user ID for a user. */
+            value: string;
+          }[];
+        };
+      };
+    };
+  };
+  /** **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change. */
+  "enterprise-admin/get-provisioning-information-for-enterprise-group": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+        /** Identifier generated by the GitHub SCIM endpoint. */
+        scim_group_id: components["parameters"]["scim-group-id"];
+      };
+      query: {
+        /** Attributes to exclude. */
+        excludedAttributes?: string;
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["scim-enterprise-group"];
+        };
+      };
+    };
+  };
+  /**
+   * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+   *
+   * Replaces an existing provisioned group’s information. You must provide all the information required for the group as if you were provisioning it for the first time. Any existing group information that you don't provide will be removed, including group membership. If you want to only update a specific attribute, use the [Update an attribute for a SCIM enterprise group](#update-an-attribute-for-a-scim-enterprise-group) endpoint instead.
+   */
+  "enterprise-admin/set-information-for-provisioned-enterprise-group": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+        /** Identifier generated by the GitHub SCIM endpoint. */
+        scim_group_id: components["parameters"]["scim-group-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["scim-enterprise-group"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** The SCIM schema URIs. */
+          schemas: string[];
+          /** The name of the SCIM group. This must match the GitHub organization that the group maps to. */
+          displayName: string;
+          members?: {
+            /** The SCIM user ID for a user. */
+            value: string;
+          }[];
+        };
+      };
+    };
+  };
+  /** **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change. */
+  "enterprise-admin/delete-scim-group-from-enterprise": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+        /** Identifier generated by the GitHub SCIM endpoint. */
+        scim_group_id: components["parameters"]["scim-group-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+    };
+  };
+  /**
+   * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+   *
+   * Allows you to change a provisioned group’s individual attributes. To change a group’s values, you must provide a specific Operations JSON format that contains at least one of the add, remove, or replace operations. For examples and more information on the SCIM operations format, see the [SCIM specification](https://tools.ietf.org/html/rfc7644#section-3.5.2).
+   */
+  "enterprise-admin/update-attribute-for-enterprise-group": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+        /** Identifier generated by the GitHub SCIM endpoint. */
+        scim_group_id: components["parameters"]["scim-group-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["scim-enterprise-group"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** The SCIM schema URIs. */
+          schemas: string[];
+          /** Array of [SCIM operations](https://tools.ietf.org/html/rfc7644#section-3.5.2). */
+          Operations: {
+            op: "add" | "Add" | "remove" | "Remove" | "replace" | "Replace";
+            path?: string;
+            value?: string | { [key: string]: unknown } | any[];
+          }[];
+        };
+      };
+    };
+  };
+  /**
+   * Searches for query terms inside of a file. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).
+   *
+   * When searching for code, you can get text match metadata for the file **content** and file **path** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/reference/search#text-match-metadata).
    *
    * For example, if you want to find the definition of the `addClass` function inside [jQuery](https://github.com/jquery/jquery) repository, your query would look something like this:
    *
@@ -24261,9 +23662,9 @@ export interface operations {
   "search/code": {
     parameters: {
       query: {
-        /** The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub. The REST API supports the same qualifiers as GitHub.com. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@2.22/rest/reference/search#constructing-a-search-query). See "[Searching code](https://help.github.com/articles/searching-code/)" for a detailed list of qualifiers. */
+        /** The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub. The REST API supports the same qualifiers as GitHub.com. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/github-ae@latest/rest/reference/search#constructing-a-search-query). See "[Searching code](https://help.github.com/articles/searching-code/)" for a detailed list of qualifiers. */
         q: string;
-        /** Sorts the results of your query. Can only be `indexed`, which indicates how recently a file has been indexed by the GitHub Enterprise Server search infrastructure. Default: [best match](https://docs.github.com/enterprise-server@2.22/rest/reference/search#ranking-search-results) */
+        /** Sorts the results of your query. Can only be `indexed`, which indicates how recently a file has been indexed by the GitHub AE search infrastructure. Default: [best match](https://docs.github.com/github-ae@latest/rest/reference/search#ranking-search-results) */
         sort?: "indexed";
         /** Determines whether the first search result returned is the highest number of matches (`desc`) or lowest number of matches (`asc`). This parameter is ignored unless you provide `sort`. */
         order?: components["parameters"]["order"];
@@ -24291,10 +23692,10 @@ export interface operations {
     };
   };
   /**
-   * Find commits via various criteria on the default branch (usually `master`). This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#pagination).
+   * Find commits via various criteria on the default branch (usually `master`). This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).
    *
    * When searching for commits, you can get text match metadata for the **message** field when you provide the `text-match` media type. For more details about how to receive highlighted search results, see [Text match
-   * metadata](https://docs.github.com/enterprise-server@2.22/rest/reference/search#text-match-metadata).
+   * metadata](https://docs.github.com/github-ae@latest/rest/reference/search#text-match-metadata).
    *
    * For example, if you want to find commits related to CSS in the [octocat/Spoon-Knife](https://github.com/octocat/Spoon-Knife) repository. Your query would look something like this:
    *
@@ -24303,9 +23704,9 @@ export interface operations {
   "search/commits": {
     parameters: {
       query: {
-        /** The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub. The REST API supports the same qualifiers as GitHub.com. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@2.22/rest/reference/search#constructing-a-search-query). See "[Searching commits](https://help.github.com/articles/searching-commits/)" for a detailed list of qualifiers. */
+        /** The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub. The REST API supports the same qualifiers as GitHub.com. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/github-ae@latest/rest/reference/search#constructing-a-search-query). See "[Searching commits](https://help.github.com/articles/searching-commits/)" for a detailed list of qualifiers. */
         q: string;
-        /** Sorts the results of your query by `author-date` or `committer-date`. Default: [best match](https://docs.github.com/enterprise-server@2.22/rest/reference/search#ranking-search-results) */
+        /** Sorts the results of your query by `author-date` or `committer-date`. Default: [best match](https://docs.github.com/github-ae@latest/rest/reference/search#ranking-search-results) */
         sort?: "author-date" | "committer-date";
         /** Determines whether the first search result returned is the highest number of matches (`desc`) or lowest number of matches (`asc`). This parameter is ignored unless you provide `sort`. */
         order?: components["parameters"]["order"];
@@ -24331,10 +23732,10 @@ export interface operations {
     };
   };
   /**
-   * Find issues by state and keyword. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#pagination).
+   * Find issues by state and keyword. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).
    *
    * When searching for issues, you can get text match metadata for the issue **title**, issue **body**, and issue **comment body** fields when you pass the `text-match` media type. For more details about how to receive highlighted
-   * search results, see [Text match metadata](https://docs.github.com/enterprise-server@2.22/rest/reference/search#text-match-metadata).
+   * search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/reference/search#text-match-metadata).
    *
    * For example, if you want to find the oldest unresolved Python bugs on Windows. Your query might look something like this.
    *
@@ -24347,9 +23748,9 @@ export interface operations {
   "search/issues-and-pull-requests": {
     parameters: {
       query: {
-        /** The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub. The REST API supports the same qualifiers as GitHub.com. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@2.22/rest/reference/search#constructing-a-search-query). See "[Searching issues and pull requests](https://help.github.com/articles/searching-issues-and-pull-requests/)" for a detailed list of qualifiers. */
+        /** The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub. The REST API supports the same qualifiers as GitHub.com. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/github-ae@latest/rest/reference/search#constructing-a-search-query). See "[Searching issues and pull requests](https://help.github.com/articles/searching-issues-and-pull-requests/)" for a detailed list of qualifiers. */
         q: string;
-        /** Sorts the results of your query by the number of `comments`, `reactions`, `reactions-+1`, `reactions--1`, `reactions-smile`, `reactions-thinking_face`, `reactions-heart`, `reactions-tada`, or `interactions`. You can also sort results by how recently the items were `created` or `updated`, Default: [best match](https://docs.github.com/enterprise-server@2.22/rest/reference/search#ranking-search-results) */
+        /** Sorts the results of your query by the number of `comments`, `reactions`, `reactions-+1`, `reactions--1`, `reactions-smile`, `reactions-thinking_face`, `reactions-heart`, `reactions-tada`, or `interactions`. You can also sort results by how recently the items were `created` or `updated`, Default: [best match](https://docs.github.com/github-ae@latest/rest/reference/search#ranking-search-results) */
         sort?:
           | "comments"
           | "reactions"
@@ -24388,9 +23789,9 @@ export interface operations {
     };
   };
   /**
-   * Find labels in a repository with names or descriptions that match search keywords. Returns up to 100 results [per page](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#pagination).
+   * Find labels in a repository with names or descriptions that match search keywords. Returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).
    *
-   * When searching for labels, you can get text match metadata for the label **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@2.22/rest/reference/search#text-match-metadata).
+   * When searching for labels, you can get text match metadata for the label **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/reference/search#text-match-metadata).
    *
    * For example, if you want to find labels in the `linguist` repository that match `bug`, `defect`, or `enhancement`. Your query might look like this:
    *
@@ -24403,9 +23804,9 @@ export interface operations {
       query: {
         /** The id of the repository. */
         repository_id: number;
-        /** The search keywords. This endpoint does not accept qualifiers in the query. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@2.22/rest/reference/search#constructing-a-search-query). */
+        /** The search keywords. This endpoint does not accept qualifiers in the query. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/github-ae@latest/rest/reference/search#constructing-a-search-query). */
         q: string;
-        /** Sorts the results of your query by when the label was `created` or `updated`. Default: [best match](https://docs.github.com/enterprise-server@2.22/rest/reference/search#ranking-search-results) */
+        /** Sorts the results of your query by when the label was `created` or `updated`. Default: [best match](https://docs.github.com/github-ae@latest/rest/reference/search#ranking-search-results) */
         sort?: "created" | "updated";
         /** Determines whether the first search result returned is the highest number of matches (`desc`) or lowest number of matches (`asc`). This parameter is ignored unless you provide `sort`. */
         order?: components["parameters"]["order"];
@@ -24433,9 +23834,9 @@ export interface operations {
     };
   };
   /**
-   * Find repositories via various criteria. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#pagination).
+   * Find repositories via various criteria. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).
    *
-   * When searching for repositories, you can get text match metadata for the **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@2.22/rest/reference/search#text-match-metadata).
+   * When searching for repositories, you can get text match metadata for the **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/reference/search#text-match-metadata).
    *
    * For example, if you want to search for popular Tetris repositories written in assembly code, your query might look like this:
    *
@@ -24450,9 +23851,9 @@ export interface operations {
   "search/repos": {
     parameters: {
       query: {
-        /** The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub. The REST API supports the same qualifiers as GitHub.com. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@2.22/rest/reference/search#constructing-a-search-query). See "[Searching for repositories](https://help.github.com/articles/searching-for-repositories/)" for a detailed list of qualifiers. */
+        /** The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub. The REST API supports the same qualifiers as GitHub.com. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/github-ae@latest/rest/reference/search#constructing-a-search-query). See "[Searching for repositories](https://help.github.com/articles/searching-for-repositories/)" for a detailed list of qualifiers. */
         q: string;
-        /** Sorts the results of your query by number of `stars`, `forks`, or `help-wanted-issues` or how recently the items were `updated`. Default: [best match](https://docs.github.com/enterprise-server@2.22/rest/reference/search#ranking-search-results) */
+        /** Sorts the results of your query by number of `stars`, `forks`, or `help-wanted-issues` or how recently the items were `updated`. Default: [best match](https://docs.github.com/github-ae@latest/rest/reference/search#ranking-search-results) */
         sort?: "stars" | "forks" | "help-wanted-issues" | "updated";
         /** Determines whether the first search result returned is the highest number of matches (`desc`) or lowest number of matches (`asc`). This parameter is ignored unless you provide `sort`. */
         order?: components["parameters"]["order"];
@@ -24479,9 +23880,9 @@ export interface operations {
     };
   };
   /**
-   * Find topics via various criteria. Results are sorted by best match. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#pagination). See "[Searching topics](https://help.github.com/articles/searching-topics/)" for a detailed list of qualifiers.
+   * Find topics via various criteria. Results are sorted by best match. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination). See "[Searching topics](https://help.github.com/articles/searching-topics/)" for a detailed list of qualifiers.
    *
-   * When searching for topics, you can get text match metadata for the topic's **short\_description**, **description**, **name**, or **display\_name** field when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@2.22/rest/reference/search#text-match-metadata).
+   * When searching for topics, you can get text match metadata for the topic's **short\_description**, **description**, **name**, or **display\_name** field when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/reference/search#text-match-metadata).
    *
    * For example, if you want to search for topics related to Ruby that are featured on https://github.com/topics. Your query might look like this:
    *
@@ -24492,7 +23893,7 @@ export interface operations {
   "search/topics": {
     parameters: {
       query: {
-        /** The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub. The REST API supports the same qualifiers as GitHub.com. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@2.22/rest/reference/search#constructing-a-search-query). */
+        /** The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub. The REST API supports the same qualifiers as GitHub.com. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/github-ae@latest/rest/reference/search#constructing-a-search-query). */
         q: string;
         /** Results per page (max 100) */
         per_page?: components["parameters"]["per-page"];
@@ -24516,9 +23917,9 @@ export interface operations {
     };
   };
   /**
-   * Find users via various criteria. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#pagination).
+   * Find users via various criteria. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).
    *
-   * When searching for users, you can get text match metadata for the issue **login**, **email**, and **name** fields when you pass the `text-match` media type. For more details about highlighting search results, see [Text match metadata](https://docs.github.com/enterprise-server@2.22/rest/reference/search#text-match-metadata). For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@2.22/rest/reference/search#text-match-metadata).
+   * When searching for users, you can get text match metadata for the issue **login**, **email**, and **name** fields when you pass the `text-match` media type. For more details about highlighting search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/reference/search#text-match-metadata). For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/reference/search#text-match-metadata).
    *
    * For example, if you're looking for a list of popular users, you might try this query:
    *
@@ -24529,9 +23930,9 @@ export interface operations {
   "search/users": {
     parameters: {
       query: {
-        /** The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub. The REST API supports the same qualifiers as GitHub.com. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@2.22/rest/reference/search#constructing-a-search-query). See "[Searching users](https://help.github.com/articles/searching-users/)" for a detailed list of qualifiers. */
+        /** The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub. The REST API supports the same qualifiers as GitHub.com. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/github-ae@latest/rest/reference/search#constructing-a-search-query). See "[Searching users](https://help.github.com/articles/searching-users/)" for a detailed list of qualifiers. */
         q: string;
-        /** Sorts the results of your query by number of `followers` or `repositories`, or when the person `joined` GitHub Enterprise Server. Default: [best match](https://docs.github.com/enterprise-server@2.22/rest/reference/search#ranking-search-results) */
+        /** Sorts the results of your query by number of `followers` or `repositories`, or when the person `joined` GitHub AE. Default: [best match](https://docs.github.com/github-ae@latest/rest/reference/search#ranking-search-results) */
         sort?: "followers" | "repositories" | "joined";
         /** Determines whether the first search result returned is the highest number of matches (`desc`) or lowest number of matches (`asc`). This parameter is ignored unless you provide `sort`. */
         order?: components["parameters"]["order"];
@@ -24557,200 +23958,7 @@ export interface operations {
       503: components["responses"]["service_unavailable"];
     };
   };
-  /**
-   * This endpoint allows you to check the status of the most recent configuration process:
-   *
-   * Note that you may need to wait several seconds after you start a process before you can check its status.
-   *
-   * The different statuses are:
-   *
-   * | Status        | Description                       |
-   * | ------------- | --------------------------------- |
-   * | `PENDING`     | The job has not started yet       |
-   * | `CONFIGURING` | The job is running                |
-   * | `DONE`        | The job has finished correctly    |
-   * | `FAILED`      | The job has finished unexpectedly |
-   */
-  "enterprise-admin/get-configuration-status": {
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["configuration-status"];
-        };
-      };
-    };
-  };
-  /** This endpoint allows you to start a configuration process at any time for your updated settings to take effect: */
-  "enterprise-admin/start-configuration-process": {
-    responses: {
-      /** Response */
-      202: unknown;
-    };
-  };
-  /** Check your installation's maintenance status: */
-  "enterprise-admin/get-maintenance-status": {
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["maintenance-status"];
-        };
-      };
-    };
-  };
-  /** **Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode). */
-  "enterprise-admin/enable-or-disable-maintenance-mode": {
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["maintenance-status"];
-        };
-      };
-    };
-    requestBody: {
-      content: {
-        "application/x-www-form-urlencoded": {
-          /**
-           * A JSON string with the attributes `enabled` and `when`.
-           *
-           * The possible values for `enabled` are `true` and `false`. When it's `false`, the attribute `when` is ignored and the maintenance mode is turned off. `when` defines the time period when the maintenance was enabled.
-           *
-           * The possible values for `when` are `now` or any date parseable by [mojombo/chronic](https://github.com/mojombo/chronic).
-           */
-          maintenance: string;
-        };
-      };
-    };
-  };
-  "enterprise-admin/get-settings": {
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["enterprise-settings"];
-        };
-      };
-    };
-  };
-  /**
-   * For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@2.22/rest/reference/enterprise-admin#get-settings).
-   *
-   * **Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode).
-   */
-  "enterprise-admin/set-settings": {
-    responses: {
-      /** Response */
-      204: never;
-    };
-    requestBody: {
-      content: {
-        "application/x-www-form-urlencoded": {
-          /** A JSON string with the new settings. Note that you only need to pass the specific settings you want to modify. For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@2.22/rest/reference/enterprise-admin#get-settings). */
-          settings: string;
-        };
-      };
-    };
-  };
-  "enterprise-admin/get-all-authorized-ssh-keys": {
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["ssh-key"][];
-        };
-      };
-    };
-  };
-  /** **Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode). */
-  "enterprise-admin/add-authorized-ssh-key": {
-    responses: {
-      /** Response */
-      201: {
-        content: {
-          "application/json": components["schemas"]["ssh-key"][];
-        };
-      };
-    };
-    requestBody: {
-      content: {
-        "application/x-www-form-urlencoded": {
-          /** The public SSH key. */
-          authorized_key: string;
-        };
-      };
-    };
-  };
-  /** **Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode). */
-  "enterprise-admin/remove-authorized-ssh-key": {
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["ssh-key"][];
-        };
-      };
-    };
-    requestBody: {
-      content: {
-        "application/x-www-form-urlencoded": {
-          /** The public SSH key. */
-          authorized_key: string;
-        };
-      };
-    };
-  };
-  /**
-   * When you boot a GitHub instance for the first time, you can use the following endpoint to upload a license.
-   *
-   * Note that you need to `POST` to [`/setup/api/configure`](https://docs.github.com/enterprise-server@2.22/rest/reference/enterprise-admin#start-a-configuration-process) to start the actual configuration process.
-   *
-   * When using this endpoint, your GitHub instance must have a password set. This can be accomplished two ways:
-   *
-   * 1.  If you're working directly with the API before accessing the web interface, you must pass in the password parameter to set your password.
-   * 2.  If you set up your instance via the web interface before accessing the API, your calls to this endpoint do not need the password parameter.
-   *
-   * **Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode).
-   */
-  "enterprise-admin/create-enterprise-server-license": {
-    responses: {
-      /** Response */
-      202: unknown;
-    };
-    requestBody: {
-      content: {
-        "application/x-www-form-urlencoded": {
-          /** The content of your _.ghl_ license file. */
-          license: string;
-          /** You **must** provide a password _only if_ you are uploading your license for the first time. If you previously set a password through the web interface, you don't need this parameter. */
-          password?: string;
-          /** An optional JSON string containing the installation settings. For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@2.22/rest/reference/enterprise-admin#get-settings). */
-          settings?: string;
-        };
-      };
-    };
-  };
-  /**
-   * This API upgrades your license and also triggers the configuration process.
-   *
-   * **Note:** The request body for this operation must be submitted as `application/x-www-form-urlencoded` data. You can submit a parameter value as a string, or you can use a tool such as `curl` to submit a parameter value as the contents of a text file. For more information, see the [`curl` documentation](https://curl.se/docs/manpage.html#--data-urlencode).
-   */
-  "enterprise-admin/upgrade-license": {
-    responses: {
-      /** Response */
-      202: unknown;
-    };
-    requestBody: {
-      content: {
-        "application/x-www-form-urlencoded": {
-          /** The content of your new _.ghl_ license file. */
-          license?: string;
-        };
-      };
-    };
-  };
-  /** **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the [Get a team by name](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#get-a-team-by-name) endpoint. */
+  /** **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the [Get a team by name](https://docs.github.com/github-ae@latest/rest/reference/teams#get-a-team-by-name) endpoint. */
   "teams/get-legacy": {
     parameters: {
       path: {
@@ -24768,7 +23976,7 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a team](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#delete-a-team) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a team](https://docs.github.com/github-ae@latest/rest/reference/teams#delete-a-team) endpoint.
    *
    * To delete a team, the authenticated user must be an organization owner or team maintainer.
    *
@@ -24788,7 +23996,7 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a team](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#update-a-team) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a team](https://docs.github.com/github-ae@latest/rest/reference/teams#update-a-team) endpoint.
    *
    * To edit a team, the authenticated user must either be an organization owner or a team maintainer.
    *
@@ -24847,9 +24055,9 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List discussions`](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#list-discussions) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List discussions`](https://docs.github.com/github-ae@latest/rest/reference/teams#list-discussions) endpoint.
    *
-   * List all discussions on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * List all discussions on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    */
   "teams/list-discussions-legacy": {
     parameters: {
@@ -24876,11 +24084,11 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create a discussion`](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#create-a-discussion) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create a discussion`](https://docs.github.com/github-ae@latest/rest/reference/teams#create-a-discussion) endpoint.
    *
-   * Creates a new discussion post on a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Creates a new discussion post on a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
-   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    */
   "teams/create-discussion-legacy": {
     parameters: {
@@ -24910,9 +24118,9 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#get-a-discussion) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion](https://docs.github.com/github-ae@latest/rest/reference/teams#get-a-discussion) endpoint.
    *
-   * Get a specific discussion on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Get a specific discussion on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    */
   "teams/get-discussion-legacy": {
     parameters: {
@@ -24931,9 +24139,9 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Delete a discussion`](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#delete-a-discussion) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Delete a discussion`](https://docs.github.com/github-ae@latest/rest/reference/teams#delete-a-discussion) endpoint.
    *
-   * Delete a discussion from a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Delete a discussion from a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    */
   "teams/delete-discussion-legacy": {
     parameters: {
@@ -24948,9 +24156,9 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#update-a-discussion) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion](https://docs.github.com/github-ae@latest/rest/reference/teams#update-a-discussion) endpoint.
    *
-   * Edits the title and body text of a discussion post. Only the parameters you provide are updated. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Edits the title and body text of a discussion post. Only the parameters you provide are updated. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    */
   "teams/update-discussion-legacy": {
     parameters: {
@@ -24979,9 +24187,9 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [List discussion comments](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#list-discussion-comments) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [List discussion comments](https://docs.github.com/github-ae@latest/rest/reference/teams#list-discussion-comments) endpoint.
    *
-   * List all comments on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * List all comments on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    */
   "teams/list-discussion-comments-legacy": {
     parameters: {
@@ -25009,11 +24217,11 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Create a discussion comment](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#create-a-discussion-comment) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Create a discussion comment](https://docs.github.com/github-ae@latest/rest/reference/teams#create-a-discussion-comment) endpoint.
    *
-   * Creates a new comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Creates a new comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
-   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/enterprise-server@2.22/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in abuse rate limiting. See "[Abuse rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#abuse-rate-limits)" and "[Dealing with abuse rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    */
   "teams/create-discussion-comment-legacy": {
     parameters: {
@@ -25040,9 +24248,9 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion comment](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#get-a-discussion-comment) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion comment](https://docs.github.com/github-ae@latest/rest/reference/teams#get-a-discussion-comment) endpoint.
    *
-   * Get a specific comment on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Get a specific comment on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    */
   "teams/get-discussion-comment-legacy": {
     parameters: {
@@ -25062,9 +24270,9 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a discussion comment](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#delete-a-discussion-comment) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a discussion comment](https://docs.github.com/github-ae@latest/rest/reference/teams#delete-a-discussion-comment) endpoint.
    *
-   * Deletes a comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Deletes a comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    */
   "teams/delete-discussion-comment-legacy": {
     parameters: {
@@ -25080,9 +24288,9 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion comment](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#update-a-discussion-comment) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion comment](https://docs.github.com/github-ae@latest/rest/reference/teams#update-a-discussion-comment) endpoint.
    *
-   * Edits the body text of a discussion comment. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Edits the body text of a discussion comment. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    */
   "teams/update-discussion-comment-legacy": {
     parameters: {
@@ -25110,9 +24318,9 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion comment`](https://docs.github.com/enterprise-server@2.22/rest/reference/reactions#list-reactions-for-a-team-discussion-comment) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion comment`](https://docs.github.com/github-ae@latest/rest/reference/reactions#list-reactions-for-a-team-discussion-comment) endpoint.
    *
-   * List the reactions to a [team discussion comment](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#discussion-comments). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * List the reactions to a [team discussion comment](https://docs.github.com/github-ae@latest/rest/reference/teams#discussion-comments). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    */
   "reactions/list-for-team-discussion-comment-legacy": {
     parameters: {
@@ -25122,7 +24330,7 @@ export interface operations {
         comment_number: components["parameters"]["comment-number"];
       };
       query: {
-        /** Returns a single [reaction type](https://docs.github.com/enterprise-server@2.22/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a team discussion comment. */
+        /** Returns a single [reaction type](https://docs.github.com/github-ae@latest/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a team discussion comment. */
         content?:
           | "+1"
           | "-1"
@@ -25149,9 +24357,9 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new "[Create reaction for a team discussion comment](https://docs.github.com/enterprise-server@2.22/rest/reference/reactions#create-reaction-for-a-team-discussion-comment)" endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new "[Create reaction for a team discussion comment](https://docs.github.com/github-ae@latest/rest/reference/reactions#create-reaction-for-a-team-discussion-comment)" endpoint.
    *
-   * Create a reaction to a [team discussion comment](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#discussion-comments). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
+   * Create a reaction to a [team discussion comment](https://docs.github.com/github-ae@latest/rest/reference/teams#discussion-comments). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
    */
   "reactions/create-for-team-discussion-comment-legacy": {
     parameters: {
@@ -25172,7 +24380,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** The [reaction type](https://docs.github.com/enterprise-server@2.22/rest/reference/reactions#reaction-types) to add to the team discussion comment. */
+          /** The [reaction type](https://docs.github.com/github-ae@latest/rest/reference/reactions#reaction-types) to add to the team discussion comment. */
           content:
             | "+1"
             | "-1"
@@ -25187,9 +24395,9 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion`](https://docs.github.com/enterprise-server@2.22/rest/reference/reactions#list-reactions-for-a-team-discussion) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion`](https://docs.github.com/github-ae@latest/rest/reference/reactions#list-reactions-for-a-team-discussion) endpoint.
    *
-   * List the reactions to a [team discussion](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#discussions). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * List the reactions to a [team discussion](https://docs.github.com/github-ae@latest/rest/reference/teams#discussions). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    */
   "reactions/list-for-team-discussion-legacy": {
     parameters: {
@@ -25198,7 +24406,7 @@ export interface operations {
         discussion_number: components["parameters"]["discussion-number"];
       };
       query: {
-        /** Returns a single [reaction type](https://docs.github.com/enterprise-server@2.22/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a team discussion. */
+        /** Returns a single [reaction type](https://docs.github.com/github-ae@latest/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a team discussion. */
         content?:
           | "+1"
           | "-1"
@@ -25225,9 +24433,9 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create reaction for a team discussion`](https://docs.github.com/enterprise-server@2.22/rest/reference/reactions#create-reaction-for-a-team-discussion) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create reaction for a team discussion`](https://docs.github.com/github-ae@latest/rest/reference/reactions#create-reaction-for-a-team-discussion) endpoint.
    *
-   * Create a reaction to a [team discussion](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion.
+   * Create a reaction to a [team discussion](https://docs.github.com/github-ae@latest/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion.
    */
   "reactions/create-for-team-discussion-legacy": {
     parameters: {
@@ -25247,7 +24455,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** The [reaction type](https://docs.github.com/enterprise-server@2.22/rest/reference/reactions#reaction-types) to add to the team discussion. */
+          /** The [reaction type](https://docs.github.com/github-ae@latest/rest/reference/reactions#reaction-types) to add to the team discussion. */
           content:
             | "+1"
             | "-1"
@@ -25262,7 +24470,7 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List team members`](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#list-team-members) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List team members`](https://docs.github.com/github-ae@latest/rest/reference/teams#list-team-members) endpoint.
    *
    * Team members will include the members of child teams.
    */
@@ -25299,7 +24507,7 @@ export interface operations {
   /**
    * The "Get team member" endpoint (described below) is deprecated.
    *
-   * We recommend using the [Get team membership for a user](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#get-team-membership-for-a-user) endpoint instead. It allows you to get both active and pending memberships.
+   * We recommend using the [Get team membership for a user](https://docs.github.com/github-ae@latest/rest/reference/teams#get-team-membership-for-a-user) endpoint instead. It allows you to get both active and pending memberships.
    *
    * To list members in a team, the team must be visible to the authenticated user.
    */
@@ -25320,15 +24528,15 @@ export interface operations {
   /**
    * The "Add team member" endpoint (described below) is deprecated.
    *
-   * We recommend using the [Add or update team membership for a user](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#add-or-update-team-membership-for-a-user) endpoint instead. It allows you to invite new organization members to your teams.
+   * We recommend using the [Add or update team membership for a user](https://docs.github.com/github-ae@latest/rest/reference/teams#add-or-update-team-membership-for-a-user) endpoint instead. It allows you to invite new organization members to your teams.
    *
    * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
    *
    * To add someone to a team, the authenticated user must be an organization owner or a team maintainer in the team they're changing. The person being added to the team must be a member of the team's organization.
    *
-   * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub Enterprise Server team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub Enterprise Server](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+   * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub AE team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub AE](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
    *
-   * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs)."
+   * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
    */
   "teams/add-member-legacy": {
     parameters: {
@@ -25350,13 +24558,13 @@ export interface operations {
   /**
    * The "Remove team member" endpoint (described below) is deprecated.
    *
-   * We recommend using the [Remove team membership for a user](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#remove-team-membership-for-a-user) endpoint instead. It allows you to remove both active and pending memberships.
+   * We recommend using the [Remove team membership for a user](https://docs.github.com/github-ae@latest/rest/reference/teams#remove-team-membership-for-a-user) endpoint instead. It allows you to remove both active and pending memberships.
    *
    * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
    *
    * To remove a team member, the authenticated user must have 'admin' permissions to the team or be an owner of the org that the team is associated with. Removing a team member does not delete the user, it just removes them from the team.
    *
-   * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub Enterprise Server team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub Enterprise Server](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+   * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub AE team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub AE](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
    */
   "teams/remove-member-legacy": {
     parameters: {
@@ -25373,7 +24581,7 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get team membership for a user](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#get-team-membership-for-a-user) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get team membership for a user](https://docs.github.com/github-ae@latest/rest/reference/teams#get-team-membership-for-a-user) endpoint.
    *
    * Team members will include the members of child teams.
    *
@@ -25382,7 +24590,7 @@ export interface operations {
    * **Note:**
    * The response contains the `state` of the membership and the member's `role`.
    *
-   * The `role` for organization owners is set to `maintainer`. For more information about `maintainer` roles, see [Create a team](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#create-a-team).
+   * The `role` for organization owners is set to `maintainer`. For more information about `maintainer` roles, see [Create a team](https://docs.github.com/github-ae@latest/rest/reference/teams#create-a-team).
    */
   "teams/get-membership-for-user-legacy": {
     parameters: {
@@ -25402,13 +24610,13 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Add or update team membership for a user](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#add-or-update-team-membership-for-a-user) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Add or update team membership for a user](https://docs.github.com/github-ae@latest/rest/reference/teams#add-or-update-team-membership-for-a-user) endpoint.
    *
    * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
    *
    * If the user is already a member of the team's organization, this endpoint will add the user to the team. To add a membership between an organization member and a team, the authenticated user must be an organization owner or a team maintainer.
    *
-   * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub Enterprise Server team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub Enterprise Server](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+   * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub AE team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub AE](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
    *
    * If the user is unaffiliated with the team's organization, this endpoint will send an invitation to the user via email. This newly-created membership will be in the "pending" state until the user accepts the invitation, at which point the membership will transition to the "active" state and the user will be added as a member of the team. To add a membership between an unaffiliated user and a team, the authenticated user must be an organization owner.
    *
@@ -25448,13 +24656,13 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove team membership for a user](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#remove-team-membership-for-a-user) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove team membership for a user](https://docs.github.com/github-ae@latest/rest/reference/teams#remove-team-membership-for-a-user) endpoint.
    *
    * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://help.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
    *
    * To remove a membership between a user and a team, the authenticated user must have 'admin' permissions to the team or be an owner of the organization that the team is associated with. Removing team membership does not delete the user, it just removes their membership from the team.
    *
-   * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub Enterprise Server team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub Enterprise Server](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
+   * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub AE team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub AE](https://help.github.com/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
    */
   "teams/remove-membership-for-user-legacy": {
     parameters: {
@@ -25471,7 +24679,7 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List team projects`](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#list-team-projects) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List team projects`](https://docs.github.com/github-ae@latest/rest/reference/teams#list-team-projects) endpoint.
    *
    * Lists the organization projects for a team.
    */
@@ -25500,7 +24708,7 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Check team permissions for a project](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#check-team-permissions-for-a-project) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Check team permissions for a project](https://docs.github.com/github-ae@latest/rest/reference/teams#check-team-permissions-for-a-project) endpoint.
    *
    * Checks whether a team has `read`, `write`, or `admin` permissions for an organization project. The response includes projects inherited from a parent team.
    */
@@ -25524,7 +24732,7 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Add or update team project permissions](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#add-or-update-team-project-permissions) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Add or update team project permissions](https://docs.github.com/github-ae@latest/rest/reference/teams#add-or-update-team-project-permissions) endpoint.
    *
    * Adds an organization project to a team. To add a project to a team or update the team's permission on a project, the authenticated user must have `admin` permissions for the project. The project and team must be part of the same organization.
    */
@@ -25559,7 +24767,7 @@ export interface operations {
            * \* `read` - team members can read, but not write to or administer this project.
            * \* `write` - team members can read and write, but not administer this project.
            * \* `admin` - team members can read, write and administer this project.
-           * Default: the team's `permission` attribute will be used to determine what permission to grant the team on this project. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs)."
+           * Default: the team's `permission` attribute will be used to determine what permission to grant the team on this project. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
            */
           permission?: "read" | "write" | "admin";
         };
@@ -25567,7 +24775,7 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove a project from a team](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#remove-a-project-from-a-team) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove a project from a team](https://docs.github.com/github-ae@latest/rest/reference/teams#remove-a-project-from-a-team) endpoint.
    *
    * Removes an organization project from a team. An organization owner or a team maintainer can remove any project from the team. To remove a project from a team as an organization member, the authenticated user must have `read` access to both the team and project, or `admin` access to the team or project. **Note:** This endpoint removes the project from the team, but does not delete it.
    */
@@ -25586,7 +24794,7 @@ export interface operations {
       422: components["responses"]["validation_failed"];
     };
   };
-  /** **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [List team repositories](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#list-team-repositories) endpoint. */
+  /** **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [List team repositories](https://docs.github.com/github-ae@latest/rest/reference/teams#list-team-repositories) endpoint. */
   "teams/list-repos-legacy": {
     parameters: {
       path: {
@@ -25613,9 +24821,9 @@ export interface operations {
   /**
    * **Note**: Repositories inherited through a parent team will also be checked.
    *
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Check team permissions for a repository](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#check-team-permissions-for-a-repository) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Check team permissions for a repository](https://docs.github.com/github-ae@latest/rest/reference/teams#check-team-permissions-for-a-repository) endpoint.
    *
-   * You can also get information about the specified repository, including what permissions the team grants on it, by passing the following custom [media type](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types/) via the `Accept` header:
+   * You can also get information about the specified repository, including what permissions the team grants on it, by passing the following custom [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/) via the `Accept` header:
    */
   "teams/check-permissions-for-repo-legacy": {
     parameters: {
@@ -25639,11 +24847,11 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new "[Add or update team repository permissions](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#add-or-update-team-repository-permissions)" endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new "[Add or update team repository permissions](https://docs.github.com/github-ae@latest/rest/reference/teams#add-or-update-team-repository-permissions)" endpoint.
    *
    * To add a repository to a team or update the team's permission on a repository, the authenticated user must have admin access to the repository, and must be able to see the team. The repository must be owned by the organization, or a direct fork of a repository owned by the organization. You will get a `422 Unprocessable Entity` status if you attempt to add a repository to a team that is not owned by the organization.
    *
-   * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs)."
+   * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
    */
   "teams/add-or-update-repo-permissions-legacy": {
     parameters: {
@@ -25676,7 +24884,7 @@ export interface operations {
     };
   };
   /**
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove a repository from a team](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#remove-a-repository-from-a-team) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove a repository from a team](https://docs.github.com/github-ae@latest/rest/reference/teams#remove-a-repository-from-a-team) endpoint.
    *
    * If the authenticated user is an organization owner or a team maintainer, they can remove any repositories from the team. To remove a repository from a team as an organization member, the authenticated user must have admin access to the repository and must be able to see the team. NOTE: This does not delete the repository, it just removes it from the team.
    */
@@ -25693,7 +24901,7 @@ export interface operations {
       204: never;
     };
   };
-  /** **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List child teams`](https://docs.github.com/enterprise-server@2.22/rest/reference/teams#list-child-teams) endpoint. */
+  /** **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List child teams`](https://docs.github.com/github-ae@latest/rest/reference/teams#list-child-teams) endpoint. */
   "teams/list-child-legacy": {
     parameters: {
       path: {
@@ -25779,76 +24987,6 @@ export interface operations {
       };
     };
   };
-  /** Lists all of your email addresses, and specifies which one is visible to the public. This endpoint is accessible with the `user:email` scope. */
-  "users/list-emails-for-authenticated": {
-    parameters: {
-      query: {
-        /** Results per page (max 100) */
-        per_page?: components["parameters"]["per-page"];
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        headers: {};
-        content: {
-          "application/json": components["schemas"]["email"][];
-        };
-      };
-      304: components["responses"]["not_modified"];
-      401: components["responses"]["requires_authentication"];
-      403: components["responses"]["forbidden"];
-      404: components["responses"]["not_found"];
-    };
-  };
-  /** This endpoint is accessible with the `user` scope. */
-  "users/add-email-for-authenticated": {
-    parameters: {};
-    responses: {
-      /** Response */
-      201: {
-        content: {
-          "application/json": components["schemas"]["email"][];
-        };
-      };
-      304: components["responses"]["not_modified"];
-      401: components["responses"]["requires_authentication"];
-      403: components["responses"]["forbidden"];
-      404: components["responses"]["not_found"];
-      422: components["responses"]["validation_failed"];
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** Adds one or more email addresses to your GitHub account. Must contain at least one email address. **Note:** Alternatively, you can pass a single email address or an `array` of emails addresses directly, but we recommend that you pass an object using the `emails` key. */
-          emails: string[];
-        };
-      };
-    };
-  };
-  /** This endpoint is accessible with the `user` scope. */
-  "users/delete-email-for-authenticated": {
-    parameters: {};
-    responses: {
-      /** Response */
-      204: never;
-      304: components["responses"]["not_modified"];
-      401: components["responses"]["requires_authentication"];
-      403: components["responses"]["forbidden"];
-      404: components["responses"]["not_found"];
-      422: components["responses"]["validation_failed"];
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** Email addresses associated with the GitHub user account. */
-          emails: string[];
-        };
-      };
-    };
-  };
   /** Lists the people following the authenticated user. */
   "users/list-followers-for-authenticated-user": {
     parameters: {
@@ -25916,7 +25054,7 @@ export interface operations {
     };
   };
   /**
-   * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs)."
+   * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
    *
    * Following a user requires the user to be logged in and authenticated with basic auth or OAuth with the `user:follow` scope.
    */
@@ -25951,7 +25089,7 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Lists the current user's GPG keys. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:gpg_key` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
+  /** Lists the current user's GPG keys. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:gpg_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
   "users/list-gpg-keys-for-authenticated": {
     parameters: {
       query: {
@@ -25975,7 +25113,7 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Adds a GPG key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or OAuth with at least `write:gpg_key` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
+  /** Adds a GPG key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or OAuth with at least `write:gpg_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
   "users/create-gpg-key-for-authenticated": {
     parameters: {};
     responses: {
@@ -26000,7 +25138,7 @@ export interface operations {
       };
     };
   };
-  /** View extended details for a single GPG key. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:gpg_key` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
+  /** View extended details for a single GPG key. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:gpg_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
   "users/get-gpg-key-for-authenticated": {
     parameters: {
       path: {
@@ -26021,7 +25159,7 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Removes a GPG key from the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `admin:gpg_key` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
+  /** Removes a GPG key from the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `admin:gpg_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
   "users/delete-gpg-key-for-authenticated": {
     parameters: {
       path: {
@@ -26042,7 +25180,7 @@ export interface operations {
   /**
    * Lists installations of your GitHub App that the authenticated user has explicit permission (`:read`, `:write`, or `:admin`) to access.
    *
-   * You must use a [user-to-server OAuth access token](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint.
+   * You must use a [user-to-server OAuth access token](https://docs.github.com/github-ae@latest/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint.
    *
    * The authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator, and repositories that they can access through an organization membership.
    *
@@ -26064,7 +25202,7 @@ export interface operations {
         content: {
           "application/json": {
             total_count: number;
-            installations: components["schemas"]["installation-ghes-2"][];
+            installations: components["schemas"]["installation"][];
           };
         };
       };
@@ -26079,7 +25217,7 @@ export interface operations {
    *
    * The authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator, and repositories that they can access through an organization membership.
    *
-   * You must use a [user-to-server OAuth access token](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint.
+   * You must use a [user-to-server OAuth access token](https://docs.github.com/github-ae@latest/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint.
    *
    * The access the user has to each repository is included in the hash under the `permissions` key.
    */
@@ -26116,7 +25254,7 @@ export interface operations {
   /**
    * Add a single repository to an installation. The authenticated user must have admin access to the repository.
    *
-   * You must use a personal access token (which you can create via the [command line](https://docs.github.com/enterprise-server@2.22/github/authenticating-to-github/creating-a-personal-access-token) or [Basic Authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#basic-authentication)) to access this endpoint.
+   * You must use a personal access token (which you can create via the [command line](https://docs.github.com/github-ae@latest/github/authenticating-to-github/creating-a-personal-access-token) or [Basic Authentication](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication)) to access this endpoint.
    */
   "apps/add-repo-to-installation": {
     parameters: {
@@ -26137,7 +25275,7 @@ export interface operations {
   /**
    * Remove a single repository from an installation. The authenticated user must have admin access to the repository.
    *
-   * You must use a personal access token (which you can create via the [command line](https://docs.github.com/enterprise-server@2.22/github/authenticating-to-github/creating-a-personal-access-token) or [Basic Authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/other-authentication-methods#basic-authentication)) to access this endpoint.
+   * You must use a personal access token (which you can create via the [command line](https://docs.github.com/github-ae@latest/github/authenticating-to-github/creating-a-personal-access-token) or [Basic Authentication](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication)) to access this endpoint.
    */
   "apps/remove-repo-from-installation": {
     parameters: {
@@ -26161,7 +25299,7 @@ export interface operations {
    * **Note**: GitHub's REST API v3 considers every pull request an issue, but not every issue is a pull request. For this
    * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
    * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
-   * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@2.22/rest/reference/pulls#list-pull-requests)" endpoint.
+   * request id, use the "[List pull requests](https://docs.github.com/github-ae@latest/rest/reference/pulls#list-pull-requests)" endpoint.
    */
   "issues/list-for-authenticated-user": {
     parameters: {
@@ -26209,7 +25347,7 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Lists the public SSH keys for the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:public_key` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
+  /** Lists the public SSH keys for the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:public_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
   "users/list-public-ssh-keys-for-authenticated": {
     parameters: {
       query: {
@@ -26233,7 +25371,7 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Adds a public SSH key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or OAuth with at least `write:public_key` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
+  /** Adds a public SSH key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or OAuth with at least `write:public_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
   "users/create-public-ssh-key-for-authenticated": {
     parameters: {};
     responses: {
@@ -26260,7 +25398,7 @@ export interface operations {
       };
     };
   };
-  /** View extended details for a single public SSH key. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:public_key` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
+  /** View extended details for a single public SSH key. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:public_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
   "users/get-public-ssh-key-for-authenticated": {
     parameters: {
       path: {
@@ -26281,7 +25419,7 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Removes a public SSH key from the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `admin:public_key` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
+  /** Removes a public SSH key from the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `admin:public_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
   "users/delete-public-ssh-key-for-authenticated": {
     parameters: {
       path: {
@@ -26421,30 +25559,6 @@ export interface operations {
       };
     };
   };
-  /** Lists your publicly visible email address, which you can set with the [Set primary email visibility for the authenticated user](https://docs.github.com/enterprise-server@2.22/rest/reference/users#set-primary-email-visibility-for-the-authenticated-user) endpoint. This endpoint is accessible with the `user:email` scope. */
-  "users/list-public-emails-for-authenticated": {
-    parameters: {
-      query: {
-        /** Results per page (max 100) */
-        per_page?: components["parameters"]["per-page"];
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        headers: {};
-        content: {
-          "application/json": components["schemas"]["email"][];
-        };
-      };
-      304: components["responses"]["not_modified"];
-      401: components["responses"]["requires_authentication"];
-      403: components["responses"]["forbidden"];
-      404: components["responses"]["not_found"];
-    };
-  };
   /**
    * Lists repositories that the authenticated user has explicit permission (`:read`, `:write`, or `:admin`) to access.
    *
@@ -26500,7 +25614,7 @@ export interface operations {
    *
    * **OAuth scope requirements**
    *
-   * When using [OAuth](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
+   * When using [OAuth](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
    *
    * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.
    * *   `repo` scope to create a private repository.
@@ -26624,7 +25738,7 @@ export interface operations {
   /**
    * Lists repositories the authenticated user has starred.
    *
-   * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types/) via the `Accept` header:
+   * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/) via the `Accept` header:
    */
   "activity/list-repos-starred-by-authenticated-user": {
     parameters: {
@@ -26674,7 +25788,7 @@ export interface operations {
       };
     };
   };
-  /** Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs)." */
+  /** Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)." */
   "activity/star-repo-for-authenticated-user": {
     parameters: {
       path: {
@@ -26730,7 +25844,7 @@ export interface operations {
       403: components["responses"]["forbidden"];
     };
   };
-  /** List all of the teams across all of the organizations to which the authenticated user belongs. This method requires `user`, `repo`, or `read:org` [scope](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/) when authenticating via [OAuth](https://docs.github.com/enterprise-server@2.22/apps/building-oauth-apps/). */
+  /** List all of the teams across all of the organizations to which the authenticated user belongs. This method requires `user`, `repo`, or `read:org` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/) when authenticating via [OAuth](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/). */
   "teams/list-for-authenticated-user": {
     parameters: {
       query: {
@@ -26754,9 +25868,9 @@ export interface operations {
     };
   };
   /**
-   * Lists all users, in the order that they signed up on GitHub Enterprise Server. This list includes personal user accounts and organization accounts.
+   * Lists all users, in the order that they signed up on GitHub AE. This list includes personal user accounts and organization accounts.
    *
-   * Note: Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of users.
+   * Note: Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of users.
    */
   "users/list": {
     parameters: {
@@ -26783,11 +25897,11 @@ export interface operations {
   /**
    * Provides publicly available information about someone with a GitHub account.
    *
-   * GitHub Apps with the `Plan` user permission can use this endpoint to retrieve information about a user's GitHub Enterprise Server plan. The GitHub App must be authenticated as a user. See "[Identifying and authorizing users for GitHub Apps](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/)" for details about authentication. For an example response, see 'Response with GitHub Enterprise Server plan information' below"
+   * GitHub Apps with the `Plan` user permission can use this endpoint to retrieve information about a user's GitHub AE plan. The GitHub App must be authenticated as a user. See "[Identifying and authorizing users for GitHub Apps](https://docs.github.com/github-ae@latest/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/)" for details about authentication. For an example response, see 'Response with GitHub AE plan information' below"
    *
-   * The `email` key in the following response is the publicly visible email address from your GitHub Enterprise Server [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be “public” which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub Enterprise Server. For more information, see [Authentication](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#authentication).
+   * The `email` key in the following response is the publicly visible email address from your GitHub AE [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be “public” which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub AE. For more information, see [Authentication](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#authentication).
    *
-   * The Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see "[Emails API](https://docs.github.com/enterprise-server@2.22/rest/reference/users#emails)".
+   * The Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see "[Emails API](https://docs.github.com/github-ae@latest/rest/reference/users#emails)".
    */
   "users/get-by-username": {
     parameters: {
@@ -26836,27 +25950,6 @@ export interface operations {
       path: {
         username: components["parameters"]["username"];
         org: components["parameters"]["org"];
-      };
-      query: {
-        /** Results per page (max 100) */
-        per_page?: components["parameters"]["per-page"];
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["event"][];
-        };
-      };
-    };
-  };
-  "activity/list-public-events-for-user": {
-    parameters: {
-      path: {
-        username: components["parameters"]["username"];
       };
       query: {
         /** Results per page (max 100) */
@@ -27019,7 +26112,7 @@ export interface operations {
   /**
    * Enables an authenticated GitHub App to find the user’s installation information.
    *
-   * You must use a [JWT](https://docs.github.com/enterprise-server@2.22/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   * You must use a [JWT](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
    */
   "apps/get-user-installation": {
     parameters: {
@@ -27031,7 +26124,7 @@ export interface operations {
       /** Response */
       200: {
         content: {
-          "application/json": components["schemas"]["installation-ghes-2"];
+          "application/json": components["schemas"]["installation"];
         };
       };
     };
@@ -27062,7 +26155,7 @@ export interface operations {
   /**
    * List [public organization memberships](https://help.github.com/articles/publicizing-or-concealing-organization-membership) for the specified user.
    *
-   * This method only lists _public_ memberships, regardless of authentication. If you need to fetch all of the organization memberships (public and private) for the authenticated user, use the [List organizations for the authenticated user](https://docs.github.com/enterprise-server@2.22/rest/reference/orgs#list-organizations-for-the-authenticated-user) API instead.
+   * This method only lists _public_ memberships, regardless of authentication. If you need to fetch all of the organization memberships (public and private) for the authenticated user, use the [List organizations for the authenticated user](https://docs.github.com/github-ae@latest/rest/reference/orgs#list-organizations-for-the-authenticated-user) API instead.
    */
   "orgs/list-for-user": {
     parameters: {
@@ -27112,49 +26205,6 @@ export interface operations {
       422: components["responses"]["validation_failed"];
     };
   };
-  /** These are events that you've received by watching repos and following users. If you are authenticated as the given user, you will see private events. Otherwise, you'll only see public events. */
-  "activity/list-received-events-for-user": {
-    parameters: {
-      path: {
-        username: components["parameters"]["username"];
-      };
-      query: {
-        /** Results per page (max 100) */
-        per_page?: components["parameters"]["per-page"];
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["event"][];
-        };
-      };
-    };
-  };
-  "activity/list-received-public-events-for-user": {
-    parameters: {
-      path: {
-        username: components["parameters"]["username"];
-      };
-      query: {
-        /** Results per page (max 100) */
-        per_page?: components["parameters"]["per-page"];
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["event"][];
-        };
-      };
-    };
-  };
   /** Lists public repositories for the specified user. Note: For GitHub AE, this endpoint will list internal repositories for the specified user. */
   "repos/list-for-user": {
     parameters: {
@@ -27184,34 +26234,10 @@ export interface operations {
       };
     };
   };
-  /** Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs)." */
-  "enterprise-admin/promote-user-to-be-site-administrator": {
-    parameters: {
-      path: {
-        username: components["parameters"]["username"];
-      };
-    };
-    responses: {
-      /** Response */
-      204: never;
-    };
-  };
-  /** You can demote any user account except your own. */
-  "enterprise-admin/demote-site-administrator": {
-    parameters: {
-      path: {
-        username: components["parameters"]["username"];
-      };
-    };
-    responses: {
-      /** Response */
-      204: never;
-    };
-  };
   /**
    * Lists repositories a user has starred.
    *
-   * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@2.22/rest/overview/media-types/) via the `Accept` header:
+   * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/) via the `Accept` header:
    */
   "activity/list-repos-starred-by-user": {
     parameters: {
@@ -27270,7 +26296,7 @@ export interface operations {
    *
    * You can suspend any user account except your own.
    *
-   * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@2.22/rest/overview/resources-in-the-rest-api#http-verbs)."
+   * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
    */
   "enterprise-admin/suspend-user": {
     parameters: {
