@@ -9820,7 +9820,7 @@ export interface components {
           watchers_count: number;
           created_at: string;
           updated_at: string;
-        };
+        } | null;
         sha: string;
         user: {
           avatar_url: string;
@@ -27539,7 +27539,7 @@ export interface operations {
         release_id: components["parameters"]["release-id"];
       };
       query: {
-        name?: string;
+        name: string;
         label?: string;
       };
     };
