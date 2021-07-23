@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "version": "3.1.1",
+    "version": "3.1.2",
     "title": "GitHub's official OpenAPI spec + Octokit extension",
     "description": "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs",
     "license": { "name": "MIT", "url": "https://spdx.org/licenses/MIT" },
@@ -26086,7 +26086,12 @@
           { "$ref": "#/components/parameters/owner" },
           { "$ref": "#/components/parameters/repo" },
           { "$ref": "#/components/parameters/release-id" },
-          { "name": "name", "in": "query", "schema": { "type": "string" } },
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          },
           { "name": "label", "in": "query", "schema": { "type": "string" } }
         ],
         "requestBody": {
@@ -44235,6 +44240,7 @@
               "ref": { "type": "string" },
               "repo": {
                 "type": "object",
+                "nullable": true,
                 "properties": {
                   "archive_url": { "type": "string" },
                   "assignees_url": { "type": "string" },
