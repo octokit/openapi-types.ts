@@ -8359,6 +8359,7 @@ export interface components {
       assets: components["schemas"]["release-asset"][];
       body_html?: string;
       body_text?: string;
+      mentions_count?: number;
       /** The URL of the release discussion. */
       discussion_url?: string;
       reactions?: components["schemas"]["reaction-rollup"];
@@ -11436,7 +11437,7 @@ export interface operations {
          * \* `created`: Issues created by you
          * \* `mentioned`: Issues mentioning you
          * \* `subscribed`: Issues you're subscribed to updates for
-         * \* `all`: All issues the authenticated user can see, regardless of participation or creation
+         * \* `all` or `repos`: All issues the authenticated user can see, regardless of participation or creation
          */
         filter?:
           | "assigned"
@@ -12789,7 +12790,7 @@ export interface operations {
          * \* `created`: Issues created by you
          * \* `mentioned`: Issues mentioning you
          * \* `subscribed`: Issues you're subscribed to updates for
-         * \* `all`: All issues the authenticated user can see, regardless of participation or creation
+         * \* `all` or `repos`: All issues the authenticated user can see, regardless of participation or creation
          */
         filter?:
           | "assigned"
@@ -25310,7 +25311,7 @@ export interface operations {
          * \* `created`: Issues created by you
          * \* `mentioned`: Issues mentioning you
          * \* `subscribed`: Issues you're subscribed to updates for
-         * \* `all`: All issues the authenticated user can see, regardless of participation or creation
+         * \* `all` or `repos`: All issues the authenticated user can see, regardless of participation or creation
          */
         filter?:
           | "assigned"
