@@ -19,7 +19,7 @@ jobs:
     if: github.event_name == 'workflow_dispatch' || github.event.client_payload.action == 'published'
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.3.0
+      - uses: actions/setup-node@v2.3.1
         with:
           cache: npm
       - run: npm ci
