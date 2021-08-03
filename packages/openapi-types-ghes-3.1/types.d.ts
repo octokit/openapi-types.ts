@@ -4882,7 +4882,7 @@ export interface components {
         push: boolean;
         maintain?: boolean;
       };
-      owner: components["schemas"]["simple-user"] | null;
+      owner: components["schemas"]["simple-user"];
       /** Whether the repository is private or public. */
       private: boolean;
       html_url: string;
@@ -5737,7 +5737,7 @@ export interface components {
       node_id: string;
       name: string;
       full_name: string;
-      owner: components["schemas"]["simple-user"] | null;
+      owner: components["schemas"]["simple-user"];
       private: boolean;
       html_url: string;
       description: string | null;

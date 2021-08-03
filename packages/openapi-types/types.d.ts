@@ -5593,7 +5593,7 @@ export interface components {
         push: boolean;
         maintain?: boolean;
       };
-      owner: components["schemas"]["simple-user"] | null;
+      owner: components["schemas"]["simple-user"];
       /** Whether the repository is private or public. */
       private: boolean;
       html_url: string;
@@ -6545,7 +6545,7 @@ export interface components {
       node_id: string;
       name: string;
       full_name: string;
-      owner: components["schemas"]["simple-user"] | null;
+      owner: components["schemas"]["simple-user"];
       private: boolean;
       html_url: string;
       description: string | null;
@@ -16749,7 +16749,7 @@ export interface operations {
           allow_merge_commit?: boolean;
           /** Either `true` to allow rebase-merging pull requests, or `false` to prevent rebase-merging. */
           allow_rebase_merge?: boolean;
-          /** Either `true` to allow auto-merge on pull requests, or `false to disallow auto-merge. */
+          /** Either `true` to allow auto-merge on pull requests, or `false` to disallow auto-merge. */
           allow_auto_merge?: boolean;
           /** Either `true` to allow automatically deleting head branches when pull requests are merged, or `false` to prevent automatic deletion. */
           delete_branch_on_merge?: boolean;
@@ -18737,7 +18737,7 @@ export interface operations {
           allow_merge_commit?: boolean;
           /** Either `true` to allow rebase-merging pull requests, or `false` to prevent rebase-merging. */
           allow_rebase_merge?: boolean;
-          /** Either `true` to allow auto-merge on pull requests, or `false to disallow auto-merge. */
+          /** Either `true` to allow auto-merge on pull requests, or `false` to disallow auto-merge. */
           allow_auto_merge?: boolean;
           /** Either `true` to allow automatically deleting head branches when pull requests are merged, or `false` to prevent automatic deletion. */
           delete_branch_on_merge?: boolean;

@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "version": "3.4.0",
+    "version": "3.4.1",
     "title": "GitHub's official OpenAPI spec + Octokit extension",
     "description": "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs",
     "license": { "name": "MIT", "url": "https://spdx.org/licenses/MIT" },
@@ -36045,10 +36045,7 @@
             },
             "required": ["admin", "pull", "push"]
           },
-          "owner": {
-            "nullable": true,
-            "allOf": [{ "$ref": "#/components/schemas/simple-user" }]
-          },
+          "owner": { "$ref": "#/components/schemas/simple-user" },
           "private": {
             "description": "Whether the repository is private or public.",
             "default": false,
@@ -38128,11 +38125,7 @@
           },
           "name": { "type": "string", "example": "Hello-World" },
           "full_name": { "type": "string", "example": "octocat/Hello-World" },
-          "owner": {
-            "type": "object",
-            "nullable": true,
-            "allOf": [{ "$ref": "#/components/schemas/simple-user" }]
-          },
+          "owner": { "$ref": "#/components/schemas/simple-user" },
           "private": { "type": "boolean" },
           "html_url": {
             "type": "string",
