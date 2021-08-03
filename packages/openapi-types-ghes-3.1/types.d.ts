@@ -25337,7 +25337,7 @@ export interface operations {
       query: {
         /** Set to `open` or `resolved` to only list secret scanning alerts in a specific state. */
         state?: "open" | "resolved";
-        /** A comma separated list of secret types to return. By default all secret types are returned. */
+        /** A comma separated list of secret types to return. By default all secret types are returned. See "[About secret scanning for private repositories](https://docs.github.com/enterprise-server@3.1/code-security/secret-security/about-secret-scanning#about-secret-scanning-for-private-repositories)" for a complete list of secret types (API slug). */
         secret_type?: string;
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];

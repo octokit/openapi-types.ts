@@ -4518,6 +4518,7 @@ export interface components {
         allow_rebase_merge?: boolean;
         temp_clone_token?: string;
         allow_squash_merge?: boolean;
+        allow_auto_merge?: boolean;
         delete_branch_on_merge?: boolean;
         allow_merge_commit?: boolean;
         subscribers_count?: number;
@@ -4526,6 +4527,8 @@ export interface components {
       temp_clone_token?: string;
       /** Whether to allow squash merges for pull requests. */
       allow_squash_merge?: boolean;
+      /** Whether to allow Auto-merge to be used on pull requests. */
+      allow_auto_merge?: boolean;
       /** Whether to delete head branches when pull requests are merged */
       delete_branch_on_merge?: boolean;
       /** Whether to allow merge commits for pull requests. */
@@ -5589,6 +5592,8 @@ export interface components {
       temp_clone_token?: string;
       /** Whether to allow squash merges for pull requests. */
       allow_squash_merge?: boolean;
+      /** Whether to allow Auto-merge to be used on pull requests. */
+      allow_auto_merge?: boolean;
       /** Whether to delete head branches when pull requests are merged */
       delete_branch_on_merge?: boolean;
       /** Whether to allow merge commits for pull requests. */
@@ -5745,6 +5750,7 @@ export interface components {
       template_repository?: components["schemas"]["repository"] | null;
       temp_clone_token?: string | null;
       allow_squash_merge?: boolean;
+      allow_auto_merge?: boolean;
       delete_branch_on_merge?: boolean;
       allow_merge_commit?: boolean;
       subscribers_count: number;
@@ -8669,6 +8675,7 @@ export interface components {
       allow_merge_commit?: boolean;
       allow_squash_merge?: boolean;
       allow_rebase_merge?: boolean;
+      allow_auto_merge?: boolean;
       delete_branch_on_merge?: boolean;
     };
     /** Topic Search Result Item */
@@ -13208,6 +13215,8 @@ export interface operations {
           allow_merge_commit?: boolean;
           /** Either `true` to allow rebase-merging pull requests, or `false` to prevent rebase-merging. */
           allow_rebase_merge?: boolean;
+          /** Either `true` to allow auto-merge on pull requests, or `false to disallow auto-merge. */
+          allow_auto_merge?: boolean;
           /** Either `true` to allow automatically deleting head branches when pull requests are merged, or `false` to prevent automatic deletion. */
           delete_branch_on_merge?: boolean;
         };
@@ -14992,6 +15001,8 @@ export interface operations {
           allow_merge_commit?: boolean;
           /** Either `true` to allow rebase-merging pull requests, or `false` to prevent rebase-merging. */
           allow_rebase_merge?: boolean;
+          /** Either `true` to allow auto-merge on pull requests, or `false to disallow auto-merge. */
+          allow_auto_merge?: boolean;
           /** Either `true` to allow automatically deleting head branches when pull requests are merged, or `false` to prevent automatic deletion. */
           delete_branch_on_merge?: boolean;
           /** `true` to archive this repository. **Note**: You cannot unarchive repositories through the API. */
@@ -25670,6 +25681,8 @@ export interface operations {
           allow_merge_commit?: boolean;
           /** Whether to allow rebase merges for pull requests. */
           allow_rebase_merge?: boolean;
+          /** Whether to allow Auto-merge to be used on pull requests. */
+          allow_auto_merge?: boolean;
           /** Whether to delete head branches when pull requests are merged */
           delete_branch_on_merge?: boolean;
           /** Whether downloads are enabled. */
