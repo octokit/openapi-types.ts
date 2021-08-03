@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "version": "3.3.0",
+    "version": "3.4.1",
     "title": "GitHub's official OpenAPI spec + Octokit extension",
     "description": "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs",
     "license": { "name": "MIT", "url": "https://spdx.org/licenses/MIT" },
@@ -8068,6 +8068,11 @@
                     "description": "Either `true` to allow rebase-merging pull requests, or `false` to prevent rebase-merging.",
                     "default": true
                   },
+                  "allow_auto_merge": {
+                    "type": "boolean",
+                    "description": "Either `true` to allow auto-merge on pull requests, or `false` to disallow auto-merge.",
+                    "default": false
+                  },
                   "delete_branch_on_merge": {
                     "type": "boolean",
                     "description": "Either `true` to allow automatically deleting head branches when pull requests are merged, or `false` to prevent automatic deletion.",
@@ -11256,6 +11261,11 @@
                     "type": "boolean",
                     "description": "Either `true` to allow rebase-merging pull requests, or `false` to prevent rebase-merging.",
                     "default": true
+                  },
+                  "allow_auto_merge": {
+                    "type": "boolean",
+                    "description": "Either `true` to allow auto-merge on pull requests, or `false` to disallow auto-merge.",
+                    "default": false
                   },
                   "delete_branch_on_merge": {
                     "type": "boolean",
@@ -31156,6 +31166,12 @@
                     "type": "boolean",
                     "example": true
                   },
+                  "allow_auto_merge": {
+                    "description": "Whether to allow Auto-merge to be used on pull requests.",
+                    "default": false,
+                    "type": "boolean",
+                    "example": false
+                  },
                   "delete_branch_on_merge": {
                     "description": "Whether to delete head branches when pull requests are merged",
                     "default": false,
@@ -34322,10 +34338,7 @@
             },
             "required": ["admin", "pull", "push"]
           },
-          "owner": {
-            "nullable": true,
-            "allOf": [{ "$ref": "#/components/schemas/simple-user" }]
-          },
+          "owner": { "$ref": "#/components/schemas/simple-user" },
           "private": {
             "description": "Whether the repository is private or public.",
             "default": false,
@@ -34723,6 +34736,7 @@
               "allow_rebase_merge": { "type": "boolean" },
               "temp_clone_token": { "type": "string" },
               "allow_squash_merge": { "type": "boolean" },
+              "allow_auto_merge": { "type": "boolean" },
               "delete_branch_on_merge": { "type": "boolean" },
               "allow_merge_commit": { "type": "boolean" },
               "subscribers_count": { "type": "integer" },
@@ -34735,6 +34749,12 @@
             "default": true,
             "type": "boolean",
             "example": true
+          },
+          "allow_auto_merge": {
+            "description": "Whether to allow Auto-merge to be used on pull requests.",
+            "default": false,
+            "type": "boolean",
+            "example": false
           },
           "delete_branch_on_merge": {
             "description": "Whether to delete head branches when pull requests are merged",
@@ -36110,11 +36130,7 @@
           },
           "name": { "type": "string", "example": "Hello-World" },
           "full_name": { "type": "string", "example": "octocat/Hello-World" },
-          "owner": {
-            "type": "object",
-            "nullable": true,
-            "allOf": [{ "$ref": "#/components/schemas/simple-user" }]
-          },
+          "owner": { "$ref": "#/components/schemas/simple-user" },
           "private": { "type": "boolean" },
           "html_url": {
             "type": "string",
@@ -37830,6 +37846,12 @@
             "type": "boolean",
             "example": true
           },
+          "allow_auto_merge": {
+            "description": "Whether to allow Auto-merge to be used on pull requests.",
+            "default": false,
+            "type": "boolean",
+            "example": false
+          },
           "delete_branch_on_merge": {
             "description": "Whether to delete head branches when pull requests are merged",
             "default": false,
@@ -38399,6 +38421,7 @@
           },
           "temp_clone_token": { "type": "string", "nullable": true },
           "allow_squash_merge": { "type": "boolean", "example": true },
+          "allow_auto_merge": { "type": "boolean", "example": false },
           "delete_branch_on_merge": { "type": "boolean", "example": false },
           "allow_merge_commit": { "type": "boolean", "example": true },
           "subscribers_count": { "type": "integer", "example": 42 },
@@ -45905,6 +45928,7 @@
           "allow_merge_commit": { "type": "boolean" },
           "allow_squash_merge": { "type": "boolean" },
           "allow_rebase_merge": { "type": "boolean" },
+          "allow_auto_merge": { "type": "boolean" },
           "delete_branch_on_merge": { "type": "boolean" }
         },
         "required": [
@@ -47057,6 +47081,7 @@
               "template_repository": null,
               "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
               "allow_squash_merge": true,
+              "allow_auto_merge": false,
               "delete_branch_on_merge": true,
               "allow_merge_commit": true,
               "subscribers_count": 42,
@@ -47764,6 +47789,7 @@
               "template_repository": null,
               "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
               "allow_squash_merge": true,
+              "allow_auto_merge": false,
               "delete_branch_on_merge": true,
               "allow_merge_commit": true,
               "subscribers_count": 42,
@@ -48017,6 +48043,7 @@
               "template_repository": null,
               "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
               "allow_squash_merge": true,
+              "allow_auto_merge": false,
               "delete_branch_on_merge": true,
               "allow_merge_commit": true,
               "subscribers_count": 42,
@@ -48546,6 +48573,7 @@
               "template_repository": null,
               "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
               "allow_squash_merge": true,
+              "allow_auto_merge": false,
               "delete_branch_on_merge": true,
               "allow_merge_commit": true,
               "subscribers_count": 42,
@@ -49182,6 +49210,7 @@
               "allow_rebase_merge": true,
               "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
               "allow_squash_merge": true,
+              "allow_auto_merge": false,
               "delete_branch_on_merge": true,
               "allow_merge_commit": true,
               "subscribers_count": 42,
@@ -49300,6 +49329,7 @@
           "template_repository": null,
           "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
           "allow_squash_merge": true,
+          "allow_auto_merge": false,
           "delete_branch_on_merge": true,
           "allow_merge_commit": true,
           "subscribers_count": 42,
@@ -50031,6 +50061,7 @@
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -50038,6 +50069,7 @@
           },
           "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
           "allow_squash_merge": true,
+          "allow_auto_merge": false,
           "delete_branch_on_merge": true,
           "allow_merge_commit": true,
           "subscribers_count": 42,
@@ -50490,6 +50522,7 @@
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -50497,6 +50530,7 @@
           },
           "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
           "allow_squash_merge": true,
+          "allow_auto_merge": false,
           "delete_branch_on_merge": true,
           "allow_merge_commit": true,
           "subscribers_count": 42,
@@ -50624,6 +50658,7 @@
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -50736,6 +50771,7 @@
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -50960,6 +50996,7 @@
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -50967,6 +51004,7 @@
           },
           "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
           "allow_squash_merge": true,
+          "allow_auto_merge": false,
           "delete_branch_on_merge": true,
           "allow_merge_commit": true,
           "subscribers_count": 42,
@@ -51094,6 +51132,7 @@
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -51206,6 +51245,7 @@
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -51443,6 +51483,7 @@
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -51450,6 +51491,7 @@
           },
           "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
           "allow_squash_merge": true,
+          "allow_auto_merge": false,
           "delete_branch_on_merge": true,
           "allow_merge_commit": true,
           "subscribers_count": 42,
@@ -51570,6 +51612,7 @@
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -51682,6 +51725,7 @@
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -53103,6 +53147,7 @@
               "allow_rebase_merge": true,
               "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
               "allow_squash_merge": true,
+              "allow_auto_merge": false,
               "delete_branch_on_merge": true,
               "allow_merge_commit": true,
               "subscribers_count": 42,
@@ -53424,6 +53469,7 @@
               "allow_rebase_merge": true,
               "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
               "allow_squash_merge": true,
+              "allow_auto_merge": false,
               "delete_branch_on_merge": true,
               "allow_merge_commit": true,
               "subscribers_count": 42,
@@ -54546,6 +54592,7 @@
                 "template_repository": null,
                 "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
                 "allow_squash_merge": true,
+                "allow_auto_merge": false,
                 "delete_branch_on_merge": true,
                 "allow_merge_commit": true,
                 "subscribers_count": 42,
@@ -54684,6 +54731,7 @@
                 "template_repository": null,
                 "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
                 "allow_squash_merge": true,
+                "allow_auto_merge": false,
                 "delete_branch_on_merge": true,
                 "allow_merge_commit": true,
                 "subscribers_count": 42,
@@ -58934,6 +58982,7 @@
               "template_repository": null,
               "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
               "allow_squash_merge": true,
+              "allow_auto_merge": false,
               "delete_branch_on_merge": true,
               "allow_merge_commit": true,
               "subscribers_count": 42,
@@ -59072,6 +59121,7 @@
               "template_repository": null,
               "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
               "allow_squash_merge": true,
+              "allow_auto_merge": false,
               "delete_branch_on_merge": true,
               "allow_merge_commit": true,
               "subscribers_count": 42,
@@ -60044,6 +60094,7 @@
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -60149,6 +60200,7 @@
           "updated_at": "2011-01-26T19:14:43Z",
           "permissions": { "admin": false, "push": false, "pull": true },
           "allow_rebase_merge": true,
+          "allow_auto_merge": false,
           "license": {
             "key": "mit",
             "name": "MIT License",
@@ -61031,6 +61083,7 @@
             "allow_rebase_merge": true,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -61038,6 +61091,7 @@
           },
           "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
           "allow_squash_merge": true,
+          "allow_auto_merge": false,
           "delete_branch_on_merge": true,
           "allow_merge_commit": true,
           "subscribers_count": 42,
@@ -61694,6 +61748,7 @@
             "template_repository": null,
             "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
             "allow_squash_merge": true,
+            "allow_auto_merge": false,
             "delete_branch_on_merge": true,
             "allow_merge_commit": true,
             "subscribers_count": 42,
@@ -61814,6 +61869,7 @@
               "template_repository": null,
               "temp_clone_token": "ABTLWHOULUVAXGTRYU7OC2876QJ2O",
               "allow_squash_merge": true,
+              "allow_auto_merge": false,
               "delete_branch_on_merge": true,
               "allow_merge_commit": true,
               "subscribers_count": 42,
