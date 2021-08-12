@@ -5149,6 +5149,28 @@ export interface paths {
      * If `package_type` is not `container`, your token must also include the `repo` scope.
      */
     get: operations["packages/get-package-for-user"];
+    /**
+     * Deletes an entire package for a user. You cannot delete a public package if any version of the package has more than 5,000 downloads. In this scenario, contact GitHub support for further assistance.
+     *
+     * To use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:delete` scopes. In addition:
+     * - If `package_type` is not `container`, your token must also include the `repo` scope.
+     * - If `package_type` is `container`, you must also have admin permissions to the container you want to delete.
+     */
+    delete: operations["packages/delete-package-for-user"];
+  };
+  "/users/{username}/packages/{package_type}/{package_name}/restore": {
+    /**
+     * Restores an entire package for a user.
+     *
+     * You can restore a deleted package under the following conditions:
+     *   - The package was deleted within the last 30 days.
+     *   - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+     *
+     * To use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:write` scopes. In addition:
+     * - If `package_type` is not `container`, your token must also include the `repo` scope.
+     * - If `package_type` is `container`, you must also have admin permissions to the container that you want to restore.
+     */
+    post: operations["packages/restore-package-for-user"];
   };
   "/users/{username}/packages/{package_type}/{package_name}/versions": {
     /**
@@ -5167,6 +5189,28 @@ export interface paths {
      * If `package_type` is not `container`, your token must also include the `repo` scope.
      */
     get: operations["packages/get-package-version-for-user"];
+    /**
+     * Deletes a specific package version for a user. If the package is public and the package version has more than 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.
+     *
+     * To use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:delete` scopes. In addition:
+     * - If `package_type` is not `container`, your token must also include the `repo` scope.
+     * - If `package_type` is `container`, you must also have admin permissions to the container you want to delete.
+     */
+    delete: operations["packages/delete-package-version-for-user"];
+  };
+  "/users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore": {
+    /**
+     * Restores a specific package version for a user.
+     *
+     * You can restore a deleted package under the following conditions:
+     *   - The package was deleted within the last 30 days.
+     *   - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+     *
+     * To use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:write` scopes. In addition:
+     * - If `package_type` is not `container`, your token must also include the `repo` scope.
+     * - If `package_type` is `container`, you must also have admin permissions to the container that you want to restore.
+     */
+    post: operations["packages/restore-package-version-for-user"];
   };
   "/users/{username}/projects": {
     get: operations["projects/list-for-user"];
@@ -32661,6 +32705,64 @@ export interface operations {
     };
   };
   /**
+   * Deletes an entire package for a user. You cannot delete a public package if any version of the package has more than 5,000 downloads. In this scenario, contact GitHub support for further assistance.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:delete` scopes. In addition:
+   * - If `package_type` is not `container`, your token must also include the `repo` scope.
+   * - If `package_type` is `container`, you must also have admin permissions to the container you want to delete.
+   */
+  "packages/delete-package-for-user": {
+    parameters: {
+      path: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
+        package_type: components["parameters"]["package-type"];
+        /** The name of the package. */
+        package_name: components["parameters"]["package-name"];
+        username: components["parameters"]["username"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+    };
+  };
+  /**
+   * Restores an entire package for a user.
+   *
+   * You can restore a deleted package under the following conditions:
+   *   - The package was deleted within the last 30 days.
+   *   - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:write` scopes. In addition:
+   * - If `package_type` is not `container`, your token must also include the `repo` scope.
+   * - If `package_type` is `container`, you must also have admin permissions to the container that you want to restore.
+   */
+  "packages/restore-package-for-user": {
+    parameters: {
+      path: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
+        package_type: components["parameters"]["package-type"];
+        /** The name of the package. */
+        package_name: components["parameters"]["package-name"];
+        username: components["parameters"]["username"];
+      };
+      query: {
+        /** package token */
+        token?: string;
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+    };
+  };
+  /**
    * Returns all package versions for a public package owned by a specified user.
    *
    * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
@@ -32713,6 +32815,64 @@ export interface operations {
           "application/json": components["schemas"]["package-version"];
         };
       };
+    };
+  };
+  /**
+   * Deletes a specific package version for a user. If the package is public and the package version has more than 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:delete` scopes. In addition:
+   * - If `package_type` is not `container`, your token must also include the `repo` scope.
+   * - If `package_type` is `container`, you must also have admin permissions to the container you want to delete.
+   */
+  "packages/delete-package-version-for-user": {
+    parameters: {
+      path: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
+        package_type: components["parameters"]["package-type"];
+        /** The name of the package. */
+        package_name: components["parameters"]["package-name"];
+        username: components["parameters"]["username"];
+        /** Unique identifier of the package version. */
+        package_version_id: components["parameters"]["package-version-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+    };
+  };
+  /**
+   * Restores a specific package version for a user.
+   *
+   * You can restore a deleted package under the following conditions:
+   *   - The package was deleted within the last 30 days.
+   *   - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` and `packages:write` scopes. In addition:
+   * - If `package_type` is not `container`, your token must also include the `repo` scope.
+   * - If `package_type` is `container`, you must also have admin permissions to the container that you want to restore.
+   */
+  "packages/restore-package-version-for-user": {
+    parameters: {
+      path: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
+        package_type: components["parameters"]["package-type"];
+        /** The name of the package. */
+        package_name: components["parameters"]["package-name"];
+        username: components["parameters"]["username"];
+        /** Unique identifier of the package version. */
+        package_version_id: components["parameters"]["package-version-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
     };
   };
   "projects/list-for-user": {
