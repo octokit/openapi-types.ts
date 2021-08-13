@@ -5485,6 +5485,8 @@ export interface components {
       installation_id: number | null;
       /** The id of the repository associated with this event. */
       repository_id: number | null;
+      /** The URL target of the delivery. */
+      url?: string;
       request: {
         /** The request headers sent with the webhook delivery. */
         headers: { [key: string]: any } | null;
