@@ -1263,6 +1263,15 @@ export interface paths {
     /** Removing a user from this list will remove them from all the organization's repositories. */
     delete: operations["orgs/remove-outside-collaborator"];
   };
+  "/orgs/{org}/packages": {
+    /**
+     * Lists all packages in an organization readable by the user.
+     *
+     * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+     * If `package_type` is not `container`, your token must also include the `repo` scope.
+     */
+    get: operations["packages/list-packages-for-organization"];
+  };
   "/orgs/{org}/packages/{package_type}/{package_name}": {
     /**
      * Gets a specific package in an organization.
@@ -4907,6 +4916,15 @@ export interface paths {
      */
     get: operations["orgs/list-for-authenticated-user"];
   };
+  "/user/packages": {
+    /**
+     * Lists packages owned by the authenticated user within the user's namespace.
+     *
+     * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+     * If `package_type` is not `container`, your token must also include the `repo` scope.
+     */
+    get: operations["packages/list-packages-for-authenticated-user"];
+  };
   "/user/packages/{package_type}/{package_name}": {
     /**
      * Gets a specific package for a package owned by the authenticated user.
@@ -5027,6 +5045,15 @@ export interface paths {
   "/user/teams": {
     /** List all of the teams across all of the organizations to which the authenticated user belongs. This method requires `user`, `repo`, or `read:org` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/) when authenticating via [OAuth](https://docs.github.com/apps/building-oauth-apps/). */
     get: operations["teams/list-for-authenticated-user"];
+  };
+  "/user/{username}/packages": {
+    /**
+     * Lists all packages in a user's namespace for which the requesting user has access.
+     *
+     * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+     * If `package_type` is not `container`, your token must also include the `repo` scope.
+     */
+    get: operations["packages/list-packages-for-user"];
   };
   "/users": {
     /**
@@ -11125,6 +11152,8 @@ export interface components {
     "migration-id": number;
     /** repo_name parameter */
     "repo-name": string;
+    /** The selected visibility of the packages. Can be one of `public`, `private`, or `internal`. Only `container` package_types currently support `internal` visibility properly. For other ecosystems `internal` is synonymous with `private`. This parameter is optional and only filters an existing result set. */
+    "package-visibility": "public" | "private" | "internal";
     /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
     "package-type":
       | "npm"
@@ -16260,6 +16289,41 @@ export interface operations {
           };
         };
       };
+    };
+  };
+  /**
+   * Lists all packages in an organization readable by the user.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   */
+  "packages/list-packages-for-organization": {
+    parameters: {
+      query: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
+        package_type:
+          | "npm"
+          | "maven"
+          | "rubygems"
+          | "docker"
+          | "nuget"
+          | "container";
+        /** The selected visibility of the packages. Can be one of `public`, `private`, or `internal`. Only `container` package_types currently support `internal` visibility properly. For other ecosystems `internal` is synonymous with `private`. This parameter is optional and only filters an existing result set. */
+        visibility?: components["parameters"]["package-visibility"];
+      };
+      path: {
+        org: components["parameters"]["org"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["package"][];
+        };
+      };
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
     };
   };
   /**
@@ -31684,6 +31748,36 @@ export interface operations {
     };
   };
   /**
+   * Lists packages owned by the authenticated user within the user's namespace.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   */
+  "packages/list-packages-for-authenticated-user": {
+    parameters: {
+      query: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
+        package_type:
+          | "npm"
+          | "maven"
+          | "rubygems"
+          | "docker"
+          | "nuget"
+          | "container";
+        /** The selected visibility of the packages. Can be one of `public`, `private`, or `internal`. Only `container` package_types currently support `internal` visibility properly. For other ecosystems `internal` is synonymous with `private`. This parameter is optional and only filters an existing result set. */
+        visibility?: components["parameters"]["package-visibility"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["package"][];
+        };
+      };
+    };
+  };
+  /**
    * Gets a specific package for a package owned by the authenticated user.
    *
    * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
@@ -32232,6 +32326,41 @@ export interface operations {
       304: components["responses"]["not_modified"];
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
+    };
+  };
+  /**
+   * Lists all packages in a user's namespace for which the requesting user has access.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   */
+  "packages/list-packages-for-user": {
+    parameters: {
+      query: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
+        package_type:
+          | "npm"
+          | "maven"
+          | "rubygems"
+          | "docker"
+          | "nuget"
+          | "container";
+        /** The selected visibility of the packages. Can be one of `public`, `private`, or `internal`. Only `container` package_types currently support `internal` visibility properly. For other ecosystems `internal` is synonymous with `private`. This parameter is optional and only filters an existing result set. */
+        visibility?: components["parameters"]["package-visibility"];
+      };
+      path: {
+        username: components["parameters"]["username"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["package"][];
+        };
+      };
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
     };
   };
   /**
