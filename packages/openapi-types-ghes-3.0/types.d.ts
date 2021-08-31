@@ -4296,6 +4296,36 @@ export interface paths {
      */
     post: operations["apps/create-content-attachment"];
   };
+  "/orgs/{org}/audit-log": {
+    /** This endpoint does not exist ghes-3.0.json. It was added in ghes-3.1.json */
+    get: operations["orgs/get-audit-log"];
+  };
+  "/repos/{owner}/{repo}/branches/{branch}/rename": {
+    /** This endpoint does not exist ghes-3.0.json. It was added in ghes-3.1.json */
+    post: operations["repos/rename-branch"];
+  };
+  "/repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances": {
+    /** This endpoint does not exist ghes-3.0.json. It was added in ghes-3.1.json */
+    get: operations["code-scanning/list-alert-instances"];
+  };
+  "/repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}": {
+    /** This endpoint does not exist ghes-3.0.json. It was added in ghes-3.1.json */
+    get: operations["code-scanning/get-analysis"];
+    /** This endpoint does not exist ghes-3.0.json. It was added in ghes-3.1.json */
+    delete: operations["code-scanning/delete-analysis"];
+  };
+  "/repos/{owner}/{repo}/code-scanning/sarifs/{sarif_id}": {
+    /** This endpoint does not exist ghes-3.0.json. It was added in ghes-3.1.json */
+    get: operations["code-scanning/get-sarif"];
+  };
+  "/repos/{owner}/{repo}/secret-scanning/alerts": {
+    /** This endpoint does not exist ghes-3.0.json. It was added in ghes-3.1.json */
+    get: operations["secret-scanning/list-alerts-for-repo"];
+  };
+  "/repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}": {
+    /** This endpoint does not exist ghes-3.0.json. It was added in ghes-3.1.json */
+    get: operations["secret-scanning/get-alert"];
+  };
 }
 
 export interface components {
@@ -28463,6 +28493,62 @@ export interface operations {
           body: string;
         };
       };
+    };
+  };
+  /** This endpoint does not exist ghes-3.0.json. It was added in ghes-3.1.json */
+  "orgs/get-audit-log": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.0.json. It was added in ghes-3.1.json */
+  "repos/rename-branch": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.0.json. It was added in ghes-3.1.json */
+  "code-scanning/list-alert-instances": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.0.json. It was added in ghes-3.1.json */
+  "code-scanning/get-analysis": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.0.json. It was added in ghes-3.1.json */
+  "code-scanning/delete-analysis": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.0.json. It was added in ghes-3.1.json */
+  "code-scanning/get-sarif": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.0.json. It was added in ghes-3.1.json */
+  "secret-scanning/list-alerts-for-repo": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.0.json. It was added in ghes-3.1.json */
+  "secret-scanning/get-alert": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
     };
   };
 }
