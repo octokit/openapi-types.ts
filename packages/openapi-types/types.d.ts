@@ -1378,6 +1378,15 @@ export interface paths {
      */
     post: operations["repos/create-in-org"];
   };
+  "/orgs/{org}/secret-scanning/alerts": {
+    /**
+     * Lists all secret scanning alerts for all eligible repositories in an organization, from newest to oldest.
+     * To use this endpoint, you must be an administrator for the repository or organization, and you must use an access token with the `repo` scope or `security_events` scope.
+     *
+     * GitHub Apps must have the `secret_scanning_alerts` read permission to use this endpoint.
+     */
+    get: operations["secret-scanning/list-alerts-for-org"];
+  };
   "/orgs/{org}/settings/billing/actions": {
     /**
      * Gets the summary of the free and paid GitHub Actions minutes used.
@@ -7040,6 +7049,36 @@ export interface components {
       /** Whether or not this project can be seen by everyone. Only present if owner is an organization. */
       private?: boolean;
     };
+    /** The security alert number. */
+    "alert-number": number;
+    /** The time that the alert was created in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
+    "alert-created-at": string;
+    /** The REST API URL of the alert resource. */
+    "alert-url": string;
+    /** The GitHub URL of the alert resource. */
+    "alert-html-url": string;
+    /** Sets the state of the secret scanning alert. Can be either `open` or `resolved`. You must provide `resolution` when you set the state to `resolved`. */
+    "secret-scanning-alert-state": "open" | "resolved";
+    /** **Required when the `state` is `resolved`.** The reason for resolving the alert. Can be one of `false_positive`, `wont_fix`, `revoked`, or `used_in_tests`. */
+    "secret-scanning-alert-resolution":
+      | ("false_positive" | "wont_fix" | "revoked" | "used_in_tests")
+      | null;
+    "organization-secret-scanning-alert": {
+      number?: components["schemas"]["alert-number"];
+      created_at?: components["schemas"]["alert-created-at"];
+      url?: components["schemas"]["alert-url"];
+      html_url?: components["schemas"]["alert-html-url"];
+      state?: components["schemas"]["secret-scanning-alert-state"];
+      resolution?: components["schemas"]["secret-scanning-alert-resolution"];
+      /** The time that the alert was resolved in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
+      resolved_at?: string | null;
+      resolved_by?: components["schemas"]["simple-user"];
+      /** The type of secret that secret scanning detected. */
+      secret_type?: string;
+      /** The secret that was detected. */
+      secret?: string;
+      repository?: components["schemas"]["minimal-repository"];
+    };
     /** External Groups to be mapped to a team for membership */
     "group-mapping": {
       /** Array of groups to be mapped to this team */
@@ -8146,14 +8185,6 @@ export interface components {
     "code-scanning-ref": string;
     /** State of a code scanning alert. */
     "code-scanning-alert-state": "open" | "closed" | "dismissed" | "fixed";
-    /** The security alert number. */
-    "alert-number": number;
-    /** The time that the alert was created in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
-    "alert-created-at": string;
-    /** The REST API URL of the alert resource. */
-    "alert-url": string;
-    /** The GitHub URL of the alert resource. */
-    "alert-html-url": string;
     /** The REST API URL for fetching the list of instances for an alert. */
     "alert-instances-url": string;
     /** The time that the alert was dismissed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
@@ -10219,12 +10250,6 @@ export interface components {
       discussion_url?: string;
       reactions?: components["schemas"]["reaction-rollup"];
     };
-    /** Sets the state of the secret scanning alert. Can be either `open` or `resolved`. You must provide `resolution` when you set the state to `resolved`. */
-    "secret-scanning-alert-state": "open" | "resolved";
-    /** **Required when the `state` is `resolved`.** The reason for resolving the alert. Can be one of `false_positive`, `wont_fix`, `revoked`, or `used_in_tests`. */
-    "secret-scanning-alert-resolution":
-      | ("false_positive" | "wont_fix" | "revoked" | "used_in_tests")
-      | null;
     "secret-scanning-alert": {
       number?: components["schemas"]["alert-number"];
       created_at?: components["schemas"]["alert-created-at"];
@@ -16763,6 +16788,40 @@ export interface operations {
           delete_branch_on_merge?: boolean;
         };
       };
+    };
+  };
+  /**
+   * Lists all secret scanning alerts for all eligible repositories in an organization, from newest to oldest.
+   * To use this endpoint, you must be an administrator for the repository or organization, and you must use an access token with the `repo` scope or `security_events` scope.
+   *
+   * GitHub Apps must have the `secret_scanning_alerts` read permission to use this endpoint.
+   */
+  "secret-scanning/list-alerts-for-org": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+      };
+      query: {
+        /** Set to `open` or `resolved` to only list secret scanning alerts in a specific state. */
+        state?: "open" | "resolved";
+        /** A comma separated list of secret types to return. By default all secret types are returned. */
+        secret_type?: string;
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
+        /** Results per page (max 100) */
+        per_page?: components["parameters"]["per-page"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        headers: {};
+        content: {
+          "application/json": components["schemas"]["organization-secret-scanning-alert"][];
+        };
+      };
+      404: components["responses"]["not_found"];
+      503: components["responses"]["service_unavailable"];
     };
   };
   /**
@@ -25323,15 +25382,16 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": Partial<{
-          /** The names of the labels to add to the issue. You can pass an empty array to remove all labels. **Note:** Alternatively, you can pass a single label as a `string` or an `array` of labels directly, but GitHub recommends passing an object with the `labels` key. */
-          labels?: string[];
-        }> &
-          Partial<{
-            labels?: {
-              name: string;
-            }[];
-          }>;
+        "application/json":
+          | {
+              /** The names of the labels to add to the issue. You can pass an empty array to remove all labels. **Note:** Alternatively, you can pass a single label as a `string` or an `array` of labels directly, but GitHub recommends passing an object with the `labels` key. */
+              labels?: string[];
+            }
+          | {
+              labels?: {
+                name: string;
+              }[];
+            };
       };
     };
   };
