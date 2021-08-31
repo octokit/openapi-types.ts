@@ -4279,6 +4279,8 @@ export interface components {
       installation_id: number | null;
       /** The id of the repository associated with this event. */
       repository_id: number | null;
+      /** The URL target of the delivery. */
+      url?: string;
       request: {
         /** The request headers sent with the webhook delivery. */
         headers: { [key: string]: any } | null;
@@ -20774,15 +20776,16 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": Partial<{
-          /** The names of the labels to add to the issue. You can pass an empty array to remove all labels. **Note:** Alternatively, you can pass a single label as a `string` or an `array` of labels directly, but GitHub recommends passing an object with the `labels` key. */
-          labels?: string[];
-        }> &
-          Partial<{
-            labels?: {
-              name: string;
-            }[];
-          }>;
+        "application/json":
+          | {
+              /** The names of the labels to add to the issue. You can pass an empty array to remove all labels. **Note:** Alternatively, you can pass a single label as a `string` or an `array` of labels directly, but GitHub recommends passing an object with the `labels` key. */
+              labels?: string[];
+            }
+          | {
+              labels?: {
+                name: string;
+              }[];
+            };
       };
     };
   };

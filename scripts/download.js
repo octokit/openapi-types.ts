@@ -42,6 +42,7 @@ async function run(version) {
   for (const file of data) {
     if (!/\.json$/.test(file.name)) continue;
     if (/deref/.test(file.name)) continue;
+    if (/diff/.test(file.name)) continue;
 
     if (/^ghes-/.test(file.name)) {
       if (
