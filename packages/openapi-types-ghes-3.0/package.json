@@ -12,5 +12,5 @@
   "types": "types.d.ts",
   "author": "Gregor Martynus (https://twitter.com/gr2m)",
   "license": "MIT",
-  "octokit": { "openapi-version": "5.0.1" }
+  "octokit": { "openapi-version": "5.0.2" }
 }
