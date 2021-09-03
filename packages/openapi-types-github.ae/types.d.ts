@@ -2809,6 +2809,10 @@ export interface paths {
      */
     get: operations["licenses/get-for-repo"];
   };
+  "/repos/{owner}/{repo}/merge-upstream": {
+    /** Sync a branch of a forked repository to keep it up-to-date with the upstream repository. */
+    post: operations["repos/merge-upstream"];
+  };
   "/repos/{owner}/{repo}/merges": {
     post: operations["repos/merge"];
   };
@@ -8531,6 +8535,12 @@ export interface components {
         self: string;
       };
       license: components["schemas"]["license-simple"] | null;
+    };
+    /** Results of a successful merge upstream request */
+    "merged-upstream": {
+      message?: string;
+      merge_type?: "merge" | "fast-forward" | "none";
+      base_branch?: string;
     };
     "pages-source-hash": {
       branch: string;
@@ -21962,6 +21972,35 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["license-content"];
+        };
+      };
+    };
+  };
+  /** Sync a branch of a forked repository to keep it up-to-date with the upstream repository. */
+  "repos/merge-upstream": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+      };
+    };
+    responses: {
+      /** The branch has been successfully synced with the upstream repository */
+      200: {
+        content: {
+          "application/json": components["schemas"]["merged-upstream"];
+        };
+      };
+      /** The branch could not be synced because of a merge conflict */
+      409: unknown;
+      /** The branch could not be synced for some other reason */
+      422: unknown;
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** The name of the branch which should be updated to match upstream. */
+          branch: string;
         };
       };
     };

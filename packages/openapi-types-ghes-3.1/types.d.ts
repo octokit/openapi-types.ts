@@ -4746,6 +4746,10 @@ export interface paths {
     /** This endpoint does not exist ghes-3.1.json. It was added in api.github.com.json */
     delete: operations["interactions/remove-restrictions-for-repo"];
   };
+  "/repos/{owner}/{repo}/merge-upstream": {
+    /** This endpoint does not exist ghes-3.1.json. It was added in api.github.com.json */
+    post: operations["repos/merge-upstream"];
+  };
   "/repos/{owner}/{repo}/pages/health": {
     /** This endpoint does not exist ghes-3.1.json. It was added in api.github.com.json */
     get: operations["repos/get-pages-health-check"];
@@ -30214,6 +30218,13 @@ export interface operations {
   };
   /** This endpoint does not exist ghes-3.1.json. It was added in api.github.com.json */
   "interactions/remove-restrictions-for-repo": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.1.json. It was added in api.github.com.json */
+  "repos/merge-upstream": {
     responses: {
       /** Not Implemented */
       501: unknown;

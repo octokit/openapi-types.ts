@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "version": "5.0.2",
+    "version": "5.1.0",
     "title": "GitHub's official OpenAPI spec + Octokit extension",
     "description": "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs",
     "license": { "name": "MIT", "url": "https://spdx.org/licenses/MIT" },
@@ -37197,6 +37197,20 @@
         "externalDocs": {
           "description": "API method documentation",
           "url": "https://docs.github.com/rest/reference/interactions#remove-interaction-restrictions-for-a-repository"
+        },
+        "x-octokit": { "api.github.com.json": "removed" },
+        "responses": { "501": { "description": "Not Implemented" } }
+      }
+    },
+    "/repos/{owner}/{repo}/merge-upstream": {
+      "post": {
+        "summary": "Sync a fork branch with the upstream repository",
+        "description": "This endpoint does not exist ghes-3.1.json. It was added in api.github.com.json",
+        "tags": ["repos"],
+        "operationId": "repos/merge-upstream",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/repos#sync-a-fork-branch-with-the-upstream-repository"
         },
         "x-octokit": { "api.github.com.json": "removed" },
         "responses": { "501": { "description": "Not Implemented" } }
