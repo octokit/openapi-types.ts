@@ -2809,6 +2809,10 @@ export interface paths {
      */
     get: operations["licenses/get-for-repo"];
   };
+  "/repos/{owner}/{repo}/merge-upstream": {
+    /** Sync a branch of a forked repository to keep it up-to-date with the upstream repository. */
+    post: operations["repos/merge-upstream"];
+  };
   "/repos/{owner}/{repo}/merges": {
     post: operations["repos/merge"];
   };
@@ -3941,6 +3945,648 @@ export interface paths {
      * You must use an [installation access token](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
      */
     post: operations["apps/create-content-attachment"];
+  };
+  "/applications/grants": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["oauth-authorizations/list-grants"];
+  };
+  "/applications/grants/{grant_id}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["oauth-authorizations/get-grant"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["oauth-authorizations/delete-grant"];
+  };
+  "/applications/{client_id}/token/scoped": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["apps/scope-token"];
+  };
+  "/authorizations": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["oauth-authorizations/list-authorizations"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["oauth-authorizations/create-authorization"];
+  };
+  "/authorizations/clients/{client_id}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    put: operations["oauth-authorizations/get-or-create-authorization-for-app"];
+  };
+  "/authorizations/clients/{client_id}/{fingerprint}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    put: operations["oauth-authorizations/get-or-create-authorization-for-app-and-fingerprint"];
+  };
+  "/authorizations/{authorization_id}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["oauth-authorizations/get-authorization"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["oauth-authorizations/delete-authorization"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    patch: operations["oauth-authorizations/update-authorization"];
+  };
+  "/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/organizations": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["enterprise-admin/list-org-access-to-self-hosted-runner-group-in-enterprise"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    put: operations["enterprise-admin/set-org-access-to-self-hosted-runner-group-in-enterprise"];
+  };
+  "/enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/organizations/{org_id}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    put: operations["enterprise-admin/add-org-access-to-self-hosted-runner-group-in-enterprise"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["enterprise-admin/remove-org-access-to-self-hosted-runner-group-in-enterprise"];
+  };
+  "/enterprises/{enterprise}/actions/runners/downloads": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["enterprise-admin/list-runner-applications-for-enterprise"];
+  };
+  "/enterprises/{enterprise}/actions/runners/registration-token": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["enterprise-admin/create-registration-token-for-enterprise"];
+  };
+  "/enterprises/{enterprise}/actions/runners/remove-token": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["enterprise-admin/create-remove-token-for-enterprise"];
+  };
+  "/enterprises/{enterprise}/audit-log": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["enterprise-admin/get-audit-log"];
+  };
+  "/enterprises/{enterprise}/settings/billing/actions": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["billing/get-github-actions-billing-ghe"];
+  };
+  "/enterprises/{enterprise}/settings/billing/packages": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["billing/get-github-packages-billing-ghe"];
+  };
+  "/enterprises/{enterprise}/settings/billing/shared-storage": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["billing/get-shared-storage-billing-ghe"];
+  };
+  "/events": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["activity/list-public-events"];
+  };
+  "/marketplace_listing/accounts/{account_id}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["apps/get-subscription-plan-for-account"];
+  };
+  "/marketplace_listing/plans": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["apps/list-plans"];
+  };
+  "/marketplace_listing/plans/{plan_id}/accounts": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["apps/list-accounts-for-plan"];
+  };
+  "/marketplace_listing/stubbed/accounts/{account_id}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["apps/get-subscription-plan-for-account-stubbed"];
+  };
+  "/marketplace_listing/stubbed/plans": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["apps/list-plans-stubbed"];
+  };
+  "/marketplace_listing/stubbed/plans/{plan_id}/accounts": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["apps/list-accounts-for-plan-stubbed"];
+  };
+  "/networks/{owner}/{repo}/events": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["activity/list-public-events-for-repo-network"];
+  };
+  "/orgs/{org}/actions/runner-groups/{runner_group_id}/repositories": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["actions/list-repo-access-to-self-hosted-runner-group-in-org"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    put: operations["actions/set-repo-access-to-self-hosted-runner-group-in-org"];
+  };
+  "/orgs/{org}/actions/runner-groups/{runner_group_id}/repositories/{repository_id}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    put: operations["actions/add-repo-access-to-self-hosted-runner-group-in-org"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["actions/remove-repo-access-to-self-hosted-runner-group-in-org"];
+  };
+  "/orgs/{org}/actions/runner-groups/{runner_group_id}/runners": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["actions/list-self-hosted-runners-in-group-for-org"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    put: operations["actions/set-self-hosted-runners-in-group-for-org"];
+  };
+  "/orgs/{org}/actions/runner-groups/{runner_group_id}/runners/{runner_id}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    put: operations["actions/add-self-hosted-runner-to-group-for-org"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["actions/remove-self-hosted-runner-from-group-for-org"];
+  };
+  "/orgs/{org}/actions/runners": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["actions/list-self-hosted-runners-for-org"];
+  };
+  "/orgs/{org}/actions/runners/downloads": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["actions/list-runner-applications-for-org"];
+  };
+  "/orgs/{org}/actions/runners/registration-token": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["actions/create-registration-token-for-org"];
+  };
+  "/orgs/{org}/actions/runners/remove-token": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["actions/create-remove-token-for-org"];
+  };
+  "/orgs/{org}/audit-log": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["orgs/get-audit-log"];
+  };
+  "/orgs/{org}/blocks": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["orgs/list-blocked-users"];
+  };
+  "/orgs/{org}/blocks/{username}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["orgs/check-blocked-user"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    put: operations["orgs/block-user"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["orgs/unblock-user"];
+  };
+  "/orgs/{org}/credential-authorizations": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["orgs/list-saml-sso-authorizations"];
+  };
+  "/orgs/{org}/credential-authorizations/{credential_id}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["orgs/remove-saml-sso-authorization"];
+  };
+  "/orgs/{org}/events": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["activity/list-public-org-events"];
+  };
+  "/orgs/{org}/failed_invitations": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["orgs/list-failed-invitations"];
+  };
+  "/orgs/{org}/hooks/{hook_id}/deliveries": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["orgs/list-webhook-deliveries"];
+  };
+  "/orgs/{org}/interaction-limits": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["interactions/get-restrictions-for-org"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    put: operations["interactions/set-restrictions-for-org"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["interactions/remove-restrictions-for-org"];
+  };
+  "/orgs/{org}/invitations": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["orgs/list-pending-invitations"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["orgs/create-invitation"];
+  };
+  "/orgs/{org}/invitations/{invitation_id}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["orgs/cancel-invitation"];
+  };
+  "/orgs/{org}/invitations/{invitation_id}/teams": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["orgs/list-invitation-teams"];
+  };
+  "/orgs/{org}/migrations": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["migrations/list-for-org"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["migrations/start-for-org"];
+  };
+  "/orgs/{org}/migrations/{migration_id}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["migrations/get-status-for-org"];
+  };
+  "/orgs/{org}/migrations/{migration_id}/archive": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["migrations/download-archive-for-org"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["migrations/delete-archive-for-org"];
+  };
+  "/orgs/{org}/migrations/{migration_id}/repos/{repo_name}/lock": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["migrations/unlock-repo-for-org"];
+  };
+  "/orgs/{org}/migrations/{migration_id}/repositories": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["migrations/list-repos-for-org"];
+  };
+  "/orgs/{org}/packages": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["packages/list-packages-for-organization"];
+  };
+  "/orgs/{org}/packages/{package_type}/{package_name}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["packages/get-package-for-organization"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["packages/delete-package-for-org"];
+  };
+  "/orgs/{org}/packages/{package_type}/{package_name}/restore": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["packages/restore-package-for-org"];
+  };
+  "/orgs/{org}/packages/{package_type}/{package_name}/versions": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["packages/get-all-package-versions-for-package-owned-by-org"];
+  };
+  "/orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["packages/get-package-version-for-organization"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["packages/delete-package-version-for-org"];
+  };
+  "/orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["packages/restore-package-version-for-org"];
+  };
+  "/orgs/{org}/public_members": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["orgs/list-public-members"];
+  };
+  "/orgs/{org}/public_members/{username}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["orgs/check-public-membership-for-user"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    put: operations["orgs/set-public-membership-for-authenticated-user"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["orgs/remove-public-membership-for-authenticated-user"];
+  };
+  "/orgs/{org}/secret-scanning/alerts": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["secret-scanning/list-alerts-for-org"];
+  };
+  "/orgs/{org}/settings/billing/actions": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["billing/get-github-actions-billing-org"];
+  };
+  "/orgs/{org}/settings/billing/packages": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["billing/get-github-packages-billing-org"];
+  };
+  "/orgs/{org}/settings/billing/shared-storage": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["billing/get-shared-storage-billing-org"];
+  };
+  "/orgs/{org}/team-sync/groups": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["teams/list-idp-groups-for-org"];
+  };
+  "/orgs/{org}/teams/{team_slug}/invitations": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["teams/list-pending-invitations-in-org"];
+  };
+  "/orgs/{org}/teams/{team_slug}/team-sync/group-mappings": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["teams/list-idp-groups-in-org"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    patch: operations["teams/create-or-update-idp-group-connections-in-org"];
+  };
+  "/repos/{owner}/{repo}/actions/runners/downloads": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["actions/list-runner-applications-for-repo"];
+  };
+  "/repos/{owner}/{repo}/actions/runners/registration-token": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["actions/create-registration-token-for-repo"];
+  };
+  "/repos/{owner}/{repo}/actions/runners/remove-token": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["actions/create-remove-token-for-repo"];
+  };
+  "/repos/{owner}/{repo}/actions/runs/{run_id}/approvals": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["actions/get-reviews-for-run"];
+  };
+  "/repos/{owner}/{repo}/actions/runs/{run_id}/approve": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["actions/approve-workflow-run"];
+  };
+  "/repos/{owner}/{repo}/actions/runs/{run_id}/pending_deployments": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["actions/get-pending-deployments-for-run"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["actions/review-pending-deployments-for-run"];
+  };
+  "/repos/{owner}/{repo}/automated-security-fixes": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    put: operations["repos/enable-automated-security-fixes"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["repos/disable-automated-security-fixes"];
+  };
+  "/repos/{owner}/{repo}/branches/{branch}/rename": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["repos/rename-branch"];
+  };
+  "/repos/{owner}/{repo}/community/code_of_conduct": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["codes-of-conduct/get-for-repo"];
+  };
+  "/repos/{owner}/{repo}/community/profile": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["repos/get-community-profile-metrics"];
+  };
+  "/repos/{owner}/{repo}/dispatches": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["repos/create-dispatch-event"];
+  };
+  "/repos/{owner}/{repo}/environments": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["repos/get-all-environments"];
+  };
+  "/repos/{owner}/{repo}/environments/{environment_name}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["repos/get-environment"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    put: operations["repos/create-or-update-environment"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["repos/delete-an-environment"];
+  };
+  "/repos/{owner}/{repo}/import": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["migrations/get-import-status"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    put: operations["migrations/start-import"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["migrations/cancel-import"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    patch: operations["migrations/update-import"];
+  };
+  "/repos/{owner}/{repo}/import/authors": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["migrations/get-commit-authors"];
+  };
+  "/repos/{owner}/{repo}/import/authors/{author_id}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    patch: operations["migrations/map-commit-author"];
+  };
+  "/repos/{owner}/{repo}/import/large_files": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["migrations/get-large-files"];
+  };
+  "/repos/{owner}/{repo}/import/lfs": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    patch: operations["migrations/set-lfs-preference"];
+  };
+  "/repos/{owner}/{repo}/interaction-limits": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["interactions/get-restrictions-for-repo"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    put: operations["interactions/set-restrictions-for-repo"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["interactions/remove-restrictions-for-repo"];
+  };
+  "/repos/{owner}/{repo}/pages/health": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["repos/get-pages-health-check"];
+  };
+  "/repos/{owner}/{repo}/secret-scanning/alerts": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["secret-scanning/list-alerts-for-repo"];
+  };
+  "/repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["secret-scanning/get-alert"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    patch: operations["secret-scanning/update-alert"];
+  };
+  "/repos/{owner}/{repo}/traffic/clones": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["repos/get-clones"];
+  };
+  "/repos/{owner}/{repo}/traffic/popular/paths": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["repos/get-top-paths"];
+  };
+  "/repos/{owner}/{repo}/traffic/popular/referrers": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["repos/get-top-referrers"];
+  };
+  "/repos/{owner}/{repo}/traffic/views": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["repos/get-views"];
+  };
+  "/repos/{owner}/{repo}/vulnerability-alerts": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["repos/check-vulnerability-alerts"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    put: operations["repos/enable-vulnerability-alerts"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["repos/disable-vulnerability-alerts"];
+  };
+  "/repositories": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["repos/list-public"];
+  };
+  "/repositories/{repository_id}/environments/{environment_name}/secrets": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["actions/list-environment-secrets"];
+  };
+  "/repositories/{repository_id}/environments/{environment_name}/secrets/public-key": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["actions/get-environment-public-key"];
+  };
+  "/repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["actions/get-environment-secret"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    put: operations["actions/create-or-update-environment-secret"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["actions/delete-environment-secret"];
+  };
+  "/scim/v2/enterprises/{enterprise}/Users": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["enterprise-admin/list-provisioned-identities-enterprise"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["enterprise-admin/provision-and-invite-enterprise-user"];
+  };
+  "/scim/v2/enterprises/{enterprise}/Users/{scim_user_id}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["enterprise-admin/get-provisioning-information-for-enterprise-user"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    put: operations["enterprise-admin/set-information-for-provisioned-enterprise-user"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["enterprise-admin/delete-user-from-enterprise"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    patch: operations["enterprise-admin/update-attribute-for-enterprise-user"];
+  };
+  "/scim/v2/organizations/{org}/Users": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["scim/list-provisioned-identities"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["scim/provision-and-invite-user"];
+  };
+  "/scim/v2/organizations/{org}/Users/{scim_user_id}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["scim/get-provisioning-information-for-user"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    put: operations["scim/set-information-for-provisioned-user"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["scim/delete-user-from-org"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    patch: operations["scim/update-attribute-for-user"];
+  };
+  "/teams/{team_id}/invitations": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["teams/list-pending-invitations-legacy"];
+  };
+  "/teams/{team_id}/team-sync/group-mappings": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["teams/list-idp-groups-for-legacy"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    patch: operations["teams/create-or-update-idp-group-connections-legacy"];
+  };
+  "/user/blocks": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["users/list-blocked-by-authenticated"];
+  };
+  "/user/blocks/{username}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["users/check-blocked"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    put: operations["users/block"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["users/unblock"];
+  };
+  "/user/email/visibility": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    patch: operations["users/set-primary-email-visibility-for-authenticated"];
+  };
+  "/user/emails": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["users/list-emails-for-authenticated"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["users/add-email-for-authenticated"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["users/delete-email-for-authenticated"];
+  };
+  "/user/interaction-limits": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["interactions/get-restrictions-for-authenticated-user"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    put: operations["interactions/set-restrictions-for-authenticated-user"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["interactions/remove-restrictions-for-authenticated-user"];
+  };
+  "/user/marketplace_purchases": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["apps/list-subscriptions-for-authenticated-user"];
+  };
+  "/user/marketplace_purchases/stubbed": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["apps/list-subscriptions-for-authenticated-user-stubbed"];
+  };
+  "/user/migrations": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["migrations/list-for-authenticated-user"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["migrations/start-for-authenticated-user"];
+  };
+  "/user/migrations/{migration_id}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["migrations/get-status-for-authenticated-user"];
+  };
+  "/user/migrations/{migration_id}/archive": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["migrations/get-archive-for-authenticated-user"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["migrations/delete-archive-for-authenticated-user"];
+  };
+  "/user/migrations/{migration_id}/repos/{repo_name}/lock": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["migrations/unlock-repo-for-authenticated-user"];
+  };
+  "/user/migrations/{migration_id}/repositories": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["migrations/list-repos-for-user"];
+  };
+  "/user/packages": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["packages/list-packages-for-authenticated-user"];
+  };
+  "/user/packages/{package_type}/{package_name}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["packages/get-package-for-authenticated-user"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["packages/delete-package-for-authenticated-user"];
+  };
+  "/user/packages/{package_type}/{package_name}/restore": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["packages/restore-package-for-authenticated-user"];
+  };
+  "/user/packages/{package_type}/{package_name}/versions": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["packages/get-all-package-versions-for-package-owned-by-authenticated-user"];
+  };
+  "/user/packages/{package_type}/{package_name}/versions/{package_version_id}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["packages/get-package-version-for-authenticated-user"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["packages/delete-package-version-for-authenticated-user"];
+  };
+  "/user/packages/{package_type}/{package_name}/versions/{package_version_id}/restore": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["packages/restore-package-version-for-authenticated-user"];
+  };
+  "/user/public_emails": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["users/list-public-emails-for-authenticated"];
+  };
+  "/user/{username}/packages": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["packages/list-packages-for-user"];
+  };
+  "/users/{username}/events/public": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["activity/list-public-events-for-user"];
+  };
+  "/users/{username}/packages/{package_type}/{package_name}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["packages/get-package-for-user"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["packages/delete-package-for-user"];
+  };
+  "/users/{username}/packages/{package_type}/{package_name}/restore": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["packages/restore-package-for-user"];
+  };
+  "/users/{username}/packages/{package_type}/{package_name}/versions": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["packages/get-all-package-versions-for-package-owned-by-user"];
+  };
+  "/users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["packages/get-package-version-for-user"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["packages/delete-package-version-for-user"];
+  };
+  "/users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["packages/restore-package-version-for-user"];
+  };
+  "/users/{username}/received_events": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["activity/list-received-events-for-user"];
+  };
+  "/users/{username}/received_events/public": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["activity/list-received-public-events-for-user"];
+  };
+  "/users/{username}/settings/billing/actions": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["billing/get-github-actions-billing-user"];
+  };
+  "/users/{username}/settings/billing/packages": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["billing/get-github-packages-billing-user"];
+  };
+  "/users/{username}/settings/billing/shared-storage": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["billing/get-shared-storage-billing-user"];
   };
 }
 
@@ -7889,6 +8535,12 @@ export interface components {
         self: string;
       };
       license: components["schemas"]["license-simple"] | null;
+    };
+    /** Results of a successful merge upstream request */
+    "merged-upstream": {
+      message?: string;
+      merge_type?: "merge" | "fast-forward" | "none";
+      base_branch?: string;
     };
     "pages-source-hash": {
       branch: string;
@@ -21324,6 +21976,35 @@ export interface operations {
       };
     };
   };
+  /** Sync a branch of a forked repository to keep it up-to-date with the upstream repository. */
+  "repos/merge-upstream": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+      };
+    };
+    responses: {
+      /** The branch has been successfully synced with the upstream repository */
+      200: {
+        content: {
+          "application/json": components["schemas"]["merged-upstream"];
+        };
+      };
+      /** The branch could not be synced because of a merge conflict */
+      409: unknown;
+      /** The branch could not be synced for some other reason */
+      422: unknown;
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** The name of the branch which should be updated to match upstream. */
+          branch: string;
+        };
+      };
+    };
+  };
   "repos/merge": {
     parameters: {
       path: {
@@ -26650,6 +27331,1329 @@ export interface operations {
           body: string;
         };
       };
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "oauth-authorizations/list-grants": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "oauth-authorizations/get-grant": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "oauth-authorizations/delete-grant": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "apps/scope-token": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "oauth-authorizations/list-authorizations": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "oauth-authorizations/create-authorization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "oauth-authorizations/get-or-create-authorization-for-app": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "oauth-authorizations/get-or-create-authorization-for-app-and-fingerprint": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "oauth-authorizations/get-authorization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "oauth-authorizations/delete-authorization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "oauth-authorizations/update-authorization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "enterprise-admin/list-org-access-to-self-hosted-runner-group-in-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "enterprise-admin/set-org-access-to-self-hosted-runner-group-in-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "enterprise-admin/add-org-access-to-self-hosted-runner-group-in-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "enterprise-admin/remove-org-access-to-self-hosted-runner-group-in-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "enterprise-admin/list-runner-applications-for-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "enterprise-admin/create-registration-token-for-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "enterprise-admin/create-remove-token-for-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "enterprise-admin/get-audit-log": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "billing/get-github-actions-billing-ghe": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "billing/get-github-packages-billing-ghe": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "billing/get-shared-storage-billing-ghe": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "activity/list-public-events": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "apps/get-subscription-plan-for-account": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "apps/list-plans": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "apps/list-accounts-for-plan": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "apps/get-subscription-plan-for-account-stubbed": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "apps/list-plans-stubbed": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "apps/list-accounts-for-plan-stubbed": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "activity/list-public-events-for-repo-network": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/list-repo-access-to-self-hosted-runner-group-in-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/set-repo-access-to-self-hosted-runner-group-in-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/add-repo-access-to-self-hosted-runner-group-in-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/remove-repo-access-to-self-hosted-runner-group-in-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/list-self-hosted-runners-in-group-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/set-self-hosted-runners-in-group-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/add-self-hosted-runner-to-group-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/remove-self-hosted-runner-from-group-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/list-self-hosted-runners-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/list-runner-applications-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/create-registration-token-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/create-remove-token-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "orgs/get-audit-log": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "orgs/list-blocked-users": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "orgs/check-blocked-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "orgs/block-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "orgs/unblock-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "orgs/list-saml-sso-authorizations": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "orgs/remove-saml-sso-authorization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "activity/list-public-org-events": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "orgs/list-failed-invitations": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "orgs/list-webhook-deliveries": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "interactions/get-restrictions-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "interactions/set-restrictions-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "interactions/remove-restrictions-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "orgs/list-pending-invitations": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "orgs/create-invitation": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "orgs/cancel-invitation": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "orgs/list-invitation-teams": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "migrations/list-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "migrations/start-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "migrations/get-status-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "migrations/download-archive-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "migrations/delete-archive-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "migrations/unlock-repo-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "migrations/list-repos-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "packages/list-packages-for-organization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "packages/get-package-for-organization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "packages/delete-package-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "packages/restore-package-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "packages/get-all-package-versions-for-package-owned-by-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "packages/get-package-version-for-organization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "packages/delete-package-version-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "packages/restore-package-version-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "orgs/list-public-members": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "orgs/check-public-membership-for-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "orgs/set-public-membership-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "orgs/remove-public-membership-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "secret-scanning/list-alerts-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "billing/get-github-actions-billing-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "billing/get-github-packages-billing-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "billing/get-shared-storage-billing-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "teams/list-idp-groups-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "teams/list-pending-invitations-in-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "teams/list-idp-groups-in-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "teams/create-or-update-idp-group-connections-in-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/list-runner-applications-for-repo": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/create-registration-token-for-repo": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/create-remove-token-for-repo": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/get-reviews-for-run": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/approve-workflow-run": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/get-pending-deployments-for-run": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/review-pending-deployments-for-run": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "repos/enable-automated-security-fixes": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "repos/disable-automated-security-fixes": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "repos/rename-branch": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "codes-of-conduct/get-for-repo": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "repos/get-community-profile-metrics": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "repos/create-dispatch-event": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "repos/get-all-environments": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "repos/get-environment": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "repos/create-or-update-environment": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "repos/delete-an-environment": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "migrations/get-import-status": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "migrations/start-import": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "migrations/cancel-import": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "migrations/update-import": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "migrations/get-commit-authors": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "migrations/map-commit-author": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "migrations/get-large-files": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "migrations/set-lfs-preference": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "interactions/get-restrictions-for-repo": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "interactions/set-restrictions-for-repo": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "interactions/remove-restrictions-for-repo": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "repos/get-pages-health-check": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "secret-scanning/list-alerts-for-repo": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "secret-scanning/get-alert": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "secret-scanning/update-alert": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "repos/get-clones": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "repos/get-top-paths": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "repos/get-top-referrers": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "repos/get-views": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "repos/check-vulnerability-alerts": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "repos/enable-vulnerability-alerts": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "repos/disable-vulnerability-alerts": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "repos/list-public": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/list-environment-secrets": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/get-environment-public-key": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/get-environment-secret": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/create-or-update-environment-secret": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/delete-environment-secret": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "enterprise-admin/list-provisioned-identities-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "enterprise-admin/provision-and-invite-enterprise-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "enterprise-admin/get-provisioning-information-for-enterprise-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "enterprise-admin/set-information-for-provisioned-enterprise-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "enterprise-admin/delete-user-from-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "enterprise-admin/update-attribute-for-enterprise-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "scim/list-provisioned-identities": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "scim/provision-and-invite-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "scim/get-provisioning-information-for-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "scim/set-information-for-provisioned-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "scim/delete-user-from-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "scim/update-attribute-for-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "teams/list-pending-invitations-legacy": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "teams/list-idp-groups-for-legacy": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "teams/create-or-update-idp-group-connections-legacy": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "users/list-blocked-by-authenticated": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "users/check-blocked": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "users/block": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "users/unblock": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "users/set-primary-email-visibility-for-authenticated": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "users/list-emails-for-authenticated": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "users/add-email-for-authenticated": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "users/delete-email-for-authenticated": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "interactions/get-restrictions-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "interactions/set-restrictions-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "interactions/remove-restrictions-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "apps/list-subscriptions-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "apps/list-subscriptions-for-authenticated-user-stubbed": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "migrations/list-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "migrations/start-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "migrations/get-status-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "migrations/get-archive-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "migrations/delete-archive-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "migrations/unlock-repo-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "migrations/list-repos-for-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "packages/list-packages-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "packages/get-package-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "packages/delete-package-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "packages/restore-package-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "packages/get-all-package-versions-for-package-owned-by-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "packages/get-package-version-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "packages/delete-package-version-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "packages/restore-package-version-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "users/list-public-emails-for-authenticated": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "packages/list-packages-for-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "activity/list-public-events-for-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "packages/get-package-for-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "packages/delete-package-for-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "packages/restore-package-for-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "packages/get-all-package-versions-for-package-owned-by-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "packages/get-package-version-for-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "packages/delete-package-version-for-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "packages/restore-package-version-for-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "activity/list-received-events-for-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "activity/list-received-public-events-for-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "billing/get-github-actions-billing-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "billing/get-github-packages-billing-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "billing/get-shared-storage-billing-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
     };
   };
 }

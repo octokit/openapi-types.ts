@@ -4068,6 +4068,104 @@ export interface paths {
      */
     post: operations["apps/create-content-attachment"];
   };
+  "/app/hook/config": {
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    get: operations["apps/get-webhook-config-for-app"];
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    patch: operations["apps/update-webhook-config-for-app"];
+  };
+  "/applications/{client_id}/token/scoped": {
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    post: operations["apps/scope-token"];
+  };
+  "/enterprise/announcement": {
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    get: operations["enterprise-admin/get-announcement"];
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    delete: operations["enterprise-admin/remove-announcement"];
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    patch: operations["enterprise-admin/set-announcement"];
+  };
+  "/enterprises/{enterprise}/actions/permissions": {
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    get: operations["enterprise-admin/get-github-actions-permissions-enterprise"];
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    put: operations["enterprise-admin/set-github-actions-permissions-enterprise"];
+  };
+  "/enterprises/{enterprise}/actions/permissions/organizations": {
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    get: operations["enterprise-admin/list-selected-organizations-enabled-github-actions-enterprise"];
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    put: operations["enterprise-admin/set-selected-organizations-enabled-github-actions-enterprise"];
+  };
+  "/enterprises/{enterprise}/actions/permissions/organizations/{org_id}": {
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    put: operations["enterprise-admin/enable-selected-organization-github-actions-enterprise"];
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    delete: operations["enterprise-admin/disable-selected-organization-github-actions-enterprise"];
+  };
+  "/enterprises/{enterprise}/actions/permissions/selected-actions": {
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    get: operations["enterprise-admin/get-allowed-actions-enterprise"];
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    put: operations["enterprise-admin/set-allowed-actions-enterprise"];
+  };
+  "/orgs/{org}/actions/permissions": {
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    get: operations["actions/get-github-actions-permissions-organization"];
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    put: operations["actions/set-github-actions-permissions-organization"];
+  };
+  "/orgs/{org}/actions/permissions/repositories": {
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    get: operations["actions/list-selected-repositories-enabled-github-actions-organization"];
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    put: operations["actions/set-selected-repositories-enabled-github-actions-organization"];
+  };
+  "/orgs/{org}/actions/permissions/repositories/{repository_id}": {
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    put: operations["actions/enable-selected-repository-github-actions-organization"];
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    delete: operations["actions/disable-selected-repository-github-actions-organization"];
+  };
+  "/orgs/{org}/actions/permissions/selected-actions": {
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    get: operations["actions/get-allowed-actions-organization"];
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    put: operations["actions/set-allowed-actions-organization"];
+  };
+  "/orgs/{org}/hooks/{hook_id}/config": {
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    get: operations["orgs/get-webhook-config-for-org"];
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    patch: operations["orgs/update-webhook-config-for-org"];
+  };
+  "/repos/{owner}/{repo}/actions/permissions": {
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    get: operations["actions/get-github-actions-permissions-repository"];
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    put: operations["actions/set-github-actions-permissions-repository"];
+  };
+  "/repos/{owner}/{repo}/actions/permissions/selected-actions": {
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    get: operations["actions/get-allowed-actions-repository"];
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    put: operations["actions/set-allowed-actions-repository"];
+  };
+  "/repos/{owner}/{repo}/actions/workflows/{workflow_id}/disable": {
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    put: operations["actions/disable-workflow"];
+  };
+  "/repos/{owner}/{repo}/actions/workflows/{workflow_id}/enable": {
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    put: operations["actions/enable-workflow"];
+  };
+  "/repos/{owner}/{repo}/hooks/{hook_id}/config": {
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    get: operations["repos/get-webhook-config-for-repo"];
+    /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+    patch: operations["repos/update-webhook-config-for-repo"];
+  };
 }
 
 export interface components {
@@ -27439,6 +27537,230 @@ export interface operations {
           body: string;
         };
       };
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "apps/get-webhook-config-for-app": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "apps/update-webhook-config-for-app": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "apps/scope-token": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "enterprise-admin/get-announcement": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "enterprise-admin/remove-announcement": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "enterprise-admin/set-announcement": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "enterprise-admin/get-github-actions-permissions-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "enterprise-admin/set-github-actions-permissions-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "enterprise-admin/list-selected-organizations-enabled-github-actions-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "enterprise-admin/set-selected-organizations-enabled-github-actions-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "enterprise-admin/enable-selected-organization-github-actions-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "enterprise-admin/disable-selected-organization-github-actions-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "enterprise-admin/get-allowed-actions-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "enterprise-admin/set-allowed-actions-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "actions/get-github-actions-permissions-organization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "actions/set-github-actions-permissions-organization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "actions/list-selected-repositories-enabled-github-actions-organization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "actions/set-selected-repositories-enabled-github-actions-organization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "actions/enable-selected-repository-github-actions-organization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "actions/disable-selected-repository-github-actions-organization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "actions/get-allowed-actions-organization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "actions/set-allowed-actions-organization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "orgs/get-webhook-config-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "orgs/update-webhook-config-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "actions/get-github-actions-permissions-repository": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "actions/set-github-actions-permissions-repository": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "actions/get-allowed-actions-repository": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "actions/set-allowed-actions-repository": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "actions/disable-workflow": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "actions/enable-workflow": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "repos/get-webhook-config-for-repo": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-2.22.json. It was added in ghes-3.0.json */
+  "repos/update-webhook-config-for-repo": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
     };
   };
 }
