@@ -1,4 +1,4 @@
-const { readdir, mkdir, rm, writeFile } = require("fs/promises");
+const { readdir, mkdir, rm, writeFile, copyFile } = require("fs/promises");
 const { basename } = require("path");
 
 const prettier = require("prettier");
@@ -81,6 +81,8 @@ type Repository = components["schemas"]["full-repository"]
         { parser: "markdown" }
       )
     );
+    
+    await copyFile("LICENSE", `packages/${packageName}/LICENSE`);
 
     await writeFile(
       `packages/${packageName}/types.d.ts`,
