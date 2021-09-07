@@ -9538,6 +9538,8 @@ export interface components {
       created_at?: components["schemas"]["alert-created-at"];
       url?: components["schemas"]["alert-url"];
       html_url?: components["schemas"]["alert-html-url"];
+      /** The REST API URL of the code locations for this alert. */
+      locations_url?: string;
       state?: components["schemas"]["secret-scanning-alert-state"];
       resolution?: components["schemas"]["secret-scanning-alert-resolution"];
       /** The time that the alert was resolved in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
