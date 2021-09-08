@@ -3617,7 +3617,11 @@ export interface paths {
     get: operations["licenses/get-for-repo"];
   };
   "/repos/{owner}/{repo}/merge-upstream": {
-    /** Sync a branch of a forked repository to keep it up-to-date with the upstream repository. */
+    /**
+     * **Note:** This endpoint is currently in beta and subject to change.
+     *
+     * Sync a branch of a forked repository to keep it up-to-date with the upstream repository.
+     */
     post: operations["repos/merge-upstream"];
   };
   "/repos/{owner}/{repo}/merges": {
@@ -7072,6 +7076,8 @@ export interface components {
       created_at?: components["schemas"]["alert-created-at"];
       url?: components["schemas"]["alert-url"];
       html_url?: components["schemas"]["alert-html-url"];
+      /** The REST API URL of the code locations for this alert. */
+      locations_url?: string;
       state?: components["schemas"]["secret-scanning-alert-state"];
       resolution?: components["schemas"]["secret-scanning-alert-resolution"];
       /** The time that the alert was resolved in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
@@ -10265,6 +10271,8 @@ export interface components {
       created_at?: components["schemas"]["alert-created-at"];
       url?: components["schemas"]["alert-url"];
       html_url?: components["schemas"]["alert-html-url"];
+      /** The REST API URL of the code locations for this alert. */
+      locations_url?: string;
       state?: components["schemas"]["secret-scanning-alert-state"];
       resolution?: components["schemas"]["secret-scanning-alert-resolution"];
       /** The time that the alert was resolved in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
@@ -25909,7 +25917,11 @@ export interface operations {
       };
     };
   };
-  /** Sync a branch of a forked repository to keep it up-to-date with the upstream repository. */
+  /**
+   * **Note:** This endpoint is currently in beta and subject to change.
+   *
+   * Sync a branch of a forked repository to keep it up-to-date with the upstream repository.
+   */
   "repos/merge-upstream": {
     parameters: {
       path: {

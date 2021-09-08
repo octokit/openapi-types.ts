@@ -2810,7 +2810,11 @@ export interface paths {
     get: operations["licenses/get-for-repo"];
   };
   "/repos/{owner}/{repo}/merge-upstream": {
-    /** Sync a branch of a forked repository to keep it up-to-date with the upstream repository. */
+    /**
+     * **Note:** This endpoint is currently in beta and subject to change.
+     *
+     * Sync a branch of a forked repository to keep it up-to-date with the upstream repository.
+     */
     post: operations["repos/merge-upstream"];
   };
   "/repos/{owner}/{repo}/merges": {
@@ -21976,7 +21980,11 @@ export interface operations {
       };
     };
   };
-  /** Sync a branch of a forked repository to keep it up-to-date with the upstream repository. */
+  /**
+   * **Note:** This endpoint is currently in beta and subject to change.
+   *
+   * Sync a branch of a forked repository to keep it up-to-date with the upstream repository.
+   */
   "repos/merge-upstream": {
     parameters: {
       path: {
