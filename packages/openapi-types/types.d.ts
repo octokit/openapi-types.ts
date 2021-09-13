@@ -7197,45 +7197,24 @@ export interface components {
     "nullable-team-simple": {
       /** Unique identifier of the team */
       id: number;
-      events_url?: string;
-      forks_url?: string;
-      git_commits_url?: string;
-      git_refs_url?: string;
-      git_tags_url?: string;
-      git_url?: string;
-      issue_comment_url?: string;
-      issue_events_url?: string;
-      issues_url?: string;
-      keys_url?: string;
-      labels_url?: string;
-      languages_url?: string;
-      merges_url?: string;
-      milestones_url?: string;
-      notifications_url?: string;
-      pulls_url?: string;
-      releases_url?: string;
-      ssh_url?: string;
-      stargazers_url?: string;
-      statuses_url?: string;
-      subscribers_url?: string;
-      subscription_url?: string;
-      tags_url?: string;
-      teams_url?: string;
-      trees_url?: string;
-      clone_url?: string;
-      mirror_url?: string | null;
-      parent: components["schemas"]["nullable-team-simple"];
-    } & {
-      node_id: unknown;
-      url: unknown;
-      members_url: unknown;
-      name: unknown;
-      description: unknown;
-      permission: unknown;
-      html_url: unknown;
-      repositories_url: unknown;
-      slug: unknown;
-    };
+      node_id: string;
+      /** URL for the team */
+      url: string;
+      members_url: string;
+      /** Name of the team */
+      name: string;
+      /** Description of the team */
+      description: string | null;
+      /** Permission that the team will have for its repositories */
+      permission: string;
+      /** The level of privacy this team should have */
+      privacy?: string;
+      html_url: string;
+      repositories_url: string;
+      slug: string;
+      /** Distinguished Name (DN) that team maps to within LDAP environment */
+      ldap_dn?: string;
+    } | null;
     /** Groups of organization members that gives permissions on specified repositories. */
     team: {
       id: number;
@@ -7261,93 +7240,16 @@ export interface components {
     /** Org Membership */
     "org-membership": {
       url: string;
-      svn_url?: string;
-      homepage?: string | null;
-      language?: string | null;
-      user?: components["schemas"]["nullable-simple-user"];
-      stargazers_count?: number;
-      owner: components["schemas"]["nullable-simple-user"];
-      size?: number;
-      default_branch?: string;
-      open_issues_count?: number;
-      exclude_metadata: boolean;
-      exclude_git_data: boolean;
-      exclude_attachments: boolean;
-      exclude_releases: boolean;
-      exclude_owner_projects: boolean;
-      repositories: string[];
-      has_issues?: boolean;
-      has_projects?: boolean;
-      has_wiki?: boolean;
-      has_pages?: boolean;
-      has_downloads?: boolean;
-      archived?: boolean;
-      disabled?: boolean;
-      visibility?: string;
-      pushed_at?: string | null;
-      created_at: string | null;
-      updated_at: string | null;
+      /** The state of the member in the organization. The `pending` state indicates the user has not yet accepted an invitation. */
+      state: "active" | "pending";
+      /** The user's membership type in the organization. */
+      role: "admin" | "member" | "billing_manager";
+      organization_url: string;
+      organization: components["schemas"]["organization-simple"];
+      user: components["schemas"]["nullable-simple-user"];
       permissions?: {
-        admin?: boolean;
-        maintain?: boolean;
-        push?: boolean;
-        triage?: boolean;
-        pull?: boolean;
+        can_create_repository: boolean;
       };
-      template_repository?: components["schemas"]["nullable-repository"];
-      temp_clone_token?: string;
-      delete_branch_on_merge?: boolean;
-      subscribers_count?: number;
-      network_count?: number;
-      code_of_conduct?: components["schemas"]["code-of-conduct"];
-      license?: {
-        key?: string;
-        name?: string;
-        spdx_id?: string;
-        url?: string;
-        node_id?: string;
-      } | null;
-      forks?: number;
-      open_issues?: number;
-      watchers?: number;
-    } & {
-      archive_url: unknown;
-      assignees_url: unknown;
-      blobs_url: unknown;
-      branches_url: unknown;
-      collaborators_url: unknown;
-      comments_url: unknown;
-      commits_url: unknown;
-      compare_url: unknown;
-      contents_url: unknown;
-      contributors_url: unknown;
-      deployments_url: unknown;
-      description: unknown;
-      downloads_url: unknown;
-      events_url: unknown;
-      fork: unknown;
-      forks_url: unknown;
-      full_name: unknown;
-      git_commits_url: unknown;
-      git_refs_url: unknown;
-      git_tags_url: unknown;
-      hooks_url: unknown;
-      html_url: unknown;
-      id: unknown;
-      node_id: unknown;
-      issue_comment_url: unknown;
-      issue_events_url: unknown;
-      issues_url: unknown;
-      keys_url: unknown;
-      labels_url: unknown;
-      languages_url: unknown;
-      merges_url: unknown;
-      milestones_url: unknown;
-      name: unknown;
-      notifications_url: unknown;
-      guid: unknown;
-      state: unknown;
-      lock_repositories: unknown;
     };
     /** A migration. */
     migration: {
@@ -7365,43 +7267,9 @@ export interface components {
       url: string;
       created_at: string;
       updated_at: string;
-      forks?: number;
-      open_issues?: number;
-      watchers?: number;
-    } & {
-      archive_url: unknown;
-      assignees_url: unknown;
-      blobs_url: unknown;
-      branches_url: unknown;
-      collaborators_url: unknown;
-      comments_url: unknown;
-      commits_url: unknown;
-      compare_url: unknown;
-      contents_url: unknown;
-      contributors_url: unknown;
-      deployments_url: unknown;
-      description: unknown;
-      downloads_url: unknown;
-      events_url: unknown;
-      fork: unknown;
-      forks_url: unknown;
-      full_name: unknown;
-      git_commits_url: unknown;
-      git_refs_url: unknown;
-      git_tags_url: unknown;
-      hooks_url: unknown;
-      html_url: unknown;
-      node_id: unknown;
-      issue_comment_url: unknown;
-      issue_events_url: unknown;
-      issues_url: unknown;
-      keys_url: unknown;
-      labels_url: unknown;
-      languages_url: unknown;
-      merges_url: unknown;
-      milestones_url: unknown;
-      name: unknown;
-      notifications_url: unknown;
+      node_id: string;
+      archive_url?: string;
+      exclude?: { [key: string]: unknown }[];
     };
     /** Minimal Repository */
     "nullable-minimal-repository": {

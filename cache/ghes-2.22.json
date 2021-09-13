@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "version": "5.1.2",
+    "version": "5.1.3",
     "title": "GitHub's official OpenAPI spec + Octokit extension",
     "description": "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs",
     "license": { "name": "MIT", "url": "https://spdx.org/licenses/MIT" },
@@ -6838,7 +6838,7 @@
           "category": "orgs",
           "subcategory": null
         },
-        "x-octokit": {}
+        "x-octokit": { "diff": { "ghes-3.0.json": { "type": "changed" } } }
       }
     },
     "/orgs/{org}/actions/runner-groups": {
@@ -17329,7 +17329,7 @@
           "previews": [],
           "category": "code-scanning"
         },
-        "x-octokit": {}
+        "x-octokit": { "diff": { "ghes-3.0.json": { "type": "changed" } } }
       }
     },
     "/repos/{owner}/{repo}/code-scanning/analyses": {
