@@ -8997,7 +8997,14 @@ export interface components {
     "diff-entry": {
       sha: string;
       filename: string;
-      status: string;
+      status:
+        | "added"
+        | "removed"
+        | "modified"
+        | "renamed"
+        | "copied"
+        | "changed"
+        | "unchanged";
       additions: number;
       deletions: number;
       changes: number;
