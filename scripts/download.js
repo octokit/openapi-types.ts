@@ -68,6 +68,10 @@ function download(version, fileName) {
 
   return new Promise((resolve, reject) => {
     get(url, (response) => {
+      if (response.statusCode !== 200) {
+        throw new Error(`Not Found: ${url}`);
+      }
+
       response.pipe(file);
       file
         .on("finish", () =>
