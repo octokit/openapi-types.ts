@@ -1990,8 +1990,19 @@ export interface paths {
     post: operations["actions/review-pending-deployments-for-run"];
   };
   "/repos/{owner}/{repo}/actions/runs/{run_id}/rerun": {
-    /** Re-runs your workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint. */
+    /**
+     * **Deprecation Notice:** This endpoint is deprecated.
+     * We recommend migrating your existing code to use the new [retry workflow](https://docs.github.com/rest/reference/actions#retry-a-workflow) endpoint.
+     *
+     * Re-runs your workflow run using its `id`. You must authenticate using
+     * an access token with the `repo` scope to use this endpoint. GitHub Apps must have
+     * the `actions:write` permission to use this endpoint.
+     */
     post: operations["actions/re-run-workflow"];
+  };
+  "/repos/{owner}/{repo}/actions/runs/{run_id}/retry": {
+    /** Retry your workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint. */
+    post: operations["actions/retry-workflow"];
   };
   "/repos/{owner}/{repo}/actions/runs/{run_id}/timing": {
     /**
@@ -19974,8 +19985,34 @@ export interface operations {
       };
     };
   };
-  /** Re-runs your workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint. */
+  /**
+   * **Deprecation Notice:** This endpoint is deprecated.
+   * We recommend migrating your existing code to use the new [retry workflow](https://docs.github.com/rest/reference/actions#retry-a-workflow) endpoint.
+   *
+   * Re-runs your workflow run using its `id`. You must authenticate using
+   * an access token with the `repo` scope to use this endpoint. GitHub Apps must have
+   * the `actions:write` permission to use this endpoint.
+   */
   "actions/re-run-workflow": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        /** The id of the workflow run. */
+        run_id: components["parameters"]["run-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      201: {
+        content: {
+          "application/json": { [key: string]: unknown };
+        };
+      };
+    };
+  };
+  /** Retry your workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint. */
+  "actions/retry-workflow": {
     parameters: {
       path: {
         owner: components["parameters"]["owner"];

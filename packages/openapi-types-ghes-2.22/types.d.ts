@@ -1560,7 +1560,11 @@ export interface paths {
     delete: operations["actions/delete-workflow-run-logs"];
   };
   "/repos/{owner}/{repo}/actions/runs/{run_id}/rerun": {
-    /** Re-runs your workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint. */
+    /**
+     * Re-runs your workflow run using its `id`. You must authenticate using
+     * an access token with the `repo` scope to use this endpoint. GitHub Apps must have
+     * the `actions:write` permission to use this endpoint.
+     */
     post: operations["actions/re-run-workflow"];
   };
   "/repos/{owner}/{repo}/actions/secrets": {
@@ -16918,7 +16922,11 @@ export interface operations {
       204: never;
     };
   };
-  /** Re-runs your workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint. */
+  /**
+   * Re-runs your workflow run using its `id`. You must authenticate using
+   * an access token with the `repo` scope to use this endpoint. GitHub Apps must have
+   * the `actions:write` permission to use this endpoint.
+   */
   "actions/re-run-workflow": {
     parameters: {
       path: {
