@@ -1815,7 +1815,11 @@ export interface paths {
     post: operations["actions/review-pending-deployments-for-run"];
   };
   "/repos/{owner}/{repo}/actions/runs/{run_id}/rerun": {
-    /** Re-runs your workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint. */
+    /**
+     * Re-runs your workflow run using its `id`. You must authenticate using
+     * an access token with the `repo` scope to use this endpoint. GitHub Apps must have
+     * the `actions:write` permission to use this endpoint.
+     */
     post: operations["actions/re-run-workflow"];
   };
   "/repos/{owner}/{repo}/actions/secrets": {
@@ -4804,6 +4808,10 @@ export interface paths {
   "/repos/{owner}/{repo}/actions/runs/{run_id}/approve": {
     /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
     post: operations["actions/approve-workflow-run"];
+  };
+  "/repos/{owner}/{repo}/actions/runs/{run_id}/retry": {
+    /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
+    post: operations["actions/retry-workflow"];
   };
   "/repos/{owner}/{repo}/actions/runs/{run_id}/timing": {
     /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
@@ -19116,7 +19124,11 @@ export interface operations {
       };
     };
   };
-  /** Re-runs your workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint. */
+  /**
+   * Re-runs your workflow run using its `id`. You must authenticate using
+   * an access token with the `repo` scope to use this endpoint. GitHub Apps must have
+   * the `actions:write` permission to use this endpoint.
+   */
   "actions/re-run-workflow": {
     parameters: {
       path: {
@@ -31262,6 +31274,13 @@ export interface operations {
   };
   /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
   "actions/approve-workflow-run": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
+  "actions/retry-workflow": {
     responses: {
       /** Not Implemented */
       501: unknown;
