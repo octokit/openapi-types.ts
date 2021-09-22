@@ -6776,6 +6776,8 @@ export interface components {
       head_sha: string;
       /** The auto incrementing run number for the workflow run. */
       run_number: number;
+      /** Attempt number of the run, 1 for first attempt and higher if the workflow was retried. */
+      run_attempt?: number;
       event: string;
       status: string | null;
       conclusion: string | null;
@@ -6799,6 +6801,8 @@ export interface components {
       cancel_url: string;
       /** The URL to rerun the workflow run. */
       rerun_url: string;
+      /** The URL to the previous attempted run of this workflow, if one exists. */
+      previous_attempt_url?: string | null;
       /** The URL to the workflow. */
       workflow_url: string;
       head_commit: components["schemas"]["nullable-simple-commit"];
@@ -19926,6 +19930,7 @@ export interface operations {
            * \* `admin` - can pull, push and administer this repository.
            * \* `maintain` - Recommended for project managers who need to manage the repository without access to sensitive or destructive actions.
            * \* `triage` - Recommended for contributors who need to proactively manage issues and pull requests without write access.
+           * \* custom repository role name - Can assign a custom repository role if the owning organization has defined any.
            */
           permission?: "pull" | "push" | "admin" | "maintain" | "triage";
           permissions?: string;
@@ -20243,7 +20248,6 @@ export interface operations {
           "application/json": components["schemas"]["branch-short"][];
         };
       };
-      415: components["responses"]["preview_header_missing"];
       422: components["responses"]["validation_failed"];
     };
   };
@@ -20339,7 +20343,6 @@ export interface operations {
           "application/json": components["schemas"]["pull-request-simple"][];
         };
       };
-      415: components["responses"]["preview_header_missing"];
     };
   };
   /**
@@ -23026,7 +23029,6 @@ export interface operations {
       };
       404: components["responses"]["not_found"];
       410: components["responses"]["gone"];
-      415: components["responses"]["preview_header_missing"];
     };
   };
   "repos/list-deploy-keys": {

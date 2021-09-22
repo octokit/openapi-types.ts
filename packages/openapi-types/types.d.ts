@@ -3619,6 +3619,12 @@ export interface paths {
     /** Lists languages for the specified repository. The value shown for each language is the number of bytes of code written in that language. */
     get: operations["repos/list-languages"];
   };
+  "/repos/{owner}/{repo}/lfs": {
+    /** **Note:** The Git LFS API endpoints are currently in beta and are subject to change. */
+    put: operations["repos/enable-lfs-for-repo"];
+    /** **Note:** The Git LFS API endpoints are currently in beta and are subject to change. */
+    delete: operations["repos/disable-lfs-for-repo"];
+  };
   "/repos/{owner}/{repo}/license": {
     /**
      * This method returns the contents of the repository's license file, if one is detected.
@@ -5074,15 +5080,6 @@ export interface paths {
     /** List all of the teams across all of the organizations to which the authenticated user belongs. This method requires `user`, `repo`, or `read:org` [scope](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/) when authenticating via [OAuth](https://docs.github.com/apps/building-oauth-apps/). */
     get: operations["teams/list-for-authenticated-user"];
   };
-  "/user/{username}/packages": {
-    /**
-     * Lists all packages in a user's namespace for which the requesting user has access.
-     *
-     * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
-     * If `package_type` is not `container`, your token must also include the `repo` scope.
-     */
-    get: operations["packages/list-packages-for-user"];
-  };
   "/users": {
     /**
      * Lists all users, in the order that they signed up on GitHub. This list includes personal user accounts and organization accounts.
@@ -5165,6 +5162,15 @@ export interface paths {
      * This method only lists _public_ memberships, regardless of authentication. If you need to fetch all of the organization memberships (public and private) for the authenticated user, use the [List organizations for the authenticated user](https://docs.github.com/rest/reference/orgs#list-organizations-for-the-authenticated-user) API instead.
      */
     get: operations["orgs/list-for-user"];
+  };
+  "/users/{username}/packages": {
+    /**
+     * Lists all packages in a user's namespace for which the requesting user has access.
+     *
+     * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+     * If `package_type` is not `container`, your token must also include the `repo` scope.
+     */
+    get: operations["packages/list-packages-for-user"];
   };
   "/users/{username}/packages/{package_type}/{package_name}": {
     /**
@@ -8041,6 +8047,8 @@ export interface components {
       head_sha: string;
       /** The auto incrementing run number for the workflow run. */
       run_number: number;
+      /** Attempt number of the run, 1 for first attempt and higher if the workflow was retried. */
+      run_attempt?: number;
       event: string;
       status: string | null;
       conclusion: string | null;
@@ -8064,6 +8072,8 @@ export interface components {
       cancel_url: string;
       /** The URL to rerun the workflow run. */
       rerun_url: string;
+      /** The URL to the previous attempted run of this workflow, if one exists. */
+      previous_attempt_url?: string | null;
       /** The URL to the workflow. */
       workflow_url: string;
       head_commit: components["schemas"]["nullable-simple-commit"];
@@ -22560,6 +22570,7 @@ export interface operations {
            * \* `admin` - can pull, push and administer this repository.
            * \* `maintain` - Recommended for project managers who need to manage the repository without access to sensitive or destructive actions.
            * \* `triage` - Recommended for contributors who need to proactively manage issues and pull requests without write access.
+           * \* custom repository role name - Can assign a custom repository role if the owning organization has defined any.
            */
           permission?: "pull" | "push" | "admin" | "maintain" | "triage";
           permissions?: string;
@@ -22877,7 +22888,6 @@ export interface operations {
           "application/json": components["schemas"]["branch-short"][];
         };
       };
-      415: components["responses"]["preview_header_missing"];
       422: components["responses"]["validation_failed"];
     };
   };
@@ -22973,7 +22983,6 @@ export interface operations {
           "application/json": components["schemas"]["pull-request-simple"][];
         };
       };
-      415: components["responses"]["preview_header_missing"];
     };
   };
   /**
@@ -26181,7 +26190,6 @@ export interface operations {
       };
       404: components["responses"]["not_found"];
       410: components["responses"]["gone"];
-      415: components["responses"]["preview_header_missing"];
     };
   };
   "repos/list-deploy-keys": {
@@ -26410,6 +26418,39 @@ export interface operations {
           "application/json": components["schemas"]["language"];
         };
       };
+    };
+  };
+  /** **Note:** The Git LFS API endpoints are currently in beta and are subject to change. */
+  "repos/enable-lfs-for-repo": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+      };
+    };
+    responses: {
+      202: components["responses"]["accepted"];
+      /**
+       * We will return a 403 with one of the following messages:
+       *
+       * - Git LFS support not enabled because Git LFS is globally disabled.
+       * - Git LFS support not enabled because Git LFS is disabled for the root repository in the network.
+       * - Git LFS support not enabled because Git LFS is disabled for <owner>.
+       */
+      403: unknown;
+    };
+  };
+  /** **Note:** The Git LFS API endpoints are currently in beta and are subject to change. */
+  "repos/disable-lfs-for-repo": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
     };
   };
   /**
@@ -32960,41 +33001,6 @@ export interface operations {
     };
   };
   /**
-   * Lists all packages in a user's namespace for which the requesting user has access.
-   *
-   * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
-   * If `package_type` is not `container`, your token must also include the `repo` scope.
-   */
-  "packages/list-packages-for-user": {
-    parameters: {
-      query: {
-        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
-        package_type:
-          | "npm"
-          | "maven"
-          | "rubygems"
-          | "docker"
-          | "nuget"
-          | "container";
-        /** The selected visibility of the packages. Can be one of `public`, `private`, or `internal`. Only `container` package_types currently support `internal` visibility properly. For other ecosystems `internal` is synonymous with `private`. This parameter is optional and only filters an existing result set. */
-        visibility?: components["parameters"]["package-visibility"];
-      };
-      path: {
-        username: components["parameters"]["username"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["package"][];
-        };
-      };
-      401: components["responses"]["requires_authentication"];
-      403: components["responses"]["forbidden"];
-    };
-  };
-  /**
    * Lists all users, in the order that they signed up on GitHub. This list includes personal user accounts and organization accounts.
    *
    * Note: Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of users.
@@ -33325,6 +33331,41 @@ export interface operations {
           "application/json": components["schemas"]["organization-simple"][];
         };
       };
+    };
+  };
+  /**
+   * Lists all packages in a user's namespace for which the requesting user has access.
+   *
+   * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
+   * If `package_type` is not `container`, your token must also include the `repo` scope.
+   */
+  "packages/list-packages-for-user": {
+    parameters: {
+      query: {
+        /** The type of supported package. Can be one of `npm`, `maven`, `rubygems`, `nuget`, `docker`, or `container`. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry. */
+        package_type:
+          | "npm"
+          | "maven"
+          | "rubygems"
+          | "docker"
+          | "nuget"
+          | "container";
+        /** The selected visibility of the packages. Can be one of `public`, `private`, or `internal`. Only `container` package_types currently support `internal` visibility properly. For other ecosystems `internal` is synonymous with `private`. This parameter is optional and only filters an existing result set. */
+        visibility?: components["parameters"]["package-visibility"];
+      };
+      path: {
+        username: components["parameters"]["username"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["package"][];
+        };
+      };
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
     };
   };
   /**
