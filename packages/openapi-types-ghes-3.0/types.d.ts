@@ -8662,6 +8662,10 @@ export interface components {
       status: ("built" | "building" | "errored") | null;
       /** The Pages site's custom domain */
       cname: string | null;
+      /** The state if the domain is protected */
+      protected_domain_state?: ("pending" | "verified" | "unverified") | null;
+      /** The timestamp when a pending domain becomes unverified. */
+      pending_domain_unverified_at?: string | null;
       /** Whether the Page has a custom 404 page. */
       custom_404: boolean;
       /** The web address the Page can be accessed from. */
@@ -24805,7 +24809,6 @@ export interface operations {
         };
       };
       403: components["responses"]["forbidden"];
-      415: components["responses"]["preview_header_missing"];
       422: components["responses"]["validation_failed"];
     };
     requestBody: {
