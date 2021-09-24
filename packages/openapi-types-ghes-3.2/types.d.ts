@@ -18205,7 +18205,6 @@ export interface operations {
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
-      415: components["responses"]["preview_header_missing"];
       422: components["responses"]["validation_failed"];
     };
   };
@@ -18224,7 +18223,6 @@ export interface operations {
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
-      415: components["responses"]["preview_header_missing"];
       422: components["responses"]["validation_failed"];
     };
     requestBody: {
@@ -18251,7 +18249,6 @@ export interface operations {
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
-      415: components["responses"]["preview_header_missing"];
       422: components["responses"]["validation_failed"];
     };
   };
@@ -18274,7 +18271,6 @@ export interface operations {
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
-      415: components["responses"]["preview_header_missing"];
       422: components["responses"]["validation_failed"];
     };
   };
@@ -29020,7 +29016,6 @@ export interface operations {
         };
       };
       404: components["responses"]["not_found"];
-      415: components["responses"]["preview_header_missing"];
     };
   };
   /**
@@ -29044,7 +29039,6 @@ export interface operations {
       };
       /** Not Found if project is not managed by this team */
       404: unknown;
-      415: components["responses"]["preview_header_missing"];
     };
   };
   /**
@@ -29072,7 +29066,6 @@ export interface operations {
         };
       };
       404: components["responses"]["not_found"];
-      415: components["responses"]["preview_header_missing"];
       422: components["responses"]["validation_failed"];
     };
     requestBody: {
@@ -30634,7 +30627,6 @@ export interface operations {
           "application/json": components["schemas"]["project"][];
         };
       };
-      415: components["responses"]["preview_header_missing"];
       422: components["responses"]["validation_failed"];
     };
   };
