@@ -20699,7 +20699,6 @@ export interface operations {
       };
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
-      415: components["responses"]["preview_header_missing"];
       422: components["responses"]["validation_failed_simple"];
     };
     requestBody: {
