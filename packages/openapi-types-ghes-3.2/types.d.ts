@@ -4637,6 +4637,14 @@ export interface paths {
      */
     post: operations["apps/create-content-attachment"];
   };
+  "/repos/{owner}/{repo}/community/code_of_conduct": {
+    /**
+     * Returns the contents of the repository's code of conduct file, if one is detected.
+     *
+     * A code of conduct is detected if there is a file named `CODE_OF_CONDUCT` in the root directory of the repository. GitHub detects which code of conduct it is using fuzzy matching.
+     */
+    post: operations["codes-of-conduct/get-for-repo"];
+  };
   "/enterprises/{enterprise}/audit-log": {
     /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
     get: operations["enterprise-admin/get-audit-log"];
@@ -4838,10 +4846,6 @@ export interface paths {
     put: operations["repos/enable-automated-security-fixes"];
     /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
     delete: operations["repos/disable-automated-security-fixes"];
-  };
-  "/repos/{owner}/{repo}/community/code_of_conduct": {
-    /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
-    get: operations["codes-of-conduct/get-for-repo"];
   };
   "/repos/{owner}/{repo}/community/profile": {
     /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
@@ -6071,19 +6075,6 @@ export interface components {
       url: string;
       avatar_url: string;
     };
-    /** Color-coded labels help you categorize and filter your issues (just like labels in Gmail). */
-    label: {
-      id: number;
-      node_id: string;
-      /** URL for the label */
-      url: string;
-      /** The name of the label. */
-      name: string;
-      description: string | null;
-      /** 6-character hex code, without the leading #, identifying the color */
-      color: string;
-      default: boolean;
-    };
     /** A collection of related issues and pull requests. */
     "nullable-milestone": {
       url: string;
@@ -6106,16 +6097,6 @@ export interface components {
       closed_at: string | null;
       due_on: string | null;
     } | null;
-    /** How the author is associated with the repository. */
-    author_association:
-      | "COLLABORATOR"
-      | "CONTRIBUTOR"
-      | "FIRST_TIMER"
-      | "FIRST_TIME_CONTRIBUTOR"
-      | "MANNEQUIN"
-      | "MEMBER"
-      | "NONE"
-      | "OWNER";
     /** GitHub apps are a new way to extend GitHub. They can be installed directly on organizations and user accounts and granted access to specific repositories. They come with granular permissions and built-in webhooks. GitHub apps are first class actors within GitHub. */
     "nullable-integration": {
       /** Unique identifier of the GitHub app */
@@ -6148,22 +6129,61 @@ export interface components {
       webhook_secret?: string | null;
       pem?: string;
     } | null;
-    /** Issue Simple */
-    "issue-simple": {
+    /** How the author is associated with the repository. */
+    author_association:
+      | "COLLABORATOR"
+      | "CONTRIBUTOR"
+      | "FIRST_TIMER"
+      | "FIRST_TIME_CONTRIBUTOR"
+      | "MANNEQUIN"
+      | "MEMBER"
+      | "NONE"
+      | "OWNER";
+    "reaction-rollup": {
+      url: string;
+      total_count: number;
+      "+1": number;
+      "-1": number;
+      laugh: number;
+      confused: number;
+      heart: number;
+      hooray: number;
+      eyes: number;
+      rocket: number;
+    };
+    /** Issues are a great way to keep track of tasks, enhancements, and bugs for your projects. */
+    issue: {
       id: number;
       node_id: string;
+      /** URL for the issue */
       url: string;
       repository_url: string;
       labels_url: string;
       comments_url: string;
       events_url: string;
       html_url: string;
+      /** Number uniquely identifying the issue within its repository */
       number: number;
+      /** State of the issue; either 'open' or 'closed' */
       state: string;
+      /** Title of the issue */
       title: string;
-      body?: string;
+      /** Contents of the issue */
+      body?: string | null;
       user: components["schemas"]["nullable-simple-user"];
-      labels: components["schemas"]["label"][];
+      /** Labels to associate with this issue; pass one or more label names to replace the set of labels on this issue; send an empty array to clear all labels from the issue; note that the labels are silently dropped for users without push access to the repository */
+      labels: (
+        | string
+        | {
+            id?: number;
+            node_id?: string;
+            url?: string;
+            name?: string;
+            description?: string | null;
+            color?: string | null;
+            default?: boolean;
+          }
+      )[];
       assignee: components["schemas"]["nullable-simple-user"];
       assignees?: components["schemas"]["simple-user"][] | null;
       milestone: components["schemas"]["nullable-milestone"];
@@ -6180,24 +6200,14 @@ export interface components {
       closed_at: string | null;
       created_at: string;
       updated_at: string;
-      author_association: components["schemas"]["author_association"];
+      closed_by?: components["schemas"]["nullable-simple-user"];
       body_html?: string;
       body_text?: string;
       timeline_url?: string;
       repository?: components["schemas"]["repository"];
       performed_via_github_app?: components["schemas"]["nullable-integration"];
-    };
-    "reaction-rollup": {
-      url: string;
-      total_count: number;
-      "+1": number;
-      "-1": number;
-      laugh: number;
-      confused: number;
-      heart: number;
-      hooray: number;
-      eyes: number;
-      rocket: number;
+      author_association: components["schemas"]["author_association"];
+      reactions?: components["schemas"]["reaction-rollup"];
     };
     /** Comments provide a way for people to collaborate on an issue. */
     "issue-comment": {
@@ -6232,7 +6242,7 @@ export interface components {
       org?: components["schemas"]["actor"];
       payload: {
         action?: string;
-        issue?: components["schemas"]["issue-simple"];
+        issue?: components["schemas"]["issue"];
         comment?: components["schemas"]["issue-comment"];
         pages?: {
           page_name?: string;
@@ -6462,64 +6472,6 @@ export interface components {
     "gitignore-template": {
       name: string;
       source: string;
-    };
-    /** Issues are a great way to keep track of tasks, enhancements, and bugs for your projects. */
-    issue: {
-      id: number;
-      node_id: string;
-      /** URL for the issue */
-      url: string;
-      repository_url: string;
-      labels_url: string;
-      comments_url: string;
-      events_url: string;
-      html_url: string;
-      /** Number uniquely identifying the issue within its repository */
-      number: number;
-      /** State of the issue; either 'open' or 'closed' */
-      state: string;
-      /** Title of the issue */
-      title: string;
-      /** Contents of the issue */
-      body?: string | null;
-      user: components["schemas"]["nullable-simple-user"];
-      /** Labels to associate with this issue; pass one or more label names to replace the set of labels on this issue; send an empty array to clear all labels from the issue; note that the labels are silently dropped for users without push access to the repository */
-      labels: (
-        | string
-        | {
-            id?: number;
-            node_id?: string;
-            url?: string;
-            name?: string;
-            description?: string | null;
-            color?: string | null;
-            default?: boolean;
-          }
-      )[];
-      assignee: components["schemas"]["nullable-simple-user"];
-      assignees?: components["schemas"]["simple-user"][] | null;
-      milestone: components["schemas"]["nullable-milestone"];
-      locked: boolean;
-      active_lock_reason?: string | null;
-      comments: number;
-      pull_request?: {
-        merged_at?: string | null;
-        diff_url: string | null;
-        html_url: string | null;
-        patch_url: string | null;
-        url: string | null;
-      };
-      closed_at: string | null;
-      created_at: string;
-      updated_at: string;
-      closed_by?: components["schemas"]["nullable-simple-user"];
-      body_html?: string;
-      body_text?: string;
-      timeline_url?: string;
-      repository?: components["schemas"]["repository"];
-      performed_via_github_app?: components["schemas"]["nullable-integration"];
-      author_association: components["schemas"]["author_association"];
-      reactions?: components["schemas"]["reaction-rollup"];
     };
     /** License Simple */
     "license-simple": {
@@ -7455,6 +7407,7 @@ export interface components {
         source_import?: components["schemas"]["rate-limit"];
         integration_manifest?: components["schemas"]["rate-limit"];
         code_scanning_upload?: components["schemas"]["rate-limit"];
+        actions_runner_registration?: components["schemas"]["rate-limit"];
       };
       rate: components["schemas"]["rate-limit"];
     };
@@ -8275,6 +8228,8 @@ export interface components {
     "code-scanning-analysis-analysis-key": string;
     /** Identifies the variable values associated with the environment in which the analysis that generated this alert instance was performed, such as the language that was analyzed. */
     "code-scanning-alert-environment": string;
+    /** Identifies the configuration under which the analysis was executed. Used to distinguish between multiple analyses for the same tool and commit, but performed on different languages or different parts of the code. */
+    "code-scanning-analysis-category": string;
     /** Describe a region within a file for the alert. */
     "code-scanning-alert-location": {
       path?: string;
@@ -8291,6 +8246,7 @@ export interface components {
       ref?: components["schemas"]["code-scanning-ref"];
       analysis_key?: components["schemas"]["code-scanning-analysis-analysis-key"];
       environment?: components["schemas"]["code-scanning-alert-environment"];
+      category?: components["schemas"]["code-scanning-analysis-category"];
       state?: components["schemas"]["code-scanning-alert-state"];
       commit_sha?: string;
       message?: {
@@ -8359,8 +8315,6 @@ export interface components {
     "code-scanning-analysis-commit-sha": string;
     /** Identifies the variable values associated with the environment in which this analysis was performed. */
     "code-scanning-analysis-environment": string;
-    /** Identifies the configuration under which the analysis was executed. Used to distinguish between multiple analyses for the same tool and commit, but performed on different languages or different parts of the code. */
-    "code-scanning-analysis-category": string;
     /** The time that the analysis was created in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
     "code-scanning-analysis-created-at": string;
     /** The REST API URL of the analysis resource. */
@@ -9096,7 +9050,7 @@ export interface components {
       commit_id: string | null;
       commit_url: string | null;
       created_at: string;
-      issue?: components["schemas"]["issue-simple"];
+      issue?: components["schemas"]["issue"];
       label?: components["schemas"]["issue-event-label"];
       assignee?: components["schemas"]["nullable-simple-user"];
       assigner?: components["schemas"]["nullable-simple-user"];
@@ -9376,6 +9330,19 @@ export interface components {
       Partial<components["schemas"]["moved-column-in-project-issue-event"]> &
       Partial<components["schemas"]["removed-from-project-issue-event"]> &
       Partial<components["schemas"]["converted-note-to-issue-issue-event"]>;
+    /** Color-coded labels help you categorize and filter your issues (just like labels in Gmail). */
+    label: {
+      id: number;
+      node_id: string;
+      /** URL for the label */
+      url: string;
+      /** The name of the label. */
+      name: string;
+      description: string | null;
+      /** 6-character hex code, without the leading #, identifying the color */
+      color: string;
+      default: boolean;
+    };
     /** Timeline Comment Event */
     "timeline-comment-event": {
       event: string;
@@ -9406,7 +9373,7 @@ export interface components {
       updated_at: string;
       source: {
         type?: string;
-        issue?: components["schemas"]["issue-simple"];
+        issue?: components["schemas"]["issue"];
       };
     };
     /** Timeline Committed Event */
@@ -10406,6 +10373,7 @@ export interface components {
       body_text?: string;
       timeline_url?: string;
       performed_via_github_app?: components["schemas"]["nullable-integration"];
+      reactions?: components["schemas"]["reaction-rollup"];
     };
     /** Label Search Result Item */
     "label-search-result-item": {
@@ -11429,7 +11397,7 @@ export interface operations {
       content: {
         "application/json": {
           /** The [distinguished name](https://www.ldap.com/ldap-dns-and-rdns) (DN) of the LDAP entry to map to a team. */
-          ldap_dn?: string;
+          ldap_dn: string;
         };
       };
     };
@@ -11470,7 +11438,7 @@ export interface operations {
       content: {
         "application/json": {
           /** The [distinguished name](https://www.ldap.com/ldap-dns-and-rdns) (DN) of the LDAP entry to map to a team. */
-          ldap_dn?: string;
+          ldap_dn: string;
         };
       };
     };
@@ -12350,7 +12318,7 @@ export interface operations {
       content: {
         "application/json": {
           /** The OAuth access token used to authenticate to the GitHub API. */
-          access_token?: string;
+          access_token: string;
         };
       };
     };
@@ -15107,7 +15075,7 @@ export interface operations {
       content: {
         "application/json": {
           /** Name of the runner group. */
-          name?: string;
+          name: string;
           /** Visibility of a runner group. You can select all repositories, select individual repositories, or all private repositories. Can be one of: `all`, `selected`, or `private`. */
           visibility?: "selected" | "all" | "private";
         };
@@ -15682,7 +15650,7 @@ export interface operations {
       content: {
         "application/json": {
           /** An array of repository ids that can access the organization secret. You can only provide a list of repository ids when the `visibility` is set to `selected`. You can add and remove individual repositories using the [Set selected repositories for an organization secret](https://docs.github.com/enterprise-server@3.2/rest/reference/actions#set-selected-repositories-for-an-organization-secret) and [Remove selected repository from an organization secret](https://docs.github.com/enterprise-server@3.2/rest/reference/actions#remove-selected-repository-from-an-organization-secret) endpoints. */
-          selected_repository_ids?: number[];
+          selected_repository_ids: number[];
         };
       };
     };
@@ -18363,7 +18331,6 @@ export interface operations {
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
       410: components["responses"]["gone"];
-      415: components["responses"]["preview_header_missing"];
     };
   };
   /**
@@ -21685,7 +21652,6 @@ export interface operations {
         };
       };
       404: components["responses"]["not_found"];
-      415: components["responses"]["preview_header_missing"];
     };
   };
   /** Create a reaction to a [commit comment](https://docs.github.com/enterprise-server@3.2/rest/reference/repos#comments). A response with an HTTP `200` status means that you already added the reaction type to this commit comment. */
@@ -22705,7 +22671,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** The state of the status. Can be one of `error`, `failure`, `inactive`, `in_progress`, `queued` `pending`, or `success`. **Note:** To use the `inactive` state, you must provide the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/enterprise-server@3.2/rest/overview/api-previews#enhanced-deployments) custom media type. To use the `in_progress` and `queued` states, you must provide the [`application/vnd.github.flash-preview+json`](https://docs.github.com/enterprise-server@3.2/rest/overview/api-previews#deployment-statuses) custom media type. When you set a transient deployment to `inactive`, the deployment will be shown as `destroyed` in GitHub. */
+          /** The state of the status. Can be one of `error`, `failure`, `inactive`, `in_progress`, `queued` `pending`, or `success`. **Note:** To use the `inactive` state, you must provide the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/enterprise-server@3.2/rest/overview/api-previews#enhanced-deployments) custom media type. When you set a transient deployment to `inactive`, the deployment will be shown as `destroyed` in GitHub. */
           state:
             | "error"
             | "failure"
@@ -22723,7 +22689,7 @@ export interface operations {
           log_url?: string;
           /** A short description of the status. The maximum description length is 140 characters. */
           description?: string;
-          /** Name for the target deployment environment, which can be changed when setting a deploy status. For example, `production`, `staging`, or `qa`. **Note:** This parameter requires you to use the [`application/vnd.github.flash-preview+json`](https://docs.github.com/enterprise-server@3.2/rest/overview/api-previews#deployment-statuses) custom media type. */
+          /** Name for the target deployment environment, which can be changed when setting a deploy status. For example, `production`, `staging`, or `qa`. */
           environment?: "production" | "staging" | "qa";
           /**
            * Sets the URL for accessing your environment. Default: `""`
@@ -22732,7 +22698,6 @@ export interface operations {
           environment_url?: string;
           /**
            * Adds a new `inactive` status to all prior non-transient, non-production environment deployments with the same repository and `environment` name as the created status's deployment. An `inactive` status is only added to deployments that had a `success` state. Default: `true`
-           * **Note:** To add an `inactive` status to `production` environments, you must use the [`application/vnd.github.flash-preview+json`](https://docs.github.com/enterprise-server@3.2/rest/overview/api-previews#deployment-statuses) custom media type.
            * **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/enterprise-server@3.2/rest/overview/api-previews#enhanced-deployments) custom media type.
            */
           auto_inactive?: boolean;
@@ -22759,7 +22724,6 @@ export interface operations {
         };
       };
       404: components["responses"]["not_found"];
-      415: components["responses"]["preview_header_missing"];
     };
   };
   /**
@@ -23953,7 +23917,7 @@ export interface operations {
       200: {
         headers: {};
         content: {
-          "application/json": components["schemas"]["issue-simple"][];
+          "application/json": components["schemas"]["issue"][];
         };
       };
       301: components["responses"]["moved_permanently"];
@@ -24142,7 +24106,6 @@ export interface operations {
         };
       };
       404: components["responses"]["not_found"];
-      415: components["responses"]["preview_header_missing"];
     };
   };
   /** Create a reaction to an [issue comment](https://docs.github.com/enterprise-server@3.2/rest/reference/issues#comments). A response with an HTTP `200` status means that you already added the reaction type to this issue comment. */
@@ -24168,7 +24131,6 @@ export interface operations {
           "application/json": components["schemas"]["reaction"];
         };
       };
-      415: components["responses"]["preview_header_missing"];
       422: components["responses"]["validation_failed"];
     };
     requestBody: {
@@ -24353,7 +24315,7 @@ export interface operations {
       /** Response */
       201: {
         content: {
-          "application/json": components["schemas"]["issue-simple"];
+          "application/json": components["schemas"]["issue"];
         };
       };
     };
@@ -24380,7 +24342,7 @@ export interface operations {
       /** Response */
       200: {
         content: {
-          "application/json": components["schemas"]["issue-simple"];
+          "application/json": components["schemas"]["issue"];
         };
       };
     };
@@ -24705,7 +24667,6 @@ export interface operations {
       };
       404: components["responses"]["not_found"];
       410: components["responses"]["gone"];
-      415: components["responses"]["preview_header_missing"];
     };
   };
   /** Create a reaction to an [issue](https://docs.github.com/enterprise-server@3.2/rest/reference/issues/). A response with an HTTP `200` status means that you already added the reaction type to this issue. */
@@ -24731,7 +24692,6 @@ export interface operations {
           "application/json": components["schemas"]["reaction"];
         };
       };
-      415: components["responses"]["preview_header_missing"];
       422: components["responses"]["validation_failed"];
     };
     requestBody: {
@@ -25846,7 +25806,6 @@ export interface operations {
         };
       };
       404: components["responses"]["not_found"];
-      415: components["responses"]["preview_header_missing"];
     };
   };
   /** Create a reaction to a [pull request review comment](https://docs.github.com/enterprise-server@3.2/rest/reference/pulls#comments). A response with an HTTP `200` status means that you already added the reaction type to this pull request review comment. */
@@ -25872,7 +25831,6 @@ export interface operations {
           "application/json": components["schemas"]["reaction"];
         };
       };
-      415: components["responses"]["preview_header_missing"];
       422: components["responses"]["validation_failed"];
     };
     requestBody: {
@@ -26985,7 +26943,6 @@ export interface operations {
           "application/json": components["schemas"]["reaction"];
         };
       };
-      415: components["responses"]["preview_header_missing"];
       422: components["responses"]["validation_failed"];
     };
     requestBody: {
@@ -27734,9 +27691,9 @@ export interface operations {
       content: {
         "application/json": {
           /** Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get an environment public key](https://docs.github.com/enterprise-server@3.2/rest/reference/actions#get-an-environment-public-key) endpoint. */
-          encrypted_value?: string;
+          encrypted_value: string;
           /** ID of the key you used to encrypt the secret. */
-          key_id?: string;
+          key_id: string;
         };
       };
     };
@@ -30945,6 +30902,27 @@ export interface operations {
       };
     };
   };
+  /**
+   * Returns the contents of the repository's code of conduct file, if one is detected.
+   *
+   * A code of conduct is detected if there is a file named `CODE_OF_CONDUCT` in the root directory of the repository. GitHub detects which code of conduct it is using fuzzy matching.
+   */
+  "codes-of-conduct/get-for-repo": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["code-of-conduct"];
+        };
+      };
+    };
+  };
   /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
   "enterprise-admin/get-audit-log": {
     responses: {
@@ -31339,13 +31317,6 @@ export interface operations {
   };
   /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
   "repos/disable-automated-security-fixes": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
-  "codes-of-conduct/get-for-repo": {
     responses: {
       /** Not Implemented */
       501: unknown;
