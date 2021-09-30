@@ -4488,7 +4488,7 @@ export interface paths {
   };
   "/repos/{owner}/{repo}/community/code_of_conduct": {
     /** This endpoint does not exist ghes-3.1.json. It was added in ghes-3.2.json */
-    post: operations["codes-of-conduct/get-for-repo"];
+    get: operations["codes-of-conduct/get-for-repo"];
   };
   "/repos/{owner}/{repo}/environments": {
     /** This endpoint does not exist ghes-3.1.json. It was added in ghes-3.2.json */
