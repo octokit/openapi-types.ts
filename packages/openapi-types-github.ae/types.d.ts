@@ -8089,58 +8089,6 @@ export interface components {
       url: string;
       avatar_url: string;
     };
-    /** Color-coded labels help you categorize and filter your issues (just like labels in Gmail). */
-    label: {
-      id: number;
-      node_id: string;
-      /** URL for the label */
-      url: string;
-      /** The name of the label. */
-      name: string;
-      description: string | null;
-      /** 6-character hex code, without the leading #, identifying the color */
-      color: string;
-      default: boolean;
-    };
-    /** Issue Simple */
-    "issue-simple": {
-      id: number;
-      node_id: string;
-      url: string;
-      repository_url: string;
-      labels_url: string;
-      comments_url: string;
-      events_url: string;
-      html_url: string;
-      number: number;
-      state: string;
-      title: string;
-      body?: string;
-      user: components["schemas"]["nullable-simple-user"];
-      labels: components["schemas"]["label"][];
-      assignee: components["schemas"]["nullable-simple-user"];
-      assignees?: components["schemas"]["simple-user"][] | null;
-      milestone: components["schemas"]["nullable-milestone"];
-      locked: boolean;
-      active_lock_reason?: string | null;
-      comments: number;
-      pull_request?: {
-        merged_at?: string | null;
-        diff_url: string | null;
-        html_url: string | null;
-        patch_url: string | null;
-        url: string | null;
-      };
-      closed_at: string | null;
-      created_at: string;
-      updated_at: string;
-      author_association: components["schemas"]["author_association"];
-      body_html?: string;
-      body_text?: string;
-      timeline_url?: string;
-      repository?: components["schemas"]["repository"];
-      performed_via_github_app?: components["schemas"]["nullable-integration"];
-    };
     /** Comments provide a way for people to collaborate on an issue. */
     "issue-comment": {
       /** Unique identifier of the issue comment */
@@ -8174,7 +8122,7 @@ export interface components {
       org?: components["schemas"]["actor"];
       payload: {
         action?: string;
-        issue?: components["schemas"]["issue-simple"];
+        issue?: components["schemas"]["issue"];
         comment?: components["schemas"]["issue-comment"];
         pages?: {
           page_name?: string;
@@ -8372,7 +8320,7 @@ export interface components {
       commit_id: string | null;
       commit_url: string | null;
       created_at: string;
-      issue?: components["schemas"]["issue-simple"];
+      issue?: components["schemas"]["issue"];
       label?: components["schemas"]["issue-event-label"];
       assignee?: components["schemas"]["nullable-simple-user"];
       assigner?: components["schemas"]["nullable-simple-user"];
@@ -8652,6 +8600,19 @@ export interface components {
       Partial<components["schemas"]["moved-column-in-project-issue-event"]> &
       Partial<components["schemas"]["removed-from-project-issue-event"]> &
       Partial<components["schemas"]["converted-note-to-issue-issue-event"]>;
+    /** Color-coded labels help you categorize and filter your issues (just like labels in Gmail). */
+    label: {
+      id: number;
+      node_id: string;
+      /** URL for the label */
+      url: string;
+      /** The name of the label. */
+      name: string;
+      description: string | null;
+      /** 6-character hex code, without the leading #, identifying the color */
+      color: string;
+      default: boolean;
+    };
     /** Timeline Comment Event */
     "timeline-comment-event": {
       event: string;
@@ -8682,7 +8643,7 @@ export interface components {
       updated_at: string;
       source: {
         type?: string;
-        issue?: components["schemas"]["issue-simple"];
+        issue?: components["schemas"]["issue"];
       };
     };
     /** Timeline Committed Event */
@@ -9701,6 +9662,7 @@ export interface components {
       body_text?: string;
       timeline_url?: string;
       performed_via_github_app?: components["schemas"]["nullable-integration"];
+      reactions?: components["schemas"]["reaction-rollup"];
     };
     /** Label Search Result Item */
     "label-search-result-item": {
@@ -16022,7 +15984,6 @@ export interface operations {
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
       410: components["responses"]["gone"];
-      415: components["responses"]["preview_header_missing"];
     };
   };
   /** The `parent` and `source` objects are present when the repository is a fork. `parent` is the repository this repository was forked from, `source` is the ultimate source for the network. */
@@ -19172,7 +19133,6 @@ export interface operations {
         };
       };
       404: components["responses"]["not_found"];
-      415: components["responses"]["preview_header_missing"];
     };
   };
   /** Create a reaction to a [commit comment](https://docs.github.com/github-ae@latest/rest/reference/repos#comments). A response with an HTTP `200` status means that you already added the reaction type to this commit comment. */
@@ -21280,7 +21240,7 @@ export interface operations {
       200: {
         headers: {};
         content: {
-          "application/json": components["schemas"]["issue-simple"][];
+          "application/json": components["schemas"]["issue"][];
         };
       };
       301: components["responses"]["moved_permanently"];
@@ -21469,7 +21429,6 @@ export interface operations {
         };
       };
       404: components["responses"]["not_found"];
-      415: components["responses"]["preview_header_missing"];
     };
   };
   /** Create a reaction to an [issue comment](https://docs.github.com/github-ae@latest/rest/reference/issues#comments). A response with an HTTP `200` status means that you already added the reaction type to this issue comment. */
@@ -21495,7 +21454,6 @@ export interface operations {
           "application/json": components["schemas"]["reaction"];
         };
       };
-      415: components["responses"]["preview_header_missing"];
       422: components["responses"]["validation_failed"];
     };
     requestBody: {
@@ -21680,7 +21638,7 @@ export interface operations {
       /** Response */
       201: {
         content: {
-          "application/json": components["schemas"]["issue-simple"];
+          "application/json": components["schemas"]["issue"];
         };
       };
     };
@@ -21707,7 +21665,7 @@ export interface operations {
       /** Response */
       200: {
         content: {
-          "application/json": components["schemas"]["issue-simple"];
+          "application/json": components["schemas"]["issue"];
         };
       };
     };
@@ -22032,7 +21990,6 @@ export interface operations {
       };
       404: components["responses"]["not_found"];
       410: components["responses"]["gone"];
-      415: components["responses"]["preview_header_missing"];
     };
   };
   /** Create a reaction to an [issue](https://docs.github.com/github-ae@latest/rest/reference/issues/). A response with an HTTP `200` status means that you already added the reaction type to this issue. */
@@ -22058,7 +22015,6 @@ export interface operations {
           "application/json": components["schemas"]["reaction"];
         };
       };
-      415: components["responses"]["preview_header_missing"];
       422: components["responses"]["validation_failed"];
     };
     requestBody: {
@@ -23145,7 +23101,6 @@ export interface operations {
         };
       };
       404: components["responses"]["not_found"];
-      415: components["responses"]["preview_header_missing"];
     };
   };
   /** Create a reaction to a [pull request review comment](https://docs.github.com/github-ae@latest/rest/reference/pulls#comments). A response with an HTTP `200` status means that you already added the reaction type to this pull request review comment. */
@@ -23171,7 +23126,6 @@ export interface operations {
           "application/json": components["schemas"]["reaction"];
         };
       };
-      415: components["responses"]["preview_header_missing"];
       422: components["responses"]["validation_failed"];
     };
     requestBody: {
@@ -24284,7 +24238,6 @@ export interface operations {
           "application/json": components["schemas"]["reaction"];
         };
       };
-      415: components["responses"]["preview_header_missing"];
       422: components["responses"]["validation_failed"];
     };
     requestBody: {
