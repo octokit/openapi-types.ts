@@ -4643,7 +4643,7 @@ export interface paths {
      *
      * A code of conduct is detected if there is a file named `CODE_OF_CONDUCT` in the root directory of the repository. GitHub detects which code of conduct it is using fuzzy matching.
      */
-    post: operations["codes-of-conduct/get-for-repo"];
+    get: operations["codes-of-conduct/get-for-repo"];
   };
   "/enterprises/{enterprise}/audit-log": {
     /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
