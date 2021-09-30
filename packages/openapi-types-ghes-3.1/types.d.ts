@@ -13867,7 +13867,6 @@ export interface operations {
         };
       };
       409: components["responses"]["conflict"];
-      415: components["responses"]["preview_header_missing"];
       /** Validation failed */
       422: {
         content: {
