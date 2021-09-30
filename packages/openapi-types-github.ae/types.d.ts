@@ -6949,14 +6949,26 @@ export interface components {
         UBUNTU?: {
           total_ms: number;
           jobs: number;
+          job_runs?: {
+            job_id: number;
+            duration_ms: number;
+          }[];
         };
         MACOS?: {
           total_ms: number;
           jobs: number;
+          job_runs?: {
+            job_id: number;
+            duration_ms: number;
+          }[];
         };
         WINDOWS?: {
           total_ms: number;
           jobs: number;
+          job_runs?: {
+            job_id: number;
+            duration_ms: number;
+          }[];
         };
       };
       run_duration_ms?: number;
@@ -20065,15 +20077,9 @@ export interface operations {
           environment?: string;
           /** Short description of the deployment. */
           description?: string | null;
-          /**
-           * Specifies if the given environment is specific to the deployment and will no longer exist at some point in the future. Default: `false`
-           * **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/github-ae@latest/rest/overview/api-previews#enhanced-deployments) custom media type.
-           */
+          /** Specifies if the given environment is specific to the deployment and will no longer exist at some point in the future. Default: `false` */
           transient_environment?: boolean;
-          /**
-           * Specifies if the given environment is one that end-users directly interact with. Default: `true` when `environment` is `production` and `false` otherwise.
-           * **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/github-ae@latest/rest/overview/api-previews#enhanced-deployments) custom media type.
-           */
+          /** Specifies if the given environment is one that end-users directly interact with. Default: `true` when `environment` is `production` and `false` otherwise. */
           production_environment?: boolean;
         };
       };
@@ -20180,7 +20186,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** The state of the status. Can be one of `error`, `failure`, `inactive`, `in_progress`, `queued` `pending`, or `success`. **Note:** To use the `inactive` state, you must provide the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/github-ae@latest/rest/overview/api-previews#enhanced-deployments) custom media type. To use the `in_progress` and `queued` states, you must provide the [`application/vnd.github.flash-preview+json`](https://docs.github.com/github-ae@latest/rest/overview/api-previews#deployment-statuses) custom media type. When you set a transient deployment to `inactive`, the deployment will be shown as `destroyed` in GitHub. */
+          /** The state of the status. Can be one of `error`, `failure`, `inactive`, `in_progress`, `queued` `pending`, or `success`. When you set a transient deployment to `inactive`, the deployment will be shown as `destroyed` in GitHub. */
           state:
             | "error"
             | "failure"
@@ -20191,25 +20197,15 @@ export interface operations {
             | "success";
           /** The target URL to associate with this status. This URL should contain output to keep the user updated while the task is running or serve as historical information for what happened in the deployment. **Note:** It's recommended to use the `log_url` parameter, which replaces `target_url`. */
           target_url?: string;
-          /**
-           * The full URL of the deployment's output. This parameter replaces `target_url`. We will continue to accept `target_url` to support legacy uses, but we recommend replacing `target_url` with `log_url`. Setting `log_url` will automatically set `target_url` to the same value. Default: `""`
-           * **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/github-ae@latest/rest/overview/api-previews#enhanced-deployments) custom media type.
-           */
+          /** The full URL of the deployment's output. This parameter replaces `target_url`. We will continue to accept `target_url` to support legacy uses, but we recommend replacing `target_url` with `log_url`. Setting `log_url` will automatically set `target_url` to the same value. Default: `""` */
           log_url?: string;
           /** A short description of the status. The maximum description length is 140 characters. */
           description?: string;
-          /** Name for the target deployment environment, which can be changed when setting a deploy status. For example, `production`, `staging`, or `qa`. **Note:** This parameter requires you to use the [`application/vnd.github.flash-preview+json`](https://docs.github.com/github-ae@latest/rest/overview/api-previews#deployment-statuses) custom media type. */
+          /** Name for the target deployment environment, which can be changed when setting a deploy status. For example, `production`, `staging`, or `qa`. */
           environment?: "production" | "staging" | "qa";
-          /**
-           * Sets the URL for accessing your environment. Default: `""`
-           * **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/github-ae@latest/rest/overview/api-previews#enhanced-deployments) custom media type.
-           */
+          /** Sets the URL for accessing your environment. Default: `""` */
           environment_url?: string;
-          /**
-           * Adds a new `inactive` status to all prior non-transient, non-production environment deployments with the same repository and `environment` name as the created status's deployment. An `inactive` status is only added to deployments that had a `success` state. Default: `true`
-           * **Note:** To add an `inactive` status to `production` environments, you must use the [`application/vnd.github.flash-preview+json`](https://docs.github.com/github-ae@latest/rest/overview/api-previews#deployment-statuses) custom media type.
-           * **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/github-ae@latest/rest/overview/api-previews#enhanced-deployments) custom media type.
-           */
+          /** Adds a new `inactive` status to all prior non-transient, non-production environment deployments with the same repository and `environment` name as the created status's deployment. An `inactive` status is only added to deployments that had a `success` state. Default: `true` */
           auto_inactive?: boolean;
         };
       };
@@ -20234,7 +20230,6 @@ export interface operations {
         };
       };
       404: components["responses"]["not_found"];
-      415: components["responses"]["preview_header_missing"];
     };
   };
   "activity/list-repo-events": {

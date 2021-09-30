@@ -22711,7 +22711,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** The state of the status. Can be one of `error`, `failure`, `inactive`, `in_progress`, `queued` `pending`, or `success`. **Note:** To use the `inactive` state, you must provide the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/enterprise-server@3.2/rest/overview/api-previews#enhanced-deployments) custom media type. To use the `in_progress` and `queued` states, you must provide the [`application/vnd.github.flash-preview+json`](https://docs.github.com/enterprise-server@3.2/rest/overview/api-previews#deployment-statuses) custom media type. When you set a transient deployment to `inactive`, the deployment will be shown as `destroyed` in GitHub. */
+          /** The state of the status. Can be one of `error`, `failure`, `inactive`, `in_progress`, `queued` `pending`, or `success`. **Note:** To use the `inactive` state, you must provide the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/enterprise-server@3.2/rest/overview/api-previews#enhanced-deployments) custom media type. When you set a transient deployment to `inactive`, the deployment will be shown as `destroyed` in GitHub. */
           state:
             | "error"
             | "failure"
@@ -22729,7 +22729,7 @@ export interface operations {
           log_url?: string;
           /** A short description of the status. The maximum description length is 140 characters. */
           description?: string;
-          /** Name for the target deployment environment, which can be changed when setting a deploy status. For example, `production`, `staging`, or `qa`. **Note:** This parameter requires you to use the [`application/vnd.github.flash-preview+json`](https://docs.github.com/enterprise-server@3.2/rest/overview/api-previews#deployment-statuses) custom media type. */
+          /** Name for the target deployment environment, which can be changed when setting a deploy status. For example, `production`, `staging`, or `qa`. */
           environment?: "production" | "staging" | "qa";
           /**
            * Sets the URL for accessing your environment. Default: `""`
@@ -22738,7 +22738,6 @@ export interface operations {
           environment_url?: string;
           /**
            * Adds a new `inactive` status to all prior non-transient, non-production environment deployments with the same repository and `environment` name as the created status's deployment. An `inactive` status is only added to deployments that had a `success` state. Default: `true`
-           * **Note:** To add an `inactive` status to `production` environments, you must use the [`application/vnd.github.flash-preview+json`](https://docs.github.com/enterprise-server@3.2/rest/overview/api-previews#deployment-statuses) custom media type.
            * **Note:** This parameter requires you to use the [`application/vnd.github.ant-man-preview+json`](https://docs.github.com/enterprise-server@3.2/rest/overview/api-previews#enhanced-deployments) custom media type.
            */
           auto_inactive?: boolean;
@@ -22765,7 +22764,6 @@ export interface operations {
         };
       };
       404: components["responses"]["not_found"];
-      415: components["responses"]["preview_header_missing"];
     };
   };
   /**
