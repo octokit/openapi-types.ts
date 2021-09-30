@@ -6547,6 +6547,7 @@ export interface components {
         source_import?: components["schemas"]["rate-limit"];
         integration_manifest?: components["schemas"]["rate-limit"];
         code_scanning_upload?: components["schemas"]["rate-limit"];
+        actions_runner_registration?: components["schemas"]["rate-limit"];
       };
       rate: components["schemas"]["rate-limit"];
     };
@@ -7283,6 +7284,8 @@ export interface components {
     "code-scanning-analysis-analysis-key": string;
     /** Identifies the variable values associated with the environment in which the analysis that generated this alert instance was performed, such as the language that was analyzed. */
     "code-scanning-alert-environment": string;
+    /** Identifies the configuration under which the analysis was executed. Used to distinguish between multiple analyses for the same tool and commit, but performed on different languages or different parts of the code. */
+    "code-scanning-analysis-category": string;
     /** Describe a region within a file for the alert. */
     "code-scanning-alert-location": {
       path?: string;
@@ -7299,6 +7302,7 @@ export interface components {
       ref?: components["schemas"]["code-scanning-ref"];
       analysis_key?: components["schemas"]["code-scanning-analysis-analysis-key"];
       environment?: components["schemas"]["code-scanning-alert-environment"];
+      category?: components["schemas"]["code-scanning-analysis-category"];
       state?: components["schemas"]["code-scanning-alert-state"];
       commit_sha?: string;
       message?: {
@@ -7365,8 +7369,6 @@ export interface components {
     "code-scanning-analysis-commit-sha": string;
     /** Identifies the variable values associated with the environment in which this analysis was performed. */
     "code-scanning-analysis-environment": string;
-    /** Identifies the configuration under which the analysis was executed. Used to distinguish between multiple analyses for the same tool and commit, but performed on different languages or different parts of the code. */
-    "code-scanning-analysis-category": string;
     /** The time that the analysis was created in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
     "code-scanning-analysis-created-at": string;
     /** The REST API URL of the analysis resource. */
@@ -10346,7 +10348,7 @@ export interface operations {
       content: {
         "application/json": {
           /** The [distinguished name](https://www.ldap.com/ldap-dns-and-rdns) (DN) of the LDAP entry to map to a team. */
-          ldap_dn?: string;
+          ldap_dn: string;
         };
       };
     };
@@ -10387,7 +10389,7 @@ export interface operations {
       content: {
         "application/json": {
           /** The [distinguished name](https://www.ldap.com/ldap-dns-and-rdns) (DN) of the LDAP entry to map to a team. */
-          ldap_dn?: string;
+          ldap_dn: string;
         };
       };
     };
@@ -11203,7 +11205,7 @@ export interface operations {
       content: {
         "application/json": {
           /** The OAuth access token used to authenticate to the GitHub API. */
-          access_token?: string;
+          access_token: string;
         };
       };
     };
@@ -13960,7 +13962,7 @@ export interface operations {
       content: {
         "application/json": {
           /** Name of the runner group. */
-          name?: string;
+          name: string;
           /** Visibility of a runner group. You can select all repositories, select individual repositories, or all private repositories. Can be one of: `all`, `selected`, or `private`. */
           visibility?: "selected" | "all" | "private";
         };
@@ -14535,7 +14537,7 @@ export interface operations {
       content: {
         "application/json": {
           /** An array of repository ids that can access the organization secret. You can only provide a list of repository ids when the `visibility` is set to `selected`. You can add and remove individual repositories using the [Set selected repositories for an organization secret](https://docs.github.com/enterprise-server@3.0/rest/reference/actions#set-selected-repositories-for-an-organization-secret) and [Remove selected repository from an organization secret](https://docs.github.com/enterprise-server@3.0/rest/reference/actions#remove-selected-repository-from-an-organization-secret) endpoints. */
-          selected_repository_ids?: number[];
+          selected_repository_ids: number[];
         };
       };
     };

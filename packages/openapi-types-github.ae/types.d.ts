@@ -1274,11 +1274,7 @@ export interface paths {
     delete: operations["reactions/delete-legacy"];
   };
   "/repos/{owner}/{repo}": {
-    /**
-     * When you pass the `scarlet-witch-preview` media type, requests to get a repository will also return the repository's code of conduct if it can be detected from the repository's code of conduct file.
-     *
-     * The `parent` and `source` objects are present when the repository is a fork. `parent` is the repository this repository was forked from, `source` is the ultimate source for the network.
-     */
+    /** The `parent` and `source` objects are present when the repository is a fork. `parent` is the repository this repository was forked from, `source` is the ultimate source for the network. */
     get: operations["repos/get"];
     /**
      * Deleting a repository requires admin access. If OAuth is used, the `delete_repo` scope is required.
@@ -3963,6 +3959,14 @@ export interface paths {
      */
     post: operations["apps/create-content-attachment"];
   };
+  "/repos/{owner}/{repo}/community/code_of_conduct": {
+    /**
+     * Returns the contents of the repository's code of conduct file, if one is detected.
+     *
+     * A code of conduct is detected if there is a file named `CODE_OF_CONDUCT` in the root directory of the repository. GitHub detects which code of conduct it is using fuzzy matching.
+     */
+    post: operations["codes-of-conduct/get-for-repo"];
+  };
   "/applications/grants": {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
     get: operations["oauth-authorizations/list-grants"];
@@ -4298,10 +4302,6 @@ export interface paths {
   "/repos/{owner}/{repo}/branches/{branch}/rename": {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
     post: operations["repos/rename-branch"];
-  };
-  "/repos/{owner}/{repo}/community/code_of_conduct": {
-    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
-    get: operations["codes-of-conduct/get-for-repo"];
   };
   "/repos/{owner}/{repo}/community/profile": {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
@@ -6670,6 +6670,7 @@ export interface components {
         source_import?: components["schemas"]["rate-limit"];
         integration_manifest?: components["schemas"]["rate-limit"];
         code_scanning_upload?: components["schemas"]["rate-limit"];
+        actions_runner_registration?: components["schemas"]["rate-limit"];
       };
       rate: components["schemas"]["rate-limit"];
     };
@@ -7455,6 +7456,8 @@ export interface components {
     "code-scanning-analysis-analysis-key": string;
     /** Identifies the variable values associated with the environment in which the analysis that generated this alert instance was performed, such as the language that was analyzed. */
     "code-scanning-alert-environment": string;
+    /** Identifies the configuration under which the analysis was executed. Used to distinguish between multiple analyses for the same tool and commit, but performed on different languages or different parts of the code. */
+    "code-scanning-analysis-category": string;
     /** Describe a region within a file for the alert. */
     "code-scanning-alert-location": {
       path?: string;
@@ -7471,6 +7474,7 @@ export interface components {
       ref?: components["schemas"]["code-scanning-ref"];
       analysis_key?: components["schemas"]["code-scanning-analysis-analysis-key"];
       environment?: components["schemas"]["code-scanning-alert-environment"];
+      category?: components["schemas"]["code-scanning-analysis-category"];
       state?: components["schemas"]["code-scanning-alert-state"];
       commit_sha?: string;
       message?: {
@@ -7539,8 +7543,6 @@ export interface components {
     "code-scanning-analysis-commit-sha": string;
     /** Identifies the variable values associated with the environment in which this analysis was performed. */
     "code-scanning-analysis-environment": string;
-    /** Identifies the configuration under which the analysis was executed. Used to distinguish between multiple analyses for the same tool and commit, but performed on different languages or different parts of the code. */
-    "code-scanning-analysis-category": string;
     /** The time that the analysis was created in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
     "code-scanning-analysis-created-at": string;
     /** The REST API URL of the analysis resource. */
@@ -11121,7 +11123,7 @@ export interface operations {
       content: {
         "application/json": {
           /** The OAuth access token used to authenticate to the GitHub API. */
-          access_token?: string;
+          access_token: string;
         };
       };
     };
@@ -13319,7 +13321,7 @@ export interface operations {
       content: {
         "application/json": {
           /** Name of the runner group. */
-          name?: string;
+          name: string;
           /** Visibility of a runner group. You can select all repositories, select individual repositories, or all private repositories. Can be one of: `all`, `selected`, or `private`. */
           visibility?: "selected" | "all" | "private";
         };
@@ -13577,7 +13579,7 @@ export interface operations {
       content: {
         "application/json": {
           /** An array of repository ids that can access the organization secret. You can only provide a list of repository ids when the `visibility` is set to `selected`. You can add and remove individual repositories using the [Set selected repositories for an organization secret](https://docs.github.com/github-ae@latest/rest/reference/actions#set-selected-repositories-for-an-organization-secret) and [Remove selected repository from an organization secret](https://docs.github.com/github-ae@latest/rest/reference/actions#remove-selected-repository-from-an-organization-secret) endpoints. */
-          selected_repository_ids?: number[];
+          selected_repository_ids: number[];
         };
       };
     };
@@ -16011,11 +16013,7 @@ export interface operations {
       415: components["responses"]["preview_header_missing"];
     };
   };
-  /**
-   * When you pass the `scarlet-witch-preview` media type, requests to get a repository will also return the repository's code of conduct if it can be detected from the repository's code of conduct file.
-   *
-   * The `parent` and `source` objects are present when the repository is a fork. `parent` is the repository this repository was forked from, `source` is the ultimate source for the network.
-   */
+  /** The `parent` and `source` objects are present when the repository is a fork. `parent` is the repository this repository was forked from, `source` is the ultimate source for the network. */
   "repos/get": {
     parameters: {
       path: {
@@ -27770,6 +27768,27 @@ export interface operations {
       };
     };
   };
+  /**
+   * Returns the contents of the repository's code of conduct file, if one is detected.
+   *
+   * A code of conduct is detected if there is a file named `CODE_OF_CONDUCT` in the root directory of the repository. GitHub detects which code of conduct it is using fuzzy matching.
+   */
+  "codes-of-conduct/get-for-repo": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["code-of-conduct"];
+        };
+      };
+    };
+  };
   /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
   "oauth-authorizations/list-grants": {
     responses: {
@@ -28437,13 +28456,6 @@ export interface operations {
   };
   /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
   "repos/rename-branch": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
-  "codes-of-conduct/get-for-repo": {
     responses: {
       /** Not Implemented */
       501: unknown;
