@@ -470,13 +470,13 @@ export interface paths {
     /**
      * Lists all self-hosted runner groups for an enterprise.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     get: operations["enterprise-admin/list-self-hosted-runner-groups-for-enterprise"];
     /**
      * Creates a new self-hosted runner group for an enterprise.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     post: operations["enterprise-admin/create-self-hosted-runner-group-for-enterprise"];
   };
@@ -484,19 +484,19 @@ export interface paths {
     /**
      * Gets a specific self-hosted runner group for an enterprise.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     get: operations["enterprise-admin/get-self-hosted-runner-group-for-enterprise"];
     /**
      * Deletes a self-hosted runner group for an enterprise.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     delete: operations["enterprise-admin/delete-self-hosted-runner-group-from-enterprise"];
     /**
      * Updates the `name` and `visibility` of a self-hosted runner group in an enterprise.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     patch: operations["enterprise-admin/update-self-hosted-runner-group-for-enterprise"];
   };
@@ -504,13 +504,13 @@ export interface paths {
     /**
      * Lists the organizations with access to a self-hosted runner group.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     get: operations["enterprise-admin/list-org-access-to-self-hosted-runner-group-in-enterprise"];
     /**
      * Replaces the list of organizations that have access to a self-hosted runner configured in an enterprise.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     put: operations["enterprise-admin/set-org-access-to-self-hosted-runner-group-in-enterprise"];
   };
@@ -518,13 +518,13 @@ export interface paths {
     /**
      * Adds an organization to the list of selected organizations that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an enterprise](#create-a-self-hosted-runner-group-for-an-enterprise)."
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     put: operations["enterprise-admin/add-org-access-to-self-hosted-runner-group-in-enterprise"];
     /**
      * Removes an organization from the list of selected organizations that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an enterprise](#create-a-self-hosted-runner-group-for-an-enterprise)."
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     delete: operations["enterprise-admin/remove-org-access-to-self-hosted-runner-group-in-enterprise"];
   };
@@ -532,13 +532,13 @@ export interface paths {
     /**
      * Lists the self-hosted runners that are in a specific enterprise group.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     get: operations["enterprise-admin/list-self-hosted-runners-in-group-for-enterprise"];
     /**
      * Replaces the list of self-hosted runners that are part of an enterprise runner group.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     put: operations["enterprise-admin/set-self-hosted-runners-in-group-for-enterprise"];
   };
@@ -546,14 +546,14 @@ export interface paths {
     /**
      * Adds a self-hosted runner to a runner group configured in an enterprise.
      *
-     * You must authenticate using an access token with the `admin:enterprise`
+     * You must authenticate using an access token with the `manage_runners:enterprise`
      * scope to use this endpoint.
      */
     put: operations["enterprise-admin/add-self-hosted-runner-to-group-for-enterprise"];
     /**
      * Removes a self-hosted runner from a group configured in an enterprise. The runner is then returned to the default group.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     delete: operations["enterprise-admin/remove-self-hosted-runner-from-group-for-enterprise"];
   };
@@ -561,7 +561,7 @@ export interface paths {
     /**
      * Lists all self-hosted runners configured for an enterprise.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     get: operations["enterprise-admin/list-self-hosted-runners-for-enterprise"];
   };
@@ -569,7 +569,7 @@ export interface paths {
     /**
      * Lists binaries for the runner application that you can download and run.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     get: operations["enterprise-admin/list-runner-applications-for-enterprise"];
   };
@@ -577,7 +577,7 @@ export interface paths {
     /**
      * Returns a token that you can pass to the `config` script. The token expires after one hour.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      *
      * #### Example using registration token
      *
@@ -593,7 +593,7 @@ export interface paths {
     /**
      * Returns a token that you can pass to the `config` script to remove a self-hosted runner from an enterprise. The token expires after one hour.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      *
      * #### Example using remove token
      *
@@ -610,13 +610,13 @@ export interface paths {
     /**
      * Gets a specific self-hosted runner configured in an enterprise.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     get: operations["enterprise-admin/get-self-hosted-runner-for-enterprise"];
     /**
      * Forces the removal of a self-hosted runner from an enterprise. You can use this endpoint to completely remove the runner when the machine you were using no longer exists.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     delete: operations["enterprise-admin/delete-self-hosted-runner-from-enterprise"];
   };
@@ -1815,11 +1815,7 @@ export interface paths {
     post: operations["actions/review-pending-deployments-for-run"];
   };
   "/repos/{owner}/{repo}/actions/runs/{run_id}/rerun": {
-    /**
-     * Re-runs your workflow run using its `id`. You must authenticate using
-     * an access token with the `repo` scope to use this endpoint. GitHub Apps must have
-     * the `actions:write` permission to use this endpoint.
-     */
+    /** Re-runs your workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint. */
     post: operations["actions/re-run-workflow"];
   };
   "/repos/{owner}/{repo}/actions/secrets": {
@@ -4280,11 +4276,11 @@ export interface paths {
   };
   "/user/emails": {
     /** Lists all of your email addresses, and specifies which one is visible to the public. This endpoint is accessible with the `user:email` scope. */
-    get: operations["users/list-emails-for-authenticated"];
+    get: operations["users/list-emails-for-authenticated-user"];
     /** This endpoint is accessible with the `user` scope. */
-    post: operations["users/add-email-for-authenticated"];
+    post: operations["users/add-email-for-authenticated-user"];
     /** This endpoint is accessible with the `user` scope. */
-    delete: operations["users/delete-email-for-authenticated"];
+    delete: operations["users/delete-email-for-authenticated-user"];
   };
   "/user/followers": {
     /** Lists the people following the authenticated user. */
@@ -4292,7 +4288,7 @@ export interface paths {
   };
   "/user/following": {
     /** Lists the people who the authenticated user follows. */
-    get: operations["users/list-followed-by-authenticated"];
+    get: operations["users/list-followed-by-authenticated-user"];
   };
   "/user/following/{username}": {
     get: operations["users/check-person-is-followed-by-authenticated"];
@@ -4307,15 +4303,15 @@ export interface paths {
   };
   "/user/gpg_keys": {
     /** Lists the current user's GPG keys. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:gpg_key` [scope](https://docs.github.com/enterprise-server@3.2/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-    get: operations["users/list-gpg-keys-for-authenticated"];
+    get: operations["users/list-gpg-keys-for-authenticated-user"];
     /** Adds a GPG key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or OAuth with at least `write:gpg_key` [scope](https://docs.github.com/enterprise-server@3.2/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-    post: operations["users/create-gpg-key-for-authenticated"];
+    post: operations["users/create-gpg-key-for-authenticated-user"];
   };
   "/user/gpg_keys/{gpg_key_id}": {
     /** View extended details for a single GPG key. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:gpg_key` [scope](https://docs.github.com/enterprise-server@3.2/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-    get: operations["users/get-gpg-key-for-authenticated"];
+    get: operations["users/get-gpg-key-for-authenticated-user"];
     /** Removes a GPG key from the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `admin:gpg_key` [scope](https://docs.github.com/enterprise-server@3.2/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-    delete: operations["users/delete-gpg-key-for-authenticated"];
+    delete: operations["users/delete-gpg-key-for-authenticated-user"];
   };
   "/user/installations": {
     /**
@@ -4347,13 +4343,13 @@ export interface paths {
      *
      * You must use a personal access token (which you can create via the [command line](https://docs.github.com/enterprise-server@3.2/github/authenticating-to-github/creating-a-personal-access-token) or [Basic Authentication](https://docs.github.com/enterprise-server@3.2/rest/overview/other-authentication-methods#basic-authentication)) to access this endpoint.
      */
-    put: operations["apps/add-repo-to-installation"];
+    put: operations["apps/add-repo-to-installation-for-authenticated-user"];
     /**
      * Remove a single repository from an installation. The authenticated user must have admin access to the repository.
      *
      * You must use a personal access token (which you can create via the [command line](https://docs.github.com/enterprise-server@3.2/github/authenticating-to-github/creating-a-personal-access-token) or [Basic Authentication](https://docs.github.com/enterprise-server@3.2/rest/overview/other-authentication-methods#basic-authentication)) to access this endpoint.
      */
-    delete: operations["apps/remove-repo-from-installation"];
+    delete: operations["apps/remove-repo-from-installation-for-authenticated-user"];
   };
   "/user/issues": {
     /**
@@ -4368,15 +4364,15 @@ export interface paths {
   };
   "/user/keys": {
     /** Lists the public SSH keys for the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:public_key` [scope](https://docs.github.com/enterprise-server@3.2/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-    get: operations["users/list-public-ssh-keys-for-authenticated"];
+    get: operations["users/list-public-ssh-keys-for-authenticated-user"];
     /** Adds a public SSH key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or OAuth with at least `write:public_key` [scope](https://docs.github.com/enterprise-server@3.2/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-    post: operations["users/create-public-ssh-key-for-authenticated"];
+    post: operations["users/create-public-ssh-key-for-authenticated-user"];
   };
   "/user/keys/{key_id}": {
     /** View extended details for a single public SSH key. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:public_key` [scope](https://docs.github.com/enterprise-server@3.2/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-    get: operations["users/get-public-ssh-key-for-authenticated"];
+    get: operations["users/get-public-ssh-key-for-authenticated-user"];
     /** Removes a public SSH key from the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `admin:public_key` [scope](https://docs.github.com/enterprise-server@3.2/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-    delete: operations["users/delete-public-ssh-key-for-authenticated"];
+    delete: operations["users/delete-public-ssh-key-for-authenticated-user"];
   };
   "/user/memberships/orgs": {
     get: operations["orgs/list-memberships-for-authenticated-user"];
@@ -4400,7 +4396,7 @@ export interface paths {
   };
   "/user/public_emails": {
     /** Lists your publicly visible email address, which you can set with the [Set primary email visibility for the authenticated user](https://docs.github.com/enterprise-server@3.2/rest/reference/users#set-primary-email-visibility-for-the-authenticated-user) endpoint. This endpoint is accessible with the `user:email` scope. */
-    get: operations["users/list-public-emails-for-authenticated"];
+    get: operations["users/list-public-emails-for-authenticated-user"];
   };
   "/user/repos": {
     /**
@@ -4426,8 +4422,8 @@ export interface paths {
     get: operations["repos/list-invitations-for-authenticated-user"];
   };
   "/user/repository_invitations/{invitation_id}": {
-    delete: operations["repos/decline-invitation"];
-    patch: operations["repos/accept-invitation"];
+    delete: operations["repos/decline-invitation-for-authenticated-user"];
+    patch: operations["repos/accept-invitation-for-authenticated-user"];
   };
   "/user/starred": {
     /**
@@ -4817,9 +4813,13 @@ export interface paths {
     /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
     post: operations["actions/approve-workflow-run"];
   };
-  "/repos/{owner}/{repo}/actions/runs/{run_id}/retry": {
+  "/repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}": {
     /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
-    post: operations["actions/retry-workflow"];
+    get: operations["actions/get-workflow-run-attempt"];
+  };
+  "/repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/logs": {
+    /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
+    get: operations["actions/download-workflow-run-attempt-logs"];
   };
   "/repos/{owner}/{repo}/actions/runs/{run_id}/timing": {
     /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
@@ -4846,6 +4846,10 @@ export interface paths {
     put: operations["repos/enable-automated-security-fixes"];
     /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
     delete: operations["repos/disable-automated-security-fixes"];
+  };
+  "/repos/{owner}/{repo}/check-runs/{check_run_id}/rerequest": {
+    /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
+    post: operations["checks/rerequest-run"];
   };
   "/repos/{owner}/{repo}/community/profile": {
     /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
@@ -4898,6 +4902,10 @@ export interface paths {
   "/repos/{owner}/{repo}/pages/health": {
     /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
     get: operations["repos/get-pages-health-check"];
+  };
+  "/repos/{owner}/{repo}/releases/generate-notes": {
+    /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
+    post: operations["repos/generate-release-notes"];
   };
   "/repos/{owner}/{repo}/traffic/clones": {
     /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
@@ -4983,7 +4991,7 @@ export interface paths {
   };
   "/user/blocks": {
     /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
-    get: operations["users/list-blocked-by-authenticated"];
+    get: operations["users/list-blocked-by-authenticated-user"];
   };
   "/user/blocks/{username}": {
     /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
@@ -4995,7 +5003,7 @@ export interface paths {
   };
   "/user/email/visibility": {
     /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
-    patch: operations["users/set-primary-email-visibility-for-authenticated"];
+    patch: operations["users/set-primary-email-visibility-for-authenticated-user"];
   };
   "/user/interaction-limits": {
     /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
@@ -5035,7 +5043,7 @@ export interface paths {
   };
   "/user/migrations/{migration_id}/repositories": {
     /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
-    get: operations["migrations/list-repos-for-user"];
+    get: operations["migrations/list-repos-for-authenticated-user"];
   };
   "/user/packages": {
     /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
@@ -5167,7 +5175,7 @@ export interface components {
       permission?: string;
       members_url?: string;
       repositories_url?: string;
-      parent?: { [key: string]: unknown } | null;
+      parent?: unknown | null;
     };
     /** Ldap Private User */
     "ldap-mapping-user": {
@@ -5565,13 +5573,13 @@ export interface components {
       url?: string;
       request: {
         /** The request headers sent with the webhook delivery. */
-        headers: { [key: string]: any } | null;
+        headers: { [key: string]: unknown } | null;
         /** The webhook payload. */
-        payload: { [key: string]: any } | null;
+        payload: { [key: string]: unknown } | null;
       };
       response: {
         /** The response headers received when the delivery was made. */
-        headers: { [key: string]: any } | null;
+        headers: { [key: string]: unknown } | null;
         /** The response payload received. */
         payload: string | null;
       };
@@ -6310,8 +6318,8 @@ export interface components {
       comments_url: string;
       owner?: components["schemas"]["simple-user"];
       truncated?: boolean;
-      forks?: { [key: string]: unknown }[];
-      history?: { [key: string]: unknown }[];
+      forks?: unknown[];
+      history?: unknown[];
     };
     /** Public User */
     "public-user": {
@@ -6412,8 +6420,8 @@ export interface components {
         comments_url: string;
         owner?: components["schemas"]["nullable-simple-user"];
         truncated?: boolean;
-        forks?: { [key: string]: unknown }[];
-        history?: { [key: string]: unknown }[];
+        forks?: unknown[];
+        history?: unknown[];
       } | null;
       url?: string;
       forks_url?: string;
@@ -6968,13 +6976,13 @@ export interface components {
       actor_location?: {
         country_name?: string;
       };
-      data?: { [key: string]: any };
+      data?: { [key: string]: unknown };
       org_id?: number;
       /** The username of the account being blocked. */
       blocked_user?: string;
       business?: string;
-      config?: any[];
-      config_was?: any[];
+      config?: unknown[];
+      config_was?: unknown[];
       content_type?: string;
       /** The time the audit log event was recorded, given as a [Unix timestamp](http://en.wikipedia.org/wiki/Unix_time). */
       created_at?: number;
@@ -6982,8 +6990,8 @@ export interface components {
       /** A unique identifier for an audit event. */
       _document_id?: string;
       emoji?: string;
-      events?: any[];
-      events_were?: any[];
+      events?: unknown[];
+      events_were?: unknown[];
       explanation?: string;
       fingerprint?: string;
       hook_id?: number;
@@ -7554,6 +7562,8 @@ export interface components {
       /** The id of the associated workflow run. */
       run_id: number;
       run_url: string;
+      /** Attempt number of the associated workflow run, 1 for first attempt and higher if the workflow was re-run. */
+      run_attempt?: number;
       node_id: string;
       /** The SHA of the commit that is being run. */
       head_sha: string;
@@ -7646,7 +7656,7 @@ export interface components {
       head_sha: string;
       /** The auto incrementing run number for the workflow run. */
       run_number: number;
-      /** Attempt number of the run, 1 for first attempt and higher if the workflow was retried. */
+      /** Attempt number of the run, 1 for first attempt and higher if the workflow was re-run. */
       run_attempt?: number;
       event: string;
       status: string | null;
@@ -7659,6 +7669,8 @@ export interface components {
       pull_requests: components["schemas"]["pull-request-minimal"][] | null;
       created_at: string;
       updated_at: string;
+      /** The start time of the latest run. Resets on re-run. */
+      run_started_at?: string;
       /** The URL to the jobs for the workflow run. */
       jobs_url: string;
       /** The URL to download the logs for the workflow run. */
@@ -7739,7 +7751,7 @@ export interface components {
       ref: string;
       /** Parameter to specify a task to execute */
       task: string;
-      payload: { [key: string]: any } | string;
+      payload: { [key: string]: unknown } | string;
       original_environment?: string;
       /** Name for the target deployment environment. */
       environment: string;
@@ -8297,7 +8309,6 @@ export interface components {
       created_at: components["schemas"]["alert-created-at"];
       url: components["schemas"]["alert-url"];
       html_url: components["schemas"]["alert-html-url"];
-      instances?: { [key: string]: unknown };
       instances_url: components["schemas"]["alert-instances-url"];
       state: components["schemas"]["code-scanning-alert-state"];
       dismissed_by: components["schemas"]["nullable-simple-user"];
@@ -8306,6 +8317,7 @@ export interface components {
       rule: components["schemas"]["code-scanning-alert-rule"];
       tool: components["schemas"]["code-scanning-analysis-tool"];
       most_recent_instance: components["schemas"]["code-scanning-alert-instance"];
+      instances?: unknown;
     };
     /** Sets the state of the code scanning alert. Can be one of `open` or `dismissed`. You must provide `dismissed_reason` when you set the state to `dismissed`. */
     "code-scanning-alert-set-state": "open" | "dismissed";
@@ -9647,7 +9659,7 @@ export interface components {
         | "dns_changed";
       description: string;
       /** Array of the domain set and its alternate name (if it is configured) */
-      domains: any[];
+      domains: unknown[];
       expires_at?: string;
     };
     /** The configuration for GitHub Pages for a repository. */
@@ -9846,6 +9858,8 @@ export interface components {
           master_branch?: string;
           archived: boolean;
           disabled: boolean;
+          /** The repository visibility: public, private, or internal. */
+          visibility?: string;
           mirror_url: string | null;
           open_issues: number;
           open_issues_count: number;
@@ -9878,6 +9892,7 @@ export interface components {
           created_at: string;
           updated_at: string;
           allow_forking?: boolean;
+          is_template?: boolean;
         } | null;
         sha: string;
         user: {
@@ -9928,6 +9943,7 @@ export interface components {
           hooks_url: string;
           html_url: string;
           id: number;
+          is_template?: boolean;
           node_id: string;
           issue_comment_url: string;
           issue_events_url: string;
@@ -9985,6 +10001,8 @@ export interface components {
           master_branch?: string;
           archived: boolean;
           disabled: boolean;
+          /** The repository visibility: public, private, or internal. */
+          visibility?: string;
           mirror_url: string | null;
           open_issues: number;
           open_issues_count: number;
@@ -10465,6 +10483,8 @@ export interface components {
       archived: boolean;
       /** Returns whether or not this repository disabled. */
       disabled: boolean;
+      /** The repository visibility: public, private, or internal. */
+      visibility?: string;
       license: components["schemas"]["nullable-license-simple"];
       permissions?: {
         admin: boolean;
@@ -10481,6 +10501,7 @@ export interface components {
       allow_auto_merge?: boolean;
       delete_branch_on_merge?: boolean;
       allow_forking?: boolean;
+      is_template?: boolean;
     };
     /** Topic Search Result Item */
     "topic-search-result-item": {
@@ -10614,13 +10635,13 @@ export interface components {
         ldap?: {
           host?: string | null;
           port?: number;
-          base?: { [key: string]: unknown }[];
+          base?: unknown[];
           uid?: string | null;
           bind_dn?: string | null;
           password?: string | null;
           method?: string;
           search_strategy?: string;
-          user_groups?: { [key: string]: unknown }[];
+          user_groups?: unknown[];
           admin_group?: string | null;
           virtual_attribute_enabled?: boolean;
           recursive_group_search?: boolean;
@@ -10785,8 +10806,8 @@ export interface components {
         primary_key_id?: number;
         key_id?: string;
         public_key?: string;
-        emails?: { [key: string]: unknown }[];
-        subkeys?: { [key: string]: unknown }[];
+        emails?: unknown[];
+        subkeys?: unknown[];
         can_sign?: boolean;
         can_encrypt_comms?: boolean;
         can_encrypt_storage?: boolean;
@@ -11730,9 +11751,9 @@ export interface operations {
           /** The script that the hook runs. */
           script: string;
           /** The GitHub repository where the script is kept. */
-          script_repository: { [key: string]: any };
+          script_repository: { [key: string]: unknown };
           /** The pre-receive environment where the script is executed. */
-          environment: { [key: string]: any };
+          environment: { [key: string]: unknown };
           /** The state of enforcement for this hook. default: `disabled` */
           enforcement?: string;
           /** Whether enforcement can be overridden at the org or repo level. default: `false` */
@@ -11792,9 +11813,9 @@ export interface operations {
           /** The script that the hook runs. */
           script?: string;
           /** The GitHub repository where the script is kept. */
-          script_repository?: { [key: string]: any };
+          script_repository?: { [key: string]: unknown };
           /** The pre-receive environment where the script is executed. */
-          environment?: { [key: string]: any };
+          environment?: { [key: string]: unknown };
           /** The state of enforcement for this hook. */
           enforcement?: string;
           /** Whether enforcement can be overridden at the org or repo level. */
@@ -11971,7 +11992,7 @@ export interface operations {
               client_secret: string;
               webhook_secret: string | null;
               pem: string;
-            } & { [key: string]: any });
+            } & { [key: string]: unknown });
         };
       };
       404: components["responses"]["not_found"];
@@ -13179,7 +13200,7 @@ export interface operations {
   /**
    * Lists all self-hosted runner groups for an enterprise.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/list-self-hosted-runner-groups-for-enterprise": {
     parameters: {
@@ -13209,7 +13230,7 @@ export interface operations {
   /**
    * Creates a new self-hosted runner group for an enterprise.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/create-self-hosted-runner-group-for-enterprise": {
     parameters: {
@@ -13244,7 +13265,7 @@ export interface operations {
   /**
    * Gets a specific self-hosted runner group for an enterprise.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/get-self-hosted-runner-group-for-enterprise": {
     parameters: {
@@ -13267,7 +13288,7 @@ export interface operations {
   /**
    * Deletes a self-hosted runner group for an enterprise.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/delete-self-hosted-runner-group-from-enterprise": {
     parameters: {
@@ -13286,7 +13307,7 @@ export interface operations {
   /**
    * Updates the `name` and `visibility` of a self-hosted runner group in an enterprise.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/update-self-hosted-runner-group-for-enterprise": {
     parameters: {
@@ -13319,7 +13340,7 @@ export interface operations {
   /**
    * Lists the organizations with access to a self-hosted runner group.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/list-org-access-to-self-hosted-runner-group-in-enterprise": {
     parameters: {
@@ -13351,7 +13372,7 @@ export interface operations {
   /**
    * Replaces the list of organizations that have access to a self-hosted runner configured in an enterprise.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/set-org-access-to-self-hosted-runner-group-in-enterprise": {
     parameters: {
@@ -13378,7 +13399,7 @@ export interface operations {
   /**
    * Adds an organization to the list of selected organizations that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an enterprise](#create-a-self-hosted-runner-group-for-an-enterprise)."
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/add-org-access-to-self-hosted-runner-group-in-enterprise": {
     parameters: {
@@ -13399,7 +13420,7 @@ export interface operations {
   /**
    * Removes an organization from the list of selected organizations that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an enterprise](#create-a-self-hosted-runner-group-for-an-enterprise)."
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/remove-org-access-to-self-hosted-runner-group-in-enterprise": {
     parameters: {
@@ -13420,7 +13441,7 @@ export interface operations {
   /**
    * Lists the self-hosted runners that are in a specific enterprise group.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/list-self-hosted-runners-in-group-for-enterprise": {
     parameters: {
@@ -13453,7 +13474,7 @@ export interface operations {
   /**
    * Replaces the list of self-hosted runners that are part of an enterprise runner group.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/set-self-hosted-runners-in-group-for-enterprise": {
     parameters: {
@@ -13480,7 +13501,7 @@ export interface operations {
   /**
    * Adds a self-hosted runner to a runner group configured in an enterprise.
    *
-   * You must authenticate using an access token with the `admin:enterprise`
+   * You must authenticate using an access token with the `manage_runners:enterprise`
    * scope to use this endpoint.
    */
   "enterprise-admin/add-self-hosted-runner-to-group-for-enterprise": {
@@ -13502,7 +13523,7 @@ export interface operations {
   /**
    * Removes a self-hosted runner from a group configured in an enterprise. The runner is then returned to the default group.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/remove-self-hosted-runner-from-group-for-enterprise": {
     parameters: {
@@ -13523,7 +13544,7 @@ export interface operations {
   /**
    * Lists all self-hosted runners configured for an enterprise.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/list-self-hosted-runners-for-enterprise": {
     parameters: {
@@ -13554,7 +13575,7 @@ export interface operations {
   /**
    * Lists binaries for the runner application that you can download and run.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/list-runner-applications-for-enterprise": {
     parameters: {
@@ -13575,7 +13596,7 @@ export interface operations {
   /**
    * Returns a token that you can pass to the `config` script. The token expires after one hour.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    *
    * #### Example using registration token
    *
@@ -13604,7 +13625,7 @@ export interface operations {
   /**
    * Returns a token that you can pass to the `config` script to remove a self-hosted runner from an enterprise. The token expires after one hour.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    *
    * #### Example using remove token
    *
@@ -13634,7 +13655,7 @@ export interface operations {
   /**
    * Gets a specific self-hosted runner configured in an enterprise.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/get-self-hosted-runner-for-enterprise": {
     parameters: {
@@ -13657,7 +13678,7 @@ export interface operations {
   /**
    * Forces the removal of a self-hosted runner from an enterprise. You can use this endpoint to completely remove the runner when the machine you were using no longer exists.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/delete-self-hosted-runner-from-enterprise": {
     parameters: {
@@ -16629,10 +16650,7 @@ export interface operations {
           homepage?: string;
           /** Whether the repository is private. */
           private?: boolean;
-          /**
-           * Can be `public` or `private`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `visibility` can also be `internal`. Note: For GitHub Enterprise Server and GitHub AE, this endpoint will only list repositories available to all users on the enterprise. For more information, see "[Creating an internal repository](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-repository-visibility#about-internal-repositories)" in the GitHub Help documentation.
-           * The `visibility` parameter overrides the `private` parameter when you use both parameters with the `nebula-preview` preview header.
-           */
+          /** Can be `public` or `private`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `visibility` can also be `internal`. Note: For GitHub Enterprise Server and GitHub AE, this endpoint will only list repositories available to all users on the enterprise. For more information, see "[Creating an internal repository](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-repository-visibility#about-internal-repositories)" in the GitHub Help documentation. */
           visibility?: "public" | "private" | "visibility" | "internal";
           /** Either `true` to enable issues for this repository or `false` to disable them. */
           has_issues?: boolean;
@@ -18419,7 +18437,7 @@ export interface operations {
            * **Note**: You will get a `422` error if the organization restricts [changing repository visibility](https://help.github.com/articles/repository-permission-levels-for-an-organization#changing-the-visibility-of-repositories) to organization owners and a non-owner tries to change the value of private. **Note**: You will get a `422` error if the organization restricts [changing repository visibility](https://help.github.com/articles/repository-permission-levels-for-an-organization#changing-the-visibility-of-repositories) to organization owners and a non-owner tries to change the value of private.
            */
           private?: boolean;
-          /** Can be `public` or `private`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `visibility` can also be `internal`. The `visibility` parameter overrides the `private` parameter when you use both along with the `nebula-preview` preview header. */
+          /** Can be `public` or `private`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `visibility` can also be `internal`." */
           visibility?: "public" | "private" | "visibility" | "internal";
           /** Specify which security and analysis features to enable or disable. For example, to enable GitHub Advanced Security, use this data in the body of the PATCH request: `{"security_and_analysis": {"advanced_security": {"status": "enabled"}}}`. If you have admin permissions for a private repository covered by an Advanced Security license, you can check which security and analysis features are currently enabled by using a `GET /repos/{owner}/{repo}` request. */
           security_and_analysis?: {
@@ -19100,11 +19118,7 @@ export interface operations {
       };
     };
   };
-  /**
-   * Re-runs your workflow run using its `id`. You must authenticate using
-   * an access token with the `repo` scope to use this endpoint. GitHub Apps must have
-   * the `actions:write` permission to use this endpoint.
-   */
+  /** Re-runs your workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint. */
   "actions/re-run-workflow": {
     parameters: {
       path: {
@@ -20583,10 +20597,10 @@ export interface operations {
               status: "completed";
             } & {
               conclusion: unknown;
-            } & { [key: string]: any })
+            } & { [key: string]: unknown })
           | ({
               status?: "queued" | "in_progress";
-            } & { [key: string]: any })
+            } & { [key: string]: unknown })
         ) & {
           /** The name of the check. For example, "code-coverage". */
           name: string;
@@ -20719,12 +20733,12 @@ export interface operations {
             status?: "completed";
           } & {
             conclusion: unknown;
-          } & { [key: string]: any }
+          } & { [key: string]: unknown }
         > &
           Partial<
             {
               status?: "queued" | "in_progress";
-            } & { [key: string]: any }
+            } & { [key: string]: unknown }
           >) & {
           /** The name of the check. For example, "code-coverage". */
           name?: string;
@@ -22550,7 +22564,7 @@ export interface operations {
           auto_merge?: boolean;
           /** The [status](https://docs.github.com/enterprise-server@3.2/rest/reference/repos#statuses) contexts to verify against commit status checks. If you omit this parameter, GitHub verifies all unique contexts before creating a deployment. To bypass checking entirely, pass an empty array. Defaults to all unique contexts. */
           required_contexts?: string[];
-          payload?: { [key: string]: any } | string;
+          payload?: { [key: string]: unknown } | string;
           /** Name for the target deployment environment (e.g., `production`, `staging`, `qa`). */
           environment?: string;
           /** Short description of the deployment. */
@@ -22755,7 +22769,7 @@ export interface operations {
           /** A custom webhook event name. */
           event_type: string;
           /** JSON payload with extra information about the webhook event that your action or worklow may use. */
-          client_payload?: { [key: string]: any };
+          client_payload?: { [key: string]: unknown };
         };
       };
     };
@@ -25327,7 +25341,6 @@ export interface operations {
         };
       };
       409: components["responses"]["conflict"];
-      415: components["responses"]["preview_header_missing"];
       422: components["responses"]["validation_failed"];
     };
     requestBody: {
@@ -25355,7 +25368,6 @@ export interface operations {
       /** Response */
       204: never;
       404: components["responses"]["not_found"];
-      415: components["responses"]["preview_header_missing"];
       422: components["responses"]["validation_failed"];
     };
   };
@@ -26967,8 +26979,10 @@ export interface operations {
       query: {
         /** Set to `open` or `resolved` to only list secret scanning alerts in a specific state. */
         state?: "open" | "resolved";
-        /** A comma separated list of secret types to return. By default all secret types are returned. See "[About secret scanning for private repositories](https://docs.github.com/enterprise-server@3.2/code-security/secret-security/about-secret-scanning#about-secret-scanning-for-private-repositories)" for a complete list of secret types (API slug). */
+        /** A comma-separated list of secret types to return. By default all secret types are returned. See "[About secret scanning for private repositories](https://docs.github.com/enterprise-server@3.2/code-security/secret-security/about-secret-scanning#about-secret-scanning-for-private-repositories)" for a complete list of secret types (API slug). */
         secret_type?: string;
+        /** A comma-separated list of resolutions. Only secret scanning alerts with one of these resolutions are listed. Valid resolutions are `false_positive`, `wont_fix`, `revoked`, `pattern_edited`, `pattern_deleted` or `used_in_tests`. */
+        resolution?: string;
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
         /** Results per page (max 100) */
@@ -27008,6 +27022,7 @@ export interface operations {
           "application/json": components["schemas"]["secret-scanning-alert"];
         };
       };
+      304: components["responses"]["not_modified"];
       /** Repository is public, or secret scanning is disabled for the repository, or the resource is not found */
       404: unknown;
       503: components["responses"]["service_unavailable"];
@@ -27802,7 +27817,6 @@ export interface operations {
         };
       };
       304: components["responses"]["not_modified"];
-      415: components["responses"]["preview_header_missing"];
     };
   };
   /**
@@ -29252,7 +29266,7 @@ export interface operations {
     };
   };
   /** Lists all of your email addresses, and specifies which one is visible to the public. This endpoint is accessible with the `user:email` scope. */
-  "users/list-emails-for-authenticated": {
+  "users/list-emails-for-authenticated-user": {
     parameters: {
       query: {
         /** Results per page (max 100) */
@@ -29276,7 +29290,7 @@ export interface operations {
     };
   };
   /** This endpoint is accessible with the `user` scope. */
-  "users/add-email-for-authenticated": {
+  "users/add-email-for-authenticated-user": {
     parameters: {};
     responses: {
       /** Response */
@@ -29301,7 +29315,7 @@ export interface operations {
     };
   };
   /** This endpoint is accessible with the `user` scope. */
-  "users/delete-email-for-authenticated": {
+  "users/delete-email-for-authenticated-user": {
     parameters: {};
     responses: {
       /** Response */
@@ -29345,7 +29359,7 @@ export interface operations {
     };
   };
   /** Lists the people who the authenticated user follows. */
-  "users/list-followed-by-authenticated": {
+  "users/list-followed-by-authenticated-user": {
     parameters: {
       query: {
         /** Results per page (max 100) */
@@ -29424,7 +29438,7 @@ export interface operations {
     };
   };
   /** Lists the current user's GPG keys. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:gpg_key` [scope](https://docs.github.com/enterprise-server@3.2/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-  "users/list-gpg-keys-for-authenticated": {
+  "users/list-gpg-keys-for-authenticated-user": {
     parameters: {
       query: {
         /** Results per page (max 100) */
@@ -29448,7 +29462,7 @@ export interface operations {
     };
   };
   /** Adds a GPG key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or OAuth with at least `write:gpg_key` [scope](https://docs.github.com/enterprise-server@3.2/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-  "users/create-gpg-key-for-authenticated": {
+  "users/create-gpg-key-for-authenticated-user": {
     parameters: {};
     responses: {
       /** Response */
@@ -29473,7 +29487,7 @@ export interface operations {
     };
   };
   /** View extended details for a single GPG key. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:gpg_key` [scope](https://docs.github.com/enterprise-server@3.2/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-  "users/get-gpg-key-for-authenticated": {
+  "users/get-gpg-key-for-authenticated-user": {
     parameters: {
       path: {
         /** gpg_key_id parameter */
@@ -29494,7 +29508,7 @@ export interface operations {
     };
   };
   /** Removes a GPG key from the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `admin:gpg_key` [scope](https://docs.github.com/enterprise-server@3.2/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-  "users/delete-gpg-key-for-authenticated": {
+  "users/delete-gpg-key-for-authenticated-user": {
     parameters: {
       path: {
         /** gpg_key_id parameter */
@@ -29590,7 +29604,7 @@ export interface operations {
    *
    * You must use a personal access token (which you can create via the [command line](https://docs.github.com/enterprise-server@3.2/github/authenticating-to-github/creating-a-personal-access-token) or [Basic Authentication](https://docs.github.com/enterprise-server@3.2/rest/overview/other-authentication-methods#basic-authentication)) to access this endpoint.
    */
-  "apps/add-repo-to-installation": {
+  "apps/add-repo-to-installation-for-authenticated-user": {
     parameters: {
       path: {
         /** installation_id parameter */
@@ -29611,7 +29625,7 @@ export interface operations {
    *
    * You must use a personal access token (which you can create via the [command line](https://docs.github.com/enterprise-server@3.2/github/authenticating-to-github/creating-a-personal-access-token) or [Basic Authentication](https://docs.github.com/enterprise-server@3.2/rest/overview/other-authentication-methods#basic-authentication)) to access this endpoint.
    */
-  "apps/remove-repo-from-installation": {
+  "apps/remove-repo-from-installation-for-authenticated-user": {
     parameters: {
       path: {
         /** installation_id parameter */
@@ -29682,7 +29696,7 @@ export interface operations {
     };
   };
   /** Lists the public SSH keys for the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:public_key` [scope](https://docs.github.com/enterprise-server@3.2/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-  "users/list-public-ssh-keys-for-authenticated": {
+  "users/list-public-ssh-keys-for-authenticated-user": {
     parameters: {
       query: {
         /** Results per page (max 100) */
@@ -29706,7 +29720,7 @@ export interface operations {
     };
   };
   /** Adds a public SSH key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or OAuth with at least `write:public_key` [scope](https://docs.github.com/enterprise-server@3.2/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-  "users/create-public-ssh-key-for-authenticated": {
+  "users/create-public-ssh-key-for-authenticated-user": {
     parameters: {};
     responses: {
       /** Response */
@@ -29733,7 +29747,7 @@ export interface operations {
     };
   };
   /** View extended details for a single public SSH key. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:public_key` [scope](https://docs.github.com/enterprise-server@3.2/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-  "users/get-public-ssh-key-for-authenticated": {
+  "users/get-public-ssh-key-for-authenticated-user": {
     parameters: {
       path: {
         /** key_id parameter */
@@ -29754,7 +29768,7 @@ export interface operations {
     };
   };
   /** Removes a public SSH key from the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `admin:public_key` [scope](https://docs.github.com/enterprise-server@3.2/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-  "users/delete-public-ssh-key-for-authenticated": {
+  "users/delete-public-ssh-key-for-authenticated-user": {
     parameters: {
       path: {
         /** key_id parameter */
@@ -29894,7 +29908,7 @@ export interface operations {
     };
   };
   /** Lists your publicly visible email address, which you can set with the [Set primary email visibility for the authenticated user](https://docs.github.com/enterprise-server@3.2/rest/reference/users#set-primary-email-visibility-for-the-authenticated-user) endpoint. This endpoint is accessible with the `user:email` scope. */
-  "users/list-public-emails-for-authenticated": {
+  "users/list-public-emails-for-authenticated-user": {
     parameters: {
       query: {
         /** Results per page (max 100) */
@@ -30063,7 +30077,7 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  "repos/decline-invitation": {
+  "repos/decline-invitation-for-authenticated-user": {
     parameters: {
       path: {
         /** invitation_id parameter */
@@ -30079,7 +30093,7 @@ export interface operations {
       409: components["responses"]["conflict"];
     };
   };
-  "repos/accept-invitation": {
+  "repos/accept-invitation-for-authenticated-user": {
     parameters: {
       path: {
         /** invitation_id parameter */
@@ -31259,7 +31273,14 @@ export interface operations {
     };
   };
   /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
-  "actions/retry-workflow": {
+  "actions/get-workflow-run-attempt": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
+  "actions/download-workflow-run-attempt-logs": {
     responses: {
       /** Not Implemented */
       501: unknown;
@@ -31316,6 +31337,13 @@ export interface operations {
   };
   /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
   "repos/disable-automated-security-fixes": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
+  "checks/rerequest-run": {
     responses: {
       /** Not Implemented */
       501: unknown;
@@ -31428,6 +31456,13 @@ export interface operations {
   };
   /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
   "repos/get-pages-health-check": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
+  "repos/generate-release-notes": {
     responses: {
       /** Not Implemented */
       501: unknown;
@@ -31630,7 +31665,7 @@ export interface operations {
     };
   };
   /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
-  "users/list-blocked-by-authenticated": {
+  "users/list-blocked-by-authenticated-user": {
     responses: {
       /** Not Implemented */
       501: unknown;
@@ -31658,7 +31693,7 @@ export interface operations {
     };
   };
   /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
-  "users/set-primary-email-visibility-for-authenticated": {
+  "users/set-primary-email-visibility-for-authenticated-user": {
     responses: {
       /** Not Implemented */
       501: unknown;
@@ -31742,7 +31777,7 @@ export interface operations {
     };
   };
   /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
-  "migrations/list-repos-for-user": {
+  "migrations/list-repos-for-authenticated-user": {
     responses: {
       /** Not Implemented */
       501: unknown;

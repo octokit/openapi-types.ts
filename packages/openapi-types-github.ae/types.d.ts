@@ -351,13 +351,13 @@ export interface paths {
     /**
      * Lists all self-hosted runner groups for an enterprise.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     get: operations["enterprise-admin/list-self-hosted-runner-groups-for-enterprise"];
     /**
      * Creates a new self-hosted runner group for an enterprise.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     post: operations["enterprise-admin/create-self-hosted-runner-group-for-enterprise"];
   };
@@ -365,19 +365,19 @@ export interface paths {
     /**
      * Gets a specific self-hosted runner group for an enterprise.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     get: operations["enterprise-admin/get-self-hosted-runner-group-for-enterprise"];
     /**
      * Deletes a self-hosted runner group for an enterprise.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     delete: operations["enterprise-admin/delete-self-hosted-runner-group-from-enterprise"];
     /**
      * Updates the `name` and `visibility` of a self-hosted runner group in an enterprise.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     patch: operations["enterprise-admin/update-self-hosted-runner-group-for-enterprise"];
   };
@@ -385,13 +385,13 @@ export interface paths {
     /**
      * Lists the self-hosted runners that are in a specific enterprise group.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     get: operations["enterprise-admin/list-self-hosted-runners-in-group-for-enterprise"];
     /**
      * Replaces the list of self-hosted runners that are part of an enterprise runner group.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     put: operations["enterprise-admin/set-self-hosted-runners-in-group-for-enterprise"];
   };
@@ -399,14 +399,14 @@ export interface paths {
     /**
      * Adds a self-hosted runner to a runner group configured in an enterprise.
      *
-     * You must authenticate using an access token with the `admin:enterprise`
+     * You must authenticate using an access token with the `manage_runners:enterprise`
      * scope to use this endpoint.
      */
     put: operations["enterprise-admin/add-self-hosted-runner-to-group-for-enterprise"];
     /**
      * Removes a self-hosted runner from a group configured in an enterprise. The runner is then returned to the default group.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     delete: operations["enterprise-admin/remove-self-hosted-runner-from-group-for-enterprise"];
   };
@@ -414,7 +414,7 @@ export interface paths {
     /**
      * Lists all self-hosted runners configured for an enterprise.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     get: operations["enterprise-admin/list-self-hosted-runners-for-enterprise"];
   };
@@ -422,13 +422,13 @@ export interface paths {
     /**
      * Gets a specific self-hosted runner configured in an enterprise.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     get: operations["enterprise-admin/get-self-hosted-runner-for-enterprise"];
     /**
      * Forces the removal of a self-hosted runner from an enterprise. You can use this endpoint to completely remove the runner when the machine you were using no longer exists.
      *
-     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      */
     delete: operations["enterprise-admin/delete-self-hosted-runner-from-enterprise"];
   };
@@ -1388,6 +1388,24 @@ export interface paths {
     /** Lists artifacts for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. */
     get: operations["actions/list-workflow-run-artifacts"];
   };
+  "/repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}": {
+    /**
+     * Gets a specific workflow run attempt. Anyone with read access to the repository
+     * can use this endpoint. If the repository is private you must use an access token
+     * with the `repo` scope. GitHub Apps must have the `actions:read` permission to
+     * use this endpoint.
+     */
+    get: operations["actions/get-workflow-run-attempt"];
+  };
+  "/repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/logs": {
+    /**
+     * Gets a redirect URL to download an archive of log files for a specific workflow run attempt. This link expires after
+     * 1 minute. Look for `Location:` in the response header to find the URL for the download. Anyone with read access to
+     * the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `actions:read` permission to use this endpoint.
+     */
+    get: operations["actions/download-workflow-run-attempt-logs"];
+  };
   "/repos/{owner}/{repo}/actions/runs/{run_id}/cancel": {
     /** Cancels a workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint. */
     post: operations["actions/cancel-workflow-run"];
@@ -1408,19 +1426,8 @@ export interface paths {
     delete: operations["actions/delete-workflow-run-logs"];
   };
   "/repos/{owner}/{repo}/actions/runs/{run_id}/rerun": {
-    /**
-     * **Deprecation Notice:** This endpoint is deprecated.
-     * We recommend migrating your existing code to use the new [retry workflow](https://docs.github.com/github-ae@latest/rest/reference/actions#retry-a-workflow) endpoint.
-     *
-     * Re-runs your workflow run using its `id`. You must authenticate using
-     * an access token with the `repo` scope to use this endpoint. GitHub Apps must have
-     * the `actions:write` permission to use this endpoint.
-     */
+    /** Re-runs your workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint. */
     post: operations["actions/re-run-workflow"];
-  };
-  "/repos/{owner}/{repo}/actions/runs/{run_id}/retry": {
-    /** Retry your workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint. */
-    post: operations["actions/retry-workflow"];
   };
   "/repos/{owner}/{repo}/actions/runs/{run_id}/timing": {
     /**
@@ -1864,6 +1871,14 @@ export interface paths {
     /** Lists annotations for a check run using the annotation `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get annotations for a check run. OAuth Apps and authenticated users must have the `repo` scope to get annotations for a check run in a private repository. */
     get: operations["checks/list-annotations"];
   };
+  "/repos/{owner}/{repo}/check-runs/{check_run_id}/rerequest": {
+    /**
+     * Triggers GitHub to rerequest an existing check run, without pushing new code to a repository. This endpoint will trigger the [`check_run` webhook](https://docs.github.com/github-ae@latest/webhooks/event-payloads/#check_run) event with the action `rerequested`. When a check run is `rerequested`, its `status` is reset to `queued` and the `conclusion` is cleared.
+     *
+     * To rerequest a check run, your GitHub App must have the `checks:read` permission on a private repository or pull access to a public repository.
+     */
+    post: operations["checks/rerequest-run"];
+  };
   "/repos/{owner}/{repo}/check-suites": {
     /**
      * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
@@ -1970,9 +1985,6 @@ export interface paths {
      * the response contains the analysis data that was uploaded.
      * This is formatted as
      * [SARIF version 2.1.0](https://docs.oasis-open.org/sarif/sarif/v2.1.0/cs01/sarif-v2.1.0-cs01.html).
-     *
-     * **Deprecation notice**:
-     * The `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the `tool` field.
      */
     get: operations["code-scanning/get-analysis"];
   };
@@ -3634,7 +3646,7 @@ export interface paths {
   };
   "/user/following": {
     /** Lists the people who the authenticated user follows. */
-    get: operations["users/list-followed-by-authenticated"];
+    get: operations["users/list-followed-by-authenticated-user"];
   };
   "/user/following/{username}": {
     get: operations["users/check-person-is-followed-by-authenticated"];
@@ -3649,15 +3661,15 @@ export interface paths {
   };
   "/user/gpg_keys": {
     /** Lists the current user's GPG keys. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:gpg_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-    get: operations["users/list-gpg-keys-for-authenticated"];
+    get: operations["users/list-gpg-keys-for-authenticated-user"];
     /** Adds a GPG key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or OAuth with at least `write:gpg_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-    post: operations["users/create-gpg-key-for-authenticated"];
+    post: operations["users/create-gpg-key-for-authenticated-user"];
   };
   "/user/gpg_keys/{gpg_key_id}": {
     /** View extended details for a single GPG key. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:gpg_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-    get: operations["users/get-gpg-key-for-authenticated"];
+    get: operations["users/get-gpg-key-for-authenticated-user"];
     /** Removes a GPG key from the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `admin:gpg_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-    delete: operations["users/delete-gpg-key-for-authenticated"];
+    delete: operations["users/delete-gpg-key-for-authenticated-user"];
   };
   "/user/installations": {
     /**
@@ -3689,13 +3701,13 @@ export interface paths {
      *
      * You must use a personal access token (which you can create via the [command line](https://docs.github.com/github-ae@latest/github/authenticating-to-github/creating-a-personal-access-token) or [Basic Authentication](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication)) to access this endpoint.
      */
-    put: operations["apps/add-repo-to-installation"];
+    put: operations["apps/add-repo-to-installation-for-authenticated-user"];
     /**
      * Remove a single repository from an installation. The authenticated user must have admin access to the repository.
      *
      * You must use a personal access token (which you can create via the [command line](https://docs.github.com/github-ae@latest/github/authenticating-to-github/creating-a-personal-access-token) or [Basic Authentication](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication)) to access this endpoint.
      */
-    delete: operations["apps/remove-repo-from-installation"];
+    delete: operations["apps/remove-repo-from-installation-for-authenticated-user"];
   };
   "/user/issues": {
     /**
@@ -3710,15 +3722,15 @@ export interface paths {
   };
   "/user/keys": {
     /** Lists the public SSH keys for the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:public_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-    get: operations["users/list-public-ssh-keys-for-authenticated"];
+    get: operations["users/list-public-ssh-keys-for-authenticated-user"];
     /** Adds a public SSH key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or OAuth with at least `write:public_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-    post: operations["users/create-public-ssh-key-for-authenticated"];
+    post: operations["users/create-public-ssh-key-for-authenticated-user"];
   };
   "/user/keys/{key_id}": {
     /** View extended details for a single public SSH key. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:public_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-    get: operations["users/get-public-ssh-key-for-authenticated"];
+    get: operations["users/get-public-ssh-key-for-authenticated-user"];
     /** Removes a public SSH key from the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `admin:public_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-    delete: operations["users/delete-public-ssh-key-for-authenticated"];
+    delete: operations["users/delete-public-ssh-key-for-authenticated-user"];
   };
   "/user/memberships/orgs": {
     get: operations["orgs/list-memberships-for-authenticated-user"];
@@ -3764,8 +3776,8 @@ export interface paths {
     get: operations["repos/list-invitations-for-authenticated-user"];
   };
   "/user/repository_invitations/{invitation_id}": {
-    delete: operations["repos/decline-invitation"];
-    patch: operations["repos/accept-invitation"];
+    delete: operations["repos/decline-invitation-for-authenticated-user"];
+    patch: operations["repos/accept-invitation-for-authenticated-user"];
   };
   "/user/starred": {
     /**
@@ -4361,6 +4373,10 @@ export interface paths {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
     get: operations["repos/get-pages-health-check"];
   };
+  "/repos/{owner}/{repo}/releases/generate-notes": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["repos/generate-release-notes"];
+  };
   "/repos/{owner}/{repo}/secret-scanning/alerts": {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
     get: operations["secret-scanning/list-alerts-for-repo"];
@@ -4459,7 +4475,7 @@ export interface paths {
   };
   "/user/blocks": {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
-    get: operations["users/list-blocked-by-authenticated"];
+    get: operations["users/list-blocked-by-authenticated-user"];
   };
   "/user/blocks/{username}": {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
@@ -4471,15 +4487,15 @@ export interface paths {
   };
   "/user/email/visibility": {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
-    patch: operations["users/set-primary-email-visibility-for-authenticated"];
+    patch: operations["users/set-primary-email-visibility-for-authenticated-user"];
   };
   "/user/emails": {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
-    get: operations["users/list-emails-for-authenticated"];
+    get: operations["users/list-emails-for-authenticated-user"];
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
-    post: operations["users/add-email-for-authenticated"];
+    post: operations["users/add-email-for-authenticated-user"];
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
-    delete: operations["users/delete-email-for-authenticated"];
+    delete: operations["users/delete-email-for-authenticated-user"];
   };
   "/user/interaction-limits": {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
@@ -4519,7 +4535,7 @@ export interface paths {
   };
   "/user/migrations/{migration_id}/repositories": {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
-    get: operations["migrations/list-repos-for-user"];
+    get: operations["migrations/list-repos-for-authenticated-user"];
   };
   "/user/packages": {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
@@ -4551,7 +4567,7 @@ export interface paths {
   };
   "/user/public_emails": {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
-    get: operations["users/list-public-emails-for-authenticated"];
+    get: operations["users/list-public-emails-for-authenticated-user"];
   };
   "/users/{username}/events/public": {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
@@ -4971,13 +4987,13 @@ export interface components {
       url?: string;
       request: {
         /** The request headers sent with the webhook delivery. */
-        headers: { [key: string]: any } | null;
+        headers: { [key: string]: unknown } | null;
         /** The webhook payload. */
-        payload: { [key: string]: any } | null;
+        payload: { [key: string]: unknown } | null;
       };
       response: {
         /** The response headers received when the delivery was made. */
-        headers: { [key: string]: any } | null;
+        headers: { [key: string]: unknown } | null;
         /** The response payload received. */
         payload: string | null;
       };
@@ -5491,8 +5507,8 @@ export interface components {
       comments_url: string;
       owner?: components["schemas"]["simple-user"];
       truncated?: boolean;
-      forks?: { [key: string]: unknown }[];
-      history?: { [key: string]: unknown }[];
+      forks?: unknown[];
+      history?: unknown[];
     };
     /** Public User */
     "public-user": {
@@ -5593,8 +5609,8 @@ export interface components {
         comments_url: string;
         owner?: components["schemas"]["nullable-simple-user"];
         truncated?: boolean;
-        forks?: { [key: string]: unknown }[];
-        history?: { [key: string]: unknown }[];
+        forks?: unknown[];
+        history?: unknown[];
       } | null;
       url?: string;
       forks_url?: string;
@@ -6817,6 +6833,8 @@ export interface components {
       /** The id of the associated workflow run. */
       run_id: number;
       run_url: string;
+      /** Attempt number of the associated workflow run, 1 for first attempt and higher if the workflow was re-run. */
+      run_attempt?: number;
       node_id: string;
       /** The SHA of the commit that is being run. */
       head_sha: string;
@@ -6847,6 +6865,16 @@ export interface components {
         completed_at?: string | null;
       }[];
       check_run_url: string;
+      /** Labels for the workflow job. Specified by the "runs_on" attribute in the action's workflow file. */
+      labels: string[];
+      /** The ID of the runner to which this job has been assigned. (If a runner hasn't yet been assigned, this will be null.) */
+      runner_id: number | null;
+      /** The name of the runner to which this job has been assigned. (If a runner hasn't yet been assigned, this will be null.) */
+      runner_name: string | null;
+      /** The ID of the runner group to which this job has been assigned. (If a runner hasn't yet been assigned, this will be null.) */
+      runner_group_id: number | null;
+      /** The name of the runner group to which this job has been assigned. (If a runner hasn't yet been assigned, this will be null.) */
+      runner_group_name: string | null;
     };
     /** Whether GitHub Actions is enabled on the repository. */
     "actions-enabled": boolean;
@@ -6909,7 +6937,7 @@ export interface components {
       head_sha: string;
       /** The auto incrementing run number for the workflow run. */
       run_number: number;
-      /** Attempt number of the run, 1 for first attempt and higher if the workflow was retried. */
+      /** Attempt number of the run, 1 for first attempt and higher if the workflow was re-run. */
       run_attempt?: number;
       event: string;
       status: string | null;
@@ -6922,6 +6950,8 @@ export interface components {
       pull_requests: components["schemas"]["pull-request-minimal"][] | null;
       created_at: string;
       updated_at: string;
+      /** The start time of the latest run. Resets on re-run. */
+      run_started_at?: string;
       /** The URL to the jobs for the workflow run. */
       jobs_url: string;
       /** The URL to download the logs for the workflow run. */
@@ -7537,7 +7567,6 @@ export interface components {
       created_at: components["schemas"]["alert-created-at"];
       url: components["schemas"]["alert-url"];
       html_url: components["schemas"]["alert-html-url"];
-      instances?: { [key: string]: unknown };
       instances_url: components["schemas"]["alert-instances-url"];
       state: components["schemas"]["code-scanning-alert-state"];
       dismissed_by: components["schemas"]["nullable-simple-user"];
@@ -7579,7 +7608,6 @@ export interface components {
       deletable: boolean;
       /** Warning generated when processing the analysis */
       warning: string;
-      tool_name?: string;
     };
     /** A Base64 string representing the SARIF file to upload. You must first compress your SARIF file using [`gzip`](http://www.gnu.org/software/gzip/manual/gzip.html) and then translate the contents of the file into a Base64 encoding string. For more information, see "[SARIF support for code scanning](https://docs.github.com/github-ae@latest/code-security/secure-coding/sarif-support-for-code-scanning)." */
     "code-scanning-analysis-sarif-file": string;
@@ -8033,7 +8061,7 @@ export interface components {
       ref: string;
       /** Parameter to specify a task to execute */
       task: string;
-      payload: { [key: string]: any } | string;
+      payload: { [key: string]: unknown } | string;
       original_environment?: string;
       /** Name for the target deployment environment. */
       environment: string;
@@ -8923,7 +8951,7 @@ export interface components {
         | "dns_changed";
       description: string;
       /** Array of the domain set and its alternate name (if it is configured) */
-      domains: any[];
+      domains: unknown[];
       expires_at?: string;
     };
     /** The configuration for GitHub Pages for a repository. */
@@ -9116,6 +9144,8 @@ export interface components {
           master_branch?: string;
           archived: boolean;
           disabled: boolean;
+          /** The repository visibility: public, private, or internal. */
+          visibility?: string;
           mirror_url: string | null;
           open_issues: number;
           open_issues_count: number;
@@ -9148,6 +9178,7 @@ export interface components {
           created_at: string;
           updated_at: string;
           allow_forking?: boolean;
+          is_template?: boolean;
         } | null;
         sha: string;
         user: {
@@ -9198,6 +9229,7 @@ export interface components {
           hooks_url: string;
           html_url: string;
           id: number;
+          is_template?: boolean;
           node_id: string;
           issue_comment_url: string;
           issue_events_url: string;
@@ -9255,6 +9287,8 @@ export interface components {
           master_branch?: string;
           archived: boolean;
           disabled: boolean;
+          /** The repository visibility: public, private, or internal. */
+          visibility?: string;
           mirror_url: string | null;
           open_issues: number;
           open_issues_count: number;
@@ -9754,6 +9788,8 @@ export interface components {
       archived: boolean;
       /** Returns whether or not this repository disabled. */
       disabled: boolean;
+      /** The repository visibility: public, private, or internal. */
+      visibility?: string;
       license: components["schemas"]["nullable-license-simple"];
       permissions?: {
         admin: boolean;
@@ -9770,6 +9806,7 @@ export interface components {
       allow_auto_merge?: boolean;
       delete_branch_on_merge?: boolean;
       allow_forking?: boolean;
+      is_template?: boolean;
     };
     /** Topic Search Result Item */
     "topic-search-result-item": {
@@ -9910,8 +9947,8 @@ export interface components {
         primary_key_id?: number;
         key_id?: string;
         public_key?: string;
-        emails?: { [key: string]: unknown }[];
-        subkeys?: { [key: string]: unknown }[];
+        emails?: unknown[];
+        subkeys?: unknown[];
         can_sign?: boolean;
         can_encrypt_comms?: boolean;
         can_encrypt_storage?: boolean;
@@ -10173,6 +10210,8 @@ export interface components {
     created: string;
     /** The id of the workflow run. */
     "run-id": number;
+    /** The attempt number of the workflow run. */
+    "attempt-number": number;
     /** The ID of the workflow. You can also pass the workflow file name as a string. */
     "workflow-id": number | string;
     /** autolink_id parameter */
@@ -10820,7 +10859,7 @@ export interface operations {
               client_secret: string;
               webhook_secret: string | null;
               pem: string;
-            } & { [key: string]: any });
+            } & { [key: string]: unknown });
         };
       };
       404: components["responses"]["not_found"];
@@ -11654,7 +11693,7 @@ export interface operations {
   /**
    * Lists all self-hosted runner groups for an enterprise.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/list-self-hosted-runner-groups-for-enterprise": {
     parameters: {
@@ -11684,7 +11723,7 @@ export interface operations {
   /**
    * Creates a new self-hosted runner group for an enterprise.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/create-self-hosted-runner-group-for-enterprise": {
     parameters: {
@@ -11719,7 +11758,7 @@ export interface operations {
   /**
    * Gets a specific self-hosted runner group for an enterprise.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/get-self-hosted-runner-group-for-enterprise": {
     parameters: {
@@ -11742,7 +11781,7 @@ export interface operations {
   /**
    * Deletes a self-hosted runner group for an enterprise.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/delete-self-hosted-runner-group-from-enterprise": {
     parameters: {
@@ -11761,7 +11800,7 @@ export interface operations {
   /**
    * Updates the `name` and `visibility` of a self-hosted runner group in an enterprise.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/update-self-hosted-runner-group-for-enterprise": {
     parameters: {
@@ -11794,7 +11833,7 @@ export interface operations {
   /**
    * Lists the self-hosted runners that are in a specific enterprise group.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/list-self-hosted-runners-in-group-for-enterprise": {
     parameters: {
@@ -11827,7 +11866,7 @@ export interface operations {
   /**
    * Replaces the list of self-hosted runners that are part of an enterprise runner group.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/set-self-hosted-runners-in-group-for-enterprise": {
     parameters: {
@@ -11854,7 +11893,7 @@ export interface operations {
   /**
    * Adds a self-hosted runner to a runner group configured in an enterprise.
    *
-   * You must authenticate using an access token with the `admin:enterprise`
+   * You must authenticate using an access token with the `manage_runners:enterprise`
    * scope to use this endpoint.
    */
   "enterprise-admin/add-self-hosted-runner-to-group-for-enterprise": {
@@ -11876,7 +11915,7 @@ export interface operations {
   /**
    * Removes a self-hosted runner from a group configured in an enterprise. The runner is then returned to the default group.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/remove-self-hosted-runner-from-group-for-enterprise": {
     parameters: {
@@ -11897,7 +11936,7 @@ export interface operations {
   /**
    * Lists all self-hosted runners configured for an enterprise.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/list-self-hosted-runners-for-enterprise": {
     parameters: {
@@ -11928,7 +11967,7 @@ export interface operations {
   /**
    * Gets a specific self-hosted runner configured in an enterprise.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/get-self-hosted-runner-for-enterprise": {
     parameters: {
@@ -11951,7 +11990,7 @@ export interface operations {
   /**
    * Forces the removal of a self-hosted runner from an enterprise. You can use this endpoint to completely remove the runner when the machine you were using no longer exists.
    *
-   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/delete-self-hosted-runner-from-enterprise": {
     parameters: {
@@ -14282,10 +14321,7 @@ export interface operations {
           homepage?: string;
           /** Whether the repository is private. */
           private?: boolean;
-          /**
-           * Can be `public` or `private`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `visibility` can also be `internal`. Note: For GitHub Enterprise Server and GitHub AE, this endpoint will only list repositories available to all users on the enterprise. For more information, see "[Creating an internal repository](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-repository-visibility#about-internal-repositories)" in the GitHub Help documentation.
-           * The `visibility` parameter overrides the `private` parameter when you use both parameters with the `nebula-preview` preview header.
-           */
+          /** Can be `public` or `private`. If your organization is associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+, `visibility` can also be `internal`. Note: For GitHub Enterprise Server and GitHub AE, this endpoint will only list repositories available to all users on the enterprise. For more information, see "[Creating an internal repository](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-repository-visibility#about-internal-repositories)" in the GitHub Help documentation. */
           visibility?: "public" | "private" | "visibility" | "internal";
           /** Either `true` to enable issues for this repository or `false` to disable them. */
           has_issues?: boolean;
@@ -16469,6 +16505,54 @@ export interface operations {
       };
     };
   };
+  /**
+   * Gets a specific workflow run attempt. Anyone with read access to the repository
+   * can use this endpoint. If the repository is private you must use an access token
+   * with the `repo` scope. GitHub Apps must have the `actions:read` permission to
+   * use this endpoint.
+   */
+  "actions/get-workflow-run-attempt": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        /** The id of the workflow run. */
+        run_id: components["parameters"]["run-id"];
+        /** The attempt number of the workflow run. */
+        attempt_number: components["parameters"]["attempt-number"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["workflow-run"];
+        };
+      };
+    };
+  };
+  /**
+   * Gets a redirect URL to download an archive of log files for a specific workflow run attempt. This link expires after
+   * 1 minute. Look for `Location:` in the response header to find the URL for the download. Anyone with read access to
+   * the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `actions:read` permission to use this endpoint.
+   */
+  "actions/download-workflow-run-attempt-logs": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        /** The id of the workflow run. */
+        run_id: components["parameters"]["run-id"];
+        /** The attempt number of the workflow run. */
+        attempt_number: components["parameters"]["attempt-number"];
+      };
+    };
+    responses: {
+      /** Response */
+      302: never;
+    };
+  };
   /** Cancels a workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint. */
   "actions/cancel-workflow-run": {
     parameters: {
@@ -16558,34 +16642,8 @@ export interface operations {
       204: never;
     };
   };
-  /**
-   * **Deprecation Notice:** This endpoint is deprecated.
-   * We recommend migrating your existing code to use the new [retry workflow](https://docs.github.com/github-ae@latest/rest/reference/actions#retry-a-workflow) endpoint.
-   *
-   * Re-runs your workflow run using its `id`. You must authenticate using
-   * an access token with the `repo` scope to use this endpoint. GitHub Apps must have
-   * the `actions:write` permission to use this endpoint.
-   */
+  /** Re-runs your workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint. */
   "actions/re-run-workflow": {
-    parameters: {
-      path: {
-        owner: components["parameters"]["owner"];
-        repo: components["parameters"]["repo"];
-        /** The id of the workflow run. */
-        run_id: components["parameters"]["run-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      201: {
-        content: {
-          "application/json": { [key: string]: unknown };
-        };
-      };
-    };
-  };
-  /** Retry your workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint. */
-  "actions/retry-workflow": {
     parameters: {
       path: {
         owner: components["parameters"]["owner"];
@@ -18163,10 +18221,10 @@ export interface operations {
               status: "completed";
             } & {
               conclusion: unknown;
-            } & { [key: string]: any })
+            } & { [key: string]: unknown })
           | ({
               status?: "queued" | "in_progress";
-            } & { [key: string]: any })
+            } & { [key: string]: unknown })
         ) & {
           /** The name of the check. For example, "code-coverage". */
           name: string;
@@ -18299,12 +18357,12 @@ export interface operations {
             status?: "completed";
           } & {
             conclusion: unknown;
-          } & { [key: string]: any }
+          } & { [key: string]: unknown }
         > &
           Partial<
             {
               status?: "queued" | "in_progress";
-            } & { [key: string]: any }
+            } & { [key: string]: unknown }
           >) & {
           /** The name of the check. For example, "code-coverage". */
           name?: string;
@@ -18405,6 +18463,42 @@ export interface operations {
         headers: {};
         content: {
           "application/json": components["schemas"]["check-annotation"][];
+        };
+      };
+    };
+  };
+  /**
+   * Triggers GitHub to rerequest an existing check run, without pushing new code to a repository. This endpoint will trigger the [`check_run` webhook](https://docs.github.com/github-ae@latest/webhooks/event-payloads/#check_run) event with the action `rerequested`. When a check run is `rerequested`, its `status` is reset to `queued` and the `conclusion` is cleared.
+   *
+   * To rerequest a check run, your GitHub App must have the `checks:read` permission on a private repository or pull access to a public repository.
+   */
+  "checks/rerequest-run": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        /** check_run_id parameter */
+        check_run_id: components["parameters"]["check-run-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      201: {
+        content: {
+          "application/json": { [key: string]: unknown };
+        };
+      };
+      /** Forbidden if the check run is not rerequestable or doesn't belong to the authenticated GitHub App */
+      403: {
+        content: {
+          "application/json": components["schemas"]["basic-error"];
+        };
+      };
+      404: components["responses"]["not_found"];
+      /** Validation error if the check run is not rerequestable */
+      422: {
+        content: {
+          "application/json": components["schemas"]["basic-error"];
         };
       };
     };
@@ -18760,9 +18854,6 @@ export interface operations {
    * the response contains the analysis data that was uploaded.
    * This is formatted as
    * [SARIF version 2.1.0](https://docs.oasis-open.org/sarif/sarif/v2.1.0/cs01/sarif-v2.1.0-cs01.html).
-   *
-   * **Deprecation notice**:
-   * The `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the `tool` field.
    */
   "code-scanning/get-analysis": {
     parameters: {
@@ -20031,7 +20122,7 @@ export interface operations {
           auto_merge?: boolean;
           /** The [status](https://docs.github.com/github-ae@latest/rest/reference/repos#statuses) contexts to verify against commit status checks. If you omit this parameter, GitHub verifies all unique contexts before creating a deployment. To bypass checking entirely, pass an empty array. Defaults to all unique contexts. */
           required_contexts?: string[];
-          payload?: { [key: string]: any } | string;
+          payload?: { [key: string]: unknown } | string;
           /** Name for the target deployment environment (e.g., `production`, `staging`, `qa`). */
           environment?: string;
           /** Short description of the deployment. */
@@ -22716,7 +22807,6 @@ export interface operations {
         };
       };
       409: components["responses"]["conflict"];
-      415: components["responses"]["preview_header_missing"];
       422: components["responses"]["validation_failed"];
     };
     requestBody: {
@@ -22744,7 +22834,6 @@ export interface operations {
       /** Response */
       204: never;
       404: components["responses"]["not_found"];
-      415: components["responses"]["preview_header_missing"];
       422: components["responses"]["validation_failed"];
     };
   };
@@ -24896,7 +24985,7 @@ export interface operations {
           Operations: {
             op: "add" | "Add" | "remove" | "Remove" | "replace" | "Replace";
             path?: string;
-            value?: string | { [key: string]: unknown } | any[];
+            value?: string | { [key: string]: unknown } | unknown[];
           }[];
         };
       };
@@ -24991,7 +25080,6 @@ export interface operations {
         };
       };
       304: components["responses"]["not_modified"];
-      415: components["responses"]["preview_header_missing"];
     };
   };
   /**
@@ -26271,7 +26359,7 @@ export interface operations {
     };
   };
   /** Lists the people who the authenticated user follows. */
-  "users/list-followed-by-authenticated": {
+  "users/list-followed-by-authenticated-user": {
     parameters: {
       query: {
         /** Results per page (max 100) */
@@ -26350,7 +26438,7 @@ export interface operations {
     };
   };
   /** Lists the current user's GPG keys. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:gpg_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-  "users/list-gpg-keys-for-authenticated": {
+  "users/list-gpg-keys-for-authenticated-user": {
     parameters: {
       query: {
         /** Results per page (max 100) */
@@ -26374,7 +26462,7 @@ export interface operations {
     };
   };
   /** Adds a GPG key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or OAuth with at least `write:gpg_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-  "users/create-gpg-key-for-authenticated": {
+  "users/create-gpg-key-for-authenticated-user": {
     parameters: {};
     responses: {
       /** Response */
@@ -26399,7 +26487,7 @@ export interface operations {
     };
   };
   /** View extended details for a single GPG key. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:gpg_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-  "users/get-gpg-key-for-authenticated": {
+  "users/get-gpg-key-for-authenticated-user": {
     parameters: {
       path: {
         /** gpg_key_id parameter */
@@ -26420,7 +26508,7 @@ export interface operations {
     };
   };
   /** Removes a GPG key from the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `admin:gpg_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-  "users/delete-gpg-key-for-authenticated": {
+  "users/delete-gpg-key-for-authenticated-user": {
     parameters: {
       path: {
         /** gpg_key_id parameter */
@@ -26516,7 +26604,7 @@ export interface operations {
    *
    * You must use a personal access token (which you can create via the [command line](https://docs.github.com/github-ae@latest/github/authenticating-to-github/creating-a-personal-access-token) or [Basic Authentication](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication)) to access this endpoint.
    */
-  "apps/add-repo-to-installation": {
+  "apps/add-repo-to-installation-for-authenticated-user": {
     parameters: {
       path: {
         /** installation_id parameter */
@@ -26537,7 +26625,7 @@ export interface operations {
    *
    * You must use a personal access token (which you can create via the [command line](https://docs.github.com/github-ae@latest/github/authenticating-to-github/creating-a-personal-access-token) or [Basic Authentication](https://docs.github.com/github-ae@latest/rest/overview/other-authentication-methods#basic-authentication)) to access this endpoint.
    */
-  "apps/remove-repo-from-installation": {
+  "apps/remove-repo-from-installation-for-authenticated-user": {
     parameters: {
       path: {
         /** installation_id parameter */
@@ -26608,7 +26696,7 @@ export interface operations {
     };
   };
   /** Lists the public SSH keys for the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:public_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-  "users/list-public-ssh-keys-for-authenticated": {
+  "users/list-public-ssh-keys-for-authenticated-user": {
     parameters: {
       query: {
         /** Results per page (max 100) */
@@ -26632,7 +26720,7 @@ export interface operations {
     };
   };
   /** Adds a public SSH key to the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth, or OAuth with at least `write:public_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-  "users/create-public-ssh-key-for-authenticated": {
+  "users/create-public-ssh-key-for-authenticated-user": {
     parameters: {};
     responses: {
       /** Response */
@@ -26659,7 +26747,7 @@ export interface operations {
     };
   };
   /** View extended details for a single public SSH key. Requires that you are authenticated via Basic Auth or via OAuth with at least `read:public_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-  "users/get-public-ssh-key-for-authenticated": {
+  "users/get-public-ssh-key-for-authenticated-user": {
     parameters: {
       path: {
         /** key_id parameter */
@@ -26680,7 +26768,7 @@ export interface operations {
     };
   };
   /** Removes a public SSH key from the authenticated user's GitHub account. Requires that you are authenticated via Basic Auth or via OAuth with at least `admin:public_key` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). */
-  "users/delete-public-ssh-key-for-authenticated": {
+  "users/delete-public-ssh-key-for-authenticated-user": {
     parameters: {
       path: {
         /** key_id parameter */
@@ -26965,7 +27053,7 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  "repos/decline-invitation": {
+  "repos/decline-invitation-for-authenticated-user": {
     parameters: {
       path: {
         /** invitation_id parameter */
@@ -26981,7 +27069,7 @@ export interface operations {
       409: components["responses"]["conflict"];
     };
   };
-  "repos/accept-invitation": {
+  "repos/accept-invitation-for-authenticated-user": {
     parameters: {
       path: {
         /** invitation_id parameter */
@@ -28535,6 +28623,13 @@ export interface operations {
     };
   };
   /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "repos/generate-release-notes": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
   "secret-scanning/list-alerts-for-repo": {
     responses: {
       /** Not Implemented */
@@ -28752,7 +28847,7 @@ export interface operations {
     };
   };
   /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
-  "users/list-blocked-by-authenticated": {
+  "users/list-blocked-by-authenticated-user": {
     responses: {
       /** Not Implemented */
       501: unknown;
@@ -28780,28 +28875,28 @@ export interface operations {
     };
   };
   /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
-  "users/set-primary-email-visibility-for-authenticated": {
+  "users/set-primary-email-visibility-for-authenticated-user": {
     responses: {
       /** Not Implemented */
       501: unknown;
     };
   };
   /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
-  "users/list-emails-for-authenticated": {
+  "users/list-emails-for-authenticated-user": {
     responses: {
       /** Not Implemented */
       501: unknown;
     };
   };
   /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
-  "users/add-email-for-authenticated": {
+  "users/add-email-for-authenticated-user": {
     responses: {
       /** Not Implemented */
       501: unknown;
     };
   };
   /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
-  "users/delete-email-for-authenticated": {
+  "users/delete-email-for-authenticated-user": {
     responses: {
       /** Not Implemented */
       501: unknown;
@@ -28885,7 +28980,7 @@ export interface operations {
     };
   };
   /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
-  "migrations/list-repos-for-user": {
+  "migrations/list-repos-for-authenticated-user": {
     responses: {
       /** Not Implemented */
       501: unknown;
@@ -28948,7 +29043,7 @@ export interface operations {
     };
   };
   /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
-  "users/list-public-emails-for-authenticated": {
+  "users/list-public-emails-for-authenticated-user": {
     responses: {
       /** Not Implemented */
       501: unknown;
