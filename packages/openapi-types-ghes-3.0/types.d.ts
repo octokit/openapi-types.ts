@@ -446,13 +446,13 @@ export interface paths {
     /**
      * Lists all self-hosted runner groups for an enterprise.
      *
-     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
      */
     get: operations["enterprise-admin/list-self-hosted-runner-groups-for-enterprise"];
     /**
      * Creates a new self-hosted runner group for an enterprise.
      *
-     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
      */
     post: operations["enterprise-admin/create-self-hosted-runner-group-for-enterprise"];
   };
@@ -460,19 +460,19 @@ export interface paths {
     /**
      * Gets a specific self-hosted runner group for an enterprise.
      *
-     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
      */
     get: operations["enterprise-admin/get-self-hosted-runner-group-for-enterprise"];
     /**
      * Deletes a self-hosted runner group for an enterprise.
      *
-     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
      */
     delete: operations["enterprise-admin/delete-self-hosted-runner-group-from-enterprise"];
     /**
      * Updates the `name` and `visibility` of a self-hosted runner group in an enterprise.
      *
-     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
      */
     patch: operations["enterprise-admin/update-self-hosted-runner-group-for-enterprise"];
   };
@@ -480,13 +480,13 @@ export interface paths {
     /**
      * Lists the organizations with access to a self-hosted runner group.
      *
-     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
      */
     get: operations["enterprise-admin/list-org-access-to-self-hosted-runner-group-in-enterprise"];
     /**
      * Replaces the list of organizations that have access to a self-hosted runner configured in an enterprise.
      *
-     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
      */
     put: operations["enterprise-admin/set-org-access-to-self-hosted-runner-group-in-enterprise"];
   };
@@ -494,13 +494,13 @@ export interface paths {
     /**
      * Adds an organization to the list of selected organizations that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an enterprise](#create-a-self-hosted-runner-group-for-an-enterprise)."
      *
-     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
      */
     put: operations["enterprise-admin/add-org-access-to-self-hosted-runner-group-in-enterprise"];
     /**
      * Removes an organization from the list of selected organizations that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an enterprise](#create-a-self-hosted-runner-group-for-an-enterprise)."
      *
-     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
      */
     delete: operations["enterprise-admin/remove-org-access-to-self-hosted-runner-group-in-enterprise"];
   };
@@ -508,13 +508,13 @@ export interface paths {
     /**
      * Lists the self-hosted runners that are in a specific enterprise group.
      *
-     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
      */
     get: operations["enterprise-admin/list-self-hosted-runners-in-group-for-enterprise"];
     /**
      * Replaces the list of self-hosted runners that are part of an enterprise runner group.
      *
-     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
      */
     put: operations["enterprise-admin/set-self-hosted-runners-in-group-for-enterprise"];
   };
@@ -522,14 +522,14 @@ export interface paths {
     /**
      * Adds a self-hosted runner to a runner group configured in an enterprise.
      *
-     * You must authenticate using an access token with the `manage_runners:enterprise`
+     * You must authenticate using an access token with the `admin:enterprise`
      * scope to use this endpoint.
      */
     put: operations["enterprise-admin/add-self-hosted-runner-to-group-for-enterprise"];
     /**
      * Removes a self-hosted runner from a group configured in an enterprise. The runner is then returned to the default group.
      *
-     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
      */
     delete: operations["enterprise-admin/remove-self-hosted-runner-from-group-for-enterprise"];
   };
@@ -537,7 +537,7 @@ export interface paths {
     /**
      * Lists all self-hosted runners configured for an enterprise.
      *
-     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
      */
     get: operations["enterprise-admin/list-self-hosted-runners-for-enterprise"];
   };
@@ -545,7 +545,7 @@ export interface paths {
     /**
      * Lists binaries for the runner application that you can download and run.
      *
-     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
      */
     get: operations["enterprise-admin/list-runner-applications-for-enterprise"];
   };
@@ -553,7 +553,7 @@ export interface paths {
     /**
      * Returns a token that you can pass to the `config` script. The token expires after one hour.
      *
-     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
      *
      * #### Example using registration token
      *
@@ -569,7 +569,7 @@ export interface paths {
     /**
      * Returns a token that you can pass to the `config` script to remove a self-hosted runner from an enterprise. The token expires after one hour.
      *
-     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
      *
      * #### Example using remove token
      *
@@ -586,13 +586,13 @@ export interface paths {
     /**
      * Gets a specific self-hosted runner configured in an enterprise.
      *
-     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
      */
     get: operations["enterprise-admin/get-self-hosted-runner-for-enterprise"];
     /**
      * Forces the removal of a self-hosted runner from an enterprise. You can use this endpoint to completely remove the runner when the machine you were using no longer exists.
      *
-     * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
      */
     delete: operations["enterprise-admin/delete-self-hosted-runner-from-enterprise"];
   };
@@ -9999,6 +9999,8 @@ export interface components {
       | "requested"
       | "waiting";
     created: string;
+    /** If `true` pull requests are omitted from the response (empty array). */
+    "exclude-pull-requests": boolean;
     /** The id of the workflow run. */
     "run-id": number;
     /** The ID of the workflow. You can also pass the workflow file name as a string. */
@@ -12037,7 +12039,7 @@ export interface operations {
   /**
    * Lists all self-hosted runner groups for an enterprise.
    *
-   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/list-self-hosted-runner-groups-for-enterprise": {
     parameters: {
@@ -12067,7 +12069,7 @@ export interface operations {
   /**
    * Creates a new self-hosted runner group for an enterprise.
    *
-   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/create-self-hosted-runner-group-for-enterprise": {
     parameters: {
@@ -12102,7 +12104,7 @@ export interface operations {
   /**
    * Gets a specific self-hosted runner group for an enterprise.
    *
-   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/get-self-hosted-runner-group-for-enterprise": {
     parameters: {
@@ -12125,7 +12127,7 @@ export interface operations {
   /**
    * Deletes a self-hosted runner group for an enterprise.
    *
-   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/delete-self-hosted-runner-group-from-enterprise": {
     parameters: {
@@ -12144,7 +12146,7 @@ export interface operations {
   /**
    * Updates the `name` and `visibility` of a self-hosted runner group in an enterprise.
    *
-   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/update-self-hosted-runner-group-for-enterprise": {
     parameters: {
@@ -12177,7 +12179,7 @@ export interface operations {
   /**
    * Lists the organizations with access to a self-hosted runner group.
    *
-   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/list-org-access-to-self-hosted-runner-group-in-enterprise": {
     parameters: {
@@ -12209,7 +12211,7 @@ export interface operations {
   /**
    * Replaces the list of organizations that have access to a self-hosted runner configured in an enterprise.
    *
-   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/set-org-access-to-self-hosted-runner-group-in-enterprise": {
     parameters: {
@@ -12236,7 +12238,7 @@ export interface operations {
   /**
    * Adds an organization to the list of selected organizations that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an enterprise](#create-a-self-hosted-runner-group-for-an-enterprise)."
    *
-   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/add-org-access-to-self-hosted-runner-group-in-enterprise": {
     parameters: {
@@ -12257,7 +12259,7 @@ export interface operations {
   /**
    * Removes an organization from the list of selected organizations that can access a self-hosted runner group. The runner group must have `visibility` set to `selected`. For more information, see "[Create a self-hosted runner group for an enterprise](#create-a-self-hosted-runner-group-for-an-enterprise)."
    *
-   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/remove-org-access-to-self-hosted-runner-group-in-enterprise": {
     parameters: {
@@ -12278,7 +12280,7 @@ export interface operations {
   /**
    * Lists the self-hosted runners that are in a specific enterprise group.
    *
-   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/list-self-hosted-runners-in-group-for-enterprise": {
     parameters: {
@@ -12311,7 +12313,7 @@ export interface operations {
   /**
    * Replaces the list of self-hosted runners that are part of an enterprise runner group.
    *
-   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/set-self-hosted-runners-in-group-for-enterprise": {
     parameters: {
@@ -12338,7 +12340,7 @@ export interface operations {
   /**
    * Adds a self-hosted runner to a runner group configured in an enterprise.
    *
-   * You must authenticate using an access token with the `manage_runners:enterprise`
+   * You must authenticate using an access token with the `admin:enterprise`
    * scope to use this endpoint.
    */
   "enterprise-admin/add-self-hosted-runner-to-group-for-enterprise": {
@@ -12360,7 +12362,7 @@ export interface operations {
   /**
    * Removes a self-hosted runner from a group configured in an enterprise. The runner is then returned to the default group.
    *
-   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/remove-self-hosted-runner-from-group-for-enterprise": {
     parameters: {
@@ -12381,7 +12383,7 @@ export interface operations {
   /**
    * Lists all self-hosted runners configured for an enterprise.
    *
-   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/list-self-hosted-runners-for-enterprise": {
     parameters: {
@@ -12412,7 +12414,7 @@ export interface operations {
   /**
    * Lists binaries for the runner application that you can download and run.
    *
-   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/list-runner-applications-for-enterprise": {
     parameters: {
@@ -12433,7 +12435,7 @@ export interface operations {
   /**
    * Returns a token that you can pass to the `config` script. The token expires after one hour.
    *
-   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
    *
    * #### Example using registration token
    *
@@ -12462,7 +12464,7 @@ export interface operations {
   /**
    * Returns a token that you can pass to the `config` script to remove a self-hosted runner from an enterprise. The token expires after one hour.
    *
-   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
    *
    * #### Example using remove token
    *
@@ -12492,7 +12494,7 @@ export interface operations {
   /**
    * Gets a specific self-hosted runner configured in an enterprise.
    *
-   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/get-self-hosted-runner-for-enterprise": {
     parameters: {
@@ -12515,7 +12517,7 @@ export interface operations {
   /**
    * Forces the removal of a self-hosted runner from an enterprise. You can use this endpoint to completely remove the runner when the machine you were using no longer exists.
    *
-   * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
    */
   "enterprise-admin/delete-self-hosted-runner-from-enterprise": {
     parameters: {
@@ -17585,6 +17587,8 @@ export interface operations {
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
         created?: components["parameters"]["created"];
+        /** If `true` pull requests are omitted from the response (empty array). */
+        exclude_pull_requests?: components["parameters"]["exclude-pull-requests"];
       };
     };
     responses: {
@@ -17608,6 +17612,10 @@ export interface operations {
         repo: components["parameters"]["repo"];
         /** The id of the workflow run. */
         run_id: components["parameters"]["run-id"];
+      };
+      query: {
+        /** If `true` pull requests are omitted from the response (empty array). */
+        exclude_pull_requests?: components["parameters"]["exclude-pull-requests"];
       };
     };
     responses: {
@@ -18102,6 +18110,8 @@ export interface operations {
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
         created?: components["parameters"]["created"];
+        /** If `true` pull requests are omitted from the response (empty array). */
+        exclude_pull_requests?: components["parameters"]["exclude-pull-requests"];
       };
     };
     responses: {
