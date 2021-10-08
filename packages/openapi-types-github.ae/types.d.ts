@@ -10208,6 +10208,8 @@ export interface components {
       | "requested"
       | "waiting";
     created: string;
+    /** If `true` pull requests are omitted from the response (empty array). */
+    "exclude-pull-requests": boolean;
     /** The id of the workflow run. */
     "run-id": number;
     /** The attempt number of the workflow run. */
@@ -16423,6 +16425,8 @@ export interface operations {
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
         created?: components["parameters"]["created"];
+        /** If `true` pull requests are omitted from the response (empty array). */
+        exclude_pull_requests?: components["parameters"]["exclude-pull-requests"];
       };
     };
     responses: {
@@ -16446,6 +16450,10 @@ export interface operations {
         repo: components["parameters"]["repo"];
         /** The id of the workflow run. */
         run_id: components["parameters"]["run-id"];
+      };
+      query: {
+        /** If `true` pull requests are omitted from the response (empty array). */
+        exclude_pull_requests?: components["parameters"]["exclude-pull-requests"];
       };
     };
     responses: {
@@ -16520,6 +16528,10 @@ export interface operations {
         run_id: components["parameters"]["run-id"];
         /** The attempt number of the workflow run. */
         attempt_number: components["parameters"]["attempt-number"];
+      };
+      query: {
+        /** If `true` pull requests are omitted from the response (empty array). */
+        exclude_pull_requests?: components["parameters"]["exclude-pull-requests"];
       };
     };
     responses: {
@@ -17011,6 +17023,8 @@ export interface operations {
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
         created?: components["parameters"]["created"];
+        /** If `true` pull requests are omitted from the response (empty array). */
+        exclude_pull_requests?: components["parameters"]["exclude-pull-requests"];
       };
     };
     responses: {
