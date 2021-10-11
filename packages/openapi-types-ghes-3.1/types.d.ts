@@ -25778,6 +25778,8 @@ export interface operations {
           "application/json": components["schemas"]["release-asset"];
         };
       };
+      /** Response if you upload an asset with the same filename as another uploaded asset */
+      422: unknown;
     };
     requestBody: {
       content: {
