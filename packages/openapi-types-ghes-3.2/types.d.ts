@@ -4817,6 +4817,10 @@ export interface paths {
     /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
     get: operations["actions/get-workflow-run-attempt"];
   };
+  "/repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/jobs": {
+    /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
+    get: operations["actions/list-jobs-for-workflow-run-attempt"];
+  };
   "/repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/logs": {
     /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
     get: operations["actions/download-workflow-run-attempt-logs"];
@@ -26934,6 +26938,8 @@ export interface operations {
           "application/json": components["schemas"]["release-asset"];
         };
       };
+      /** Response if you upload an asset with the same filename as another uploaded asset */
+      422: unknown;
     };
     requestBody: {
       content: {
@@ -31284,6 +31290,13 @@ export interface operations {
   };
   /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
   "actions/get-workflow-run-attempt": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
+  "actions/list-jobs-for-workflow-run-attempt": {
     responses: {
       /** Not Implemented */
       501: unknown;
