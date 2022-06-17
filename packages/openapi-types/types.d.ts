@@ -3702,6 +3702,10 @@ export interface paths {
     /** Gets the diff of the dependency changes between two commits of a repository, based on the changes to the dependency manifests made in those commits. */
     get: operations["dependency-graph/diff-range"];
   };
+  "/repos/{owner}/{repo}/dependency-graph/snapshots": {
+    /** Create a new snapshot of a repository's dependencies. You must authenticate using an access token with the `repo` scope to use this endpoint for a repository that the requesting user has access to. */
+    post: operations["dependency-graph/create-repository-snapshot"];
+  };
   "/repos/{owner}/{repo}/deployments": {
     /** Simple filtering of deployments is available via query parameters: */
     get: operations["repos/list-deployments"];
@@ -4806,7 +4810,7 @@ export interface paths {
     post: operations["repos/transfer"];
   };
   "/repos/{owner}/{repo}/vulnerability-alerts": {
-    /** Shows whether dependency alerts are enabled or disabled for a repository. The authenticated user must have admin access to the repository. For more information, see "[About security alerts for vulnerable dependencies](https://docs.github.com/en/articles/about-security-alerts-for-vulnerable-dependencies)". */
+    /** Shows whether dependency alerts are enabled or disabled for a repository. The authenticated user must have admin read access to the repository. For more information, see "[About security alerts for vulnerable dependencies](https://docs.github.com/en/articles/about-security-alerts-for-vulnerable-dependencies)". */
     get: operations["repos/check-vulnerability-alerts"];
     /** Enables dependency alerts and the dependency graph for a repository. The authenticated user must have admin access to the repository. For more information, see "[About security alerts for vulnerable dependencies](https://docs.github.com/en/articles/about-security-alerts-for-vulnerable-dependencies)". */
     put: operations["repos/enable-vulnerability-alerts"];
@@ -10791,6 +10795,64 @@ export interface components {
         advisory_url: string;
       }[];
     }[];
+    /** User-defined metadata to store domain-specific information limited to 8 keys with scalar values. */
+    metadata: {
+      [key: string]: Partial<string> & Partial<number> & Partial<boolean>;
+    };
+    /** A single package dependency. */
+    dependency: {
+      /** Package-url (PURL) of dependency. See https://github.com/package-url/purl-spec for more details. */
+      package_url?: string;
+      metadata?: components["schemas"]["metadata"];
+      /** A notation of whether a dependency is requested directly by this manifest or is a dependency of another dependency. */
+      relationship?: "direct" | "indirect";
+      /** A notation of whether the dependency is required for the primary build artifact (runtime) or is only used for development. Future versions of this specification may allow for more granular scopes. */
+      scope?: "runtime" | "development";
+      /** Array of package-url (PURLs) of direct child dependencies. */
+      dependencies?: string[];
+    };
+    /** A collection of related dependencies declared in a file or representing a logical group of dependencies. */
+    manifest: {
+      /** The name of the manifest. */
+      name: string;
+      file?: {
+        /** The path of the manifest file relative to the root of the Git repository. */
+        source_location?: string;
+      };
+      metadata?: components["schemas"]["metadata"];
+      resolved?: { [key: string]: components["schemas"]["dependency"] };
+    };
+    /** Create a new snapshot of a repository's dependencies. */
+    snapshot: {
+      /** The version of the repository snapshot submission. */
+      version: number;
+      job: {
+        /** The external ID of the job. */
+        id: string;
+        /** Correlator provides a key that is used to group snapshots submitted over time. Only the "latest" submitted snapshot for a given combination of `job.correlator` and `detector.name` will be considered when calculating a repository's current dependencies. Correlator should be as unique as it takes to distinguish all detection runs for a given "wave" of CI workflow you run. If you're using GitHub Actions, a good default value for this could be the environment variables GITHUB_WORKFLOW and GITHUB_JOB concatenated together. If you're using a build matrix, then you'll also need to add additional key(s) to distinguish between each submission inside a matrix variation. */
+        correlator: string;
+        /** The url for the job. */
+        html_url?: string;
+      };
+      /** The commit SHA associated with this dependency snapshot. */
+      sha: string;
+      /** The repository branch that triggered this snapshot. */
+      ref: string;
+      /** A description of the detector used. */
+      detector: {
+        /** The name of the detector used. */
+        name: string;
+        /** The version of the detector used. */
+        version: string;
+        /** The url of the detector used. */
+        url: string;
+      };
+      metadata?: components["schemas"]["metadata"];
+      /** A collection of package manifests */
+      manifests?: { [key: string]: components["schemas"]["manifest"] };
+      /** The time at which the snapshot was scanned. */
+      scanned: string;
+    };
     /** The status of a deployment. */
     "deployment-status": {
       url: string;
@@ -13446,7 +13508,7 @@ export interface components {
     participating: boolean;
     /** Only show notifications updated before the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
     before: string;
-    /** The unique identifier of the thread. */
+    /** The unique identifier of the pull request thread. */
     "thread-id": number;
     /** An organization ID. Only return organizations with an ID greater than this ID. */
     "since-org": number;
@@ -16539,7 +16601,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** Describes the last point that notifications were checked. */
+          /** Describes the last point that notifications were checked. Anything updated since this time will not be marked as read. If you omit this parameter, all notifications are marked as read. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. Default: The current timestamp. */
           last_read_at?: string;
           /** Whether the notification has been read. */
           read?: boolean;
@@ -16550,7 +16612,7 @@ export interface operations {
   "activity/get-thread": {
     parameters: {
       path: {
-        /** The unique identifier of the thread. */
+        /** The unique identifier of the pull request thread. */
         thread_id: components["parameters"]["thread-id"];
       };
     };
@@ -16569,7 +16631,7 @@ export interface operations {
   "activity/mark-thread-as-read": {
     parameters: {
       path: {
-        /** The unique identifier of the thread. */
+        /** The unique identifier of the pull request thread. */
         thread_id: components["parameters"]["thread-id"];
       };
     };
@@ -16588,7 +16650,7 @@ export interface operations {
   "activity/get-thread-subscription-for-authenticated-user": {
     parameters: {
       path: {
-        /** The unique identifier of the thread. */
+        /** The unique identifier of the pull request thread. */
         thread_id: components["parameters"]["thread-id"];
       };
     };
@@ -16614,7 +16676,7 @@ export interface operations {
   "activity/set-thread-subscription": {
     parameters: {
       path: {
-        /** The unique identifier of the thread. */
+        /** The unique identifier of the pull request thread. */
         thread_id: components["parameters"]["thread-id"];
       };
     };
@@ -16642,7 +16704,7 @@ export interface operations {
   "activity/delete-thread-subscription": {
     parameters: {
       path: {
-        /** The unique identifier of the thread. */
+        /** The unique identifier of the pull request thread. */
         thread_id: components["parameters"]["thread-id"];
       };
     };
@@ -27846,6 +27908,39 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
+  /** Create a new snapshot of a repository's dependencies. You must authenticate using an access token with the `repo` scope to use this endpoint for a repository that the requesting user has access to. */
+  "dependency-graph/create-repository-snapshot": {
+    parameters: {
+      path: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: components["parameters"]["owner"];
+        /** The name of the repository. The name is not case sensitive. */
+        repo: components["parameters"]["repo"];
+      };
+    };
+    responses: {
+      /** Response */
+      201: {
+        content: {
+          "application/json": {
+            /** ID of the created snapshot. */
+            id: number;
+            /** The time at which the snapshot was created. */
+            created_at: string;
+            /** Either "SUCCESS", "ACCEPTED", or "INVALID". "SUCCESS" indicates that the snapshot was successfully created and the repository's dependencies were updated. "ACCEPTED" indicates that the snapshot was successfully created, but the repository's dependencies were not updated. "INVALID" indicates that the snapshot was malformed. */
+            result: string;
+            /** A message providing further details about the result, such as why the dependencies were not updated. */
+            message: string;
+          };
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["snapshot"];
+      };
+    };
+  };
   /** Simple filtering of deployments is available via query parameters: */
   "repos/list-deployments": {
     parameters: {
@@ -33951,7 +34046,7 @@ export interface operations {
       };
     };
   };
-  /** Shows whether dependency alerts are enabled or disabled for a repository. The authenticated user must have admin access to the repository. For more information, see "[About security alerts for vulnerable dependencies](https://docs.github.com/en/articles/about-security-alerts-for-vulnerable-dependencies)". */
+  /** Shows whether dependency alerts are enabled or disabled for a repository. The authenticated user must have admin read access to the repository. For more information, see "[About security alerts for vulnerable dependencies](https://docs.github.com/en/articles/about-security-alerts-for-vulnerable-dependencies)". */
   "repos/check-vulnerability-alerts": {
     parameters: {
       path: {
