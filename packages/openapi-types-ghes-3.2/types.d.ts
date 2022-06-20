@@ -5106,6 +5106,10 @@ export interface paths {
     /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
     get: operations["dependency-graph/diff-range"];
   };
+  "/repos/{owner}/{repo}/dependency-graph/snapshots": {
+    /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
+    post: operations["dependency-graph/create-repository-snapshot"];
+  };
   "/repos/{owner}/{repo}/import": {
     /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
     get: operations["migrations/get-import-status"];
@@ -11484,7 +11488,7 @@ export interface components {
     participating: boolean;
     /** Only show notifications updated before the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
     before: string;
-    /** The unique identifier of the thread. */
+    /** The unique identifier of the pull request thread. */
     "thread-id": number;
     /** An organization ID. Only return organizations with an ID greater than this ID. */
     "since-org": number;
@@ -14941,7 +14945,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** Describes the last point that notifications were checked. */
+          /** Describes the last point that notifications were checked. Anything updated since this time will not be marked as read. If you omit this parameter, all notifications are marked as read. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. Default: The current timestamp. */
           last_read_at?: string;
           /** Whether the notification has been read. */
           read?: boolean;
@@ -14952,7 +14956,7 @@ export interface operations {
   "activity/get-thread": {
     parameters: {
       path: {
-        /** The unique identifier of the thread. */
+        /** The unique identifier of the pull request thread. */
         thread_id: components["parameters"]["thread-id"];
       };
     };
@@ -14971,7 +14975,7 @@ export interface operations {
   "activity/mark-thread-as-read": {
     parameters: {
       path: {
-        /** The unique identifier of the thread. */
+        /** The unique identifier of the pull request thread. */
         thread_id: components["parameters"]["thread-id"];
       };
     };
@@ -14990,7 +14994,7 @@ export interface operations {
   "activity/get-thread-subscription-for-authenticated-user": {
     parameters: {
       path: {
-        /** The unique identifier of the thread. */
+        /** The unique identifier of the pull request thread. */
         thread_id: components["parameters"]["thread-id"];
       };
     };
@@ -15016,7 +15020,7 @@ export interface operations {
   "activity/set-thread-subscription": {
     parameters: {
       path: {
-        /** The unique identifier of the thread. */
+        /** The unique identifier of the pull request thread. */
         thread_id: components["parameters"]["thread-id"];
       };
     };
@@ -15044,7 +15048,7 @@ export interface operations {
   "activity/delete-thread-subscription": {
     parameters: {
       path: {
-        /** The unique identifier of the thread. */
+        /** The unique identifier of the pull request thread. */
         thread_id: components["parameters"]["thread-id"];
       };
     };
@@ -33162,6 +33166,13 @@ export interface operations {
   };
   /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
   "dependency-graph/diff-range": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.2.json. It was added in api.github.com.json */
+  "dependency-graph/create-repository-snapshot": {
     responses: {
       /** Not Implemented */
       501: unknown;
