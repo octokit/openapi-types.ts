@@ -1,10 +1,10 @@
 {
-  "name": "@octokit/openapi-types-ghes-3.2",
-  "description": "Generated TypeScript definitions based on GitHub's OpenAPI spec for ghes-3.2",
+  "name": "@octokit/openapi-types-ghes-3.3",
+  "description": "Generated TypeScript definitions based on GitHub's OpenAPI spec for ghes-3.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/octokit/openapi-types.ts.git",
-    "directory": "packages/openapi-types-ghes-3.2"
+    "directory": "packages/openapi-types-ghes-3.3"
   },
   "publishConfig": { "access": "public" },
   "version": "0.0.0-development",
