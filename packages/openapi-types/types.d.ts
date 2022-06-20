@@ -13550,6 +13550,10 @@ export interface components {
     "package-name": string;
     /** Unique identifier of the package version. */
     "package-version-id": number;
+    /** A cursor, as given in the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events before this cursor. To receive an initial cursor on your first request, include an empty "before" query string. */
+    "secret-scanning-pagination-before-org-repo": string;
+    /** A cursor, as given in the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events after this cursor.  To receive an initial cursor on your first request, include an empty "after" query string. */
+    "secret-scanning-pagination-after-org-repo": string;
     /** The slug of the team name. */
     "team-slug": string;
     /** The number that identifies the discussion. */
@@ -20193,6 +20197,10 @@ export interface operations {
         page?: components["parameters"]["page"];
         /** The number of results per page (max 100). */
         per_page?: components["parameters"]["per-page"];
+        /** A cursor, as given in the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events before this cursor. To receive an initial cursor on your first request, include an empty "before" query string. */
+        before?: components["parameters"]["secret-scanning-pagination-before-org-repo"];
+        /** A cursor, as given in the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events after this cursor.  To receive an initial cursor on your first request, include an empty "after" query string. */
+        after?: components["parameters"]["secret-scanning-pagination-after-org-repo"];
       };
     };
     responses: {
@@ -33309,6 +33317,10 @@ export interface operations {
         page?: components["parameters"]["page"];
         /** The number of results per page (max 100). */
         per_page?: components["parameters"]["per-page"];
+        /** A cursor, as given in the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events before this cursor. To receive an initial cursor on your first request, include an empty "before" query string. */
+        before?: components["parameters"]["secret-scanning-pagination-before-org-repo"];
+        /** A cursor, as given in the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events after this cursor.  To receive an initial cursor on your first request, include an empty "after" query string. */
+        after?: components["parameters"]["secret-scanning-pagination-after-org-repo"];
       };
     };
     responses: {
