@@ -237,6 +237,14 @@ export interface paths {
      */
     get: operations["actions/get-actions-cache-usage-for-enterprise"];
   };
+  "/enterprises/{enterprise}/actions/oidc/customization/issuer": {
+    /**
+     * Sets the GitHub Actions OpenID Connect (OIDC) custom issuer policy for an enterprise.
+     * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+     * GitHub Apps must have the `enterprise_administration:write` permission to use this endpoint.
+     */
+    put: operations["actions/set-actions-oidc-custom-issuer-policy-for-enterprise"];
+  };
   "/enterprises/{enterprise}/actions/permissions": {
     /**
      * Gets the GitHub Actions permissions policy for organizations and allowed actions and reusable workflows in an enterprise.
@@ -793,6 +801,14 @@ export interface paths {
      */
     get: operations["orgs/list-custom-roles"];
   };
+  "/orgs/{org_id}/codespaces": {
+    /**
+     * Lists the codespaces associated to a specified organization.
+     *
+     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+     */
+    get: operations["codespaces/list-in-organization"];
+  };
   "/orgs/{org}": {
     /**
      * To see many of the organization response values, you need to be an authenticated organization owner with the `admin:org` scope. When the value of `two_factor_requirement_enabled` is `true`, the organization requires all members, billing managers, and outside collaborators to enable [two-factor authentication](https://docs.github.com/articles/securing-your-account-with-two-factor-authentication-2fa/).
@@ -822,6 +838,20 @@ export interface paths {
      * You must authenticate using an access token with the `read:org` scope to use this endpoint. GitHub Apps must have the `organization_admistration:read` permission to use this endpoint.
      */
     get: operations["actions/get-actions-cache-usage-by-repo-for-org"];
+  };
+  "/orgs/{org}/actions/oidc/customization/sub": {
+    /**
+     * Gets the customization template for an OpenID Connect (OIDC) subject claim.
+     * You must authenticate using an access token with the `read:org` scope to use this endpoint.
+     * GitHub Apps must have the `organization_administration:write` permission to use this endpoint.
+     */
+    get: operations["oidc/get-oidc-custom-sub-template-for-org"];
+    /**
+     * Creates or updates the customization template for an OpenID Connect (OIDC) subject claim.
+     * You must authenticate using an access token with the `write:org` scope to use this endpoint.
+     * GitHub Apps must have the `admin:org` permission to use this endpoint.
+     */
+    put: operations["oidc/update-oidc-custom-sub-template-for-org"];
   };
   "/orgs/{org}/actions/permissions": {
     /**
@@ -1511,6 +1541,22 @@ export interface paths {
     /** Removing a user from this list will remove them from all teams and they will no longer have any access to the organization's repositories. */
     delete: operations["orgs/remove-member"];
   };
+  "/orgs/{org}/members/{username}/codespaces/{codespace_name}": {
+    /**
+     * Deletes a user's codespace.
+     *
+     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+     */
+    delete: operations["codespaces/delete-from-organization"];
+  };
+  "/orgs/{org}/members/{username}/codespaces/{codespace_name}/stop": {
+    /**
+     * Stops a user's codespace.
+     *
+     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+     */
+    post: operations["codespaces/stop-in-organization"];
+  };
   "/orgs/{org}/memberships/{username}": {
     /** In order to get a user's membership with an organization, the authenticated user must be an organization member. The `state` parameter in the response can be used to identify the user's membership status. */
     get: operations["orgs/get-membership-for-user"];
@@ -2152,6 +2198,32 @@ export interface paths {
      */
     get: operations["actions/get-actions-cache-usage"];
   };
+  "/repos/{owner}/{repo}/actions/caches": {
+    /**
+     * Lists the GitHub Actions caches for a repository.
+     * You must authenticate using an access token with the `repo` scope to use this endpoint.
+     * GitHub Apps must have the `actions:read` permission to use this endpoint.
+     */
+    get: operations["actions/get-actions-cache-list"];
+    /**
+     * Deletes one or more GitHub Actions caches for a repository, using a complete cache key. By default, all caches that match the provided key are deleted, but you can optionally provide a Git ref to restrict deletions to caches that match both the provided key and the Git ref.
+     *
+     * You must authenticate using an access token with the `repo` scope to use this endpoint.
+     *
+     * GitHub Apps must have the `actions:write` permission to use this endpoint.
+     */
+    delete: operations["actions/delete-actions-cache-by-key"];
+  };
+  "/repos/{owner}/{repo}/actions/caches/{cache_id}": {
+    /**
+     * Deletes a GitHub Actions cache for a repository, using a cache ID.
+     *
+     * You must authenticate using an access token with the `repo` scope to use this endpoint.
+     *
+     * GitHub Apps must have the `actions:write` permission to use this endpoint.
+     */
+    delete: operations["actions/delete-actions-cache-by-id"];
+  };
   "/repos/{owner}/{repo}/actions/jobs/{job_id}": {
     /** Gets a specific job in a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. */
     get: operations["actions/get-job-for-workflow-run"];
@@ -2168,6 +2240,20 @@ export interface paths {
   "/repos/{owner}/{repo}/actions/jobs/{job_id}/rerun": {
     /** Re-run a job and its dependent jobs in a workflow run. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint. */
     post: operations["actions/re-run-job-for-workflow-run"];
+  };
+  "/repos/{owner}/{repo}/actions/oidc/customization/sub": {
+    /**
+     * Gets the `opt-out` flag of a GitHub Actions OpenID Connect (OIDC) subject claim customization for a repository.
+     * You must authenticate using an access token with the `repo` scope to use this
+     * endpoint. GitHub Apps must have the `organization_administration:read` permission to use this endpoint.
+     */
+    get: operations["actions/get-custom-oidc-sub-claim-for-repo"];
+    /**
+     * Sets the `opt-out` flag of a GitHub Actions OpenID Connect (OIDC) subject claim customization for a repository.
+     * You must authenticate using an access token with the `repo` scope to use this
+     * endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+     */
+    put: operations["actions/set-custom-oidc-sub-claim-for-repo"];
   };
   "/repos/{owner}/{repo}/actions/permissions": {
     /**
@@ -7079,6 +7165,10 @@ export interface components {
       /** The total size in bytes of all active cache items across all repositories of an enterprise or an organization. */
       total_active_caches_size_in_bytes: number;
     };
+    "actions-oidc-custom-issuer-policy-for-enterprise": {
+      /** Whether the enterprise customer requested a custom issuer URL. */
+      include_enterprise_slug?: boolean;
+    };
     /** The policy that controls the organizations in the enterprise that are allowed to run GitHub Actions. */
     "enabled-organizations": "all" | "none" | "selected";
     /** The permissions policy that controls the actions and reusable workflows that are allowed to run. */
@@ -7260,335 +7350,99 @@ export interface components {
     "secret-scanning-alert-resolution":
       | ("false_positive" | "wont_fix" | "revoked" | "used_in_tests")
       | null;
-    /** A git repository */
-    "nullable-repository": {
-      /** Unique identifier of the repository */
+    /** Simple Repository */
+    "simple-repository": {
+      /** A unique identifier of the repository. */
       id: number;
+      /** The GraphQL identifier of the repository. */
       node_id: string;
       /** The name of the repository. */
       name: string;
-      full_name: string;
-      license: components["schemas"]["nullable-license-simple"];
-      organization?: components["schemas"]["nullable-simple-user"];
-      forks: number;
-      permissions?: {
-        admin: boolean;
-        pull: boolean;
-        triage?: boolean;
-        push: boolean;
-        maintain?: boolean;
-      };
-      owner: components["schemas"]["simple-user"];
-      /** Whether the repository is private or public. */
-      private: boolean;
-      html_url: string;
-      description: string | null;
-      fork: boolean;
-      url: string;
-      archive_url: string;
-      assignees_url: string;
-      blobs_url: string;
-      branches_url: string;
-      collaborators_url: string;
-      comments_url: string;
-      commits_url: string;
-      compare_url: string;
-      contents_url: string;
-      contributors_url: string;
-      deployments_url: string;
-      downloads_url: string;
-      events_url: string;
-      forks_url: string;
-      git_commits_url: string;
-      git_refs_url: string;
-      git_tags_url: string;
-      git_url: string;
-      issue_comment_url: string;
-      issue_events_url: string;
-      issues_url: string;
-      keys_url: string;
-      labels_url: string;
-      languages_url: string;
-      merges_url: string;
-      milestones_url: string;
-      notifications_url: string;
-      pulls_url: string;
-      releases_url: string;
-      ssh_url: string;
-      stargazers_url: string;
-      statuses_url: string;
-      subscribers_url: string;
-      subscription_url: string;
-      tags_url: string;
-      teams_url: string;
-      trees_url: string;
-      clone_url: string;
-      mirror_url: string | null;
-      hooks_url: string;
-      svn_url: string;
-      homepage: string | null;
-      language: string | null;
-      forks_count: number;
-      stargazers_count: number;
-      watchers_count: number;
-      size: number;
-      /** The default branch of the repository. */
-      default_branch: string;
-      open_issues_count: number;
-      /** Whether this repository acts as a template that can be used to generate new repositories. */
-      is_template?: boolean;
-      topics?: string[];
-      /** Whether issues are enabled. */
-      has_issues: boolean;
-      /** Whether projects are enabled. */
-      has_projects: boolean;
-      /** Whether the wiki is enabled. */
-      has_wiki: boolean;
-      has_pages: boolean;
-      /** Whether downloads are enabled. */
-      has_downloads: boolean;
-      /** Whether the repository is archived. */
-      archived: boolean;
-      /** Returns whether or not this repository disabled. */
-      disabled: boolean;
-      /** The repository visibility: public, private, or internal. */
-      visibility?: string;
-      pushed_at: string | null;
-      created_at: string | null;
-      updated_at: string | null;
-      /** Whether to allow rebase merges for pull requests. */
-      allow_rebase_merge?: boolean;
-      template_repository?: {
-        id?: number;
-        node_id?: string;
-        name?: string;
-        full_name?: string;
-        owner?: {
-          login?: string;
-          id?: number;
-          node_id?: string;
-          avatar_url?: string;
-          gravatar_id?: string;
-          url?: string;
-          html_url?: string;
-          followers_url?: string;
-          following_url?: string;
-          gists_url?: string;
-          starred_url?: string;
-          subscriptions_url?: string;
-          organizations_url?: string;
-          repos_url?: string;
-          events_url?: string;
-          received_events_url?: string;
-          type?: string;
-          site_admin?: boolean;
-        };
-        private?: boolean;
-        html_url?: string;
-        description?: string;
-        fork?: boolean;
-        url?: string;
-        archive_url?: string;
-        assignees_url?: string;
-        blobs_url?: string;
-        branches_url?: string;
-        collaborators_url?: string;
-        comments_url?: string;
-        commits_url?: string;
-        compare_url?: string;
-        contents_url?: string;
-        contributors_url?: string;
-        deployments_url?: string;
-        downloads_url?: string;
-        events_url?: string;
-        forks_url?: string;
-        git_commits_url?: string;
-        git_refs_url?: string;
-        git_tags_url?: string;
-        git_url?: string;
-        issue_comment_url?: string;
-        issue_events_url?: string;
-        issues_url?: string;
-        keys_url?: string;
-        labels_url?: string;
-        languages_url?: string;
-        merges_url?: string;
-        milestones_url?: string;
-        notifications_url?: string;
-        pulls_url?: string;
-        releases_url?: string;
-        ssh_url?: string;
-        stargazers_url?: string;
-        statuses_url?: string;
-        subscribers_url?: string;
-        subscription_url?: string;
-        tags_url?: string;
-        teams_url?: string;
-        trees_url?: string;
-        clone_url?: string;
-        mirror_url?: string;
-        hooks_url?: string;
-        svn_url?: string;
-        homepage?: string;
-        language?: string;
-        forks_count?: number;
-        stargazers_count?: number;
-        watchers_count?: number;
-        size?: number;
-        default_branch?: string;
-        open_issues_count?: number;
-        is_template?: boolean;
-        topics?: string[];
-        has_issues?: boolean;
-        has_projects?: boolean;
-        has_wiki?: boolean;
-        has_pages?: boolean;
-        has_downloads?: boolean;
-        archived?: boolean;
-        disabled?: boolean;
-        visibility?: string;
-        pushed_at?: string;
-        created_at?: string;
-        updated_at?: string;
-        permissions?: {
-          admin?: boolean;
-          maintain?: boolean;
-          push?: boolean;
-          triage?: boolean;
-          pull?: boolean;
-        };
-        allow_rebase_merge?: boolean;
-        temp_clone_token?: string;
-        allow_squash_merge?: boolean;
-        allow_auto_merge?: boolean;
-        delete_branch_on_merge?: boolean;
-        allow_update_branch?: boolean;
-        use_squash_pr_title_as_default?: boolean;
-        allow_merge_commit?: boolean;
-        subscribers_count?: number;
-        network_count?: number;
-      } | null;
-      temp_clone_token?: string;
-      /** Whether to allow squash merges for pull requests. */
-      allow_squash_merge?: boolean;
-      /** Whether to allow Auto-merge to be used on pull requests. */
-      allow_auto_merge?: boolean;
-      /** Whether to delete head branches when pull requests are merged */
-      delete_branch_on_merge?: boolean;
-      /** Whether or not a pull request head branch that is behind its base branch can always be updated even if it is not required to be up to date before merging. */
-      allow_update_branch?: boolean;
-      /** Whether a squash merge commit can use the pull request title as default. */
-      use_squash_pr_title_as_default?: boolean;
-      /** Whether to allow merge commits for pull requests. */
-      allow_merge_commit?: boolean;
-      /** Whether to allow forking this repo */
-      allow_forking?: boolean;
-      subscribers_count?: number;
-      network_count?: number;
-      open_issues: number;
-      watchers: number;
-      master_branch?: string;
-      starred_at?: string;
-    } | null;
-    /** Minimal Repository */
-    "minimal-repository": {
-      id: number;
-      node_id: string;
-      name: string;
+      /** The full, globally unique, name of the repository. */
       full_name: string;
       owner: components["schemas"]["simple-user"];
+      /** Whether the repository is private. */
       private: boolean;
+      /** The URL to view the repository on GitHub.com. */
       html_url: string;
+      /** The repository description. */
       description: string | null;
+      /** Whether the repository is a fork. */
       fork: boolean;
+      /** The URL to get more information about the repository from the GitHub API. */
       url: string;
+      /** A template for the API URL to download the repository as an archive. */
       archive_url: string;
+      /** A template for the API URL to list the available assignees for issues in the repository. */
       assignees_url: string;
+      /** A template for the API URL to create or retrieve a raw Git blob in the repository. */
       blobs_url: string;
+      /** A template for the API URL to get information about branches in the repository. */
       branches_url: string;
+      /** A template for the API URL to get information about collaborators of the repository. */
       collaborators_url: string;
+      /** A template for the API URL to get information about comments on the repository. */
       comments_url: string;
+      /** A template for the API URL to get information about commits on the repository. */
       commits_url: string;
+      /** A template for the API URL to compare two commits or refs. */
       compare_url: string;
+      /** A template for the API URL to get the contents of the repository. */
       contents_url: string;
+      /** A template for the API URL to list the contributors to the repository. */
       contributors_url: string;
+      /** The API URL to list the deployments of the repository. */
       deployments_url: string;
+      /** The API URL to list the downloads on the repository. */
       downloads_url: string;
+      /** The API URL to list the events of the repository. */
       events_url: string;
+      /** The API URL to list the forks of the repository. */
       forks_url: string;
+      /** A template for the API URL to get information about Git commits of the repository. */
       git_commits_url: string;
+      /** A template for the API URL to get information about Git refs of the repository. */
       git_refs_url: string;
+      /** A template for the API URL to get information about Git tags of the repository. */
       git_tags_url: string;
-      git_url?: string;
+      /** A template for the API URL to get information about issue comments on the repository. */
       issue_comment_url: string;
+      /** A template for the API URL to get information about issue events on the repository. */
       issue_events_url: string;
+      /** A template for the API URL to get information about issues on the repository. */
       issues_url: string;
+      /** A template for the API URL to get information about deploy keys on the repository. */
       keys_url: string;
+      /** A template for the API URL to get information about labels of the repository. */
       labels_url: string;
+      /** The API URL to get information about the languages of the repository. */
       languages_url: string;
+      /** The API URL to merge branches in the repository. */
       merges_url: string;
+      /** A template for the API URL to get information about milestones of the repository. */
       milestones_url: string;
+      /** A template for the API URL to get information about notifications on the repository. */
       notifications_url: string;
+      /** A template for the API URL to get information about pull requests on the repository. */
       pulls_url: string;
+      /** A template for the API URL to get information about releases on the repository. */
       releases_url: string;
-      ssh_url?: string;
+      /** The API URL to list the stargazers on the repository. */
       stargazers_url: string;
+      /** A template for the API URL to get information about statuses of a commit. */
       statuses_url: string;
+      /** The API URL to list the subscribers on the repository. */
       subscribers_url: string;
+      /** The API URL to subscribe to notifications for this repository. */
       subscription_url: string;
+      /** The API URL to get information about tags on the repository. */
       tags_url: string;
+      /** The API URL to list the teams on the repository. */
       teams_url: string;
+      /** A template for the API URL to create or retrieve a raw Git tree of the repository. */
       trees_url: string;
-      clone_url?: string;
-      mirror_url?: string | null;
+      /** The API URL to list the hooks on the repository. */
       hooks_url: string;
-      svn_url?: string;
-      homepage?: string | null;
-      language?: string | null;
-      forks_count?: number;
-      stargazers_count?: number;
-      watchers_count?: number;
-      size?: number;
-      default_branch?: string;
-      open_issues_count?: number;
-      is_template?: boolean;
-      topics?: string[];
-      has_issues?: boolean;
-      has_projects?: boolean;
-      has_wiki?: boolean;
-      has_pages?: boolean;
-      has_downloads?: boolean;
-      archived?: boolean;
-      disabled?: boolean;
-      visibility?: string;
-      pushed_at?: string | null;
-      created_at?: string | null;
-      updated_at?: string | null;
-      permissions?: {
-        admin?: boolean;
-        maintain?: boolean;
-        push?: boolean;
-        triage?: boolean;
-        pull?: boolean;
-      };
-      role_name?: string;
-      template_repository?: components["schemas"]["nullable-repository"];
-      temp_clone_token?: string;
-      delete_branch_on_merge?: boolean;
-      subscribers_count?: number;
-      network_count?: number;
-      code_of_conduct?: components["schemas"]["code-of-conduct"];
-      license?: {
-        key?: string;
-        name?: string;
-        spdx_id?: string;
-        url?: string;
-        node_id?: string;
-      } | null;
-      forks?: number;
-      open_issues?: number;
-      watchers?: number;
-      allow_forking?: boolean;
     };
     "organization-secret-scanning-alert": {
       number?: components["schemas"]["alert-number"];
@@ -7612,7 +7466,7 @@ export interface components {
       secret_type_display_name?: string;
       /** The secret that was detected. */
       secret?: string;
-      repository?: components["schemas"]["minimal-repository"];
+      repository?: components["schemas"]["simple-repository"];
       /** Whether push protection was bypassed for the detected secret. */
       push_protection_bypassed?: boolean | null;
       push_protection_bypassed_by?: components["schemas"]["nullable-simple-user"];
@@ -7668,6 +7522,7 @@ export interface components {
     };
     "advanced-security-active-committers": {
       total_advanced_security_committers?: number;
+      total_count?: number;
       repositories: components["schemas"]["advanced-security-active-committers-repository"][];
     };
     "packages-billing-usage": {
@@ -8183,6 +8038,336 @@ export interface components {
       actions?: string[];
       dependabot?: string[];
     };
+    /** A git repository */
+    "nullable-repository": {
+      /** Unique identifier of the repository */
+      id: number;
+      node_id: string;
+      /** The name of the repository. */
+      name: string;
+      full_name: string;
+      license: components["schemas"]["nullable-license-simple"];
+      organization?: components["schemas"]["nullable-simple-user"];
+      forks: number;
+      permissions?: {
+        admin: boolean;
+        pull: boolean;
+        triage?: boolean;
+        push: boolean;
+        maintain?: boolean;
+      };
+      owner: components["schemas"]["simple-user"];
+      /** Whether the repository is private or public. */
+      private: boolean;
+      html_url: string;
+      description: string | null;
+      fork: boolean;
+      url: string;
+      archive_url: string;
+      assignees_url: string;
+      blobs_url: string;
+      branches_url: string;
+      collaborators_url: string;
+      comments_url: string;
+      commits_url: string;
+      compare_url: string;
+      contents_url: string;
+      contributors_url: string;
+      deployments_url: string;
+      downloads_url: string;
+      events_url: string;
+      forks_url: string;
+      git_commits_url: string;
+      git_refs_url: string;
+      git_tags_url: string;
+      git_url: string;
+      issue_comment_url: string;
+      issue_events_url: string;
+      issues_url: string;
+      keys_url: string;
+      labels_url: string;
+      languages_url: string;
+      merges_url: string;
+      milestones_url: string;
+      notifications_url: string;
+      pulls_url: string;
+      releases_url: string;
+      ssh_url: string;
+      stargazers_url: string;
+      statuses_url: string;
+      subscribers_url: string;
+      subscription_url: string;
+      tags_url: string;
+      teams_url: string;
+      trees_url: string;
+      clone_url: string;
+      mirror_url: string | null;
+      hooks_url: string;
+      svn_url: string;
+      homepage: string | null;
+      language: string | null;
+      forks_count: number;
+      stargazers_count: number;
+      watchers_count: number;
+      size: number;
+      /** The default branch of the repository. */
+      default_branch: string;
+      open_issues_count: number;
+      /** Whether this repository acts as a template that can be used to generate new repositories. */
+      is_template?: boolean;
+      topics?: string[];
+      /** Whether issues are enabled. */
+      has_issues: boolean;
+      /** Whether projects are enabled. */
+      has_projects: boolean;
+      /** Whether the wiki is enabled. */
+      has_wiki: boolean;
+      has_pages: boolean;
+      /** Whether downloads are enabled. */
+      has_downloads: boolean;
+      /** Whether the repository is archived. */
+      archived: boolean;
+      /** Returns whether or not this repository disabled. */
+      disabled: boolean;
+      /** The repository visibility: public, private, or internal. */
+      visibility?: string;
+      pushed_at: string | null;
+      created_at: string | null;
+      updated_at: string | null;
+      /** Whether to allow rebase merges for pull requests. */
+      allow_rebase_merge?: boolean;
+      template_repository?: {
+        id?: number;
+        node_id?: string;
+        name?: string;
+        full_name?: string;
+        owner?: {
+          login?: string;
+          id?: number;
+          node_id?: string;
+          avatar_url?: string;
+          gravatar_id?: string;
+          url?: string;
+          html_url?: string;
+          followers_url?: string;
+          following_url?: string;
+          gists_url?: string;
+          starred_url?: string;
+          subscriptions_url?: string;
+          organizations_url?: string;
+          repos_url?: string;
+          events_url?: string;
+          received_events_url?: string;
+          type?: string;
+          site_admin?: boolean;
+        };
+        private?: boolean;
+        html_url?: string;
+        description?: string;
+        fork?: boolean;
+        url?: string;
+        archive_url?: string;
+        assignees_url?: string;
+        blobs_url?: string;
+        branches_url?: string;
+        collaborators_url?: string;
+        comments_url?: string;
+        commits_url?: string;
+        compare_url?: string;
+        contents_url?: string;
+        contributors_url?: string;
+        deployments_url?: string;
+        downloads_url?: string;
+        events_url?: string;
+        forks_url?: string;
+        git_commits_url?: string;
+        git_refs_url?: string;
+        git_tags_url?: string;
+        git_url?: string;
+        issue_comment_url?: string;
+        issue_events_url?: string;
+        issues_url?: string;
+        keys_url?: string;
+        labels_url?: string;
+        languages_url?: string;
+        merges_url?: string;
+        milestones_url?: string;
+        notifications_url?: string;
+        pulls_url?: string;
+        releases_url?: string;
+        ssh_url?: string;
+        stargazers_url?: string;
+        statuses_url?: string;
+        subscribers_url?: string;
+        subscription_url?: string;
+        tags_url?: string;
+        teams_url?: string;
+        trees_url?: string;
+        clone_url?: string;
+        mirror_url?: string;
+        hooks_url?: string;
+        svn_url?: string;
+        homepage?: string;
+        language?: string;
+        forks_count?: number;
+        stargazers_count?: number;
+        watchers_count?: number;
+        size?: number;
+        default_branch?: string;
+        open_issues_count?: number;
+        is_template?: boolean;
+        topics?: string[];
+        has_issues?: boolean;
+        has_projects?: boolean;
+        has_wiki?: boolean;
+        has_pages?: boolean;
+        has_downloads?: boolean;
+        archived?: boolean;
+        disabled?: boolean;
+        visibility?: string;
+        pushed_at?: string;
+        created_at?: string;
+        updated_at?: string;
+        permissions?: {
+          admin?: boolean;
+          maintain?: boolean;
+          push?: boolean;
+          triage?: boolean;
+          pull?: boolean;
+        };
+        allow_rebase_merge?: boolean;
+        temp_clone_token?: string;
+        allow_squash_merge?: boolean;
+        allow_auto_merge?: boolean;
+        delete_branch_on_merge?: boolean;
+        allow_update_branch?: boolean;
+        use_squash_pr_title_as_default?: boolean;
+        allow_merge_commit?: boolean;
+        subscribers_count?: number;
+        network_count?: number;
+      } | null;
+      temp_clone_token?: string;
+      /** Whether to allow squash merges for pull requests. */
+      allow_squash_merge?: boolean;
+      /** Whether to allow Auto-merge to be used on pull requests. */
+      allow_auto_merge?: boolean;
+      /** Whether to delete head branches when pull requests are merged */
+      delete_branch_on_merge?: boolean;
+      /** Whether or not a pull request head branch that is behind its base branch can always be updated even if it is not required to be up to date before merging. */
+      allow_update_branch?: boolean;
+      /** Whether a squash merge commit can use the pull request title as default. */
+      use_squash_pr_title_as_default?: boolean;
+      /** Whether to allow merge commits for pull requests. */
+      allow_merge_commit?: boolean;
+      /** Whether to allow forking this repo */
+      allow_forking?: boolean;
+      subscribers_count?: number;
+      network_count?: number;
+      open_issues: number;
+      watchers: number;
+      master_branch?: string;
+      starred_at?: string;
+    } | null;
+    /** Minimal Repository */
+    "minimal-repository": {
+      id: number;
+      node_id: string;
+      name: string;
+      full_name: string;
+      owner: components["schemas"]["simple-user"];
+      private: boolean;
+      html_url: string;
+      description: string | null;
+      fork: boolean;
+      url: string;
+      archive_url: string;
+      assignees_url: string;
+      blobs_url: string;
+      branches_url: string;
+      collaborators_url: string;
+      comments_url: string;
+      commits_url: string;
+      compare_url: string;
+      contents_url: string;
+      contributors_url: string;
+      deployments_url: string;
+      downloads_url: string;
+      events_url: string;
+      forks_url: string;
+      git_commits_url: string;
+      git_refs_url: string;
+      git_tags_url: string;
+      git_url?: string;
+      issue_comment_url: string;
+      issue_events_url: string;
+      issues_url: string;
+      keys_url: string;
+      labels_url: string;
+      languages_url: string;
+      merges_url: string;
+      milestones_url: string;
+      notifications_url: string;
+      pulls_url: string;
+      releases_url: string;
+      ssh_url?: string;
+      stargazers_url: string;
+      statuses_url: string;
+      subscribers_url: string;
+      subscription_url: string;
+      tags_url: string;
+      teams_url: string;
+      trees_url: string;
+      clone_url?: string;
+      mirror_url?: string | null;
+      hooks_url: string;
+      svn_url?: string;
+      homepage?: string | null;
+      language?: string | null;
+      forks_count?: number;
+      stargazers_count?: number;
+      watchers_count?: number;
+      size?: number;
+      default_branch?: string;
+      open_issues_count?: number;
+      is_template?: boolean;
+      topics?: string[];
+      has_issues?: boolean;
+      has_projects?: boolean;
+      has_wiki?: boolean;
+      has_pages?: boolean;
+      has_downloads?: boolean;
+      archived?: boolean;
+      disabled?: boolean;
+      visibility?: string;
+      pushed_at?: string | null;
+      created_at?: string | null;
+      updated_at?: string | null;
+      permissions?: {
+        admin?: boolean;
+        maintain?: boolean;
+        push?: boolean;
+        triage?: boolean;
+        pull?: boolean;
+      };
+      role_name?: string;
+      template_repository?: components["schemas"]["nullable-repository"];
+      temp_clone_token?: string;
+      delete_branch_on_merge?: boolean;
+      subscribers_count?: number;
+      network_count?: number;
+      code_of_conduct?: components["schemas"]["code-of-conduct"];
+      license?: {
+        key?: string;
+        name?: string;
+        spdx_id?: string;
+        url?: string;
+        node_id?: string;
+      } | null;
+      forks?: number;
+      open_issues?: number;
+      watchers?: number;
+      allow_forking?: boolean;
+    };
     /** Thread */
     thread: {
       id: string;
@@ -8214,6 +8399,106 @@ export interface components {
     "organization-custom-repository-role": {
       id: number;
       name: string;
+    };
+    /** A description of the machine powering a codespace. */
+    "nullable-codespace-machine": {
+      /** The name of the machine. */
+      name: string;
+      /** The display name of the machine includes cores, memory, and storage. */
+      display_name: string;
+      /** The operating system of the machine. */
+      operating_system: string;
+      /** How much storage is available to the codespace. */
+      storage_in_bytes: number;
+      /** How much memory is available to the codespace. */
+      memory_in_bytes: number;
+      /** How many cores are available to the codespace. */
+      cpus: number;
+      /** Whether a prebuild is currently available when creating a codespace for this machine and repository. If a branch was not specified as a ref, the default branch will be assumed. Value will be "null" if prebuilds are not supported or prebuild availability could not be determined. Value will be "none" if no prebuild is available. Latest values "ready" and "in_progress" indicate the prebuild availability status. Old values "blob" and "pool" will be deprecated soon. */
+      prebuild_availability:
+        | ("none" | "blob" | "pool" | "ready" | "in_progress")
+        | null;
+    } | null;
+    /** A codespace. */
+    codespace: {
+      id: number;
+      /** Automatically generated name of this codespace. */
+      name: string;
+      /** Display name for this codespace. */
+      display_name?: string | null;
+      /** UUID identifying this codespace's environment. */
+      environment_id: string | null;
+      owner: components["schemas"]["simple-user"];
+      billable_owner: components["schemas"]["simple-user"];
+      repository: components["schemas"]["minimal-repository"];
+      machine: components["schemas"]["nullable-codespace-machine"];
+      /** Path to devcontainer.json from repo root used to create Codespace. */
+      devcontainer_path?: string | null;
+      /** Whether the codespace was created from a prebuild. */
+      prebuild: boolean | null;
+      created_at: string;
+      updated_at: string;
+      /** Last known time this codespace was started. */
+      last_used_at: string;
+      /** State of this codespace. */
+      state:
+        | "Unknown"
+        | "Created"
+        | "Queued"
+        | "Provisioning"
+        | "Available"
+        | "Awaiting"
+        | "Unavailable"
+        | "Deleted"
+        | "Moved"
+        | "Shutdown"
+        | "Archived"
+        | "Starting"
+        | "ShuttingDown"
+        | "Failed"
+        | "Exporting"
+        | "Updating"
+        | "Rebuilding";
+      /** API URL for this codespace. */
+      url: string;
+      /** Details about the codespace's git repository. */
+      git_status: {
+        /** The number of commits the local repository is ahead of the remote. */
+        ahead?: number;
+        /** The number of commits the local repository is behind the remote. */
+        behind?: number;
+        /** Whether the local repository has unpushed changes. */
+        has_unpushed_changes?: boolean;
+        /** Whether the local repository has uncommitted changes. */
+        has_uncommitted_changes?: boolean;
+        /** The current branch (or SHA if in detached HEAD state) of the local repository. */
+        ref?: string;
+      };
+      /** The Azure region where this codespace is located. */
+      location: "EastUs" | "SouthEastAsia" | "WestEurope" | "WestUs2";
+      /** The number of minutes of inactivity after which this codespace will be automatically stopped. */
+      idle_timeout_minutes: number | null;
+      /** URL to access this codespace on the web. */
+      web_url: string;
+      /** API URL to access available alternate machine types for this codespace. */
+      machines_url: string;
+      /** API URL to start this codespace. */
+      start_url: string;
+      /** API URL to stop this codespace. */
+      stop_url: string;
+      /** API URL for the Pull Request associated with this codespace, if any. */
+      pulls_url: string | null;
+      recent_folders: string[];
+      runtime_constraints?: {
+        /** The privacy settings a user can select from when forwarding a port. */
+        allowed_port_privacy_settings?: string[] | null;
+      };
+      /** Whether or not a codespace has a pending async operation. This would mean that the codespace is temporarily unavailable. The only thing that you can do with a codespace in this state is delete it. */
+      pending_operation?: boolean | null;
+      /** Text to show user when codespace is disabled by a pending operation */
+      pending_operation_disabled_reason?: string | null;
+      /** Text to show user when codespace idle timeout minutes has been overriden by an organization policy */
+      idle_timeout_notice?: string | null;
     };
     /** Organization Full */
     "organization-full": {
@@ -8280,6 +8565,12 @@ export interface components {
       /** The number of active caches in the repository. */
       active_caches_count: number;
     };
+    /** Actions OIDC Subject customization */
+    "oidc-custom-sub": {
+      include_claim_keys: string[];
+    };
+    /** An object without any properties. */
+    "empty-object": { [key: string]: unknown };
     /** The policy that controls the repositories in the organization that are allowed to run GitHub Actions. */
     "enabled-repositories": "all" | "none" | "selected";
     "actions-organization-permissions": {
@@ -8328,8 +8619,6 @@ export interface components {
       title?: string;
       created_at?: string;
     };
-    /** An object without any properties. */
-    "empty-object": { [key: string]: unknown };
     /** The name of the tool used to generate the code scanning analysis. */
     "code-scanning-analysis-tool-name": string;
     /** The GUID of the tool used to generate the code scanning analysis, if provided in the uploaded SARIF data. */
@@ -8432,7 +8721,7 @@ export interface components {
       rule: components["schemas"]["code-scanning-alert-rule"];
       tool: components["schemas"]["code-scanning-analysis-tool"];
       most_recent_instance: components["schemas"]["code-scanning-alert-instance"];
-      repository: components["schemas"]["minimal-repository"];
+      repository: components["schemas"]["simple-repository"];
     };
     /** Credential Authorization */
     "credential-authorization": {
@@ -9289,6 +9578,21 @@ export interface components {
         head_sha?: string;
       } | null;
     };
+    /** Repository actions caches */
+    "actions-cache-list": {
+      /** Total number of caches */
+      total_count: number;
+      /** Array of caches */
+      actions_caches: {
+        id?: number;
+        ref?: string;
+        key?: string;
+        version?: string;
+        last_accessed_at?: string;
+        created_at?: string;
+        size_in_bytes?: number;
+      }[];
+    };
     /** Information of a job execution in a workflow run */
     job: {
       /** The id of the job. */
@@ -9338,6 +9642,10 @@ export interface components {
       runner_group_id: number | null;
       /** The name of the runner group to which this job has been assigned. (If a runner hasn't yet been assigned, this will be null.) */
       runner_group_name: string | null;
+    };
+    /** OIDC Customer Subject */
+    "opt-out-oidc-custom-sub": {
+      use_default: boolean;
     };
     /** Whether GitHub Actions is enabled on the repository. */
     "actions-enabled": boolean;
@@ -10171,106 +10479,6 @@ export interface components {
         /** The path of the file where the error occured. */
         path: string;
       }[];
-    };
-    /** A description of the machine powering a codespace. */
-    "nullable-codespace-machine": {
-      /** The name of the machine. */
-      name: string;
-      /** The display name of the machine includes cores, memory, and storage. */
-      display_name: string;
-      /** The operating system of the machine. */
-      operating_system: string;
-      /** How much storage is available to the codespace. */
-      storage_in_bytes: number;
-      /** How much memory is available to the codespace. */
-      memory_in_bytes: number;
-      /** How many cores are available to the codespace. */
-      cpus: number;
-      /** Whether a prebuild is currently available when creating a codespace for this machine and repository. If a branch was not specified as a ref, the default branch will be assumed. Value will be "null" if prebuilds are not supported or prebuild availability could not be determined. Value will be "none" if no prebuild is available. Latest values "ready" and "in_progress" indicate the prebuild availability status. Old values "blob" and "pool" will be deprecated soon. */
-      prebuild_availability:
-        | ("none" | "blob" | "pool" | "ready" | "in_progress")
-        | null;
-    } | null;
-    /** A codespace. */
-    codespace: {
-      id: number;
-      /** Automatically generated name of this codespace. */
-      name: string;
-      /** Display name for this codespace. */
-      display_name?: string | null;
-      /** UUID identifying this codespace's environment. */
-      environment_id: string | null;
-      owner: components["schemas"]["simple-user"];
-      billable_owner: components["schemas"]["simple-user"];
-      repository: components["schemas"]["minimal-repository"];
-      machine: components["schemas"]["nullable-codespace-machine"];
-      /** Path to devcontainer.json from repo root used to create Codespace. */
-      devcontainer_path?: string | null;
-      /** Whether the codespace was created from a prebuild. */
-      prebuild: boolean | null;
-      created_at: string;
-      updated_at: string;
-      /** Last known time this codespace was started. */
-      last_used_at: string;
-      /** State of this codespace. */
-      state:
-        | "Unknown"
-        | "Created"
-        | "Queued"
-        | "Provisioning"
-        | "Available"
-        | "Awaiting"
-        | "Unavailable"
-        | "Deleted"
-        | "Moved"
-        | "Shutdown"
-        | "Archived"
-        | "Starting"
-        | "ShuttingDown"
-        | "Failed"
-        | "Exporting"
-        | "Updating"
-        | "Rebuilding";
-      /** API URL for this codespace. */
-      url: string;
-      /** Details about the codespace's git repository. */
-      git_status: {
-        /** The number of commits the local repository is ahead of the remote. */
-        ahead?: number;
-        /** The number of commits the local repository is behind the remote. */
-        behind?: number;
-        /** Whether the local repository has unpushed changes. */
-        has_unpushed_changes?: boolean;
-        /** Whether the local repository has uncommitted changes. */
-        has_uncommitted_changes?: boolean;
-        /** The current branch (or SHA if in detached HEAD state) of the local repository. */
-        ref?: string;
-      };
-      /** The Azure region where this codespace is located. */
-      location: "EastUs" | "SouthEastAsia" | "WestEurope" | "WestUs2";
-      /** The number of minutes of inactivity after which this codespace will be automatically stopped. */
-      idle_timeout_minutes: number | null;
-      /** URL to access this codespace on the web. */
-      web_url: string;
-      /** API URL to access available alternate machine types for this codespace. */
-      machines_url: string;
-      /** API URL to start this codespace. */
-      start_url: string;
-      /** API URL to stop this codespace. */
-      stop_url: string;
-      /** API URL for the Pull Request associated with this codespace, if any. */
-      pulls_url: string | null;
-      recent_folders: string[];
-      runtime_constraints?: {
-        /** The privacy settings a user can select from when forwarding a port. */
-        allowed_port_privacy_settings?: string[] | null;
-      };
-      /** Whether or not a codespace has a pending async operation. This would mean that the codespace is temporarily unavailable. The only thing that you can do with a codespace in this state is delete it. */
-      pending_operation?: boolean | null;
-      /** Text to show user when codespace is disabled by a pending operation */
-      pending_operation_disabled_reason?: string | null;
-      /** Text to show user when codespace idle timeout minutes has been overriden by an organization policy */
-      idle_timeout_notice?: string | null;
     };
     /** A description of the machine powering a codespace. */
     "codespace-machine": {
@@ -13342,6 +13550,12 @@ export interface components {
         "application/json": components["schemas"]["basic-error"];
       };
     };
+    /** Internal Error */
+    internal_error: {
+      content: {
+        "application/json": components["schemas"]["basic-error"];
+      };
+    };
     /** Conflict */
     conflict: {
       content: {
@@ -13350,12 +13564,6 @@ export interface components {
     };
     /** Temporary Redirect */
     temporary_redirect: {
-      content: {
-        "application/json": components["schemas"]["basic-error"];
-      };
-    };
-    /** Internal Error */
-    internal_error: {
       content: {
         "application/json": components["schemas"]["basic-error"];
       };
@@ -13532,6 +13740,8 @@ export interface components {
     "hook-id": number;
     /** The unique identifier of the invitation. */
     "invitation-id": number;
+    /** The name of the codespace. */
+    "codespace-name": string;
     /** The unique identifier of the migration. */
     "migration-id": number;
     /** repo_name parameter */
@@ -13570,6 +13780,19 @@ export interface components {
     "column-id": number;
     /** The unique identifier of the artifact. */
     "artifact-id": number;
+    /** The Git reference for the results you want to list. The `ref` for a branch can be formatted either as `refs/heads/<branch name>` or simply `<branch name>`. To reference a pull request use `refs/pull/<number>/merge`. */
+    "git-ref": components["schemas"]["code-scanning-ref"];
+    /** An explicit key or prefix for identifying the cache */
+    "actions-cache-key": string;
+    /** The property to sort the results by. `created_at` means when the cache was created. `last_accessed_at` means when the cache was last accessed. `size_in_bytes` is the size of the cache in bytes. */
+    "actions-cache-list-sort":
+      | "created_at"
+      | "last_accessed_at"
+      | "size_in_bytes";
+    /** A key for identifying the cache. */
+    "actions-cache-key-required": string;
+    /** The unique identifier of the GitHub Actions cache. */
+    "cache-id": number;
     /** The unique identifier of the job. */
     "job-id": number;
     /** Returns someone's workflow runs. Use the login for the user who created the `push` associated with the check suite or workflow run. */
@@ -13617,8 +13840,6 @@ export interface components {
     "check-name": string;
     /** Returns check runs with the specified `status`. */
     status: "queued" | "in_progress" | "completed";
-    /** The Git reference for the results you want to list. The `ref` for a branch can be formatted either as `refs/heads/<branch name>` or simply `<branch name>`. To reference a pull request use `refs/pull/<number>/merge`. */
-    "git-ref": components["schemas"]["code-scanning-ref"];
     /** The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation. */
     "alert-number": components["schemas"]["alert-number"];
     /** The SHA of the commit. */
@@ -13665,8 +13886,6 @@ export interface components {
     "team-id": number;
     /** ID of the Repository to filter on */
     "repository-id-in-query": number;
-    /** The name of the codespace. */
-    "codespace-name": string;
     /** The ID of the export operation, or `latest`. Currently only `latest` is currently supported. */
     "export-id": string;
     /** The unique identifier of the GPG key. */
@@ -14568,6 +14787,28 @@ export interface operations {
         content: {
           "application/json": components["schemas"]["actions-cache-usage-org-enterprise"];
         };
+      };
+    };
+  };
+  /**
+   * Sets the GitHub Actions OpenID Connect (OIDC) custom issuer policy for an enterprise.
+   * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
+   * GitHub Apps must have the `enterprise_administration:write` permission to use this endpoint.
+   */
+  "actions/set-actions-oidc-custom-issuer-policy-for-enterprise": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["actions-oidc-custom-issuer-policy-for-enterprise"];
       };
     };
   };
@@ -16790,6 +17031,41 @@ export interface operations {
     };
   };
   /**
+   * Lists the codespaces associated to a specified organization.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   */
+  "codespaces/list-in-organization": {
+    parameters: {
+      query: {
+        /** The number of results per page (max 100). */
+        per_page?: components["parameters"]["per-page"];
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
+      };
+      path: {
+        /** The unique identifier of the organization. */
+        org_id: components["parameters"]["org-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": {
+            total_count: number;
+            codespaces: components["schemas"]["codespace"][];
+          };
+        };
+      };
+      304: components["responses"]["not_modified"];
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      500: components["responses"]["internal_error"];
+    };
+  };
+  /**
    * To see many of the organization response values, you need to be an authenticated organization owner with the `admin:org` scope. When the value of `two_factor_requirement_enabled` is `true`, the organization requires all members, billing managers, and outside collaborators to enable [two-factor authentication](https://docs.github.com/articles/securing-your-account-with-two-factor-authentication-2fa/).
    *
    * GitHub Apps with the `Organization plan` permission can use this endpoint to retrieve information about an organization's GitHub plan. See "[Authenticating with GitHub Apps](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/)" for details. For an example response, see 'Response with GitHub plan information' below."
@@ -16939,6 +17215,55 @@ export interface operations {
             repository_cache_usages: components["schemas"]["actions-cache-usage-by-repository"][];
           };
         };
+      };
+    };
+  };
+  /**
+   * Gets the customization template for an OpenID Connect (OIDC) subject claim.
+   * You must authenticate using an access token with the `read:org` scope to use this endpoint.
+   * GitHub Apps must have the `organization_administration:write` permission to use this endpoint.
+   */
+  "oidc/get-oidc-custom-sub-template-for-org": {
+    parameters: {
+      path: {
+        /** The organization name. The name is not case sensitive. */
+        org: components["parameters"]["org"];
+      };
+    };
+    responses: {
+      /** A JSON serialized template for OIDC subject claim customization */
+      200: {
+        content: {
+          "application/json": components["schemas"]["oidc-custom-sub"];
+        };
+      };
+    };
+  };
+  /**
+   * Creates or updates the customization template for an OpenID Connect (OIDC) subject claim.
+   * You must authenticate using an access token with the `write:org` scope to use this endpoint.
+   * GitHub Apps must have the `admin:org` permission to use this endpoint.
+   */
+  "oidc/update-oidc-custom-sub-template-for-org": {
+    parameters: {
+      path: {
+        /** The organization name. The name is not case sensitive. */
+        org: components["parameters"]["org"];
+      };
+    };
+    responses: {
+      /** Empty response */
+      201: {
+        content: {
+          "application/json": components["schemas"]["empty-object"];
+        };
+      };
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["oidc-custom-sub"];
       };
     };
   };
@@ -19321,6 +19646,61 @@ export interface operations {
       /** Response */
       204: never;
       403: components["responses"]["forbidden"];
+    };
+  };
+  /**
+   * Deletes a user's codespace.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   */
+  "codespaces/delete-from-organization": {
+    parameters: {
+      path: {
+        /** The organization name. The name is not case sensitive. */
+        org: components["parameters"]["org"];
+        /** The handle for the GitHub user account. */
+        username: components["parameters"]["username"];
+        /** The name of the codespace. */
+        codespace_name: components["parameters"]["codespace-name"];
+      };
+    };
+    responses: {
+      202: components["responses"]["accepted"];
+      304: components["responses"]["not_modified"];
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      500: components["responses"]["internal_error"];
+    };
+  };
+  /**
+   * Stops a user's codespace.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   */
+  "codespaces/stop-in-organization": {
+    parameters: {
+      path: {
+        /** The organization name. The name is not case sensitive. */
+        org: components["parameters"]["org"];
+        /** The handle for the GitHub user account. */
+        username: components["parameters"]["username"];
+        /** The name of the codespace. */
+        codespace_name: components["parameters"]["codespace-name"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["codespace"];
+        };
+      };
+      304: components["responses"]["not_modified"];
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      500: components["responses"]["internal_error"];
     };
   };
   /** In order to get a user's membership with an organization, the authenticated user must be an organization member. The `state` parameter in the response can be used to identify the user's membership status. */
@@ -22428,6 +22808,7 @@ export interface operations {
     responses: {
       /** Response */
       302: never;
+      410: components["responses"]["gone"];
     };
   };
   /**
@@ -22451,6 +22832,98 @@ export interface operations {
           "application/json": components["schemas"]["actions-cache-usage-by-repository"];
         };
       };
+    };
+  };
+  /**
+   * Lists the GitHub Actions caches for a repository.
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * GitHub Apps must have the `actions:read` permission to use this endpoint.
+   */
+  "actions/get-actions-cache-list": {
+    parameters: {
+      path: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: components["parameters"]["owner"];
+        /** The name of the repository. The name is not case sensitive. */
+        repo: components["parameters"]["repo"];
+      };
+      query: {
+        /** The number of results per page (max 100). */
+        per_page?: components["parameters"]["per-page"];
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
+        /** The Git reference for the results you want to list. The `ref` for a branch can be formatted either as `refs/heads/<branch name>` or simply `<branch name>`. To reference a pull request use `refs/pull/<number>/merge`. */
+        ref?: components["parameters"]["git-ref"];
+        /** An explicit key or prefix for identifying the cache */
+        key?: components["parameters"]["actions-cache-key"];
+        /** The property to sort the results by. `created_at` means when the cache was created. `last_accessed_at` means when the cache was last accessed. `size_in_bytes` is the size of the cache in bytes. */
+        sort?: components["parameters"]["actions-cache-list-sort"];
+        /** The direction to sort the results by. */
+        direction?: components["parameters"]["direction"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        headers: {};
+        content: {
+          "application/json": components["schemas"]["actions-cache-list"];
+        };
+      };
+    };
+  };
+  /**
+   * Deletes one or more GitHub Actions caches for a repository, using a complete cache key. By default, all caches that match the provided key are deleted, but you can optionally provide a Git ref to restrict deletions to caches that match both the provided key and the Git ref.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   *
+   * GitHub Apps must have the `actions:write` permission to use this endpoint.
+   */
+  "actions/delete-actions-cache-by-key": {
+    parameters: {
+      path: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: components["parameters"]["owner"];
+        /** The name of the repository. The name is not case sensitive. */
+        repo: components["parameters"]["repo"];
+      };
+      query: {
+        /** A key for identifying the cache. */
+        key: components["parameters"]["actions-cache-key-required"];
+        /** The Git reference for the results you want to list. The `ref` for a branch can be formatted either as `refs/heads/<branch name>` or simply `<branch name>`. To reference a pull request use `refs/pull/<number>/merge`. */
+        ref?: components["parameters"]["git-ref"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["actions-cache-list"];
+        };
+      };
+    };
+  };
+  /**
+   * Deletes a GitHub Actions cache for a repository, using a cache ID.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   *
+   * GitHub Apps must have the `actions:write` permission to use this endpoint.
+   */
+  "actions/delete-actions-cache-by-id": {
+    parameters: {
+      path: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: components["parameters"]["owner"];
+        /** The name of the repository. The name is not case sensitive. */
+        repo: components["parameters"]["repo"];
+        /** The unique identifier of the GitHub Actions cache. */
+        cache_id: components["parameters"]["cache-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
     };
   };
   /** Gets a specific job in a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. */
@@ -22523,6 +22996,62 @@ export interface operations {
           /** Whether to enable debug logging for the re-run. */
           enable_debug_logging?: boolean;
         } | null;
+      };
+    };
+  };
+  /**
+   * Gets the `opt-out` flag of a GitHub Actions OpenID Connect (OIDC) subject claim customization for a repository.
+   * You must authenticate using an access token with the `repo` scope to use this
+   * endpoint. GitHub Apps must have the `organization_administration:read` permission to use this endpoint.
+   */
+  "actions/get-custom-oidc-sub-claim-for-repo": {
+    parameters: {
+      path: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: components["parameters"]["owner"];
+        /** The name of the repository. The name is not case sensitive. */
+        repo: components["parameters"]["repo"];
+      };
+    };
+    responses: {
+      /** Status response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["opt-out-oidc-custom-sub"];
+        };
+      };
+      400: components["responses"]["bad_request"];
+      404: components["responses"]["not_found"];
+    };
+  };
+  /**
+   * Sets the `opt-out` flag of a GitHub Actions OpenID Connect (OIDC) subject claim customization for a repository.
+   * You must authenticate using an access token with the `repo` scope to use this
+   * endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+   */
+  "actions/set-custom-oidc-sub-claim-for-repo": {
+    parameters: {
+      path: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: components["parameters"]["owner"];
+        /** The name of the repository. The name is not case sensitive. */
+        repo: components["parameters"]["repo"];
+      };
+    };
+    responses: {
+      /** Empty response */
+      201: {
+        content: {
+          "application/json": components["schemas"]["empty-object"];
+        };
+      };
+      400: components["responses"]["bad_request"];
+      404: components["responses"]["not_found"];
+      422: components["responses"]["validation_failed_simple"];
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["opt-out-oidc-custom-sub"];
       };
     };
   };
@@ -26305,6 +26834,8 @@ export interface operations {
           idle_timeout_minutes?: number;
           /** Display name for this codespace */
           display_name?: string;
+          /** Duration in minutes after codespace has gone idle in which it will be deleted. Must be integer minutes between 0 and 43200 (30 days). */
+          retention_period_minutes?: number;
         } | null;
       };
     };
@@ -32077,6 +32608,8 @@ export interface operations {
           idle_timeout_minutes?: number;
           /** Display name for this codespace */
           display_name?: string;
+          /** Duration in minutes after codespace has gone idle in which it will be deleted. Must be integer minutes between 0 and 43200 (30 days). */
+          retention_period_minutes?: number;
         } | null;
       };
     };
@@ -36697,6 +37230,8 @@ export interface operations {
               idle_timeout_minutes?: number;
               /** Display name for this codespace */
               display_name?: string;
+              /** Duration in minutes after codespace has gone idle in which it will be deleted. Must be integer minutes between 0 and 43200 (30 days). */
+              retention_period_minutes?: number;
             }
           | {
               /** Pull request number for this codespace */
