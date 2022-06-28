@@ -4365,6 +4365,10 @@ export interface paths {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
     get: operations["actions/get-actions-cache-usage-for-enterprise"];
   };
+  "/enterprises/{enterprise}/actions/oidc/customization/issuer": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    put: operations["actions/set-actions-oidc-custom-issuer-policy-for-enterprise"];
+  };
   "/enterprises/{enterprise}/actions/permissions/workflow": {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
     get: operations["actions/get-github-actions-default-workflow-permissions-enterprise"];
@@ -4453,6 +4457,10 @@ export interface paths {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
     get: operations["orgs/list-custom-roles"];
   };
+  "/orgs/{org_id}/codespaces": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["codespaces/list-in-organization"];
+  };
   "/orgs/{org}/actions/cache/usage": {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
     get: operations["actions/get-actions-cache-usage-for-org"];
@@ -4460,6 +4468,12 @@ export interface paths {
   "/orgs/{org}/actions/cache/usage-by-repository": {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
     get: operations["actions/get-actions-cache-usage-by-repo-for-org"];
+  };
+  "/orgs/{org}/actions/oidc/customization/sub": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["oidc/get-oidc-custom-sub-template-for-org"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    put: operations["oidc/update-oidc-custom-sub-template-for-org"];
   };
   "/orgs/{org}/actions/permissions/workflow": {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
@@ -4581,6 +4595,14 @@ export interface paths {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
     get: operations["orgs/list-invitation-teams"];
   };
+  "/orgs/{org}/members/{username}/codespaces/{codespace_name}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["codespaces/delete-from-organization"];
+  };
+  "/orgs/{org}/members/{username}/codespaces/{codespace_name}/stop": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    post: operations["codespaces/stop-in-organization"];
+  };
   "/orgs/{org}/migrations/{migration_id}/archive": {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
     get: operations["migrations/download-archive-for-org"];
@@ -4673,9 +4695,25 @@ export interface paths {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
     get: operations["actions/get-actions-cache-usage"];
   };
+  "/repos/{owner}/{repo}/actions/caches": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["actions/get-actions-cache-list"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["actions/delete-actions-cache-by-key"];
+  };
+  "/repos/{owner}/{repo}/actions/caches/{cache_id}": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    delete: operations["actions/delete-actions-cache-by-id"];
+  };
   "/repos/{owner}/{repo}/actions/jobs/{job_id}/rerun": {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
     post: operations["actions/re-run-job-for-workflow-run"];
+  };
+  "/repos/{owner}/{repo}/actions/oidc/customization/sub": {
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    get: operations["actions/get-custom-oidc-sub-claim-for-repo"];
+    /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+    put: operations["actions/set-custom-oidc-sub-claim-for-repo"];
   };
   "/repos/{owner}/{repo}/actions/permissions/access": {
     /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
@@ -17763,6 +17801,7 @@ export interface operations {
     responses: {
       /** Response */
       302: never;
+      410: components["responses"]["gone"];
     };
   };
   /** Gets a specific job in a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. */
@@ -30654,6 +30693,13 @@ export interface operations {
     };
   };
   /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/set-actions-oidc-custom-issuer-policy-for-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
   "actions/get-github-actions-default-workflow-permissions-enterprise": {
     responses: {
       /** Not Implemented */
@@ -30829,6 +30875,13 @@ export interface operations {
     };
   };
   /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "codespaces/list-in-organization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
   "actions/get-actions-cache-usage-for-org": {
     responses: {
       /** Not Implemented */
@@ -30837,6 +30890,20 @@ export interface operations {
   };
   /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
   "actions/get-actions-cache-usage-by-repo-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "oidc/get-oidc-custom-sub-template-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "oidc/update-oidc-custom-sub-template-for-org": {
     responses: {
       /** Not Implemented */
       501: unknown;
@@ -31109,6 +31176,20 @@ export interface operations {
     };
   };
   /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "codespaces/delete-from-organization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "codespaces/stop-in-organization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
   "migrations/download-archive-for-org": {
     responses: {
       /** Not Implemented */
@@ -31291,7 +31372,42 @@ export interface operations {
     };
   };
   /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/get-actions-cache-list": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/delete-actions-cache-by-key": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/delete-actions-cache-by-id": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
   "actions/re-run-job-for-workflow-run": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/get-custom-oidc-sub-claim-for-repo": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist github.ae.json. It was added in api.github.com.json */
+  "actions/set-custom-oidc-sub-claim-for-repo": {
     responses: {
       /** Not Implemented */
       501: unknown;
