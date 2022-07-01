@@ -801,14 +801,6 @@ export interface paths {
      */
     get: operations["orgs/list-custom-roles"];
   };
-  "/orgs/{org_id}/codespaces": {
-    /**
-     * Lists the codespaces associated to a specified organization.
-     *
-     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-     */
-    get: operations["codespaces/list-in-organization"];
-  };
   "/orgs/{org}": {
     /**
      * To see many of the organization response values, you need to be an authenticated organization owner with the `admin:org` scope. When the value of `two_factor_requirement_enabled` is `true`, the organization requires all members, billing managers, and outside collaborators to enable [two-factor authentication](https://docs.github.com/articles/securing-your-account-with-two-factor-authentication-2fa/).
@@ -1292,6 +1284,14 @@ export interface paths {
      * GitHub Apps must have the `security_events` read permission to use this endpoint.
      */
     get: operations["code-scanning/list-alerts-for-org"];
+  };
+  "/orgs/{org}/codespaces": {
+    /**
+     * Lists the codespaces associated to a specified organization.
+     *
+     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+     */
+    get: operations["codespaces/list-in-organization"];
   };
   "/orgs/{org}/credential-authorizations": {
     /**
@@ -6433,14 +6433,6 @@ export interface paths {
      */
     get: operations["repos/compare-commits"];
   };
-  "/repos/{owner}/{repo}/community/code_of_conduct": {
-    /**
-     * Returns the contents of the repository's code of conduct file, if one is detected.
-     *
-     * A code of conduct is detected if there is a file named `CODE_OF_CONDUCT` in the root directory of the repository. GitHub detects which code of conduct it is using fuzzy matching.
-     */
-    get: operations["codes-of-conduct/get-for-repo"];
-  };
 }
 
 export interface components {
@@ -7605,7 +7597,7 @@ export interface components {
       pem?: string;
     } | null;
     /** How the author is associated with the repository. */
-    author_association:
+    "author-association":
       | "COLLABORATOR"
       | "CONTRIBUTOR"
       | "FIRST_TIMER"
@@ -7684,7 +7676,7 @@ export interface components {
       timeline_url?: string;
       repository?: components["schemas"]["repository"];
       performed_via_github_app?: components["schemas"]["nullable-integration"];
-      author_association: components["schemas"]["author_association"];
+      author_association: components["schemas"]["author-association"];
       reactions?: components["schemas"]["reaction-rollup"];
     };
     /** Comments provide a way for people to collaborate on an issue. */
@@ -7703,7 +7695,7 @@ export interface components {
       created_at: string;
       updated_at: string;
       issue_url: string;
-      author_association: components["schemas"]["author_association"];
+      author_association: components["schemas"]["author-association"];
       performed_via_github_app?: components["schemas"]["nullable-integration"];
       reactions?: components["schemas"]["reaction-rollup"];
     };
@@ -7932,7 +7924,7 @@ export interface components {
       user: components["schemas"]["nullable-simple-user"];
       created_at: string;
       updated_at: string;
-      author_association: components["schemas"]["author_association"];
+      author_association: components["schemas"]["author-association"];
     };
     /** Gist Commit */
     "gist-commit": {
@@ -8400,106 +8392,6 @@ export interface components {
       id: number;
       name: string;
     };
-    /** A description of the machine powering a codespace. */
-    "nullable-codespace-machine": {
-      /** The name of the machine. */
-      name: string;
-      /** The display name of the machine includes cores, memory, and storage. */
-      display_name: string;
-      /** The operating system of the machine. */
-      operating_system: string;
-      /** How much storage is available to the codespace. */
-      storage_in_bytes: number;
-      /** How much memory is available to the codespace. */
-      memory_in_bytes: number;
-      /** How many cores are available to the codespace. */
-      cpus: number;
-      /** Whether a prebuild is currently available when creating a codespace for this machine and repository. If a branch was not specified as a ref, the default branch will be assumed. Value will be "null" if prebuilds are not supported or prebuild availability could not be determined. Value will be "none" if no prebuild is available. Latest values "ready" and "in_progress" indicate the prebuild availability status. Old values "blob" and "pool" will be deprecated soon. */
-      prebuild_availability:
-        | ("none" | "blob" | "pool" | "ready" | "in_progress")
-        | null;
-    } | null;
-    /** A codespace. */
-    codespace: {
-      id: number;
-      /** Automatically generated name of this codespace. */
-      name: string;
-      /** Display name for this codespace. */
-      display_name?: string | null;
-      /** UUID identifying this codespace's environment. */
-      environment_id: string | null;
-      owner: components["schemas"]["simple-user"];
-      billable_owner: components["schemas"]["simple-user"];
-      repository: components["schemas"]["minimal-repository"];
-      machine: components["schemas"]["nullable-codespace-machine"];
-      /** Path to devcontainer.json from repo root used to create Codespace. */
-      devcontainer_path?: string | null;
-      /** Whether the codespace was created from a prebuild. */
-      prebuild: boolean | null;
-      created_at: string;
-      updated_at: string;
-      /** Last known time this codespace was started. */
-      last_used_at: string;
-      /** State of this codespace. */
-      state:
-        | "Unknown"
-        | "Created"
-        | "Queued"
-        | "Provisioning"
-        | "Available"
-        | "Awaiting"
-        | "Unavailable"
-        | "Deleted"
-        | "Moved"
-        | "Shutdown"
-        | "Archived"
-        | "Starting"
-        | "ShuttingDown"
-        | "Failed"
-        | "Exporting"
-        | "Updating"
-        | "Rebuilding";
-      /** API URL for this codespace. */
-      url: string;
-      /** Details about the codespace's git repository. */
-      git_status: {
-        /** The number of commits the local repository is ahead of the remote. */
-        ahead?: number;
-        /** The number of commits the local repository is behind the remote. */
-        behind?: number;
-        /** Whether the local repository has unpushed changes. */
-        has_unpushed_changes?: boolean;
-        /** Whether the local repository has uncommitted changes. */
-        has_uncommitted_changes?: boolean;
-        /** The current branch (or SHA if in detached HEAD state) of the local repository. */
-        ref?: string;
-      };
-      /** The Azure region where this codespace is located. */
-      location: "EastUs" | "SouthEastAsia" | "WestEurope" | "WestUs2";
-      /** The number of minutes of inactivity after which this codespace will be automatically stopped. */
-      idle_timeout_minutes: number | null;
-      /** URL to access this codespace on the web. */
-      web_url: string;
-      /** API URL to access available alternate machine types for this codespace. */
-      machines_url: string;
-      /** API URL to start this codespace. */
-      start_url: string;
-      /** API URL to stop this codespace. */
-      stop_url: string;
-      /** API URL for the Pull Request associated with this codespace, if any. */
-      pulls_url: string | null;
-      recent_folders: string[];
-      runtime_constraints?: {
-        /** The privacy settings a user can select from when forwarding a port. */
-        allowed_port_privacy_settings?: string[] | null;
-      };
-      /** Whether or not a codespace has a pending async operation. This would mean that the codespace is temporarily unavailable. The only thing that you can do with a codespace in this state is delete it. */
-      pending_operation?: boolean | null;
-      /** Text to show user when codespace is disabled by a pending operation */
-      pending_operation_disabled_reason?: string | null;
-      /** Text to show user when codespace idle timeout minutes has been overriden by an organization policy */
-      idle_timeout_notice?: string | null;
-    };
     /** Organization Full */
     "organization-full": {
       login: string;
@@ -8722,6 +8614,104 @@ export interface components {
       tool: components["schemas"]["code-scanning-analysis-tool"];
       most_recent_instance: components["schemas"]["code-scanning-alert-instance"];
       repository: components["schemas"]["simple-repository"];
+    };
+    /** A description of the machine powering a codespace. */
+    "nullable-codespace-machine": {
+      /** The name of the machine. */
+      name: string;
+      /** The display name of the machine includes cores, memory, and storage. */
+      display_name: string;
+      /** The operating system of the machine. */
+      operating_system: string;
+      /** How much storage is available to the codespace. */
+      storage_in_bytes: number;
+      /** How much memory is available to the codespace. */
+      memory_in_bytes: number;
+      /** How many cores are available to the codespace. */
+      cpus: number;
+      /** Whether a prebuild is currently available when creating a codespace for this machine and repository. If a branch was not specified as a ref, the default branch will be assumed. Value will be "null" if prebuilds are not supported or prebuild availability could not be determined. Value will be "none" if no prebuild is available. Latest values "ready" and "in_progress" indicate the prebuild availability status. */
+      prebuild_availability: ("none" | "ready" | "in_progress") | null;
+    } | null;
+    /** A codespace. */
+    codespace: {
+      id: number;
+      /** Automatically generated name of this codespace. */
+      name: string;
+      /** Display name for this codespace. */
+      display_name?: string | null;
+      /** UUID identifying this codespace's environment. */
+      environment_id: string | null;
+      owner: components["schemas"]["simple-user"];
+      billable_owner: components["schemas"]["simple-user"];
+      repository: components["schemas"]["minimal-repository"];
+      machine: components["schemas"]["nullable-codespace-machine"];
+      /** Path to devcontainer.json from repo root used to create Codespace. */
+      devcontainer_path?: string | null;
+      /** Whether the codespace was created from a prebuild. */
+      prebuild: boolean | null;
+      created_at: string;
+      updated_at: string;
+      /** Last known time this codespace was started. */
+      last_used_at: string;
+      /** State of this codespace. */
+      state:
+        | "Unknown"
+        | "Created"
+        | "Queued"
+        | "Provisioning"
+        | "Available"
+        | "Awaiting"
+        | "Unavailable"
+        | "Deleted"
+        | "Moved"
+        | "Shutdown"
+        | "Archived"
+        | "Starting"
+        | "ShuttingDown"
+        | "Failed"
+        | "Exporting"
+        | "Updating"
+        | "Rebuilding";
+      /** API URL for this codespace. */
+      url: string;
+      /** Details about the codespace's git repository. */
+      git_status: {
+        /** The number of commits the local repository is ahead of the remote. */
+        ahead?: number;
+        /** The number of commits the local repository is behind the remote. */
+        behind?: number;
+        /** Whether the local repository has unpushed changes. */
+        has_unpushed_changes?: boolean;
+        /** Whether the local repository has uncommitted changes. */
+        has_uncommitted_changes?: boolean;
+        /** The current branch (or SHA if in detached HEAD state) of the local repository. */
+        ref?: string;
+      };
+      /** The Azure region where this codespace is located. */
+      location: "EastUs" | "SouthEastAsia" | "WestEurope" | "WestUs2";
+      /** The number of minutes of inactivity after which this codespace will be automatically stopped. */
+      idle_timeout_minutes: number | null;
+      /** URL to access this codespace on the web. */
+      web_url: string;
+      /** API URL to access available alternate machine types for this codespace. */
+      machines_url: string;
+      /** API URL to start this codespace. */
+      start_url: string;
+      /** API URL to stop this codespace. */
+      stop_url: string;
+      /** API URL for the Pull Request associated with this codespace, if any. */
+      pulls_url: string | null;
+      recent_folders: string[];
+      runtime_constraints?: {
+        /** The privacy settings a user can select from when forwarding a port. */
+        allowed_port_privacy_settings?: string[] | null;
+      };
+      /** Whether or not a codespace has a pending async operation. This would mean that the codespace is temporarily unavailable. The only thing that you can do with a codespace in this state is delete it. */
+      pending_operation?: boolean | null;
+      /** Text to show user when codespace is disabled by a pending operation */
+      pending_operation_disabled_reason?: string | null;
+      /** Text to show user when codespace idle timeout minutes has been overriden by an organization policy */
+      idle_timeout_notice?: string | null;
     };
     /** Credential Authorization */
     "credential-authorization": {
@@ -9662,7 +9652,7 @@ export interface components {
       access_level: "none" | "organization" | "enterprise";
     };
     /** A workflow referenced/reused by the initial caller workflow */
-    referenced_workflow: {
+    "referenced-workflow": {
       path: string;
       sha: string;
       ref?: string;
@@ -9726,7 +9716,7 @@ export interface components {
       /** Attempt number of the run, 1 for first attempt and higher if the workflow was re-run. */
       run_attempt?: number;
       referenced_workflows?:
-        | components["schemas"]["referenced_workflow"][]
+        | components["schemas"]["referenced-workflow"][]
         | null;
       event: string;
       status: string | null;
@@ -9916,6 +9906,8 @@ export interface components {
       key_prefix: string;
       /** A template for the target URL that is generated if a key was found. */
       url_template: string;
+      /** Whether this autolink reference matches alphanumeric characters. If false, this autolink reference is a legacy autolink that only matches numeric characters. */
+      is_alphanumeric?: boolean;
     };
     /** Protected Branch Required Status Check */
     "protected-branch-required-status-check": {
@@ -10494,10 +10486,8 @@ export interface components {
       memory_in_bytes: number;
       /** How many cores are available to the codespace. */
       cpus: number;
-      /** Whether a prebuild is currently available when creating a codespace for this machine and repository. If a branch was not specified as a ref, the default branch will be assumed. Value will be "null" if prebuilds are not supported or prebuild availability could not be determined. Value will be "none" if no prebuild is available. Latest values "ready" and "in_progress" indicate the prebuild availability status. Old values "blob" and "pool" will be deprecated soon. */
-      prebuild_availability:
-        | ("none" | "blob" | "pool" | "ready" | "in_progress")
-        | null;
+      /** Whether a prebuild is currently available when creating a codespace for this machine and repository. If a branch was not specified as a ref, the default branch will be assumed. Value will be "null" if prebuilds are not supported or prebuild availability could not be determined. Value will be "none" if no prebuild is available. Latest values "ready" and "in_progress" indicate the prebuild availability status. */
+      prebuild_availability: ("none" | "ready" | "in_progress") | null;
     };
     /** Set repository secrets for GitHub Codespaces. */
     "repo-codespaces-secret": {
@@ -10616,7 +10606,7 @@ export interface components {
       user: components["schemas"]["nullable-simple-user"];
       created_at: string;
       updated_at: string;
-      author_association: components["schemas"]["author_association"];
+      author_association: components["schemas"]["author-association"];
       reactions?: components["schemas"]["reaction-rollup"];
     };
     /** Branch Short */
@@ -10633,7 +10623,7 @@ export interface components {
       href: string;
     };
     /** The status of auto merging a pull request. */
-    auto_merge: {
+    "auto-merge": {
       enabled_by: components["schemas"]["simple-user"];
       /** The merge method to use. */
       merge_method: "merge" | "squash" | "rebase";
@@ -10706,8 +10696,8 @@ export interface components {
         review_comment: components["schemas"]["link"];
         self: components["schemas"]["link"];
       };
-      author_association: components["schemas"]["author_association"];
-      auto_merge: components["schemas"]["auto_merge"];
+      author_association: components["schemas"]["author-association"];
+      auto_merge: components["schemas"]["auto-merge"];
       /** Indicates whether or not the pull request is a draft. */
       draft?: boolean;
     };
@@ -11095,7 +11085,7 @@ export interface components {
     /** The amount of time to delay a job after the job is initially triggered. The time (in minutes) must be an integer between 0 and 43,200 (30 days). */
     "wait-timer": number;
     /** The type of deployment branch policy for this environment. To allow all branches to deploy, set to `null`. */
-    deployment_branch_policy: {
+    "deployment-branch-policy": {
       /** Whether only branches with branch protection rules can deploy to this environment. If `protected_branches` is `true`, `custom_branch_policies` must be `false`; if `protected_branches` is `false`, `custom_branch_policies` must be `true`. */
       protected_branches: boolean;
       /** Whether only branches that match the specified name patterns can deploy to this environment.  If `custom_branch_policies` is `true`, `protected_branches` must be `false`; if `custom_branch_policies` is `false`, `protected_branches` must be `true`. */
@@ -11136,7 +11126,7 @@ export interface components {
           node_id: string;
           type: string;
         }>)[];
-      deployment_branch_policy?: components["schemas"]["deployment_branch_policy"];
+      deployment_branch_policy?: components["schemas"]["deployment-branch-policy"];
     };
     /** Short Blob */
     "short-blob": {
@@ -11405,7 +11395,7 @@ export interface components {
       timeline_url?: string;
       repository?: components["schemas"]["repository"];
       performed_via_github_app?: components["schemas"]["nullable-integration"];
-      author_association: components["schemas"]["author_association"];
+      author_association: components["schemas"]["author-association"];
       reactions?: components["schemas"]["reaction-rollup"];
     } | null;
     /** Issue Event Label */
@@ -11458,7 +11448,7 @@ export interface components {
       milestone?: components["schemas"]["issue-event-milestone"];
       project_card?: components["schemas"]["issue-event-project-card"];
       rename?: components["schemas"]["issue-event-rename"];
-      author_association?: components["schemas"]["author_association"];
+      author_association?: components["schemas"]["author-association"];
       lock_reason?: string | null;
       performed_via_github_app?: components["schemas"]["nullable-integration"];
     };
@@ -11758,7 +11748,7 @@ export interface components {
       created_at: string;
       updated_at: string;
       issue_url: string;
-      author_association: components["schemas"]["author_association"];
+      author_association: components["schemas"]["author-association"];
       performed_via_github_app?: components["schemas"]["nullable-integration"];
       reactions?: components["schemas"]["reaction-rollup"];
     };
@@ -11844,7 +11834,7 @@ export interface components {
       commit_id: string;
       body_html?: string;
       body_text?: string;
-      author_association: components["schemas"]["author_association"];
+      author_association: components["schemas"]["author-association"];
     };
     /** Pull Request Review Comments are comments on a portion of the Pull Request's diff. */
     "pull-request-review-comment": {
@@ -11879,7 +11869,7 @@ export interface components {
       html_url: string;
       /** URL for the pull request that the review comment belongs to. */
       pull_request_url: string;
-      author_association: components["schemas"]["author_association"];
+      author_association: components["schemas"]["author-association"];
       _links: {
         self: {
           href: string;
@@ -12526,8 +12516,8 @@ export interface components {
         review_comment: components["schemas"]["link"];
         self: components["schemas"]["link"];
       };
-      author_association: components["schemas"]["author_association"];
-      auto_merge: components["schemas"]["auto_merge"];
+      author_association: components["schemas"]["author-association"];
+      auto_merge: components["schemas"]["auto-merge"];
       /** Indicates whether or not the pull request is a draft. */
       draft?: boolean;
       merged: boolean;
@@ -12579,7 +12569,7 @@ export interface components {
       commit_id: string;
       body_html?: string;
       body_text?: string;
-      author_association: components["schemas"]["author_association"];
+      author_association: components["schemas"]["author-association"];
     };
     /** Legacy Review Comment */
     "review-comment": {
@@ -12600,7 +12590,7 @@ export interface components {
       updated_at: string;
       html_url: string;
       pull_request_url: string;
-      author_association: components["schemas"]["author_association"];
+      author_association: components["schemas"]["author-association"];
       _links: {
         self: components["schemas"]["link"];
         html: components["schemas"]["link"];
@@ -13076,7 +13066,7 @@ export interface components {
       };
       body?: string;
       score: number;
-      author_association: components["schemas"]["author_association"];
+      author_association: components["schemas"]["author-association"];
       draft?: boolean;
       repository?: components["schemas"]["repository"];
       body_html?: string;
@@ -13321,12 +13311,15 @@ export interface components {
     };
     /** Secrets for a GitHub Codespace. */
     "codespaces-secret": {
-      /** The name of the secret. */
+      /** The name of the secret */
       name: string;
+      /** Secret created at */
       created_at: string;
+      /** Secret last updated at */
       updated_at: string;
-      /** Visibility of a secret */
+      /** The type of repositories in the organization that the secret is visible to */
       visibility: "all" | "private" | "selected";
+      /** API URL at which the list of repositories this secret is vicible can be retrieved */
       selected_repositories_url: string;
     };
     /** The public key used for setting user Codespaces' Secrets. */
@@ -13550,14 +13543,14 @@ export interface components {
         "application/json": components["schemas"]["basic-error"];
       };
     };
-    /** Internal Error */
-    internal_error: {
+    /** Conflict */
+    conflict: {
       content: {
         "application/json": components["schemas"]["basic-error"];
       };
     };
-    /** Conflict */
-    conflict: {
+    /** Internal Error */
+    internal_error: {
       content: {
         "application/json": components["schemas"]["basic-error"];
       };
@@ -13641,7 +13634,7 @@ export interface components {
     /** The unique identifier of the authorization. */
     "authorization-id": number;
     /** The slug version of the enterprise name or the login of an organization. */
-    enterprise_or_org: string;
+    "enterprise-or-org": string;
     /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
     enterprise: string;
     /** The unique identifier of the organization. */
@@ -13867,7 +13860,7 @@ export interface components {
     /** The unique identifier of the release. */
     "release-id": number;
     /** The unique identifier of the tag protection. */
-    tag_protection_id: number;
+    "tag-protection-id": number;
     /** The time frame to display results for. */
     per: "" | "day" | "week";
     /** A repository ID. Only return repositories with an ID greater than this ID. */
@@ -14750,7 +14743,7 @@ export interface operations {
     parameters: {
       path: {
         /** The slug version of the enterprise name or the login of an organization. */
-        enterprise_or_org: components["parameters"]["enterprise_or_org"];
+        enterprise_or_org: components["parameters"]["enterprise-or-org"];
       };
       query: {
         /** A cursor, as given in the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events after this cursor. */
@@ -17031,41 +17024,6 @@ export interface operations {
     };
   };
   /**
-   * Lists the codespaces associated to a specified organization.
-   *
-   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
-   */
-  "codespaces/list-in-organization": {
-    parameters: {
-      query: {
-        /** The number of results per page (max 100). */
-        per_page?: components["parameters"]["per-page"];
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
-      };
-      path: {
-        /** The unique identifier of the organization. */
-        org_id: components["parameters"]["org-id"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": {
-            total_count: number;
-            codespaces: components["schemas"]["codespace"][];
-          };
-        };
-      };
-      304: components["responses"]["not_modified"];
-      401: components["responses"]["requires_authentication"];
-      403: components["responses"]["forbidden"];
-      404: components["responses"]["not_found"];
-      500: components["responses"]["internal_error"];
-    };
-  };
-  /**
    * To see many of the organization response values, you need to be an authenticated organization owner with the `admin:org` scope. When the value of `two_factor_requirement_enabled` is `true`, the organization requires all members, billing managers, and outside collaborators to enable [two-factor authentication](https://docs.github.com/articles/securing-your-account-with-two-factor-authentication-2fa/).
    *
    * GitHub Apps with the `Organization plan` permission can use this endpoint to retrieve information about an organization's GitHub plan. See "[Authenticating with GitHub Apps](https://docs.github.com/apps/building-github-apps/authenticating-with-github-apps/)" for details. For an example response, see 'Response with GitHub plan information' below."
@@ -18337,7 +18295,7 @@ export interface operations {
           /** Which type of organization repositories have access to the organization secret. `selected` means only the repositories specified by `selected_repository_ids` can access the secret. */
           visibility: "all" | "private" | "selected";
           /** An array of repository ids that can access the organization secret. You can only provide a list of repository ids when the `visibility` is set to `selected`. You can manage the list of selected repositories using the [List selected repositories for an organization secret](https://docs.github.com/rest/reference/actions#list-selected-repositories-for-an-organization-secret), [Set selected repositories for an organization secret](https://docs.github.com/rest/reference/actions#set-selected-repositories-for-an-organization-secret), and [Remove selected repository from an organization secret](https://docs.github.com/rest/reference/actions#remove-selected-repository-from-an-organization-secret) endpoints. */
-          selected_repository_ids?: string[];
+          selected_repository_ids?: (Partial<number> & Partial<string>)[];
         };
       };
     };
@@ -18609,6 +18567,41 @@ export interface operations {
     };
   };
   /**
+   * Lists the codespaces associated to a specified organization.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   */
+  "codespaces/list-in-organization": {
+    parameters: {
+      query: {
+        /** The number of results per page (max 100). */
+        per_page?: components["parameters"]["per-page"];
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
+      };
+      path: {
+        /** The organization name. The name is not case sensitive. */
+        org: components["parameters"]["org"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": {
+            total_count: number;
+            codespaces: components["schemas"]["codespace"][];
+          };
+        };
+      };
+      304: components["responses"]["not_modified"];
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      500: components["responses"]["internal_error"];
+    };
+  };
+  /**
    * Listing and deleting credential authorizations is available to organizations with GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products).
    *
    * An authenticated organization owner with the `read:org` scope can list all credential authorizations for an organization that uses SAML single sign-on (SSO). The credentials are either personal access tokens or SSH keys that organization members have authorized for the organization. For more information, see [About authentication with SAML single sign-on](https://docs.github.com/en/articles/about-authentication-with-saml-single-sign-on).
@@ -18825,7 +18818,7 @@ export interface operations {
           /** Which type of organization repositories have access to the organization secret. `selected` means only the repositories specified by `selected_repository_ids` can access the secret. */
           visibility: "all" | "private" | "selected";
           /** An array of repository ids that can access the organization secret. You can only provide a list of repository ids when the `visibility` is set to `selected`. You can manage the list of selected repositories using the [List selected repositories for an organization secret](https://docs.github.com/rest/reference/dependabot#list-selected-repositories-for-an-organization-secret), [Set selected repositories for an organization secret](https://docs.github.com/rest/reference/dependabot#set-selected-repositories-for-an-organization-secret), and [Remove selected repository from an organization secret](https://docs.github.com/rest/reference/dependabot#remove-selected-repository-from-an-organization-secret) endpoints. */
-          selected_repository_ids?: string[];
+          selected_repository_ids?: (Partial<string> & Partial<number>)[];
         };
       };
     };
@@ -24563,9 +24556,9 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** The prefix appended by a number will generate a link any time it is found in an issue, pull request, or commit. */
+          /** The prefix appended by alphanumeric characters will generate a link any time it is found in an issue, pull request, or commit. */
           key_prefix: string;
-          /** The URL must contain <num> for the reference number. */
+          /** The URL must contain `<num>` for the reference number. `<num>` matches alphanumeric characters `A-Z` (case insensitive), `0-9`, and `-`. */
           url_template: string;
         };
       };
@@ -28907,7 +28900,7 @@ export interface operations {
                 id?: number;
               }[]
             | null;
-          deployment_branch_policy?: components["schemas"]["deployment_branch_policy"];
+          deployment_branch_policy?: components["schemas"]["deployment-branch-policy"];
         } | null;
       };
     };
@@ -30837,7 +30830,7 @@ export interface operations {
       content: {
         "application/json": {
           /** Usernames of assignees to remove from an issue. _NOTE: Only users with push access can remove assignees from an issue. Assignees are silently ignored otherwise._ */
-          assignees?: string[];
+          assignees: string[];
         };
       };
     };
@@ -34365,7 +34358,7 @@ export interface operations {
         /** The name of the repository. The name is not case sensitive. */
         repo: components["parameters"]["repo"];
         /** The unique identifier of the tag protection. */
-        tag_protection_id: components["parameters"]["tag_protection_id"];
+        tag_protection_id: components["parameters"]["tag-protection-id"];
       };
     };
     responses: {
@@ -40195,29 +40188,6 @@ export interface operations {
       };
       404: components["responses"]["not_found"];
       500: components["responses"]["internal_error"];
-    };
-  };
-  /**
-   * Returns the contents of the repository's code of conduct file, if one is detected.
-   *
-   * A code of conduct is detected if there is a file named `CODE_OF_CONDUCT` in the root directory of the repository. GitHub detects which code of conduct it is using fuzzy matching.
-   */
-  "codes-of-conduct/get-for-repo": {
-    parameters: {
-      path: {
-        /** The account owner of the repository. The name is not case sensitive. */
-        owner: components["parameters"]["owner"];
-        /** The name of the repository. The name is not case sensitive. */
-        repo: components["parameters"]["repo"];
-      };
-    };
-    responses: {
-      /** Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["code-of-conduct"];
-        };
-      };
     };
   };
 }
