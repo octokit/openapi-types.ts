@@ -5986,7 +5986,7 @@ export interface components {
       pem?: string;
     } | null;
     /** How the author is associated with the repository. */
-    author_association:
+    "author-association":
       | "COLLABORATOR"
       | "CONTRIBUTOR"
       | "FIRST_TIMER"
@@ -6065,7 +6065,7 @@ export interface components {
       timeline_url?: string;
       repository?: components["schemas"]["repository"];
       performed_via_github_app?: components["schemas"]["nullable-integration"];
-      author_association: components["schemas"]["author_association"];
+      author_association: components["schemas"]["author-association"];
       reactions?: components["schemas"]["reaction-rollup"];
     };
     /** Comments provide a way for people to collaborate on an issue. */
@@ -6084,7 +6084,7 @@ export interface components {
       created_at: string;
       updated_at: string;
       issue_url: string;
-      author_association: components["schemas"]["author_association"];
+      author_association: components["schemas"]["author-association"];
       performed_via_github_app?: components["schemas"]["nullable-integration"];
       reactions?: components["schemas"]["reaction-rollup"];
     };
@@ -6313,7 +6313,7 @@ export interface components {
       user: components["schemas"]["nullable-simple-user"];
       created_at: string;
       updated_at: string;
-      author_association: components["schemas"]["author_association"];
+      author_association: components["schemas"]["author-association"];
     };
     /** Gist Commit */
     "gist-commit": {
@@ -8434,7 +8434,7 @@ export interface components {
       user: components["schemas"]["nullable-simple-user"];
       created_at: string;
       updated_at: string;
-      author_association: components["schemas"]["author_association"];
+      author_association: components["schemas"]["author-association"];
       reactions?: components["schemas"]["reaction-rollup"];
     };
     /** Branch Short */
@@ -8451,7 +8451,7 @@ export interface components {
       href: string;
     };
     /** The status of auto merging a pull request. */
-    auto_merge: {
+    "auto-merge": {
       enabled_by: components["schemas"]["simple-user"];
       /** The merge method to use. */
       merge_method: "merge" | "squash" | "rebase";
@@ -8524,8 +8524,8 @@ export interface components {
         review_comment: components["schemas"]["link"];
         self: components["schemas"]["link"];
       };
-      author_association: components["schemas"]["author_association"];
-      auto_merge: components["schemas"]["auto_merge"];
+      author_association: components["schemas"]["author-association"];
+      auto_merge: components["schemas"]["auto-merge"];
       /** Indicates whether or not the pull request is a draft. */
       draft?: boolean;
     };
@@ -8814,7 +8814,7 @@ export interface components {
     /** The amount of time to delay a job after the job is initially triggered. The time (in minutes) must be an integer between 0 and 43,200 (30 days). */
     "wait-timer": number;
     /** The type of deployment branch policy for this environment. To allow all branches to deploy, set to `null`. */
-    deployment_branch_policy: {
+    "deployment-branch-policy": {
       /** Whether only branches with branch protection rules can deploy to this environment. If `protected_branches` is `true`, `custom_branch_policies` must be `false`; if `protected_branches` is `false`, `custom_branch_policies` must be `true`. */
       protected_branches: boolean;
       /** Whether only branches that match the specified name patterns can deploy to this environment.  If `custom_branch_policies` is `true`, `protected_branches` must be `false`; if `custom_branch_policies` is `false`, `protected_branches` must be `true`. */
@@ -8855,7 +8855,7 @@ export interface components {
           node_id: string;
           type: string;
         }>)[];
-      deployment_branch_policy?: components["schemas"]["deployment_branch_policy"];
+      deployment_branch_policy?: components["schemas"]["deployment-branch-policy"];
     };
     /** Short Blob */
     "short-blob": {
@@ -9060,7 +9060,7 @@ export interface components {
       timeline_url?: string;
       repository?: components["schemas"]["repository"];
       performed_via_github_app?: components["schemas"]["nullable-integration"];
-      author_association: components["schemas"]["author_association"];
+      author_association: components["schemas"]["author-association"];
       reactions?: components["schemas"]["reaction-rollup"];
     } | null;
     /** Issue Event Label */
@@ -9113,7 +9113,7 @@ export interface components {
       milestone?: components["schemas"]["issue-event-milestone"];
       project_card?: components["schemas"]["issue-event-project-card"];
       rename?: components["schemas"]["issue-event-rename"];
-      author_association?: components["schemas"]["author_association"];
+      author_association?: components["schemas"]["author-association"];
       lock_reason?: string | null;
       performed_via_github_app?: components["schemas"]["nullable-integration"];
     };
@@ -9413,7 +9413,7 @@ export interface components {
       created_at: string;
       updated_at: string;
       issue_url: string;
-      author_association: components["schemas"]["author_association"];
+      author_association: components["schemas"]["author-association"];
       performed_via_github_app?: components["schemas"]["nullable-integration"];
       reactions?: components["schemas"]["reaction-rollup"];
     };
@@ -9499,7 +9499,7 @@ export interface components {
       commit_id: string;
       body_html?: string;
       body_text?: string;
-      author_association: components["schemas"]["author_association"];
+      author_association: components["schemas"]["author-association"];
     };
     /** Pull Request Review Comments are comments on a portion of the Pull Request's diff. */
     "pull-request-review-comment": {
@@ -9534,7 +9534,7 @@ export interface components {
       html_url: string;
       /** URL for the pull request that the review comment belongs to. */
       pull_request_url: string;
-      author_association: components["schemas"]["author_association"];
+      author_association: components["schemas"]["author-association"];
       _links: {
         self: {
           href: string;
@@ -10124,8 +10124,8 @@ export interface components {
         review_comment: components["schemas"]["link"];
         self: components["schemas"]["link"];
       };
-      author_association: components["schemas"]["author_association"];
-      auto_merge: components["schemas"]["auto_merge"];
+      author_association: components["schemas"]["author-association"];
+      auto_merge: components["schemas"]["auto-merge"];
       /** Indicates whether or not the pull request is a draft. */
       draft?: boolean;
       merged: boolean;
@@ -10177,7 +10177,7 @@ export interface components {
       commit_id: string;
       body_html?: string;
       body_text?: string;
-      author_association: components["schemas"]["author_association"];
+      author_association: components["schemas"]["author-association"];
     };
     /** Legacy Review Comment */
     "review-comment": {
@@ -10198,7 +10198,7 @@ export interface components {
       updated_at: string;
       html_url: string;
       pull_request_url: string;
-      author_association: components["schemas"]["author_association"];
+      author_association: components["schemas"]["author-association"];
       _links: {
         self: components["schemas"]["link"];
         html: components["schemas"]["link"];
@@ -10477,7 +10477,7 @@ export interface components {
       };
       body?: string;
       score: number;
-      author_association: components["schemas"]["author_association"];
+      author_association: components["schemas"]["author-association"];
       draft?: boolean;
       repository?: components["schemas"]["repository"];
       body_html?: string;
@@ -15724,7 +15724,7 @@ export interface operations {
           /** Which type of organization repositories have access to the organization secret. `selected` means only the repositories specified by `selected_repository_ids` can access the secret. */
           visibility: "all" | "private" | "selected";
           /** An array of repository ids that can access the organization secret. You can only provide a list of repository ids when the `visibility` is set to `selected`. You can manage the list of selected repositories using the [List selected repositories for an organization secret](https://docs.github.com/enterprise-server@3.3/rest/reference/actions#list-selected-repositories-for-an-organization-secret), [Set selected repositories for an organization secret](https://docs.github.com/enterprise-server@3.3/rest/reference/actions#set-selected-repositories-for-an-organization-secret), and [Remove selected repository from an organization secret](https://docs.github.com/enterprise-server@3.3/rest/reference/actions#remove-selected-repository-from-an-organization-secret) endpoints. */
-          selected_repository_ids?: string[];
+          selected_repository_ids?: number[];
         };
       };
     };
@@ -19938,7 +19938,7 @@ export interface operations {
         "application/json": {
           /** The prefix appended by a number will generate a link any time it is found in an issue, pull request, or commit. */
           key_prefix: string;
-          /** The URL must contain <num> for the reference number. */
+          /** The URL must contain `<num>` for the reference number. */
           url_template: string;
         };
       };
@@ -23559,7 +23559,7 @@ export interface operations {
                 id?: number;
               }[]
             | null;
-          deployment_branch_policy?: components["schemas"]["deployment_branch_policy"];
+          deployment_branch_policy?: components["schemas"]["deployment-branch-policy"];
         } | null;
       };
     };
@@ -25167,7 +25167,7 @@ export interface operations {
       content: {
         "application/json": {
           /** Usernames of assignees to remove from an issue. _NOTE: Only users with push access can remove assignees from an issue. Assignees are silently ignored otherwise._ */
-          assignees?: string[];
+          assignees: string[];
         };
       };
     };
