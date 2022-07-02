@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "version": "6.3.0",
+    "version": "6.3.1",
     "title": "GitHub's official OpenAPI spec + Octokit extension",
     "description": "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs",
     "license": { "name": "MIT", "url": "https://spdx.org/licenses/MIT" },
@@ -8144,7 +8144,16 @@
           "category": "codespaces",
           "subcategory": "organizations"
         },
-        "x-octokit": {}
+        "x-octokit": {
+          "changes": [
+            {
+              "type": "PARAMETER",
+              "date": "2022-07-01",
+              "parameter": "org",
+              "before": { "name": "org_id" }
+            }
+          ]
+        }
       }
     },
     "/orgs/{org}/credential-authorizations": {
