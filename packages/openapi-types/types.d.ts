@@ -26303,8 +26303,8 @@ export interface operations {
         ref?: components["parameters"]["git-ref"];
         /** The direction to sort the results by. */
         direction?: components["parameters"]["direction"];
-        /** The property by which to sort the results. */
-        sort?: "created" | "updated" | "number";
+        /** The property by which to sort the results. . `number` is deprecated - we recommend that you use `created` instead. */
+        sort?: "created" | "number" | "updated";
         /** Set to `open`, `closed, `fixed`, or `dismissed` to list code scanning alerts in a specific state. */
         state?: components["schemas"]["code-scanning-alert-state"];
       };
@@ -26512,8 +26512,8 @@ export interface operations {
       /** Response */
       200: {
         content: {
-          "application/json+sarif": string;
           "application/json": components["schemas"]["code-scanning-analysis"];
+          "application/json+sarif": { [key: string]: unknown };
         };
       };
       403: components["responses"]["code_scanning_forbidden_read"];
@@ -29005,6 +29005,8 @@ export interface operations {
         "application/json": {
           /** Optional parameter to specify the organization name if forking into an organization. */
           organization?: string;
+          /** When forking from an existing repository, a new name for the fork. */
+          name?: string;
         } | null;
       };
     };

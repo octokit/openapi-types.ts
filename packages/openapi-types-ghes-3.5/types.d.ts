@@ -5256,6 +5256,580 @@ export interface paths {
      */
     get: operations["repos/compare-commits"];
   };
+  "/enterprise-installation/{enterprise_or_org}/server-statistics": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["enterprise-admin/get-server-statistics"];
+  };
+  "/enterprises/{enterprise}/actions/oidc/customization/issuer": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    put: operations["actions/set-actions-oidc-custom-issuer-policy-for-enterprise"];
+  };
+  "/enterprises/{enterprise}/actions/permissions/workflow": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["actions/get-github-actions-default-workflow-permissions-enterprise"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    put: operations["actions/set-github-actions-default-workflow-permissions-enterprise"];
+  };
+  "/enterprises/{enterprise}/settings/billing/actions": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["billing/get-github-actions-billing-ghe"];
+  };
+  "/enterprises/{enterprise}/settings/billing/packages": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["billing/get-github-packages-billing-ghe"];
+  };
+  "/enterprises/{enterprise}/settings/billing/shared-storage": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["billing/get-shared-storage-billing-ghe"];
+  };
+  "/marketplace_listing/accounts/{account_id}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["apps/get-subscription-plan-for-account"];
+  };
+  "/marketplace_listing/plans": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["apps/list-plans"];
+  };
+  "/marketplace_listing/plans/{plan_id}/accounts": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["apps/list-accounts-for-plan"];
+  };
+  "/marketplace_listing/stubbed/accounts/{account_id}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["apps/get-subscription-plan-for-account-stubbed"];
+  };
+  "/marketplace_listing/stubbed/plans": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["apps/list-plans-stubbed"];
+  };
+  "/marketplace_listing/stubbed/plans/{plan_id}/accounts": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["apps/list-accounts-for-plan-stubbed"];
+  };
+  "/orgs/{org}/actions/oidc/customization/sub": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["oidc/get-oidc-custom-sub-template-for-org"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    put: operations["oidc/update-oidc-custom-sub-template-for-org"];
+  };
+  "/orgs/{org}/blocks": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["orgs/list-blocked-users"];
+  };
+  "/orgs/{org}/blocks/{username}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["orgs/check-blocked-user"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    put: operations["orgs/block-user"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["orgs/unblock-user"];
+  };
+  "/orgs/{org}/codespaces": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["codespaces/list-in-organization"];
+  };
+  "/orgs/{org}/credential-authorizations": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["orgs/list-saml-sso-authorizations"];
+  };
+  "/orgs/{org}/credential-authorizations/{credential_id}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["orgs/remove-saml-sso-authorization"];
+  };
+  "/orgs/{org}/external-group/{group_id}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["teams/external-idp-group-info-for-org"];
+  };
+  "/orgs/{org}/external-groups": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["teams/list-external-idp-groups-for-org"];
+  };
+  "/orgs/{org}/failed_invitations": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["orgs/list-failed-invitations"];
+  };
+  "/orgs/{org}/interaction-limits": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["interactions/get-restrictions-for-org"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    put: operations["interactions/set-restrictions-for-org"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["interactions/remove-restrictions-for-org"];
+  };
+  "/orgs/{org}/invitations": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["orgs/list-pending-invitations"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    post: operations["orgs/create-invitation"];
+  };
+  "/orgs/{org}/invitations/{invitation_id}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["orgs/cancel-invitation"];
+  };
+  "/orgs/{org}/invitations/{invitation_id}/teams": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["orgs/list-invitation-teams"];
+  };
+  "/orgs/{org}/members/{username}/codespaces/{codespace_name}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["codespaces/delete-from-organization"];
+  };
+  "/orgs/{org}/members/{username}/codespaces/{codespace_name}/stop": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    post: operations["codespaces/stop-in-organization"];
+  };
+  "/orgs/{org}/migrations/{migration_id}/archive": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["migrations/download-archive-for-org"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["migrations/delete-archive-for-org"];
+  };
+  "/orgs/{org}/migrations/{migration_id}/repos/{repo_name}/lock": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["migrations/unlock-repo-for-org"];
+  };
+  "/orgs/{org}/migrations/{migration_id}/repositories": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["migrations/list-repos-for-org"];
+  };
+  "/orgs/{org}/packages": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["packages/list-packages-for-organization"];
+  };
+  "/orgs/{org}/packages/{package_type}/{package_name}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["packages/get-package-for-organization"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["packages/delete-package-for-org"];
+  };
+  "/orgs/{org}/packages/{package_type}/{package_name}/restore": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    post: operations["packages/restore-package-for-org"];
+  };
+  "/orgs/{org}/packages/{package_type}/{package_name}/versions": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["packages/get-all-package-versions-for-package-owned-by-org"];
+  };
+  "/orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["packages/get-package-version-for-organization"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["packages/delete-package-version-for-org"];
+  };
+  "/orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    post: operations["packages/restore-package-version-for-org"];
+  };
+  "/orgs/{org}/settings/billing/actions": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["billing/get-github-actions-billing-org"];
+  };
+  "/orgs/{org}/settings/billing/packages": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["billing/get-github-packages-billing-org"];
+  };
+  "/orgs/{org}/settings/billing/shared-storage": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["billing/get-shared-storage-billing-org"];
+  };
+  "/orgs/{org}/team-sync/groups": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["teams/list-idp-groups-for-org"];
+  };
+  "/orgs/{org}/teams/{team_slug}/external-groups": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["teams/list-linked-external-idp-groups-to-team-for-org"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["teams/unlink-external-idp-group-from-team-for-org"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    patch: operations["teams/link-external-idp-group-to-team-for-org"];
+  };
+  "/orgs/{org}/teams/{team_slug}/invitations": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["teams/list-pending-invitations-in-org"];
+  };
+  "/orgs/{org}/teams/{team_slug}/team-sync/group-mappings": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["teams/list-idp-groups-in-org"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    patch: operations["teams/create-or-update-idp-group-connections-in-org"];
+  };
+  "/repos/{owner}/{repo}/actions/caches": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["actions/get-actions-cache-list"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["actions/delete-actions-cache-by-key"];
+  };
+  "/repos/{owner}/{repo}/actions/caches/{cache_id}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["actions/delete-actions-cache-by-id"];
+  };
+  "/repos/{owner}/{repo}/actions/oidc/customization/sub": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["actions/get-custom-oidc-sub-claim-for-repo"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    put: operations["actions/set-custom-oidc-sub-claim-for-repo"];
+  };
+  "/repos/{owner}/{repo}/actions/permissions/workflow": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["actions/get-github-actions-default-workflow-permissions-repository"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    put: operations["actions/set-github-actions-default-workflow-permissions-repository"];
+  };
+  "/repos/{owner}/{repo}/actions/runs/{run_id}/approve": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    post: operations["actions/approve-workflow-run"];
+  };
+  "/repos/{owner}/{repo}/actions/runs/{run_id}/timing": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["actions/get-workflow-run-usage"];
+  };
+  "/repos/{owner}/{repo}/actions/workflows/{workflow_id}/timing": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["actions/get-workflow-usage"];
+  };
+  "/repos/{owner}/{repo}/automated-security-fixes": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    put: operations["repos/enable-automated-security-fixes"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["repos/disable-automated-security-fixes"];
+  };
+  "/repos/{owner}/{repo}/codespaces": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["codespaces/list-in-repository-for-authenticated-user"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    post: operations["codespaces/create-with-repo-for-authenticated-user"];
+  };
+  "/repos/{owner}/{repo}/codespaces/devcontainers": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["codespaces/list-devcontainers-in-repository-for-authenticated-user"];
+  };
+  "/repos/{owner}/{repo}/codespaces/machines": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["codespaces/repo-machines-for-authenticated-user"];
+  };
+  "/repos/{owner}/{repo}/codespaces/secrets": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["codespaces/list-repo-secrets"];
+  };
+  "/repos/{owner}/{repo}/codespaces/secrets/public-key": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["codespaces/get-repo-public-key"];
+  };
+  "/repos/{owner}/{repo}/codespaces/secrets/{secret_name}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["codespaces/get-repo-secret"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    put: operations["codespaces/create-or-update-repo-secret"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["codespaces/delete-repo-secret"];
+  };
+  "/repos/{owner}/{repo}/community/profile": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["repos/get-community-profile-metrics"];
+  };
+  "/repos/{owner}/{repo}/dependency-graph/compare/{basehead}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["dependency-graph/diff-range"];
+  };
+  "/repos/{owner}/{repo}/dependency-graph/snapshots": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    post: operations["dependency-graph/create-repository-snapshot"];
+  };
+  "/repos/{owner}/{repo}/import": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["migrations/get-import-status"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    put: operations["migrations/start-import"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["migrations/cancel-import"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    patch: operations["migrations/update-import"];
+  };
+  "/repos/{owner}/{repo}/import/authors": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["migrations/get-commit-authors"];
+  };
+  "/repos/{owner}/{repo}/import/authors/{author_id}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    patch: operations["migrations/map-commit-author"];
+  };
+  "/repos/{owner}/{repo}/import/large_files": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["migrations/get-large-files"];
+  };
+  "/repos/{owner}/{repo}/import/lfs": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    patch: operations["migrations/set-lfs-preference"];
+  };
+  "/repos/{owner}/{repo}/interaction-limits": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["interactions/get-restrictions-for-repo"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    put: operations["interactions/set-restrictions-for-repo"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["interactions/remove-restrictions-for-repo"];
+  };
+  "/repos/{owner}/{repo}/pages/health": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["repos/get-pages-health-check"];
+  };
+  "/repos/{owner}/{repo}/pulls/{pull_number}/codespaces": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    post: operations["codespaces/create-with-pr-for-authenticated-user"];
+  };
+  "/repos/{owner}/{repo}/traffic/clones": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["repos/get-clones"];
+  };
+  "/repos/{owner}/{repo}/traffic/popular/paths": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["repos/get-top-paths"];
+  };
+  "/repos/{owner}/{repo}/traffic/popular/referrers": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["repos/get-top-referrers"];
+  };
+  "/repos/{owner}/{repo}/traffic/views": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["repos/get-views"];
+  };
+  "/repos/{owner}/{repo}/vulnerability-alerts": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["repos/check-vulnerability-alerts"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    put: operations["repos/enable-vulnerability-alerts"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["repos/disable-vulnerability-alerts"];
+  };
+  "/scim/v2/enterprises/{enterprise}/Groups": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["enterprise-admin/list-provisioned-groups-enterprise"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    post: operations["enterprise-admin/provision-and-invite-enterprise-group"];
+  };
+  "/scim/v2/enterprises/{enterprise}/Groups/{scim_group_id}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["enterprise-admin/get-provisioning-information-for-enterprise-group"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    put: operations["enterprise-admin/set-information-for-provisioned-enterprise-group"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["enterprise-admin/delete-scim-group-from-enterprise"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    patch: operations["enterprise-admin/update-attribute-for-enterprise-group"];
+  };
+  "/scim/v2/enterprises/{enterprise}/Users": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["enterprise-admin/list-provisioned-identities-enterprise"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    post: operations["enterprise-admin/provision-and-invite-enterprise-user"];
+  };
+  "/scim/v2/enterprises/{enterprise}/Users/{scim_user_id}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["enterprise-admin/get-provisioning-information-for-enterprise-user"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    put: operations["enterprise-admin/set-information-for-provisioned-enterprise-user"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["enterprise-admin/delete-user-from-enterprise"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    patch: operations["enterprise-admin/update-attribute-for-enterprise-user"];
+  };
+  "/scim/v2/organizations/{org}/Users": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["scim/list-provisioned-identities"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    post: operations["scim/provision-and-invite-user"];
+  };
+  "/scim/v2/organizations/{org}/Users/{scim_user_id}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["scim/get-provisioning-information-for-user"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    put: operations["scim/set-information-for-provisioned-user"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["scim/delete-user-from-org"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    patch: operations["scim/update-attribute-for-user"];
+  };
+  "/teams/{team_id}/invitations": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["teams/list-pending-invitations-legacy"];
+  };
+  "/teams/{team_id}/team-sync/group-mappings": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["teams/list-idp-groups-for-legacy"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    patch: operations["teams/create-or-update-idp-group-connections-legacy"];
+  };
+  "/user/blocks": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["users/list-blocked-by-authenticated-user"];
+  };
+  "/user/blocks/{username}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["users/check-blocked"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    put: operations["users/block"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["users/unblock"];
+  };
+  "/user/codespaces": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["codespaces/list-for-authenticated-user"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    post: operations["codespaces/create-for-authenticated-user"];
+  };
+  "/user/codespaces/secrets": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["codespaces/list-secrets-for-authenticated-user"];
+  };
+  "/user/codespaces/secrets/public-key": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["codespaces/get-public-key-for-authenticated-user"];
+  };
+  "/user/codespaces/secrets/{secret_name}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["codespaces/get-secret-for-authenticated-user"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    put: operations["codespaces/create-or-update-secret-for-authenticated-user"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["codespaces/delete-secret-for-authenticated-user"];
+  };
+  "/user/codespaces/secrets/{secret_name}/repositories": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["codespaces/list-repositories-for-secret-for-authenticated-user"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    put: operations["codespaces/set-repositories-for-secret-for-authenticated-user"];
+  };
+  "/user/codespaces/secrets/{secret_name}/repositories/{repository_id}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    put: operations["codespaces/add-repository-for-secret-for-authenticated-user"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["codespaces/remove-repository-for-secret-for-authenticated-user"];
+  };
+  "/user/codespaces/{codespace_name}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["codespaces/get-for-authenticated-user"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["codespaces/delete-for-authenticated-user"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    patch: operations["codespaces/update-for-authenticated-user"];
+  };
+  "/user/codespaces/{codespace_name}/exports": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    post: operations["codespaces/export-for-authenticated-user"];
+  };
+  "/user/codespaces/{codespace_name}/exports/{export_id}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["codespaces/get-export-details-for-authenticated-user"];
+  };
+  "/user/codespaces/{codespace_name}/machines": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["codespaces/codespace-machines-for-authenticated-user"];
+  };
+  "/user/codespaces/{codespace_name}/start": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    post: operations["codespaces/start-for-authenticated-user"];
+  };
+  "/user/codespaces/{codespace_name}/stop": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    post: operations["codespaces/stop-for-authenticated-user"];
+  };
+  "/user/email/visibility": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    patch: operations["users/set-primary-email-visibility-for-authenticated-user"];
+  };
+  "/user/interaction-limits": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["interactions/get-restrictions-for-authenticated-user"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    put: operations["interactions/set-restrictions-for-authenticated-user"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["interactions/remove-restrictions-for-authenticated-user"];
+  };
+  "/user/marketplace_purchases": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["apps/list-subscriptions-for-authenticated-user"];
+  };
+  "/user/marketplace_purchases/stubbed": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["apps/list-subscriptions-for-authenticated-user-stubbed"];
+  };
+  "/user/migrations/{migration_id}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["migrations/get-status-for-authenticated-user"];
+  };
+  "/user/migrations/{migration_id}/repos/{repo_name}/lock": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["migrations/unlock-repo-for-authenticated-user"];
+  };
+  "/user/packages": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["packages/list-packages-for-authenticated-user"];
+  };
+  "/user/packages/{package_type}/{package_name}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["packages/get-package-for-authenticated-user"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["packages/delete-package-for-authenticated-user"];
+  };
+  "/user/packages/{package_type}/{package_name}/restore": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    post: operations["packages/restore-package-for-authenticated-user"];
+  };
+  "/user/packages/{package_type}/{package_name}/versions": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["packages/get-all-package-versions-for-package-owned-by-authenticated-user"];
+  };
+  "/user/packages/{package_type}/{package_name}/versions/{package_version_id}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["packages/get-package-version-for-authenticated-user"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["packages/delete-package-version-for-authenticated-user"];
+  };
+  "/user/packages/{package_type}/{package_name}/versions/{package_version_id}/restore": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    post: operations["packages/restore-package-version-for-authenticated-user"];
+  };
+  "/users/{username}/packages": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["packages/list-packages-for-user"];
+  };
+  "/users/{username}/packages/{package_type}/{package_name}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["packages/get-package-for-user"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["packages/delete-package-for-user"];
+  };
+  "/users/{username}/packages/{package_type}/{package_name}/restore": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    post: operations["packages/restore-package-for-user"];
+  };
+  "/users/{username}/packages/{package_type}/{package_name}/versions": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["packages/get-all-package-versions-for-package-owned-by-user"];
+  };
+  "/users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["packages/get-package-version-for-user"];
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    delete: operations["packages/delete-package-version-for-user"];
+  };
+  "/users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    post: operations["packages/restore-package-version-for-user"];
+  };
+  "/users/{username}/settings/billing/actions": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["billing/get-github-actions-billing-user"];
+  };
+  "/users/{username}/settings/billing/packages": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["billing/get-github-packages-billing-user"];
+  };
+  "/users/{username}/settings/billing/shared-storage": {
+    /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+    get: operations["billing/get-shared-storage-billing-user"];
+  };
 }
 
 export interface components {
@@ -23565,8 +24139,8 @@ export interface operations {
         ref?: components["parameters"]["git-ref"];
         /** The direction to sort the results by. */
         direction?: components["parameters"]["direction"];
-        /** The property by which to sort the results. */
-        sort?: "created" | "updated" | "number";
+        /** The property by which to sort the results. . `number` is deprecated - we recommend that you use `created` instead. */
+        sort?: "created" | "number" | "updated";
         /** Set to `open`, `closed, `fixed`, or `dismissed` to list code scanning alerts in a specific state. */
         state?: components["schemas"]["code-scanning-alert-state"];
       };
@@ -23773,8 +24347,8 @@ export interface operations {
       /** Response */
       200: {
         content: {
-          "application/json+sarif": string;
           "application/json": components["schemas"]["code-scanning-analysis"];
+          "application/json+sarif": { [key: string]: unknown };
         };
       };
       403: components["responses"]["code_scanning_forbidden_read"];
@@ -34605,6 +35179,1203 @@ export interface operations {
       };
       404: components["responses"]["not_found"];
       500: components["responses"]["internal_error"];
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "enterprise-admin/get-server-statistics": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "actions/set-actions-oidc-custom-issuer-policy-for-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "actions/get-github-actions-default-workflow-permissions-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "actions/set-github-actions-default-workflow-permissions-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "billing/get-github-actions-billing-ghe": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "billing/get-github-packages-billing-ghe": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "billing/get-shared-storage-billing-ghe": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "apps/get-subscription-plan-for-account": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "apps/list-plans": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "apps/list-accounts-for-plan": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "apps/get-subscription-plan-for-account-stubbed": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "apps/list-plans-stubbed": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "apps/list-accounts-for-plan-stubbed": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "oidc/get-oidc-custom-sub-template-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "oidc/update-oidc-custom-sub-template-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "orgs/list-blocked-users": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "orgs/check-blocked-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "orgs/block-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "orgs/unblock-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/list-in-organization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "orgs/list-saml-sso-authorizations": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "orgs/remove-saml-sso-authorization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "teams/external-idp-group-info-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "teams/list-external-idp-groups-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "orgs/list-failed-invitations": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "interactions/get-restrictions-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "interactions/set-restrictions-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "interactions/remove-restrictions-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "orgs/list-pending-invitations": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "orgs/create-invitation": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "orgs/cancel-invitation": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "orgs/list-invitation-teams": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/delete-from-organization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/stop-in-organization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "migrations/download-archive-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "migrations/delete-archive-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "migrations/unlock-repo-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "migrations/list-repos-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "packages/list-packages-for-organization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "packages/get-package-for-organization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "packages/delete-package-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "packages/restore-package-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "packages/get-all-package-versions-for-package-owned-by-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "packages/get-package-version-for-organization": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "packages/delete-package-version-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "packages/restore-package-version-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "billing/get-github-actions-billing-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "billing/get-github-packages-billing-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "billing/get-shared-storage-billing-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "teams/list-idp-groups-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "teams/list-linked-external-idp-groups-to-team-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "teams/unlink-external-idp-group-from-team-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "teams/link-external-idp-group-to-team-for-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "teams/list-pending-invitations-in-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "teams/list-idp-groups-in-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "teams/create-or-update-idp-group-connections-in-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "actions/get-actions-cache-list": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "actions/delete-actions-cache-by-key": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "actions/delete-actions-cache-by-id": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "actions/get-custom-oidc-sub-claim-for-repo": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "actions/set-custom-oidc-sub-claim-for-repo": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "actions/get-github-actions-default-workflow-permissions-repository": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "actions/set-github-actions-default-workflow-permissions-repository": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "actions/approve-workflow-run": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "actions/get-workflow-run-usage": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "actions/get-workflow-usage": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "repos/enable-automated-security-fixes": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "repos/disable-automated-security-fixes": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/list-in-repository-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/create-with-repo-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/list-devcontainers-in-repository-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/repo-machines-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/list-repo-secrets": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/get-repo-public-key": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/get-repo-secret": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/create-or-update-repo-secret": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/delete-repo-secret": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "repos/get-community-profile-metrics": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "dependency-graph/diff-range": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "dependency-graph/create-repository-snapshot": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "migrations/get-import-status": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "migrations/start-import": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "migrations/cancel-import": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "migrations/update-import": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "migrations/get-commit-authors": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "migrations/map-commit-author": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "migrations/get-large-files": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "migrations/set-lfs-preference": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "interactions/get-restrictions-for-repo": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "interactions/set-restrictions-for-repo": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "interactions/remove-restrictions-for-repo": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "repos/get-pages-health-check": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/create-with-pr-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "repos/get-clones": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "repos/get-top-paths": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "repos/get-top-referrers": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "repos/get-views": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "repos/check-vulnerability-alerts": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "repos/enable-vulnerability-alerts": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "repos/disable-vulnerability-alerts": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "enterprise-admin/list-provisioned-groups-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "enterprise-admin/provision-and-invite-enterprise-group": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "enterprise-admin/get-provisioning-information-for-enterprise-group": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "enterprise-admin/set-information-for-provisioned-enterprise-group": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "enterprise-admin/delete-scim-group-from-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "enterprise-admin/update-attribute-for-enterprise-group": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "enterprise-admin/list-provisioned-identities-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "enterprise-admin/provision-and-invite-enterprise-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "enterprise-admin/get-provisioning-information-for-enterprise-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "enterprise-admin/set-information-for-provisioned-enterprise-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "enterprise-admin/delete-user-from-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "enterprise-admin/update-attribute-for-enterprise-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "scim/list-provisioned-identities": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "scim/provision-and-invite-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "scim/get-provisioning-information-for-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "scim/set-information-for-provisioned-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "scim/delete-user-from-org": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "scim/update-attribute-for-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "teams/list-pending-invitations-legacy": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "teams/list-idp-groups-for-legacy": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "teams/create-or-update-idp-group-connections-legacy": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "users/list-blocked-by-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "users/check-blocked": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "users/block": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "users/unblock": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/list-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/create-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/list-secrets-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/get-public-key-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/get-secret-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/create-or-update-secret-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/delete-secret-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/list-repositories-for-secret-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/set-repositories-for-secret-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/add-repository-for-secret-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/remove-repository-for-secret-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/get-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/delete-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/update-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/export-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/get-export-details-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/codespace-machines-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/start-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "codespaces/stop-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "users/set-primary-email-visibility-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "interactions/get-restrictions-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "interactions/set-restrictions-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "interactions/remove-restrictions-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "apps/list-subscriptions-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "apps/list-subscriptions-for-authenticated-user-stubbed": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "migrations/get-status-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "migrations/unlock-repo-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "packages/list-packages-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "packages/get-package-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "packages/delete-package-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "packages/restore-package-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "packages/get-all-package-versions-for-package-owned-by-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "packages/get-package-version-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "packages/delete-package-version-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "packages/restore-package-version-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "packages/list-packages-for-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "packages/get-package-for-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "packages/delete-package-for-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "packages/restore-package-for-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "packages/get-all-package-versions-for-package-owned-by-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "packages/get-package-version-for-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "packages/delete-package-version-for-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "packages/restore-package-version-for-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "billing/get-github-actions-billing-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "billing/get-github-packages-billing-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist ghes-3.5.json. It was added in api.github.com.json */
+  "billing/get-shared-storage-billing-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
     };
   };
 }
