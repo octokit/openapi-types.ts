@@ -21195,8 +21195,8 @@ export interface operations {
       /** Response */
       200: {
         content: {
-          "application/json+sarif": string;
           "application/json": components["schemas"]["code-scanning-analysis"];
+          "application/json+sarif": { [key: string]: unknown };
         };
       };
       403: components["responses"]["code_scanning_forbidden_read"];
