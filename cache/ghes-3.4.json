@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "version": "6.4.0",
+    "version": "6.5.0",
     "title": "GitHub's official OpenAPI spec + Octokit extension",
     "description": "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs",
     "license": { "name": "MIT", "url": "https://spdx.org/licenses/MIT" },
@@ -16045,7 +16045,7 @@
       },
       "post": {
         "summary": "Review pending deployments for a workflow run",
-        "description": "Approve or reject pending deployments that are waiting on approval by a required reviewer.\n\nAnyone with read access to the repository contents and deployments can use this endpoint.",
+        "description": "Approve or reject pending deployments that are waiting on approval by a required reviewer.\n\nRequired reviewers with read access to the repository contents and deployments can use this endpoint. Required reviewers must authenticate using an access token with the `repo` scope to use this endpoint.",
         "tags": ["actions"],
         "operationId": "actions/review-pending-deployments-for-run",
         "externalDocs": {
@@ -16107,7 +16107,7 @@
         },
         "x-github": {
           "githubCloudOnly": false,
-          "enabledForGitHubApps": true,
+          "enabledForGitHubApps": false,
           "category": "actions",
           "subcategory": "workflow-runs"
         },

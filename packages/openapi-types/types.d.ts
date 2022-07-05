@@ -2513,7 +2513,7 @@ export interface paths {
     /**
      * Approve or reject pending deployments that are waiting on approval by a required reviewer.
      *
-     * Anyone with read access to the repository contents and deployments can use this endpoint.
+     * Required reviewers with read access to the repository contents and deployments can use this endpoint. Required reviewers must authenticate using an access token with the `repo` scope to use this endpoint.
      */
     post: operations["actions/review-pending-deployments-for-run"];
   };
@@ -9416,6 +9416,7 @@ export interface components {
         code_scanning_upload?: components["schemas"]["rate-limit"];
         actions_runner_registration?: components["schemas"]["rate-limit"];
         scim?: components["schemas"]["rate-limit"];
+        dependency_snapshots?: components["schemas"]["rate-limit"];
       };
       rate: components["schemas"]["rate-limit"];
     };
@@ -23938,7 +23939,7 @@ export interface operations {
   /**
    * Approve or reject pending deployments that are waiting on approval by a required reviewer.
    *
-   * Anyone with read access to the repository contents and deployments can use this endpoint.
+   * Required reviewers with read access to the repository contents and deployments can use this endpoint. Required reviewers must authenticate using an access token with the `repo` scope to use this endpoint.
    */
   "actions/review-pending-deployments-for-run": {
     parameters: {
