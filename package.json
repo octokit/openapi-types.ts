@@ -14,7 +14,7 @@
     "update-package": "node scripts/update-package"
   },
   "devDependencies": {
-    "@octokit/core": "^3.5.1",
+    "@octokit/core": "^4.0.0",
     "github-enterprise-server-versions": "^1.0.0",
     "openapi-typescript": "^4.0.1",
     "prettier": "^2.3.2"
