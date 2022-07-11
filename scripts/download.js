@@ -2,8 +2,7 @@ import { get } from "node:https"
 import { createWriteStream } from "node:fs"
 import { mkdir, rm } from "node:fs/promises"
 
-import octokit from "@octokit/core"
-const { Octokit } = octokit;
+import { Octokit } from "@octokit/core"
 import gheVersions from "github-enterprise-server-versions"
 const { getCurrentVersions } = gheVersions;
 
