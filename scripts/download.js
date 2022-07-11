@@ -1,9 +1,11 @@
-const { get } = require("https");
-const { createWriteStream } = require("fs");
-const { mkdir, rm } = require("fs/promises");
+import { get } from "https"
+import { createWriteStream } from "fs"
+import { mkdir, rm } from "fs/promises"
 
-const { Octokit } = require("@octokit/core");
-const { getCurrentVersions } = require("github-enterprise-server-versions");
+import octokit from "@octokit/core"
+const { Octokit } = octokit;
+import gheVersions from "github-enterprise-server-versions"
+const { getCurrentVersions } = gheVersions;
 
 if (!process.env.OCTOKIT_OPENAPI_VERSION) {
   throw new Error("OCTOKIT_OPENAPI_VERSION is not set");
