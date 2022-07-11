@@ -8,6 +8,7 @@
   "repository": "github:octokit/openapi-types.ts",
   "author": "Gregor Martynus (https://twitter.com/gr2m)",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "download": "node scripts/download",
     "generate-types": "node scripts/generate-types",
