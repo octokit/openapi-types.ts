@@ -4,7 +4,7 @@ if (!process.env.OCTOKIT_OPENAPI_VERSION) {
   throw new Error("OCTOKIT_OPENAPI_VERSION is not set");
 }
 
-const pkg = JSON.parse((await readFile("../package.json")).toString());
+const pkg = JSON.parse((await readFile("package.json")).toString());
 
 updatePackage();
 
