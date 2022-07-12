@@ -1,8 +1,8 @@
-const { readdir, mkdir, rm, writeFile, copyFile } = require("fs/promises");
-const { basename } = require("path");
+import { readdir, mkdir, rm, writeFile, copyFile } from "node:fs/promises"
+import { basename } from "node:path"
 
-const prettier = require("prettier");
-const openapiTS = require("openapi-typescript").default;
+import prettier from "prettier"
+import openapiTS from "openapi-typescript"
 
 if (!process.env.OCTOKIT_OPENAPI_VERSION) {
   throw new Error("OCTOKIT_OPENAPI_VERSION is not set");

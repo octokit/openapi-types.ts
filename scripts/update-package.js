@@ -1,10 +1,10 @@
-const { writeFile, readdir } = require("fs/promises");
+import { writeFile, readdir, readFile } from "node:fs/promises"
 
 if (!process.env.OCTOKIT_OPENAPI_VERSION) {
   throw new Error("OCTOKIT_OPENAPI_VERSION is not set");
 }
 
-const pkg = require("../package.json");
+const pkg = JSON.parse((await readFile("package.json")).toString());
 
 updatePackage();
 
@@ -18,11 +18,11 @@ async function updatePackage() {
     "@semantic-release/release-notes-generator",
     "@semantic-release/github",
   ].concat(
-    packages.map((package) => {
+    packages.map((packageName) => {
       return [
         "@semantic-release/npm",
         {
-          pkgRoot: `packages/${package}`,
+          pkgRoot: `packages/${packageName}`,
         },
       ];
     })
