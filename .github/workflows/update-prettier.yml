@@ -1,0 +1,24 @@
+name: Update Prettier
+"on":
+  push:
+    branches:
+      - renovate/prettier-*
+jobs:
+  update_prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3
+      - uses: actions/setup-node@5b949b50c3461bbcd5a540b150c368278160234a # tag=v3
+        with:
+          node-version: 16
+          cache: npm
+      - run: npm ci
+      - run: npm run lint:fix
+      - uses: gr2m/create-or-update-pull-request-action@v1.x
+        env:
+          GITHUB_TOKEN: ${{ secrets.OCTOKITBOT_PAT }}
+        with:
+          title: Prettier updated
+          body: An update to prettier required updates to your code.
+          branch: ${{ github.ref }}
+          commit-message: "style: prettier"
