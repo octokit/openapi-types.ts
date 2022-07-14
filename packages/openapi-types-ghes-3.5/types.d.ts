@@ -4001,6 +4001,7 @@ export interface paths {
     put: operations["pulls/merge"];
   };
   "/repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers": {
+    /** Lists the users or teams whose review is requested for a pull request. Once a requested reviewer submits a review, they are no longer considered a requested reviewer. Their review will instead be returned by the [List reviews for a pull request](https://docs.github.com/enterprise-server@3.5/rest/pulls/reviews#list-reviews-for-a-pull-request) operation. */
     get: operations["pulls/list-requested-reviewers"];
     /** This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.5/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details. */
     post: operations["pulls/request-reviewers"];
@@ -35628,6 +35629,7 @@ export interface operations {
       };
     };
   };
+  /** Lists the users or teams whose review is requested for a pull request. Once a requested reviewer submits a review, they are no longer considered a requested reviewer. Their review will instead be returned by the [List reviews for a pull request](https://docs.github.com/enterprise-server@3.5/rest/pulls/reviews#list-reviews-for-a-pull-request) operation. */
   "pulls/list-requested-reviewers": {
     parameters: {
       path: {

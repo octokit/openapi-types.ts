@@ -1,8 +1,6 @@
 {
   "name": "@octokit/openapi-types",
-  "publishConfig": {
-    "access": "public"
-  },
+  "publishConfig": { "access": "public" },
   "version": "0.0.0-development",
   "description": "Generated TypeScript definitions based on GitHub's OpenAPI spec for https://api.github.com",
   "repository": "github:octokit/openapi-types.ts",
@@ -23,55 +21,33 @@
     "prettier": "2.7.1"
   },
   "release": {
-    "branches": [
-      "main",
-      "beta"
-    ],
+    "branches": ["main", "beta"],
     "plugins": [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
       "@semantic-release/github",
+      ["@semantic-release/npm", { "pkgRoot": "packages/openapi-types" }],
       [
         "@semantic-release/npm",
-        {
-          "pkgRoot": "packages/openapi-types"
-        }
+        { "pkgRoot": "packages/openapi-types-ghes-3.2" }
       ],
       [
         "@semantic-release/npm",
-        {
-          "pkgRoot": "packages/openapi-types-ghes-3.2"
-        }
+        { "pkgRoot": "packages/openapi-types-ghes-3.3" }
       ],
       [
         "@semantic-release/npm",
-        {
-          "pkgRoot": "packages/openapi-types-ghes-3.3"
-        }
+        { "pkgRoot": "packages/openapi-types-ghes-3.4" }
       ],
       [
         "@semantic-release/npm",
-        {
-          "pkgRoot": "packages/openapi-types-ghes-3.4"
-        }
+        { "pkgRoot": "packages/openapi-types-ghes-3.5" }
       ],
       [
         "@semantic-release/npm",
-        {
-          "pkgRoot": "packages/openapi-types-ghes-3.5"
-        }
-      ],
-      [
-        "@semantic-release/npm",
-        {
-          "pkgRoot": "packages/openapi-types-github.ae"
-        }
+        { "pkgRoot": "packages/openapi-types-github.ae" }
       ]
     ]
   },
-  "renovate": {
-    "extends": [
-      "github>octokit/.github"
-    ]
-  }
+  "renovate": { "extends": ["github>octokit/.github"] }
 }
