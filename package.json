@@ -18,7 +18,7 @@
     "@octokit/core": "^4.0.0",
     "github-enterprise-server-versions": "^1.0.0",
     "openapi-typescript": "^5.0.0",
-    "prettier": "^2.3.2"
+    "prettier": "2.7.1"
   },
   "release": {
     "branches": [
