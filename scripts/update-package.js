@@ -28,5 +28,8 @@ async function updatePackage() {
     })
   );
 
-  await writeFile("package.json", JSON.stringify(pkg, null, 2) + "\n");
+  await writeFile(
+    "package.json",
+    prettier(JSON.stringify(pkg, null), { parser: "json" })
+  );
 }
