@@ -1,8 +1,8 @@
-import { readdir, mkdir, rm, writeFile, copyFile } from "node:fs/promises"
-import { basename } from "node:path"
+import { readdir, mkdir, rm, writeFile, copyFile } from "node:fs/promises";
+import { basename } from "node:path";
 
-import prettier from "prettier"
-import openapiTS from "openapi-typescript"
+import prettier from "prettier";
+import openapiTS from "openapi-typescript";
 
 if (!process.env.OCTOKIT_OPENAPI_VERSION) {
   throw new Error("OCTOKIT_OPENAPI_VERSION is not set");
@@ -81,7 +81,7 @@ type Repository = components["schemas"]["full-repository"]
         { parser: "markdown" }
       )
     );
-    
+
     await copyFile("LICENSE", `packages/${packageName}/LICENSE`);
 
     await writeFile(

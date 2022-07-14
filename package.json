@@ -12,13 +12,15 @@
   "scripts": {
     "download": "node scripts/download",
     "generate-types": "node scripts/generate-types",
-    "update-package": "node scripts/update-package"
+    "update-package": "node scripts/update-package",
+    "lint": "prettier --check '*.{md,json}' 'scripts/*.js' 'packages/**/*.{ts,md,json,d.ts}'",
+    "lint:fix": "prettier --write '*.{md,json}' 'scripts/*.js' 'packages/**/*.{ts,md,json,d.ts}'"
   },
   "devDependencies": {
     "@octokit/core": "^4.0.0",
     "github-enterprise-server-versions": "^1.0.0",
     "openapi-typescript": "^5.0.0",
-    "prettier": "^2.3.2"
+    "prettier": "2.7.1"
   },
   "release": {
     "branches": [
