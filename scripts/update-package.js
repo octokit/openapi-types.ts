@@ -1,4 +1,4 @@
-import { writeFile, readdir, readFile } from "node:fs/promises"
+import { writeFile, readdir, readFile } from "node:fs/promises";
 
 if (!process.env.OCTOKIT_OPENAPI_VERSION) {
   throw new Error("OCTOKIT_OPENAPI_VERSION is not set");
