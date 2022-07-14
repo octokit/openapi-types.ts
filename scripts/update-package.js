@@ -1,4 +1,5 @@
 import { writeFile, readdir, readFile } from "node:fs/promises";
+import prettier from "prettier";
 
 if (!process.env.OCTOKIT_OPENAPI_VERSION) {
   throw new Error("OCTOKIT_OPENAPI_VERSION is not set");
@@ -30,6 +31,6 @@ async function updatePackage() {
 
   await writeFile(
     "package.json",
-    prettier(JSON.stringify(pkg, null), { parser: "json" })
+    prettier.format(JSON.stringify(pkg, null), { parser: "json" })
   );
 }
