@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "version": "6.6.3",
+    "version": "6.7.0",
     "title": "GitHub's official OpenAPI spec + Octokit extension",
     "description": "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs",
     "license": { "name": "MIT", "url": "https://spdx.org/licenses/MIT" },
@@ -35804,6 +35804,20 @@
         "externalDocs": {
           "description": "API method documentation",
           "url": "https://docs.github.com/rest/reference/codespaces#list-available-machine-types-for-a-repository"
+        },
+        "x-octokit": { "api.github.com": "removed" },
+        "responses": { "501": { "description": "Not Implemented" } }
+      }
+    },
+    "/repos/{owner}/{repo}/codespaces/new": {
+      "get": {
+        "summary": "Get default attributes for a codespace",
+        "description": "This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now.",
+        "tags": ["codespaces"],
+        "operationId": "codespaces/pre-flight-with-repo-for-authenticated-user",
+        "externalDocs": {
+          "description": "API method documentation",
+          "url": "https://docs.github.com/rest/reference/codespaces#preview-attributes-for-a-new-codespace"
         },
         "x-octokit": { "api.github.com": "removed" },
         "responses": { "501": { "description": "Not Implemented" } }

@@ -4776,6 +4776,10 @@ export interface paths {
     /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
     get: operations["codespaces/repo-machines-for-authenticated-user"];
   };
+  "/repos/{owner}/{repo}/codespaces/new": {
+    /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+    get: operations["codespaces/pre-flight-with-repo-for-authenticated-user"];
+  };
   "/repos/{owner}/{repo}/codespaces/secrets": {
     /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
     get: operations["codespaces/list-repo-secrets"];
@@ -37041,6 +37045,13 @@ export interface operations {
   };
   /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
   "codespaces/repo-machines-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+  "codespaces/pre-flight-with-repo-for-authenticated-user": {
     responses: {
       /** Not Implemented */
       501: unknown;
