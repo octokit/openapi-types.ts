@@ -51,7 +51,7 @@ async function run() {
           },
           ...packageDefaults,
         }),
-        { parser: "json" }
+        { parser: "json-stringify" }
       )
     );
     await writeFile(

@@ -22,6 +22,7 @@
     "openapi-typescript": "^5.0.0",
     "prettier": "2.7.1"
   },
+  "prettier": {},
   "release": {
     "branches": [
       "main",

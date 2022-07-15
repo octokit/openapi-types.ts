@@ -31,6 +31,6 @@ async function updatePackage() {
 
   await writeFile(
     "package.json",
-    prettier.format(JSON.stringify(pkg, null), { parser: "json" })
+    prettier.format(JSON.stringify(pkg), { parser: "json-stringify" })
   );
 }
