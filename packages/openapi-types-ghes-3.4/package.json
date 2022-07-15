@@ -6,11 +6,15 @@
     "url": "https://github.com/octokit/openapi-types.ts.git",
     "directory": "packages/openapi-types-ghes-3.4"
   },
-  "publishConfig": { "access": "public" },
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "0.0.0-development",
   "main": "",
   "types": "types.d.ts",
   "author": "Gregor Martynus (https://twitter.com/gr2m)",
   "license": "MIT",
-  "octokit": { "openapi-version": "6.7.0" }
+  "octokit": {
+    "openapi-version": "6.7.0"
+  }
 }
