@@ -539,7 +539,10 @@ export interface paths {
   "/enterprises/{enterprise}/settings/billing/advanced-security": {
     /**
      * Gets the GitHub Advanced Security active committers for an enterprise per repository.
-     * Each distinct user login across all repositories is counted as a single Advanced Security seat, so the total_advanced_security_committers is not the sum of active_users for each repository.
+     *
+     * Each distinct user login across all repositories is counted as a single Advanced Security seat, so the `total_advanced_security_committers` is not the sum of active_users for each repository.
+     *
+     * The total number of repositories with committer information is tracked by the `total_count` field.
      */
     get: operations["billing/get-github-advanced-security-billing-ghe"];
   };
@@ -1277,9 +1280,9 @@ export interface paths {
   };
   "/orgs/{org}/code-scanning/alerts": {
     /**
-     * Lists all code scanning alerts for the default branch (usually `main`
-     * or `master`) for all eligible repositories in an organization.
-     * To use this endpoint, you must be an administrator or security manager for the organization, and you must use an access token with the `repo` scope or `security_events` scope.
+     * Lists code scanning alerts for the default branch for all eligible repositories in an organization. Eligible repositories are repositories that are owned by organizations that you own or for which you are a security manager. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+     *
+     * To use this endpoint, you must be an owner or security manager for the organization, and you must use an access token with the `repo` scope or `security_events` scope.
      *
      * GitHub Apps must have the `security_events` read permission to use this endpoint.
      */
@@ -1760,8 +1763,12 @@ export interface paths {
   "/orgs/{org}/settings/billing/advanced-security": {
     /**
      * Gets the GitHub Advanced Security active committers for an organization per repository.
-     * Each distinct user login across all repositories is counted as a single Advanced Security seat, so the total_advanced_security_committers is not the sum of advanced_security_committers for each repository.
-     * If this organization defers to an enterprise for billing, the total_advanced_security_committers returned from the organization API may include some users that are in more than one organization, so they will only consume a single Advanced Security seat at the enterprise level.
+     *
+     * Each distinct user login across all repositories is counted as a single Advanced Security seat, so the `total_advanced_security_committers` is not the sum of advanced_security_committers for each repository.
+     *
+     * If this organization defers to an enterprise for billing, the `total_advanced_security_committers` returned from the organization API may include some users that are in more than one organization, so they will only consume a single Advanced Security seat at the enterprise level.
+     *
+     * The total number of repositories with committer information is tracked by the `total_count` field.
      */
     get: operations["billing/get-github-advanced-security-billing-org"];
   };
@@ -3261,6 +3268,16 @@ export interface paths {
      * GitHub Apps must have write access to the `codespaces_metadata` repository permission to use this endpoint.
      */
     get: operations["codespaces/repo-machines-for-authenticated-user"];
+  };
+  "/repos/{owner}/{repo}/codespaces/new": {
+    /**
+     * Gets the default attributes for codespaces created by the user with the repository.
+     *
+     * You must authenticate using an access token with the `codespace` scope to use this endpoint.
+     *
+     * GitHub Apps must have write access to the `codespaces` repository permission to use this endpoint.
+     */
+    get: operations["codespaces/pre-flight-with-repo-for-authenticated-user"];
   };
   "/repos/{owner}/{repo}/codespaces/secrets": {
     /** Lists all secrets available in a repository without revealing their encrypted values. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `codespaces_secrets` repository permission to use this endpoint. */
@@ -21784,7 +21801,10 @@ export interface operations {
   };
   /**
    * Gets the GitHub Advanced Security active committers for an enterprise per repository.
-   * Each distinct user login across all repositories is counted as a single Advanced Security seat, so the total_advanced_security_committers is not the sum of active_users for each repository.
+   *
+   * Each distinct user login across all repositories is counted as a single Advanced Security seat, so the `total_advanced_security_committers` is not the sum of active_users for each repository.
+   *
+   * The total number of repositories with committer information is tracked by the `total_count` field.
    */
   "billing/get-github-advanced-security-billing-ghe": {
     parameters: {
@@ -24604,9 +24624,9 @@ export interface operations {
     };
   };
   /**
-   * Lists all code scanning alerts for the default branch (usually `main`
-   * or `master`) for all eligible repositories in an organization.
-   * To use this endpoint, you must be an administrator or security manager for the organization, and you must use an access token with the `repo` scope or `security_events` scope.
+   * Lists code scanning alerts for the default branch for all eligible repositories in an organization. Eligible repositories are repositories that are owned by organizations that you own or for which you are a security manager. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+   *
+   * To use this endpoint, you must be an owner or security manager for the organization, and you must use an access token with the `repo` scope or `security_events` scope.
    *
    * GitHub Apps must have the `security_events` read permission to use this endpoint.
    */
@@ -24631,7 +24651,7 @@ export interface operations {
         per_page?: components["parameters"]["per-page"];
         /** The direction to sort the results by. */
         direction?: components["parameters"]["direction"];
-        /** Set to `open`, `closed`, `fixed`, or `dismissed` to list code scanning alerts in a specific state. */
+        /** If specified, only code scanning alerts with this state will be returned. */
         state?: components["schemas"]["code-scanning-alert-state"];
         /** The property by which to sort the results. */
         sort?: "created" | "updated";
@@ -26792,8 +26812,12 @@ export interface operations {
   };
   /**
    * Gets the GitHub Advanced Security active committers for an organization per repository.
-   * Each distinct user login across all repositories is counted as a single Advanced Security seat, so the total_advanced_security_committers is not the sum of advanced_security_committers for each repository.
-   * If this organization defers to an enterprise for billing, the total_advanced_security_committers returned from the organization API may include some users that are in more than one organization, so they will only consume a single Advanced Security seat at the enterprise level.
+   *
+   * Each distinct user login across all repositories is counted as a single Advanced Security seat, so the `total_advanced_security_committers` is not the sum of advanced_security_committers for each repository.
+   *
+   * If this organization defers to an enterprise for billing, the `total_advanced_security_committers` returned from the organization API may include some users that are in more than one organization, so they will only consume a single Advanced Security seat at the enterprise level.
+   *
+   * The total number of repositories with committer information is tracked by the `total_count` field.
    */
   "billing/get-github-advanced-security-billing-org": {
     parameters: {
@@ -33284,6 +33308,46 @@ export interface operations {
       500: components["responses"]["internal_error"];
     };
   };
+  /**
+   * Gets the default attributes for codespaces created by the user with the repository.
+   *
+   * You must authenticate using an access token with the `codespace` scope to use this endpoint.
+   *
+   * GitHub Apps must have write access to the `codespaces` repository permission to use this endpoint.
+   */
+  "codespaces/pre-flight-with-repo-for-authenticated-user": {
+    parameters: {
+      path: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: components["parameters"]["owner"];
+        /** The name of the repository. The name is not case sensitive. */
+        repo: components["parameters"]["repo"];
+      };
+      query: {
+        /** The branch or commit to check for a default devcontainer path. If not specified, the default branch will be checked. */
+        ref?: string;
+        /** An alternative IP for default location auto-detection, such as when proxying a request. */
+        client_ip?: string;
+      };
+    };
+    responses: {
+      /** Response when a user is able to create codespaces from the repository. */
+      200: {
+        content: {
+          "application/json": {
+            billable_owner?: components["schemas"]["simple-user"];
+            defaults?: {
+              location: string;
+              devcontainer_path: string | null;
+            };
+          };
+        };
+      };
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+    };
+  };
   /** Lists all secrets available in a repository without revealing their encrypted values. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `codespaces_secrets` repository permission to use this endpoint. */
   "codespaces/list-repo-secrets": {
     parameters: {
@@ -34756,7 +34820,7 @@ export interface operations {
       /** Response when creating a secret */
       201: {
         content: {
-          "application/json": { [key: string]: unknown };
+          "application/json": components["schemas"]["empty-object"];
         };
       };
       /** Response when updating a secret */
