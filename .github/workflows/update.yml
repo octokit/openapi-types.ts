@@ -44,7 +44,7 @@ jobs:
           npm run update-package
         if: github.event_name != 'push'
       - name: Fix code formatting and style with Prettier (if required)
-        run: npx prettier -w .
+        run: npm run lint:fix
       - name: Create Pull Request
         if: github.event_name != 'push'
         uses: gr2m/create-or-update-pull-request-action@v1.x
