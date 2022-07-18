@@ -9993,7 +9993,7 @@ export interface components {
       allow_merge_commit?: boolean;
       /** @example true */
       allow_update_branch?: boolean;
-      /** @default false */
+      /** @example false */
       use_squash_pr_title_as_default?: boolean;
       /** @example true */
       allow_forking?: boolean;
