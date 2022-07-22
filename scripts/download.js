@@ -1,5 +1,4 @@
-import { get } from "node:https";
-import { createWriteStream } from "node:fs";
+import { writeFileSync } from "node:fs";
 import { mkdir, rm } from "node:fs/promises";
 
 import { Octokit } from "@octokit/core";
@@ -15,78 +14,69 @@ run(process.env.OCTOKIT_OPENAPI_VERSION.replace(/^v/, "")).then(
   console.error
 );
 
+const octokit = new Octokit({
+  auth: process.env.GITHUB_TOKEN,
+});
+
 async function run(version) {
   await rm("cache", { recursive: true });
   await mkdir("cache");
 
-  const octokit = new Octokit({
-    auth: process.env.GITHUB_TOKEN,
+  const {
+    data: { id: releaseId },
+  } = await octokit.request("GET /repos/{owner}/{repo}/releases/tags/{tag}", {
+    owner: "octokit",
+    repo: "openapi",
+    tag: `v${version}`,
   });
 
-  const { data } = await octokit.request(
-    "GET /repos/{owner}/{repo}/contents/{path}",
+  const { data: releaseAssets } = await octokit.request(
+    "GET /repos/{owner}/{repo}/releases/{release_id}/assets",
     {
       owner: "octokit",
       repo: "openapi",
-      path: "generated",
-      ref: "main",
+      release_id: releaseId,
     }
   );
 
-  if (!Array.isArray(data)) {
-    throw new Error(
-      "https://github.com/octokit/openapi/tree/main/generated is not a directory"
-    );
-  }
-
   const currentGHESVersions = await getCurrentVersions();
-  for (const file of data) {
-    if (!/\.json$/.test(file.name)) continue;
-    if (/deref/.test(file.name)) continue;
-    if (/diff/.test(file.name)) continue;
+  for (const asset of releaseAssets) {
+    if (!/\.json$/.test(asset.name)) continue;
+    if (/deref/.test(asset.name)) continue;
+    if (/diff/.test(asset.name)) continue;
 
-    if (/^ghes-/.test(file.name)) {
+    if (/^ghes-/.test(asset.name)) {
       if (
         !currentGHESVersions.includes(
-          parseFloat(file.name.substr("ghes-".length))
+          parseFloat(asset.name.substr("ghes-".length))
         )
       ) {
         continue;
       }
     }
 
-    download(version, file.name);
+    await download(asset.id, asset.name);
   }
 }
 
-function download(version, fileName) {
+async function download(assetId, fileName) {
   const localPath = `cache/${fileName}`;
 
-  const file = createWriteStream(localPath);
-  const url = `https://unpkg.com/@octokit/openapi@${version}/generated/${fileName}`;
+  console.log(`Downloading ${fileName} (${assetId}) to ${localPath}`);
 
-  console.log("Downloading %s", url);
+  const response = await octokit.request(
+    "GET /repos/{owner}/{repo}/releases/assets/{asset_id}",
+    {
+      owner: "octokit",
+      repo: "openapi",
+      asset_id: assetId,
+      headers: {
+        Accept: "application/octet-stream",
+      },
+    }
+  );
 
-  return new Promise((resolve, reject) => {
-    get(url, (response) => {
-      if (response.statusCode !== 200) {
-        const errorDescription = [response.statusCode, response.statusMessage]
-          .filter(Boolean)
-          .join(" ");
+  writeFileSync(localPath, Buffer.from(response.data));
 
-        throw new Error(`${errorDescription}: ${url}`);
-      }
-
-      response.pipe(file);
-      file
-        .on("finish", () =>
-          file.close((error) => {
-            if (error) return reject(error);
-            console.log("%s written", localPath);
-            resolve();
-          })
-        )
-        .on("error", (error) => reject(error.message));
-    });
-  });
+  console.log(`Finished writing to ${localPath}`);
 }
