@@ -70,7 +70,11 @@ function download(version, fileName) {
   return new Promise((resolve, reject) => {
     get(url, (response) => {
       if (response.statusCode !== 200) {
-        throw new Error(`Not Found: ${url}`);
+        const errorDescription = [response.statusCode, response.statusMessage]
+          .filter(Boolean)
+          .join(" ");
+
+        throw new Error(`${errorDescription}: ${url}`);
       }
 
       response.pipe(file);
