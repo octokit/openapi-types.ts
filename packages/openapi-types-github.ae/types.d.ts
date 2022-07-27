@@ -1071,7 +1071,7 @@ export interface paths {
   "/orgs/{org}/projects": {
     /** Lists the projects in an organization. Returns a `404 Not Found` status if projects are disabled in the organization. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
     get: operations["projects/list-for-org"];
-    /** Creates an organization project board. Returns a `404 Not Found` status if projects are disabled in the organization. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
+    /** Creates an organization project board. Returns a `410 Gone` status if projects are disabled in the organization or if the organization does not have existing classic projects. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
     post: operations["projects/create-for-org"];
   };
   "/orgs/{org}/repos": {
@@ -3201,7 +3201,7 @@ export interface paths {
   "/repos/{owner}/{repo}/projects": {
     /** Lists the projects in a repository. Returns a `404 Not Found` status if projects are disabled in the repository. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
     get: operations["projects/list-for-repo"];
-    /** Creates a repository project board. Returns a `404 Not Found` status if projects are disabled in the repository. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
+    /** Creates a repository project board. Returns a `410 Gone` status if projects are disabled in the repository or if the repository does not have existing classic projects. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
     post: operations["projects/create-for-repo"];
   };
   "/repos/{owner}/{repo}/pulls": {
@@ -4103,6 +4103,7 @@ export interface paths {
     get: operations["orgs/list-for-authenticated-user"];
   };
   "/user/projects": {
+    /** Creates a user project board. Returns a `410 Gone` status if the user does not have existing classic projects. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
     post: operations["projects/create-for-authenticated-user"];
   };
   "/user/repos": {
@@ -4393,6 +4394,10 @@ export interface paths {
   "/enterprises/{enterprise}/actions/runners/{runner_id}/labels/{name}": {
     /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
     delete: operations["enterprise-admin/remove-custom-label-from-self-hosted-runner-for-enterprise"];
+  };
+  "/enterprises/{enterprise}/code-scanning/alerts": {
+    /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+    get: operations["code-scanning/list-alerts-for-enterprise"];
   };
   "/enterprises/{enterprise}/secret-scanning/alerts": {
     /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
@@ -20685,7 +20690,7 @@ export interface operations {
       422: components["responses"]["validation_failed_simple"];
     };
   };
-  /** Creates an organization project board. Returns a `404 Not Found` status if projects are disabled in the organization. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
+  /** Creates an organization project board. Returns a `410 Gone` status if projects are disabled in the organization or if the organization does not have existing classic projects. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
   "projects/create-for-org": {
     parameters: {
       path: {
@@ -27683,7 +27688,7 @@ export interface operations {
         "application/json": {
           /** @description A custom webhook event name. Must be 100 characters or fewer. */
           event_type: string;
-          /** @description JSON payload with extra information about the webhook event that your action or worklow may use. */
+          /** @description JSON payload with extra information about the webhook event that your action or workflow may use. */
           client_payload?: { [key: string]: unknown };
         };
       };
@@ -30754,7 +30759,7 @@ export interface operations {
       422: components["responses"]["validation_failed_simple"];
     };
   };
-  /** Creates a repository project board. Returns a `404 Not Found` status if projects are disabled in the repository. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
+  /** Creates a repository project board. Returns a `410 Gone` status if projects are disabled in the repository or if the repository does not have existing classic projects. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
   "projects/create-for-repo": {
     parameters: {
       path: {
@@ -35125,6 +35130,7 @@ export interface operations {
       403: components["responses"]["forbidden"];
     };
   };
+  /** Creates a user project board. Returns a `410 Gone` status if the user does not have existing classic projects. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
   "projects/create-for-authenticated-user": {
     parameters: {};
     responses: {
@@ -36261,6 +36267,13 @@ export interface operations {
   };
   /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
   "enterprise-admin/remove-custom-label-from-self-hosted-runner-for-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+  "code-scanning/list-alerts-for-enterprise": {
     responses: {
       /** Not Implemented */
       501: unknown;
