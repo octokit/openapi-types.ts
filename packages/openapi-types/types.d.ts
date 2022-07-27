@@ -519,6 +519,15 @@ export interface paths {
     /** Gets the audit log for an enterprise. To use this endpoint, you must be an enterprise admin, and you must use an access token with the `admin:enterprise` scope. */
     get: operations["enterprise-admin/get-audit-log"];
   };
+  "/enterprises/{enterprise}/code-scanning/alerts": {
+    /**
+     * Lists code scanning alerts for the default branch for all eligible repositories in an enterprise. Eligible repositories are repositories that are owned by organizations that you own or for which you are a security manager. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+     *
+     * To use this endpoint, you must be a member of the enterprise,
+     * and you must use an access token with the `repo` scope or `security_events` scope.
+     */
+    get: operations["code-scanning/list-alerts-for-enterprise"];
+  };
   "/enterprises/{enterprise}/secret-scanning/alerts": {
     /**
      * Lists secret scanning alerts for eligible repositories in an enterprise, from newest to oldest.
@@ -1708,7 +1717,7 @@ export interface paths {
   "/orgs/{org}/projects": {
     /** Lists the projects in an organization. Returns a `404 Not Found` status if projects are disabled in the organization. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
     get: operations["projects/list-for-org"];
-    /** Creates an organization project board. Returns a `404 Not Found` status if projects are disabled in the organization. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
+    /** Creates an organization project board. Returns a `410 Gone` status if projects are disabled in the organization or if the organization does not have existing classic projects. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
     post: operations["projects/create-for-org"];
   };
   "/orgs/{org}/public_members": {
@@ -4495,7 +4504,7 @@ export interface paths {
   "/repos/{owner}/{repo}/projects": {
     /** Lists the projects in a repository. Returns a `404 Not Found` status if projects are disabled in the repository. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
     get: operations["projects/list-for-repo"];
-    /** Creates a repository project board. Returns a `404 Not Found` status if projects are disabled in the repository. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
+    /** Creates a repository project board. Returns a `410 Gone` status if projects are disabled in the repository or if the repository does not have existing classic projects. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
     post: operations["projects/create-for-repo"];
   };
   "/repos/{owner}/{repo}/pulls": {
@@ -6128,6 +6137,7 @@ export interface paths {
     post: operations["packages/restore-package-version-for-authenticated-user"];
   };
   "/user/projects": {
+    /** Creates a user project board. Returns a `410 Gone` status if the user does not have existing classic projects. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
     post: operations["projects/create-for-authenticated-user"];
   };
   "/user/public_emails": {
@@ -8189,6 +8199,15 @@ export interface components {
       /** @description The repository visibility, for example `public` or `private`. */
       visibility?: string;
     };
+    /** @description The name of the tool used to generate the code scanning analysis. */
+    "code-scanning-analysis-tool-name": string;
+    /** @description The GUID of the tool used to generate the code scanning analysis, if provided in the uploaded SARIF data. */
+    "code-scanning-analysis-tool-guid": string | null;
+    /**
+     * @description State of a code scanning alert.
+     * @enum {string}
+     */
+    "code-scanning-alert-state": "open" | "closed" | "dismissed" | "fixed";
     /** @description The security alert number. */
     "alert-number": number;
     /**
@@ -8200,7 +8219,7 @@ export interface components {
      * Format: date-time
      * @description The time that the alert was last updated in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
      */
-    "nullable-alert-updated-at": string | null;
+    "alert-updated-at": string;
     /**
      * Format: uri
      * @description The REST API URL of the alert resource.
@@ -8212,17 +8231,104 @@ export interface components {
      */
     "alert-html-url": string;
     /**
-     * @description Sets the state of the secret scanning alert. Can be either `open` or `resolved`. You must provide `resolution` when you set the state to `resolved`.
-     * @enum {string}
+     * Format: uri
+     * @description The REST API URL for fetching the list of instances for an alert.
      */
-    "secret-scanning-alert-state": "open" | "resolved";
+    "alert-instances-url": string;
     /**
-     * @description **Required when the `state` is `resolved`.** The reason for resolving the alert.
+     * Format: date-time
+     * @description The time that the alert was no longer detected and was considered fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+     */
+    "code-scanning-alert-fixed-at": string | null;
+    /**
+     * Format: date-time
+     * @description The time that the alert was dismissed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+     */
+    "code-scanning-alert-dismissed-at": string | null;
+    /**
+     * @description **Required when the state is dismissed.** The reason for dismissing or closing the alert.
      * @enum {string|null}
      */
-    "secret-scanning-alert-resolution":
-      | (null | "false_positive" | "wont_fix" | "revoked" | "used_in_tests")
+    "code-scanning-alert-dismissed-reason":
+      | (null | "false positive" | "won't fix" | "used in tests")
       | null;
+    /** @description The dismissal comment associated with the dismissal of the alert. */
+    "code-scanning-alert-dismissed-comment": string | null;
+    "code-scanning-alert-rule": {
+      /** @description A unique identifier for the rule used to detect the alert. */
+      id?: string | null;
+      /** @description The name of the rule used to detect the alert. */
+      name?: string;
+      /**
+       * @description The severity of the alert.
+       * @enum {string|null}
+       */
+      severity?: ("none" | "note" | "warning" | "error") | null;
+      /**
+       * @description The security severity of the alert.
+       * @enum {string|null}
+       */
+      security_severity_level?: ("low" | "medium" | "high" | "critical") | null;
+      /** @description A short description of the rule used to detect the alert. */
+      description?: string;
+      /** @description description of the rule used to detect the alert. */
+      full_description?: string;
+      /** @description A set of tags applicable for the rule. */
+      tags?: string[] | null;
+      /** @description Detailed documentation for the rule as GitHub Flavored Markdown. */
+      help?: string | null;
+    };
+    /** @description The version of the tool used to generate the code scanning analysis. */
+    "code-scanning-analysis-tool-version": string | null;
+    "code-scanning-analysis-tool": {
+      name?: components["schemas"]["code-scanning-analysis-tool-name"];
+      version?: components["schemas"]["code-scanning-analysis-tool-version"];
+      guid?: components["schemas"]["code-scanning-analysis-tool-guid"];
+    };
+    /**
+     * @description The full Git reference, formatted as `refs/heads/<branch name>`,
+     * `refs/pull/<number>/merge`, or `refs/pull/<number>/head`.
+     */
+    "code-scanning-ref": string;
+    /** @description Identifies the configuration under which the analysis was executed. For example, in GitHub Actions this includes the workflow filename and job name. */
+    "code-scanning-analysis-analysis-key": string;
+    /** @description Identifies the variable values associated with the environment in which the analysis that generated this alert instance was performed, such as the language that was analyzed. */
+    "code-scanning-alert-environment": string;
+    /** @description Identifies the configuration under which the analysis was executed. Used to distinguish between multiple analyses for the same tool and commit, but performed on different languages or different parts of the code. */
+    "code-scanning-analysis-category": string;
+    /** @description Describe a region within a file for the alert. */
+    "code-scanning-alert-location": {
+      path?: string;
+      start_line?: number;
+      end_line?: number;
+      start_column?: number;
+      end_column?: number;
+    };
+    /**
+     * @description A classification of the file. For example to identify it as generated.
+     * @enum {string|null}
+     */
+    "code-scanning-alert-classification":
+      | ("source" | "generated" | "test" | "library")
+      | null;
+    "code-scanning-alert-instance": {
+      ref?: components["schemas"]["code-scanning-ref"];
+      analysis_key?: components["schemas"]["code-scanning-analysis-analysis-key"];
+      environment?: components["schemas"]["code-scanning-alert-environment"];
+      category?: components["schemas"]["code-scanning-analysis-category"];
+      state?: components["schemas"]["code-scanning-alert-state"];
+      commit_sha?: string;
+      message?: {
+        text?: string;
+      };
+      location?: components["schemas"]["code-scanning-alert-location"];
+      html_url?: string;
+      /**
+       * @description Classifications that have been applied to the file that triggered the alert.
+       * For example identifying it as documentation, or a generated file.
+       */
+      classifications?: components["schemas"]["code-scanning-alert-classification"][];
+    };
     /**
      * Simple Repository
      * @description Simple Repository
@@ -8464,6 +8570,41 @@ export interface components {
        */
       hooks_url: string;
     };
+    "code-scanning-organization-alert-items": {
+      number: components["schemas"]["alert-number"];
+      created_at: components["schemas"]["alert-created-at"];
+      updated_at?: components["schemas"]["alert-updated-at"];
+      url: components["schemas"]["alert-url"];
+      html_url: components["schemas"]["alert-html-url"];
+      instances_url: components["schemas"]["alert-instances-url"];
+      state: components["schemas"]["code-scanning-alert-state"];
+      fixed_at?: components["schemas"]["code-scanning-alert-fixed-at"];
+      dismissed_by: components["schemas"]["nullable-simple-user"];
+      dismissed_at: components["schemas"]["code-scanning-alert-dismissed-at"];
+      dismissed_reason: components["schemas"]["code-scanning-alert-dismissed-reason"];
+      dismissed_comment?: components["schemas"]["code-scanning-alert-dismissed-comment"];
+      rule: components["schemas"]["code-scanning-alert-rule"];
+      tool: components["schemas"]["code-scanning-analysis-tool"];
+      most_recent_instance: components["schemas"]["code-scanning-alert-instance"];
+      repository: components["schemas"]["simple-repository"];
+    };
+    /**
+     * Format: date-time
+     * @description The time that the alert was last updated in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+     */
+    "nullable-alert-updated-at": string | null;
+    /**
+     * @description Sets the state of the secret scanning alert. Can be either `open` or `resolved`. You must provide `resolution` when you set the state to `resolved`.
+     * @enum {string}
+     */
+    "secret-scanning-alert-state": "open" | "resolved";
+    /**
+     * @description **Required when the `state` is `resolved`.** The reason for resolving the alert.
+     * @enum {string|null}
+     */
+    "secret-scanning-alert-resolution":
+      | (null | "false_positive" | "wont_fix" | "revoked" | "used_in_tests")
+      | null;
     "organization-secret-scanning-alert": {
       number?: components["schemas"]["alert-number"];
       created_at?: components["schemas"]["alert-created-at"];
@@ -10472,137 +10613,6 @@ export interface components {
       title?: string;
       /** @example 2011-01-26T19:01:12Z */
       created_at?: string;
-    };
-    /** @description The name of the tool used to generate the code scanning analysis. */
-    "code-scanning-analysis-tool-name": string;
-    /** @description The GUID of the tool used to generate the code scanning analysis, if provided in the uploaded SARIF data. */
-    "code-scanning-analysis-tool-guid": string | null;
-    /**
-     * @description State of a code scanning alert.
-     * @enum {string}
-     */
-    "code-scanning-alert-state": "open" | "closed" | "dismissed" | "fixed";
-    /**
-     * Format: date-time
-     * @description The time that the alert was last updated in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
-     */
-    "alert-updated-at": string;
-    /**
-     * Format: uri
-     * @description The REST API URL for fetching the list of instances for an alert.
-     */
-    "alert-instances-url": string;
-    /**
-     * Format: date-time
-     * @description The time that the alert was no longer detected and was considered fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
-     */
-    "code-scanning-alert-fixed-at": string | null;
-    /**
-     * Format: date-time
-     * @description The time that the alert was dismissed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
-     */
-    "code-scanning-alert-dismissed-at": string | null;
-    /**
-     * @description **Required when the state is dismissed.** The reason for dismissing or closing the alert.
-     * @enum {string|null}
-     */
-    "code-scanning-alert-dismissed-reason":
-      | (null | "false positive" | "won't fix" | "used in tests")
-      | null;
-    /** @description The dismissal comment associated with the dismissal of the alert. */
-    "code-scanning-alert-dismissed-comment": string | null;
-    "code-scanning-alert-rule": {
-      /** @description A unique identifier for the rule used to detect the alert. */
-      id?: string | null;
-      /** @description The name of the rule used to detect the alert. */
-      name?: string;
-      /**
-       * @description The severity of the alert.
-       * @enum {string|null}
-       */
-      severity?: ("none" | "note" | "warning" | "error") | null;
-      /**
-       * @description The security severity of the alert.
-       * @enum {string|null}
-       */
-      security_severity_level?: ("low" | "medium" | "high" | "critical") | null;
-      /** @description A short description of the rule used to detect the alert. */
-      description?: string;
-      /** @description description of the rule used to detect the alert. */
-      full_description?: string;
-      /** @description A set of tags applicable for the rule. */
-      tags?: string[] | null;
-      /** @description Detailed documentation for the rule as GitHub Flavored Markdown. */
-      help?: string | null;
-    };
-    /** @description The version of the tool used to generate the code scanning analysis. */
-    "code-scanning-analysis-tool-version": string | null;
-    "code-scanning-analysis-tool": {
-      name?: components["schemas"]["code-scanning-analysis-tool-name"];
-      version?: components["schemas"]["code-scanning-analysis-tool-version"];
-      guid?: components["schemas"]["code-scanning-analysis-tool-guid"];
-    };
-    /**
-     * @description The full Git reference, formatted as `refs/heads/<branch name>`,
-     * `refs/pull/<number>/merge`, or `refs/pull/<number>/head`.
-     */
-    "code-scanning-ref": string;
-    /** @description Identifies the configuration under which the analysis was executed. For example, in GitHub Actions this includes the workflow filename and job name. */
-    "code-scanning-analysis-analysis-key": string;
-    /** @description Identifies the variable values associated with the environment in which the analysis that generated this alert instance was performed, such as the language that was analyzed. */
-    "code-scanning-alert-environment": string;
-    /** @description Identifies the configuration under which the analysis was executed. Used to distinguish between multiple analyses for the same tool and commit, but performed on different languages or different parts of the code. */
-    "code-scanning-analysis-category": string;
-    /** @description Describe a region within a file for the alert. */
-    "code-scanning-alert-location": {
-      path?: string;
-      start_line?: number;
-      end_line?: number;
-      start_column?: number;
-      end_column?: number;
-    };
-    /**
-     * @description A classification of the file. For example to identify it as generated.
-     * @enum {string|null}
-     */
-    "code-scanning-alert-classification":
-      | ("source" | "generated" | "test" | "library")
-      | null;
-    "code-scanning-alert-instance": {
-      ref?: components["schemas"]["code-scanning-ref"];
-      analysis_key?: components["schemas"]["code-scanning-analysis-analysis-key"];
-      environment?: components["schemas"]["code-scanning-alert-environment"];
-      category?: components["schemas"]["code-scanning-analysis-category"];
-      state?: components["schemas"]["code-scanning-alert-state"];
-      commit_sha?: string;
-      message?: {
-        text?: string;
-      };
-      location?: components["schemas"]["code-scanning-alert-location"];
-      html_url?: string;
-      /**
-       * @description Classifications that have been applied to the file that triggered the alert.
-       * For example identifying it as documentation, or a generated file.
-       */
-      classifications?: components["schemas"]["code-scanning-alert-classification"][];
-    };
-    "code-scanning-organization-alert-items": {
-      number: components["schemas"]["alert-number"];
-      created_at: components["schemas"]["alert-created-at"];
-      updated_at?: components["schemas"]["alert-updated-at"];
-      url: components["schemas"]["alert-url"];
-      html_url: components["schemas"]["alert-html-url"];
-      instances_url: components["schemas"]["alert-instances-url"];
-      state: components["schemas"]["code-scanning-alert-state"];
-      fixed_at?: components["schemas"]["code-scanning-alert-fixed-at"];
-      dismissed_by: components["schemas"]["nullable-simple-user"];
-      dismissed_at: components["schemas"]["code-scanning-alert-dismissed-at"];
-      dismissed_reason: components["schemas"]["code-scanning-alert-dismissed-reason"];
-      dismissed_comment?: components["schemas"]["code-scanning-alert-dismissed-comment"];
-      rule: components["schemas"]["code-scanning-alert-rule"];
-      tool: components["schemas"]["code-scanning-analysis-tool"];
-      most_recent_instance: components["schemas"]["code-scanning-alert-instance"];
-      repository: components["schemas"]["simple-repository"];
     };
     /**
      * Codespace machine
@@ -19447,6 +19457,12 @@ export interface components {
         };
       };
     };
+    /** Response if GitHub Advanced Security is not enabled for this repository */
+    code_scanning_forbidden_read: {
+      content: {
+        "application/json": components["schemas"]["basic-error"];
+      };
+    };
     /** Service unavailable */
     service_unavailable: {
       content: {
@@ -19455,12 +19471,6 @@ export interface components {
           message?: string;
           documentation_url?: string;
         };
-      };
-    };
-    /** Response if GitHub Advanced Security is not enabled for this repository */
-    code_scanning_forbidden_read: {
-      content: {
-        "application/json": components["schemas"]["basic-error"];
       };
     };
     /** Forbidden Gist */
@@ -19611,6 +19621,16 @@ export interface components {
      * The default is `desc`.
      */
     "audit-log-order": "desc" | "asc";
+    /** @description The name of a code scanning tool. Only results by this tool will be listed. You can specify the tool by using either `tool_name` or `tool_guid`, but not both. */
+    "tool-name": components["schemas"]["code-scanning-analysis-tool-name"];
+    /** @description The GUID of a code scanning tool. Only results by this tool will be listed. Note that some code scanning tools may not include a GUID in their analysis data. You can specify the tool by using either `tool_guid` or `tool_name`, but not both. */
+    "tool-guid": components["schemas"]["code-scanning-analysis-tool-guid"];
+    /** @description A cursor, as given in the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events before this cursor. */
+    "pagination-before": string;
+    /** @description A cursor, as given in the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events after this cursor. */
+    "pagination-after": string;
+    /** @description The direction to sort the results by. */
+    direction: "asc" | "desc";
     /** @description Set to `open` or `resolved` to only list secret scanning alerts in a specific state. */
     "secret-scanning-alert-state": "open" | "resolved";
     /**
@@ -19623,12 +19643,6 @@ export interface components {
     "secret-scanning-alert-resolution": string;
     /** @description The property to sort the results by. `created` means when the alert was created. `updated` means when the alert was updated or resolved. */
     "secret-scanning-alert-sort": "created" | "updated";
-    /** @description The direction to sort the results by. */
-    direction: "asc" | "desc";
-    /** @description A cursor, as given in the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events before this cursor. */
-    "pagination-before": string;
-    /** @description A cursor, as given in the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events after this cursor. */
-    "pagination-after": string;
     /** @description The unique identifier of the gist. */
     "gist-id": string;
     /** @description The unique identifier of the comment. */
@@ -19665,10 +19679,6 @@ export interface components {
     "secret-name": string;
     /** @description The handle for the GitHub user account. */
     username: string;
-    /** @description The name of a code scanning tool. Only results by this tool will be listed. You can specify the tool by using either `tool_name` or `tool_guid`, but not both. */
-    "tool-name": components["schemas"]["code-scanning-analysis-tool-name"];
-    /** @description The GUID of a code scanning tool. Only results by this tool will be listed. Note that some code scanning tools may not include a GUID in their analysis data. You can specify the tool by using either `tool_guid` or `tool_name`, but not both. */
-    "tool-guid": components["schemas"]["code-scanning-analysis-tool-guid"];
     /** @description The unique identifier of the group. */
     "group-id": number;
     /** @description The unique identifier of the hook. */
@@ -21729,6 +21739,52 @@ export interface operations {
           "application/json": components["schemas"]["audit-log-event"][];
         };
       };
+    };
+  };
+  /**
+   * Lists code scanning alerts for the default branch for all eligible repositories in an enterprise. Eligible repositories are repositories that are owned by organizations that you own or for which you are a security manager. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+   *
+   * To use this endpoint, you must be a member of the enterprise,
+   * and you must use an access token with the `repo` scope or `security_events` scope.
+   */
+  "code-scanning/list-alerts-for-enterprise": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+      };
+      query: {
+        /** The name of a code scanning tool. Only results by this tool will be listed. You can specify the tool by using either `tool_name` or `tool_guid`, but not both. */
+        tool_name?: components["parameters"]["tool-name"];
+        /** The GUID of a code scanning tool. Only results by this tool will be listed. Note that some code scanning tools may not include a GUID in their analysis data. You can specify the tool by using either `tool_guid` or `tool_name`, but not both. */
+        tool_guid?: components["parameters"]["tool-guid"];
+        /** A cursor, as given in the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events before this cursor. */
+        before?: components["parameters"]["pagination-before"];
+        /** A cursor, as given in the [Link header](https://docs.github.com/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events after this cursor. */
+        after?: components["parameters"]["pagination-after"];
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
+        /** The number of results per page (max 100). */
+        per_page?: components["parameters"]["per-page"];
+        /** The direction to sort the results by. */
+        direction?: components["parameters"]["direction"];
+        /** If specified, only code scanning alerts with this state will be returned. */
+        state?: components["schemas"]["code-scanning-alert-state"];
+        /** The property by which to sort the results. */
+        sort?: "created" | "updated";
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        headers: {};
+        content: {
+          "application/json": components["schemas"]["code-scanning-organization-alert-items"][];
+        };
+      };
+      403: components["responses"]["code_scanning_forbidden_read"];
+      404: components["responses"]["not_found"];
+      503: components["responses"]["service_unavailable"];
     };
   };
   /**
@@ -26480,7 +26536,7 @@ export interface operations {
       422: components["responses"]["validation_failed_simple"];
     };
   };
-  /** Creates an organization project board. Returns a `404 Not Found` status if projects are disabled in the organization. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
+  /** Creates an organization project board. Returns a `410 Gone` status if projects are disabled in the organization or if the organization does not have existing classic projects. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
   "projects/create-for-org": {
     parameters: {
       path: {
@@ -35269,7 +35325,7 @@ export interface operations {
         "application/json": {
           /** @description A custom webhook event name. Must be 100 characters or fewer. */
           event_type: string;
-          /** @description JSON payload with extra information about the webhook event that your action or worklow may use. */
+          /** @description JSON payload with extra information about the webhook event that your action or workflow may use. */
           client_payload?: { [key: string]: unknown };
         };
       };
@@ -38713,7 +38769,7 @@ export interface operations {
       422: components["responses"]["validation_failed_simple"];
     };
   };
-  /** Creates a repository project board. Returns a `404 Not Found` status if projects are disabled in the repository. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
+  /** Creates a repository project board. Returns a `410 Gone` status if projects are disabled in the repository or if the repository does not have existing classic projects. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
   "projects/create-for-repo": {
     parameters: {
       path: {
@@ -45716,6 +45772,7 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
+  /** Creates a user project board. Returns a `410 Gone` status if the user does not have existing classic projects. If you do not have sufficient privileges to perform this action, a `401 Unauthorized` or `410 Gone` status is returned. */
   "projects/create-for-authenticated-user": {
     parameters: {};
     responses: {
