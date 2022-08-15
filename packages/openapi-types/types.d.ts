@@ -561,7 +561,6 @@ export interface paths {
   };
   "/gists/{gist_id}/forks": {
     get: operations["gists/list-forks"];
-    /** **Note**: This was previously `/gists/:gist_id/fork`. */
     post: operations["gists/fork"];
   };
   "/gists/{gist_id}/star": {
@@ -1217,6 +1216,8 @@ export interface paths {
      *
      * To use this endpoint, you must be an owner or security manager for the organization, and you must use an access token with the `repo` scope or `security_events` scope.
      *
+     * For public repositories, you may instead use the `public_repo` scope.
+     *
      * GitHub Apps must have the `security_events` read permission to use this endpoint.
      */
     get: operations["code-scanning/list-alerts-for-org"];
@@ -1682,6 +1683,34 @@ export interface paths {
      * GitHub Apps must have the `secret_scanning_alerts` read permission to use this endpoint.
      */
     get: operations["secret-scanning/list-alerts-for-org"];
+  };
+  "/orgs/{org}/security-managers": {
+    /**
+     * Lists teams that are security managers for an organization. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+     *
+     * To use this endpoint, you must be an administrator or security manager for the organization, and you must use an access token with the `read:org` scope.
+     *
+     * GitHub Apps must have the `administration` organization read permission to use this endpoint.
+     */
+    get: operations["orgs/list-security-manager-teams"];
+  };
+  "/orgs/{org}/security-managers/teams/{team_slug}": {
+    /**
+     * Adds a team as a security manager for an organization. For more information, see "[Managing security for an organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization) for an organization."
+     *
+     * To use this endpoint, you must be an administrator for the organization, and you must use an access token with the `write:org` scope.
+     *
+     * GitHub Apps must have the `administration` organization read-write permission to use this endpoint.
+     */
+    put: operations["orgs/add-security-manager-team"];
+    /**
+     * Removes the security manager role from a team for an organization. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization) team from an organization."
+     *
+     * To use this endpoint, you must be an administrator for the organization, and you must use an access token with the `admin:org` scope.
+     *
+     * GitHub Apps must have the `administration` organization read-write permission to use this endpoint.
+     */
+    delete: operations["orgs/remove-security-manager-team"];
   };
   "/orgs/{org}/settings/billing/actions": {
     /**
@@ -2189,7 +2218,7 @@ export interface paths {
      */
     get: operations["actions/get-custom-oidc-sub-claim-for-repo"];
     /**
-     * Sets the `opt-out` flag of a GitHub Actions OpenID Connect (OIDC) subject claim customization for a repository.
+     * Sets the `opt-in` or `opt-out` flag of a GitHub Actions OpenID Connect (OIDC) subject claim customization for a repository.
      * You must authenticate using an access token with the `repo` scope to use this
      * endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
      */
@@ -3839,27 +3868,67 @@ export interface paths {
   };
   "/repos/{owner}/{repo}/environments": {
     /**
-     * Get all environments for a repository.
+     * Lists the environments for a repository.
      *
      * Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
      */
     get: operations["repos/get-all-environments"];
   };
   "/repos/{owner}/{repo}/environments/{environment_name}": {
-    /** Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. */
+    /**
+     * **Note:** To get information about name patterns that branches must match in order to deploy to this environment, see "[Get a deployment branch policy](/rest/deployments/branch-policies#get-a-deployment-branch-policy)."
+     *
+     * Anyone with read access to the repository can use this endpoint. If the
+     * repository is private, you must use an access token with the `repo` scope. GitHub
+     * Apps must have the `actions:read` permission to use this endpoint.
+     */
     get: operations["repos/get-environment"];
     /**
      * Create or update an environment with protection rules, such as required reviewers. For more information about environment protection rules, see "[Environments](/actions/reference/environments#environment-protection-rules)."
      *
-     * **Note:** Although you can use this operation to specify that only branches that match specified name patterns can deploy to this environment, you must use the UI to set the name patterns. For more information, see "[Environments](/actions/reference/environments#deployment-branches)."
+     * **Note:** To create or update name patterns that branches must match in order to deploy to this environment, see "[Deployment branch policies](/rest/deployments/branch-policies)."
      *
      * **Note:** To create or update secrets for an environment, see "[Secrets](/rest/reference/actions#secrets)."
      *
-     * You must authenticate using an access token with the repo scope to use this endpoint.
+     * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration:write` permission for the repository to use this endpoint.
      */
     put: operations["repos/create-or-update-environment"];
     /** You must authenticate using an access token with the repo scope to use this endpoint. */
     delete: operations["repos/delete-an-environment"];
+  };
+  "/repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies": {
+    /**
+     * Lists the deployment branch policies for an environment.
+     *
+     * Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+     */
+    get: operations["repos/list-deployment-branch-policies"];
+    /**
+     * Creates a deployment branch policy for an environment.
+     *
+     * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration:write` permission for the repository to use this endpoint.
+     */
+    post: operations["repos/create-deployment-branch-policy"];
+  };
+  "/repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id}": {
+    /**
+     * Gets a deployment branch policy for an environment.
+     *
+     * Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+     */
+    get: operations["repos/get-deployment-branch-policy"];
+    /**
+     * Updates a deployment branch policy for an environment.
+     *
+     * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration:write` permission for the repository to use this endpoint.
+     */
+    put: operations["repos/update-deployment-branch-policy"];
+    /**
+     * Deletes a deployment branch policy for an environment.
+     *
+     * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration:write` permission for the repository to use this endpoint.
+     */
+    delete: operations["repos/delete-deployment-branch-policy"];
   };
   "/repos/{owner}/{repo}/events": {
     get: operations["activity/list-repo-events"];
@@ -4055,6 +4124,8 @@ export interface paths {
      * The tree creation API accepts nested entries. If you specify both a tree and a nested path modifying that tree, this endpoint will overwrite the contents of the tree with the new path contents, and create a new tree structure.
      *
      * If you use this endpoint to add, delete, or modify the file contents in a tree, you will need to commit the tree and then update a branch to point to the commit. For more information see "[Create a commit](https://docs.github.com/rest/reference/git#create-a-commit)" and "[Update a reference](https://docs.github.com/rest/reference/git#update-a-reference)."
+     *
+     * Returns an error if you try to delete a file that does not exist.
      */
     post: operations["git/create-tree"];
   };
@@ -4415,6 +4486,14 @@ export interface paths {
   "/repos/{owner}/{repo}/pages/builds/{build_id}": {
     get: operations["repos/get-pages-build"];
   };
+  "/repos/{owner}/{repo}/pages/deployment": {
+    /**
+     * Create a GitHub Pages deployment for a repository.
+     *
+     * Users must have write permissions. GitHub Apps must have the `pages:write` permission to use this endpoint.
+     */
+    post: operations["repos/create-pages-deployment"];
+  };
   "/repos/{owner}/{repo}/pages/health": {
     /**
      * Gets a health check of the DNS settings for the `CNAME` record configured for a repository's GitHub Pages.
@@ -4438,8 +4517,6 @@ export interface paths {
      * Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
      *
      * To open or update a pull request in a public repository, you must have write access to the head or the source branch. For organization-owned repositories, you must be a member of the organization that owns the repository to open or update a pull request.
-     *
-     * You can create a new pull request.
      *
      * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
      */
@@ -4543,7 +4620,7 @@ export interface paths {
     put: operations["pulls/merge"];
   };
   "/repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers": {
-    /** Lists the users or teams whose review is requested for a pull request. Once a requested reviewer submits a review, they are no longer considered a requested reviewer. Their review will instead be returned by the [List reviews for a pull request](https://docs.github.com/rest/pulls/reviews#list-reviews-for-a-pull-request) operation. */
+    /** Gets the users or teams whose review is requested for a pull request. Once a requested reviewer submits a review, they are no longer considered a requested reviewer. Their review will instead be returned by the [List reviews for a pull request](https://docs.github.com/rest/pulls/reviews#list-reviews-for-a-pull-request) operation. */
     get: operations["pulls/list-requested-reviewers"];
     /** This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details. */
     post: operations["pulls/request-reviewers"];
@@ -4555,7 +4632,7 @@ export interface paths {
     /**
      * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
      *
-     * Pull request reviews created in the `PENDING` state do not include the `submitted_at` property in the response.
+     * Pull request reviews created in the `PENDING` state are not submitted and therefore do not include the `submitted_at` property in the response. To create a pending review for a pull request, leave the `event` parameter blank. For more information about submitting a `PENDING` review, see "[Submit a review for a pull request](https://docs.github.com/rest/pulls#submit-a-review-for-a-pull-request)."
      *
      * **Note:** To comment on a specific line in a file, you need to first determine the _position_ of that line in the diff. The GitHub REST API v3 offers the `application/vnd.github.v3.diff` [media type](https://docs.github.com/rest/overview/media-types#commits-commit-comparison-and-pull-requests). To see a pull request diff, add this media type to the `Accept` header of a call to the [single pull request](https://docs.github.com/rest/reference/pulls#get-a-pull-request) endpoint.
      *
@@ -4578,6 +4655,7 @@ export interface paths {
     put: operations["pulls/dismiss-review"];
   };
   "/repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/events": {
+    /** Submits a pending review for a pull request. For more information about creating a pending review for a pull request, see "[Create a review for a pull request](https://docs.github.com/rest/pulls#create-a-review-for-a-pull-request)." */
     post: operations["pulls/submit-review"];
   };
   "/repos/{owner}/{repo}/pulls/{pull_number}/update-branch": {
@@ -4859,7 +4937,8 @@ export interface paths {
      * Gets a redirect URL to download a zip archive for a repository. If you omit `:ref`, the repository’s default branch (usually
      * `master`) will be used. Please make sure your HTTP framework is configured to follow redirects or you will need to use
      * the `Location` header to make a second `GET` request.
-     * **Note**: For private repositories, these links are temporary and expire after five minutes.
+     *
+     * **Note**: For private repositories, these links are temporary and expire after five minutes. If the repository is empty, you will receive a 404 when you follow the redirect.
      */
     get: operations["repos/download-zipball-archive"];
   };
@@ -5227,7 +5306,7 @@ export interface paths {
     /**
      * Find users via various criteria. This method returns up to 100 results [per page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
      *
-     * When searching for users, you can get text match metadata for the issue **login**, **email**, and **name** fields when you pass the `text-match` media type. For more details about highlighting search results, see [Text match metadata](https://docs.github.com/rest/reference/search#text-match-metadata). For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/rest/reference/search#text-match-metadata).
+     * When searching for users, you can get text match metadata for the issue **login**, public **email**, and **name** fields when you pass the `text-match` media type. For more details about highlighting search results, see [Text match metadata](https://docs.github.com/rest/reference/search#text-match-metadata). For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/rest/reference/search#text-match-metadata).
      *
      * For example, if you're looking for a list of popular users, you might try this query:
      *
@@ -7825,7 +7904,7 @@ export interface components {
         total_dormant_users?: number;
         dormancy_threshold?: string;
       };
-    };
+    }[];
     "actions-cache-usage-org-enterprise": {
       /** @description The count of active caches across all repositories of an enterprise or an organization. */
       total_active_caches_count: number;
@@ -10253,7 +10332,9 @@ export interface components {
      * @description Custom repository roles created by organization administrators
      */
     "organization-custom-repository-role": {
+      /** @description The unique identifier of the custom role. */
       id: number;
+      /** @description The name of the custom role. */
       name: string;
     };
     /**
@@ -10693,6 +10774,17 @@ export interface components {
       pending_operation_disabled_reason?: string | null;
       /** @description Text to show user when codespace idle timeout minutes has been overriden by an organization policy */
       idle_timeout_notice?: string | null;
+      /**
+       * @description Duration in minutes after codespace has gone idle in which it will be deleted. Must be integer minutes between 0 and 43200 (30 days).
+       * @example 60
+       */
+      retention_period_minutes?: number | null;
+      /**
+       * Format: date-time
+       * @description When a codespace will be auto-deleted based on the "retention_period_minutes" and "last_used_at"
+       * @example 2011-01-26T20:01:12Z
+       */
+      retention_expires_at?: string | null;
     };
     /**
      * Credential Authorization
@@ -11587,6 +11679,64 @@ export interface components {
       organization_permission?: "read" | "write" | "admin" | "none";
       /** @description Whether or not this project can be seen by everyone. Only present if owner is an organization. */
       private?: boolean;
+    };
+    /**
+     * Team Simple
+     * @description Groups of organization members that gives permissions on specified repositories.
+     */
+    "team-simple": {
+      /**
+       * @description Unique identifier of the team
+       * @example 1
+       */
+      id: number;
+      /** @example MDQ6VGVhbTE= */
+      node_id: string;
+      /**
+       * Format: uri
+       * @description URL for the team
+       * @example https://api.github.com/organizations/1/team/1
+       */
+      url: string;
+      /** @example https://api.github.com/organizations/1/team/1/members{/member} */
+      members_url: string;
+      /**
+       * @description Name of the team
+       * @example Justice League
+       */
+      name: string;
+      /**
+       * @description Description of the team
+       * @example A great team.
+       */
+      description: string | null;
+      /**
+       * @description Permission that the team will have for its repositories
+       * @example admin
+       */
+      permission: string;
+      /**
+       * @description The level of privacy this team should have
+       * @example closed
+       */
+      privacy?: string;
+      /**
+       * Format: uri
+       * @example https://github.com/orgs/rails/teams/core
+       */
+      html_url: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/organizations/1/team/1/repos
+       */
+      repositories_url: string;
+      /** @example justice-league */
+      slug: string;
+      /**
+       * @description Distinguished Name (DN) that team maps to within LDAP environment
+       * @example uid=example,ou=users,dc=github,dc=com
+       */
+      ldap_dn?: string;
     };
     /**
      * GroupMapping
@@ -14741,7 +14891,7 @@ export interface components {
       state: string;
       context: string;
       /** Format: uri */
-      target_url: string;
+      target_url: string | null;
       required?: boolean | null;
       /** Format: uri */
       avatar_url: string | null;
@@ -14777,8 +14927,8 @@ export interface components {
       id: number;
       node_id: string;
       state: string;
-      description: string;
-      target_url: string;
+      description: string | null;
+      target_url: string | null;
       context: string;
       created_at: string;
       updated_at: string;
@@ -14944,7 +15094,8 @@ export interface components {
      * @description A list of directory items
      */
     "content-directory": {
-      type: string;
+      /** @enum {string} */
+      type: "dir" | "file" | "submodule" | "symlink";
       size: number;
       name: string;
       path: string;
@@ -14972,7 +15123,8 @@ export interface components {
      * @description Content File
      */
     "content-file": {
-      type: string;
+      /** @enum {string} */
+      type: "file";
       encoding: string;
       size: number;
       name: string;
@@ -15005,7 +15157,8 @@ export interface components {
      * @description An object describing a symlink
      */
     "content-symlink": {
-      type: string;
+      /** @enum {string} */
+      type: "symlink";
       target: string;
       size: number;
       name: string;
@@ -15029,11 +15182,12 @@ export interface components {
       };
     };
     /**
-     * Symlink Content
-     * @description An object describing a symlink
+     * Submodule Content
+     * @description An object describing a submodule
      */
     "content-submodule": {
-      type: string;
+      /** @enum {string} */
+      type: "submodule";
       /** Format: uri */
       submodule_git_url: string;
       size: number;
@@ -15400,7 +15554,7 @@ export interface components {
      */
     "wait-timer": number;
     /** @description The type of deployment branch policy for this environment. To allow all branches to deploy, set to `null`. */
-    "deployment-branch-policy": {
+    "deployment-branch-policy-settings": {
       /** @description Whether only branches with branch protection rules can deploy to this environment. If `protected_branches` is `true`, `custom_branch_policies` must be `false`; if `protected_branches` is `false`, `custom_branch_policies` must be `true`. */
       protected_branches: boolean;
       /** @description Whether only branches that match the specified name patterns can deploy to this environment.  If `custom_branch_policies` is `true`, `protected_branches` must be `false`; if `custom_branch_policies` is `false`, `protected_branches` must be `true`. */
@@ -15470,7 +15624,36 @@ export interface components {
           /** @example branch_policy */
           type: string;
         }>)[];
-      deployment_branch_policy?: components["schemas"]["deployment-branch-policy"];
+      deployment_branch_policy?: components["schemas"]["deployment-branch-policy-settings"];
+    };
+    /**
+     * Deployment branch policy
+     * @description Details of a deployment branch policy.
+     */
+    "deployment-branch-policy": {
+      /**
+       * @description The unique identifier of the branch policy.
+       * @example 361471
+       */
+      id?: number;
+      /** @example MDE2OkdhdGVCcmFuY2hQb2xpY3kzNjE0NzE= */
+      node_id?: string;
+      /**
+       * @description The name pattern that branches must match in order to deploy to the environment.
+       * @example release/*
+       */
+      name?: string;
+    };
+    /** Deployment branch policy name pattern */
+    "deployment-branch-policy-name-pattern": {
+      /**
+       * @description The name pattern that branches must match in order to deploy to the environment.
+       *
+       * Wildcard characters will not match `/`. For example, to match branches that begin with `release/` and contain an additional single slash, use `release/*\/*`.
+       * For more information about pattern matching syntax, see the [Ruby File.fnmatch documentation](https://ruby-doc.org/core-2.5.1/File.html#method-c-fnmatch).
+       * @example release/*
+       */
+      name: string;
     };
     /**
      * Short Blob
@@ -16865,6 +17048,8 @@ export interface components {
       verified: boolean;
       created_at: string;
       read_only: boolean;
+      added_by?: string | null;
+      last_used?: string | null;
     };
     /**
      * Language
@@ -17114,6 +17299,30 @@ export interface components {
       status: string;
     };
     /**
+     * GitHub Pages
+     * @description The GitHub Pages deployment status.
+     */
+    "page-deployment": {
+      /**
+       * Format: uri
+       * @description The URI to monitor GitHub Pages deployment status.
+       * @example https://api.github.com/repos/github/hello-world/pages/deployments/4fd754f7e594640989b406850d0bc8f06a121251/status
+       */
+      status_url: string;
+      /**
+       * Format: uri
+       * @description The URI to the deployed GitHub Pages.
+       * @example hello-world.github.io
+       */
+      page_url: string;
+      /**
+       * Format: uri
+       * @description The URI to the deployed GitHub Pages preview.
+       * @example monalisa-1231a2312sa32-23sda74.drafts.github.io
+       */
+      preview_url?: string;
+    };
+    /**
      * Pages Health Check Status
      * @description Pages Health Check Status
      */
@@ -17178,64 +17387,6 @@ export interface components {
         is_https_eligible?: boolean | null;
         caa_error?: string | null;
       } | null;
-    };
-    /**
-     * Team Simple
-     * @description Groups of organization members that gives permissions on specified repositories.
-     */
-    "team-simple": {
-      /**
-       * @description Unique identifier of the team
-       * @example 1
-       */
-      id: number;
-      /** @example MDQ6VGVhbTE= */
-      node_id: string;
-      /**
-       * Format: uri
-       * @description URL for the team
-       * @example https://api.github.com/organizations/1/team/1
-       */
-      url: string;
-      /** @example https://api.github.com/organizations/1/team/1/members{/member} */
-      members_url: string;
-      /**
-       * @description Name of the team
-       * @example Justice League
-       */
-      name: string;
-      /**
-       * @description Description of the team
-       * @example A great team.
-       */
-      description: string | null;
-      /**
-       * @description Permission that the team will have for its repositories
-       * @example admin
-       */
-      permission: string;
-      /**
-       * @description The level of privacy this team should have
-       * @example closed
-       */
-      privacy?: string;
-      /**
-       * Format: uri
-       * @example https://github.com/orgs/rails/teams/core
-       */
-      html_url: string;
-      /**
-       * Format: uri
-       * @example https://api.github.com/organizations/1/team/1/repos
-       */
-      repositories_url: string;
-      /** @example justice-league */
-      slug: string;
-      /**
-       * @description Distinguished Name (DN) that team maps to within LDAP environment
-       * @example uid=example,ou=users,dc=github,dc=com
-       */
-      ldap_dn?: string;
     };
     /**
      * Pull Request
@@ -19019,12 +19170,12 @@ export interface components {
       name: string;
       /**
        * Format: date-time
-       * @description Secret created at
+       * @description The date and time at which the secret was created, in ISO 8601 format':' YYYY-MM-DDTHH:MM:SSZ.
        */
       created_at: string;
       /**
        * Format: date-time
-       * @description Secret last updated at
+       * @description The date and time at which the secret was last updated, in ISO 8601 format':' YYYY-MM-DDTHH:MM:SSZ.
        */
       updated_at: string;
       /**
@@ -19034,7 +19185,7 @@ export interface components {
       visibility: "all" | "private" | "selected";
       /**
        * Format: uri
-       * @description API URL at which the list of repositories this secret is vicible can be retrieved
+       * @description The API URL at which the list of repositories this secret is visible to can be retrieved
        * @example https://api.github.com/user/secrets/SECRET_NAME/repositories
        */
       selected_repositories_url: string;
@@ -19274,6 +19425,34 @@ export interface components {
       id: number;
       key: string;
     };
+    /**
+     * Simple Installation
+     * @description Simple Installation
+     */
+    "simple-installation": {
+      /**
+       * @description The ID of the installation.
+       * @example 1
+       */
+      id: number;
+      /**
+       * @description The global node ID of the installation.
+       * @example MDQ6VXNlcjU4MzIzMQ==
+       */
+      node_id: string;
+    };
+    "merge-group-checks-requested": {
+      action: string;
+      installation?: components["schemas"]["simple-installation"];
+      organization?: components["schemas"]["organization-simple"];
+      repository?: components["schemas"]["repository"];
+      sender?: components["schemas"]["simple-user"];
+      merge_group: {
+        head_sha: string;
+        head_ref: string;
+        base_ref: string;
+      };
+    };
   };
   responses: {
     /** Resource not found */
@@ -19321,12 +19500,6 @@ export interface components {
     };
     /** Not modified */
     not_modified: unknown;
-    /** Gone */
-    gone: {
-      content: {
-        "application/json": components["schemas"]["basic-error"];
-      };
-    };
     /** Response */
     actions_runner_labels: {
       content: {
@@ -19389,6 +19562,12 @@ export interface components {
     };
     /** Internal Error */
     internal_error: {
+      content: {
+        "application/json": components["schemas"]["basic-error"];
+      };
+    };
+    /** Gone */
+    gone: {
       content: {
         "application/json": components["schemas"]["basic-error"];
       };
@@ -19628,7 +19807,7 @@ export interface components {
     "workflow-run-branch": string;
     /** @description Returns workflow run triggered by the event you specify. For example, `push`, `pull_request` or `issue`. For more information, see "[Events that trigger workflows](https://docs.github.com/en/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows)." */
     event: string;
-    /** @description Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. For a list of the possible `status` and `conclusion` options, see "[Create a check run](https://docs.github.com/rest/reference/checks#create-a-check-run)." */
+    /** @description Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. */
     "workflow-run-status":
       | "completed"
       | "action_required"
@@ -19675,8 +19854,10 @@ export interface components {
     "manifest-path": string;
     /** @description deployment_id parameter */
     "deployment-id": number;
-    /** @description The name of the environment */
+    /** @description The name of the environment. */
     "environment-name": string;
+    /** @description The unique identifier of the branch policy. */
+    "branch-policy-id": number;
     /** @description A user ID. Only return users with an ID greater than this ID. */
     "since-user": number;
     /** @description The number that identifies the issue. */
@@ -21869,7 +22050,6 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** **Note**: This was previously `/gists/:gist_id/fork`. */
   "gists/fork": {
     parameters: {
       path: {
@@ -22416,10 +22596,10 @@ export interface operations {
         since?: components["parameters"]["since"];
         /** Only show notifications updated before the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         before?: components["parameters"]["before"];
-        /** The number of results per page (max 100). */
-        per_page?: components["parameters"]["per-page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
+        /** The number of results per page (max 50). */
+        per_page?: number;
       };
     };
     responses: {
@@ -24150,9 +24330,9 @@ export interface operations {
       };
     };
     responses: {
-      /** If the user is blocked: */
+      /** If the user is blocked */
       204: never;
-      /** If the user is not blocked: */
+      /** If the user is not blocked */
       404: {
         content: {
           "application/json": components["schemas"]["basic-error"];
@@ -24193,6 +24373,8 @@ export interface operations {
    * Lists code scanning alerts for the default branch for all eligible repositories in an organization. Eligible repositories are repositories that are owned by organizations that you own or for which you are a security manager. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
    *
    * To use this endpoint, you must be an owner or security manager for the organization, and you must use an access token with the `repo` scope or `security_events` scope.
+   *
+   * For public repositories, you may instead use the `public_repo` scope.
    *
    * GitHub Apps must have the `security_events` read permission to use this endpoint.
    */
@@ -26354,6 +26536,73 @@ export interface operations {
     };
   };
   /**
+   * Lists teams that are security managers for an organization. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+   *
+   * To use this endpoint, you must be an administrator or security manager for the organization, and you must use an access token with the `read:org` scope.
+   *
+   * GitHub Apps must have the `administration` organization read permission to use this endpoint.
+   */
+  "orgs/list-security-manager-teams": {
+    parameters: {
+      path: {
+        /** The organization name. The name is not case sensitive. */
+        org: components["parameters"]["org"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["team-simple"][];
+        };
+      };
+    };
+  };
+  /**
+   * Adds a team as a security manager for an organization. For more information, see "[Managing security for an organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization) for an organization."
+   *
+   * To use this endpoint, you must be an administrator for the organization, and you must use an access token with the `write:org` scope.
+   *
+   * GitHub Apps must have the `administration` organization read-write permission to use this endpoint.
+   */
+  "orgs/add-security-manager-team": {
+    parameters: {
+      path: {
+        /** The organization name. The name is not case sensitive. */
+        org: components["parameters"]["org"];
+        /** The slug of the team name. */
+        team_slug: components["parameters"]["team-slug"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+      /** The organization has reached the maximum number of security manager teams. */
+      409: unknown;
+    };
+  };
+  /**
+   * Removes the security manager role from a team for an organization. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization) team from an organization."
+   *
+   * To use this endpoint, you must be an administrator for the organization, and you must use an access token with the `admin:org` scope.
+   *
+   * GitHub Apps must have the `administration` organization read-write permission to use this endpoint.
+   */
+  "orgs/remove-security-manager-team": {
+    parameters: {
+      path: {
+        /** The organization name. The name is not case sensitive. */
+        org: components["parameters"]["org"];
+        /** The slug of the team name. */
+        team_slug: components["parameters"]["team-slug"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+    };
+  };
+  /**
    * Gets the summary of the free and paid GitHub Actions minutes used.
    *
    * Paid minutes only apply to workflows in private repositories that use GitHub-hosted runners. Minutes used is listed for each GitHub-hosted runner operating system. Any job re-runs are also included in the usage. The usage returned includes any minute multipliers for macOS and Windows runners, and is rounded up to the nearest whole minute. For more information, see "[Managing billing for GitHub Actions](https://docs.github.com/github/setting-up-and-managing-billing-and-payments-on-github/managing-billing-for-github-actions)".
@@ -27667,11 +27916,10 @@ export interface operations {
       content: {
         "application/json": {
           /**
-           * @description The permission to grant the team on this repository. In addition to the enumerated values, you can also specify a custom repository role name, if the owning organization has defined any. If no permission is specified, the team's `permission` attribute will be used to determine what permission to grant the team on this repository.
+           * @description The permission to grant the team on this repository. We accept the following permissions to be set: `pull`, `triage`, `push`, `maintain`, `admin` and you can also specify a custom repository role name, if the owning organization has defined any. If no permission is specified, the team's `permission` attribute will be used to determine what permission to grant the team on this repository.
            * @default push
-           * @enum {string}
            */
-          permission?: "pull" | "push" | "admin" | "maintain" | "triage";
+          permission?: string;
         };
       };
     };
@@ -28507,7 +28755,7 @@ export interface operations {
           homepage?: string;
           /**
            * @description Either `true` to make the repository private or `false` to make it public. Default: `false`.
-           * **Note**: You will get a `422` error if the organization restricts [changing repository visibility](https://docs.github.com/articles/repository-permission-levels-for-an-organization#changing-the-visibility-of-repositories) to organization owners and a non-owner tries to change the value of private. **Note**: You will get a `422` error if the organization restricts [changing repository visibility](https://docs.github.com/articles/repository-permission-levels-for-an-organization#changing-the-visibility-of-repositories) to organization owners and a non-owner tries to change the value of private.
+           * **Note**: You will get a `422` error if the organization restricts [changing repository visibility](https://docs.github.com/articles/repository-permission-levels-for-an-organization#changing-the-visibility-of-repositories) to organization owners and a non-owner tries to change the value of private.
            * @default false
            */
           private?: boolean;
@@ -28516,7 +28764,16 @@ export interface operations {
            * @enum {string}
            */
           visibility?: "public" | "private" | "internal";
-          /** @description Specify which security and analysis features to enable or disable. For example, to enable GitHub Advanced Security, use this data in the body of the PATCH request: `{"security_and_analysis": {"advanced_security": {"status": "enabled"}}}`. If you have admin permissions for a private repository covered by an Advanced Security license, you can check which security and analysis features are currently enabled by using a `GET /repos/{owner}/{repo}` request. */
+          /**
+           * @description Specify which security and analysis features to enable or disable for the repository.
+           *
+           * To use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+           *
+           * For example, to enable GitHub Advanced Security, use this data in the body of the `PATCH` request:
+           * `{ "security_and_analysis": {"advanced_security": { "status": "enabled" } } }`.
+           *
+           * You can check which security and analysis features are currently enabled by using a `GET /repos/{owner}/{repo}` request.
+           */
           security_and_analysis?: {
             /** @description Use the `status` property to enable or disable GitHub Advanced Security for this repository. For more information, see "[About GitHub Advanced Security](/github/getting-started-with-github/learning-about-github/about-github-advanced-security)." */
             advanced_security?: {
@@ -28913,7 +29170,7 @@ export interface operations {
     };
   };
   /**
-   * Sets the `opt-out` flag of a GitHub Actions OpenID Connect (OIDC) subject claim customization for a repository.
+   * Sets the `opt-in` or `opt-out` flag of a GitHub Actions OpenID Connect (OIDC) subject claim customization for a repository.
    * You must authenticate using an access token with the `repo` scope to use this
    * endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
    */
@@ -29467,7 +29724,7 @@ export interface operations {
         branch?: components["parameters"]["workflow-run-branch"];
         /** Returns workflow run triggered by the event you specify. For example, `push`, `pull_request` or `issue`. For more information, see "[Events that trigger workflows](https://docs.github.com/en/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows)." */
         event?: components["parameters"]["event"];
-        /** Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. For a list of the possible `status` and `conclusion` options, see "[Create a check run](https://docs.github.com/rest/reference/checks#create-a-check-run)." */
+        /** Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. */
         status?: components["parameters"]["workflow-run-status"];
         /** The number of results per page (max 100). */
         per_page?: components["parameters"]["per-page"];
@@ -30311,7 +30568,7 @@ export interface operations {
         branch?: components["parameters"]["workflow-run-branch"];
         /** Returns workflow run triggered by the event you specify. For example, `push`, `pull_request` or `issue`. For more information, see "[Events that trigger workflows](https://docs.github.com/en/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows)." */
         event?: components["parameters"]["event"];
-        /** Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. For a list of the possible `status` and `conclusion` options, see "[Create a check run](https://docs.github.com/rest/reference/checks#create-a-check-run)." */
+        /** Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. */
         status?: components["parameters"]["workflow-run-status"];
         /** The number of results per page (max 100). */
         per_page?: components["parameters"]["per-page"];
@@ -33229,11 +33486,10 @@ export interface operations {
       content: {
         "application/json": {
           /**
-           * @description The permission to grant the collaborator. **Only valid on organization-owned repositories.** In addition to the enumerated values, you can also specify a custom repository role name, if the owning organization has defined any.
+           * @description The permission to grant the collaborator. **Only valid on organization-owned repositories.** We accept the following permissions to be set: `pull`, `triage`, `push`, `maintain`, `admin` and you can also specify a custom repository role name, if the owning organization has defined any.
            * @default push
-           * @enum {string}
            */
-          permission?: "pull" | "push" | "admin" | "maintain" | "triage";
+          permission?: string;
         };
       };
     };
@@ -34055,7 +34311,7 @@ export interface operations {
       /** Response */
       200: {
         content: {
-          "application/vnd.github.v3.object": components["schemas"]["content-tree"];
+          "application/vnd.github.object": components["schemas"]["content-tree"];
           "application/json":
             | components["schemas"]["content-directory"]
             | components["schemas"]["content-file"]
@@ -34842,7 +35098,7 @@ export interface operations {
     };
   };
   /**
-   * Get all environments for a repository.
+   * Lists the environments for a repository.
    *
    * Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
    */
@@ -34877,7 +35133,13 @@ export interface operations {
       };
     };
   };
-  /** Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. */
+  /**
+   * **Note:** To get information about name patterns that branches must match in order to deploy to this environment, see "[Get a deployment branch policy](/rest/deployments/branch-policies#get-a-deployment-branch-policy)."
+   *
+   * Anyone with read access to the repository can use this endpoint. If the
+   * repository is private, you must use an access token with the `repo` scope. GitHub
+   * Apps must have the `actions:read` permission to use this endpoint.
+   */
   "repos/get-environment": {
     parameters: {
       path: {
@@ -34885,7 +35147,7 @@ export interface operations {
         owner: components["parameters"]["owner"];
         /** The name of the repository. The name is not case sensitive. */
         repo: components["parameters"]["repo"];
-        /** The name of the environment */
+        /** The name of the environment. */
         environment_name: components["parameters"]["environment-name"];
       };
     };
@@ -34901,11 +35163,11 @@ export interface operations {
   /**
    * Create or update an environment with protection rules, such as required reviewers. For more information about environment protection rules, see "[Environments](/actions/reference/environments#environment-protection-rules)."
    *
-   * **Note:** Although you can use this operation to specify that only branches that match specified name patterns can deploy to this environment, you must use the UI to set the name patterns. For more information, see "[Environments](/actions/reference/environments#deployment-branches)."
+   * **Note:** To create or update name patterns that branches must match in order to deploy to this environment, see "[Deployment branch policies](/rest/deployments/branch-policies)."
    *
    * **Note:** To create or update secrets for an environment, see "[Secrets](/rest/reference/actions#secrets)."
    *
-   * You must authenticate using an access token with the repo scope to use this endpoint.
+   * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration:write` permission for the repository to use this endpoint.
    */
   "repos/create-or-update-environment": {
     parameters: {
@@ -34914,7 +35176,7 @@ export interface operations {
         owner: components["parameters"]["owner"];
         /** The name of the repository. The name is not case sensitive. */
         repo: components["parameters"]["repo"];
-        /** The name of the environment */
+        /** The name of the environment. */
         environment_name: components["parameters"]["environment-name"];
       };
     };
@@ -34947,7 +35209,7 @@ export interface operations {
                 id?: number;
               }[]
             | null;
-          deployment_branch_policy?: components["schemas"]["deployment-branch-policy"];
+          deployment_branch_policy?: components["schemas"]["deployment-branch-policy-settings"];
         } | null;
       };
     };
@@ -34960,12 +35222,166 @@ export interface operations {
         owner: components["parameters"]["owner"];
         /** The name of the repository. The name is not case sensitive. */
         repo: components["parameters"]["repo"];
-        /** The name of the environment */
+        /** The name of the environment. */
         environment_name: components["parameters"]["environment-name"];
       };
     };
     responses: {
       /** Default response */
+      204: never;
+    };
+  };
+  /**
+   * Lists the deployment branch policies for an environment.
+   *
+   * Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+   */
+  "repos/list-deployment-branch-policies": {
+    parameters: {
+      path: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: components["parameters"]["owner"];
+        /** The name of the repository. The name is not case sensitive. */
+        repo: components["parameters"]["repo"];
+        /** The name of the environment. */
+        environment_name: components["parameters"]["environment-name"];
+      };
+      query: {
+        /** The number of results per page (max 100). */
+        per_page?: components["parameters"]["per-page"];
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": {
+            /**
+             * @description The number of deployment branch policies for the environment.
+             * @example 2
+             */
+            total_count: number;
+            branch_policies: components["schemas"]["deployment-branch-policy"][];
+          };
+        };
+      };
+    };
+  };
+  /**
+   * Creates a deployment branch policy for an environment.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration:write` permission for the repository to use this endpoint.
+   */
+  "repos/create-deployment-branch-policy": {
+    parameters: {
+      path: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: components["parameters"]["owner"];
+        /** The name of the repository. The name is not case sensitive. */
+        repo: components["parameters"]["repo"];
+        /** The name of the environment. */
+        environment_name: components["parameters"]["environment-name"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["deployment-branch-policy"];
+        };
+      };
+      /** Response if the same branch name pattern already exists */
+      303: never;
+      /** Not Found or `deployment_branch_policy.custom_branch_policies` property for the environment is set to false */
+      404: unknown;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["deployment-branch-policy-name-pattern"];
+      };
+    };
+  };
+  /**
+   * Gets a deployment branch policy for an environment.
+   *
+   * Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+   */
+  "repos/get-deployment-branch-policy": {
+    parameters: {
+      path: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: components["parameters"]["owner"];
+        /** The name of the repository. The name is not case sensitive. */
+        repo: components["parameters"]["repo"];
+        /** The name of the environment. */
+        environment_name: components["parameters"]["environment-name"];
+        /** The unique identifier of the branch policy. */
+        branch_policy_id: components["parameters"]["branch-policy-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["deployment-branch-policy"];
+        };
+      };
+    };
+  };
+  /**
+   * Updates a deployment branch policy for an environment.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration:write` permission for the repository to use this endpoint.
+   */
+  "repos/update-deployment-branch-policy": {
+    parameters: {
+      path: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: components["parameters"]["owner"];
+        /** The name of the repository. The name is not case sensitive. */
+        repo: components["parameters"]["repo"];
+        /** The name of the environment. */
+        environment_name: components["parameters"]["environment-name"];
+        /** The unique identifier of the branch policy. */
+        branch_policy_id: components["parameters"]["branch-policy-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["deployment-branch-policy"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["deployment-branch-policy-name-pattern"];
+      };
+    };
+  };
+  /**
+   * Deletes a deployment branch policy for an environment.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration:write` permission for the repository to use this endpoint.
+   */
+  "repos/delete-deployment-branch-policy": {
+    parameters: {
+      path: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: components["parameters"]["owner"];
+        /** The name of the repository. The name is not case sensitive. */
+        repo: components["parameters"]["repo"];
+        /** The name of the environment. */
+        environment_name: components["parameters"]["environment-name"];
+        /** The unique identifier of the branch policy. */
+        branch_policy_id: components["parameters"]["branch-policy-id"];
+      };
+    };
+    responses: {
+      /** Response */
       204: never;
     };
   };
@@ -35288,12 +35704,6 @@ export interface operations {
         /** ref parameter */
         ref: string;
       };
-      query: {
-        /** The number of results per page (max 100). */
-        per_page?: components["parameters"]["per-page"];
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
-      };
     };
     responses: {
       /** Response */
@@ -35390,7 +35800,7 @@ export interface operations {
         owner: components["parameters"]["owner"];
         /** The name of the repository. The name is not case sensitive. */
         repo: components["parameters"]["repo"];
-        /** ref parameter */
+        /** The name of the fully qualified reference to update. For example, `refs/heads/master`. If the value doesn't start with `refs` and have at least two slashes, it will be rejected. */
         ref: string;
       };
     };
@@ -35554,6 +35964,8 @@ export interface operations {
    * The tree creation API accepts nested entries. If you specify both a tree and a nested path modifying that tree, this endpoint will overwrite the contents of the tree with the new path contents, and create a new tree structure.
    *
    * If you use this endpoint to add, delete, or modify the file contents in a tree, you will need to commit the tree and then update a branch to point to the commit. For more information see "[Create a commit](https://docs.github.com/rest/reference/git#create-a-commit)" and "[Update a reference](https://docs.github.com/rest/reference/git#update-a-reference)."
+   *
+   * Returns an error if you try to delete a file that does not exist.
    */
   "git/create-tree": {
     parameters: {
@@ -38057,6 +38469,11 @@ export interface operations {
           https_enforced?: boolean;
           /** @description Configures access controls for the GitHub Pages site. If public is set to `true`, the site is accessible to anyone on the internet. If set to `false`, the site will only be accessible to users who have at least `read` access to the repository that published the site. This includes anyone in your Enterprise if the repository is set to `internal` visibility. This feature is only available to repositories in an organization on an Enterprise plan. */
           public?: boolean;
+          /**
+           * @description The process by which the GitHub Pages site will be built. `workflow` means that the site is built by a custom GitHub Actions workflow. `legacy` means that the site is built by GitHub when changes are pushed to a specific branch.
+           * @enum {string}
+           */
+          build_type?: "legacy" | "workflow";
           source?: Partial<"gh-pages" | "master" | "master /docs"> &
             Partial<{
               /** @description The repository branch used to publish your site's source files. */
@@ -38094,6 +38511,11 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
+          /**
+           * @description The process in which the Page will be built. Possible values are `"legacy"` and `"workflow"`.
+           * @enum {string}
+           */
+          build_type?: "legacy" | "workflow";
           /** @description The source branch and directory used to publish your Pages site. */
           source?: {
             /** @description The repository branch used to publish your site's source files. */
@@ -38206,6 +38628,52 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["page-build"];
+        };
+      };
+    };
+  };
+  /**
+   * Create a GitHub Pages deployment for a repository.
+   *
+   * Users must have write permissions. GitHub Apps must have the `pages:write` permission to use this endpoint.
+   */
+  "repos/create-pages-deployment": {
+    parameters: {
+      path: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: components["parameters"]["owner"];
+        /** The name of the repository. The name is not case sensitive. */
+        repo: components["parameters"]["repo"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["page-deployment"];
+        };
+      };
+      400: components["responses"]["bad_request"];
+      404: components["responses"]["not_found"];
+      422: components["responses"]["validation_failed"];
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @description The URL of an artifact that contains the .zip or .tar of static assets to deploy. The artifact belongs to the repository. */
+          artifact_url: string;
+          /**
+           * @description The target environment for this GitHub Pages deployment.
+           * @default github-pages
+           */
+          environment?: string;
+          /**
+           * @description A unique string that represents the version of the build for this deployment.
+           * @default GITHUB_SHA
+           */
+          pages_build_version: string;
+          /** @description The OIDC token issued by GitHub Actions certifying the origin of the deployment. */
+          oidc_token: string;
         };
       };
     };
@@ -38356,8 +38824,6 @@ export interface operations {
    *
    * To open or update a pull request in a public repository, you must have write access to the head or the source branch. For organization-owned repositories, you must be a member of the organization that owns the repository to open or update a pull request.
    *
-   * You can create a new pull request.
-   *
    * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    */
   "pulls/create": {
@@ -38385,7 +38851,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** @description The title of the new pull request. */
+          /** @description The title of the new pull request. Required unless `issue` is specified. */
           title?: string;
           /** @description The name of the branch where your changes are implemented. For cross-repository pull requests in the same network, namespace `head` with a user like this: `username:branch`. */
           head: string;
@@ -38397,7 +38863,10 @@ export interface operations {
           maintainer_can_modify?: boolean;
           /** @description Indicates whether the pull request is a draft. See "[Draft Pull Requests](https://docs.github.com/en/articles/about-pull-requests#draft-pull-requests)" in the GitHub Help documentation to learn more. */
           draft?: boolean;
-          /** @example 1 */
+          /**
+           * @description An issue in the repository to convert to a pull request. The issue title, body, and comments will become the title, body, and comments on the new pull request. Required unless `title` is specified.
+           * @example 1
+           */
           issue?: number;
         };
       };
@@ -38831,9 +39300,9 @@ export interface operations {
           /** @description The text of the review comment. */
           body: string;
           /** @description The SHA of the commit needing a comment. Not using the latest commit SHA may render your comment outdated if a subsequent commit modifies the line you specify as the `position`. */
-          commit_id?: string;
+          commit_id: string;
           /** @description The relative path to the file that necessitates a comment. */
-          path?: string;
+          path: string;
           /**
            * @deprecated
            * @description **This parameter is deprecated. Use `line` instead**. The position in the diff where you want to add a review comment. Note this value is not the same as the line number in the file. For help finding the position value, read the note above.
@@ -38845,7 +39314,7 @@ export interface operations {
            */
           side?: "LEFT" | "RIGHT";
           /** @description The line of the blob in the pull request diff that the comment applies to. For a multi-line comment, the last line of the range that your comment applies to. */
-          line?: number;
+          line: number;
           /** @description **Required when using multi-line comments unless using `in_reply_to`**. The `start_line` is the first line in the pull request diff that your multi-line comment applies to. To learn more about multi-line comments, see "[Commenting on a pull request](https://docs.github.com/en/articles/commenting-on-a-pull-request#adding-line-comments-to-a-pull-request)" in the GitHub Help documentation. */
           start_line?: number;
           /**
@@ -39036,7 +39505,7 @@ export interface operations {
       };
     };
   };
-  /** Lists the users or teams whose review is requested for a pull request. Once a requested reviewer submits a review, they are no longer considered a requested reviewer. Their review will instead be returned by the [List reviews for a pull request](https://docs.github.com/rest/pulls/reviews#list-reviews-for-a-pull-request) operation. */
+  /** Gets the users or teams whose review is requested for a pull request. Once a requested reviewer submits a review, they are no longer considered a requested reviewer. Their review will instead be returned by the [List reviews for a pull request](https://docs.github.com/rest/pulls/reviews#list-reviews-for-a-pull-request) operation. */
   "pulls/list-requested-reviewers": {
     parameters: {
       path: {
@@ -39046,12 +39515,6 @@ export interface operations {
         repo: components["parameters"]["repo"];
         /** The number that identifies the pull request. */
         pull_number: components["parameters"]["pull-number"];
-      };
-      query: {
-        /** The number of results per page (max 100). */
-        per_page?: components["parameters"]["per-page"];
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
       };
     };
     responses: {
@@ -39160,7 +39623,7 @@ export interface operations {
   /**
    * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
    *
-   * Pull request reviews created in the `PENDING` state do not include the `submitted_at` property in the response.
+   * Pull request reviews created in the `PENDING` state are not submitted and therefore do not include the `submitted_at` property in the response. To create a pending review for a pull request, leave the `event` parameter blank. For more information about submitting a `PENDING` review, see "[Submit a review for a pull request](https://docs.github.com/rest/pulls#submit-a-review-for-a-pull-request)."
    *
    * **Note:** To comment on a specific line in a file, you need to first determine the _position_ of that line in the diff. The GitHub REST API v3 offers the `application/vnd.github.v3.diff` [media type](https://docs.github.com/rest/overview/media-types#commits-commit-comparison-and-pull-requests). To see a pull request diff, add this media type to the `Accept` header of a call to the [single pull request](https://docs.github.com/rest/reference/pulls#get-a-pull-request) endpoint.
    *
@@ -39195,7 +39658,7 @@ export interface operations {
           /** @description **Required** when using `REQUEST_CHANGES` or `COMMENT` for the `event` parameter. The body text of the pull request review. */
           body?: string;
           /**
-           * @description The review action you want to perform. The review actions include: `APPROVE`, `REQUEST_CHANGES`, or `COMMENT`. By leaving this blank, you set the review action state to `PENDING`, which means you will need to [submit the pull request review](https://docs.github.com/rest/reference/pulls#submit-a-review-for-a-pull-request) when you are ready.
+           * @description The review action you want to perform. The review actions include: `APPROVE`, `REQUEST_CHANGES`, or `COMMENT`. By leaving this blank, you set the review action state to `PENDING`, which means you will need to [submit the pull request review](https://docs.github.com/rest/pulls#submit-a-review-for-a-pull-request) when you are ready.
            * @enum {string}
            */
           event?: "APPROVE" | "REQUEST_CHANGES" | "COMMENT";
@@ -39359,12 +39822,16 @@ export interface operations {
         "application/json": {
           /** @description The message for the pull request review dismissal */
           message: string;
-          /** @example "APPROVE" */
-          event?: string;
+          /**
+           * @example "DISMISS"
+           * @enum {string}
+           */
+          event?: "DISMISS";
         };
       };
     };
   };
+  /** Submits a pending review for a pull request. For more information about creating a pending review for a pull request, see "[Create a review for a pull request](https://docs.github.com/rest/pulls#create-a-review-for-a-pull-request)." */
   "pulls/submit-review": {
     parameters: {
       path: {
@@ -39605,7 +40072,7 @@ export interface operations {
       };
     };
     responses: {
-      /** To download the asset's binary content, set the `Accept` header of the request to [`application/octet-stream`](https://docs.github.com/rest/overview/media-types). The API will either redirect the client to the location, or stream it directly if possible. API clients should handle both a `200` or `302` response. */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["release-asset"];
@@ -40252,12 +40719,7 @@ export interface operations {
       };
     };
     responses: {
-      /**
-       * *   `w` - Start of the week, given as a [Unix timestamp](http://en.wikipedia.org/wiki/Unix_time).
-       * *   `a` - Number of additions
-       * *   `d` - Number of deletions
-       * *   `c` - Number of commits
-       */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["contributor-activity"][];
@@ -40358,9 +40820,9 @@ export interface operations {
            * For example, if your continuous integration system is posting build status, you would want to provide the deep link for the build output for this specific SHA:
            * `http://ci.example.com/user/repo/build/sha`
            */
-          target_url?: string;
+          target_url?: string | null;
           /** @description A short description of the status. */
-          description?: string;
+          description?: string | null;
           /**
            * @description A string label to differentiate this status from the status of other systems. This field is case-insensitive.
            * @default default
@@ -40832,7 +41294,8 @@ export interface operations {
    * Gets a redirect URL to download a zip archive for a repository. If you omit `:ref`, the repository’s default branch (usually
    * `master`) will be used. Please make sure your HTTP framework is configured to follow redirects or you will need to use
    * the `Location` header to make a second `GET` request.
-   * **Note**: For private repositories, these links are temporary and expire after five minutes.
+   *
+   * **Note**: For private repositories, these links are temporary and expire after five minutes. If the repository is empty, you will receive a 404 when you follow the redirect.
    */
   "repos/download-zipball-archive": {
     parameters: {
@@ -40934,7 +41397,7 @@ export interface operations {
       path: {
         /** The unique identifier of the repository. */
         repository_id: components["parameters"]["repository-id"];
-        /** The name of the environment */
+        /** The name of the environment. */
         environment_name: components["parameters"]["environment-name"];
       };
       query: {
@@ -40963,7 +41426,7 @@ export interface operations {
       path: {
         /** The unique identifier of the repository. */
         repository_id: components["parameters"]["repository-id"];
-        /** The name of the environment */
+        /** The name of the environment. */
         environment_name: components["parameters"]["environment-name"];
       };
     };
@@ -40982,7 +41445,7 @@ export interface operations {
       path: {
         /** The unique identifier of the repository. */
         repository_id: components["parameters"]["repository-id"];
-        /** The name of the environment */
+        /** The name of the environment. */
         environment_name: components["parameters"]["environment-name"];
         /** The name of the secret. */
         secret_name: components["parameters"]["secret-name"];
@@ -41079,7 +41542,7 @@ export interface operations {
       path: {
         /** The unique identifier of the repository. */
         repository_id: components["parameters"]["repository-id"];
-        /** The name of the environment */
+        /** The name of the environment. */
         environment_name: components["parameters"]["environment-name"];
         /** The name of the secret. */
         secret_name: components["parameters"]["secret-name"];
@@ -41112,7 +41575,7 @@ export interface operations {
       path: {
         /** The unique identifier of the repository. */
         repository_id: components["parameters"]["repository-id"];
-        /** The name of the environment */
+        /** The name of the environment. */
         environment_name: components["parameters"]["environment-name"];
         /** The name of the secret. */
         secret_name: components["parameters"]["secret-name"];
@@ -42131,7 +42594,7 @@ export interface operations {
   /**
    * Find users via various criteria. This method returns up to 100 results [per page](https://docs.github.com/rest/overview/resources-in-the-rest-api#pagination).
    *
-   * When searching for users, you can get text match metadata for the issue **login**, **email**, and **name** fields when you pass the `text-match` media type. For more details about highlighting search results, see [Text match metadata](https://docs.github.com/rest/reference/search#text-match-metadata). For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/rest/reference/search#text-match-metadata).
+   * When searching for users, you can get text match metadata for the issue **login**, public **email**, and **name** fields when you pass the `text-match` media type. For more details about highlighting search results, see [Text match metadata](https://docs.github.com/rest/reference/search#text-match-metadata). For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/rest/reference/search#text-match-metadata).
    *
    * For example, if you're looking for a list of popular users, you might try this query:
    *
@@ -43400,12 +43863,12 @@ export interface operations {
       };
     };
     responses: {
-      /** If the user is blocked: */
+      /** If the user is blocked */
       204: never;
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
-      /** If the user is not blocked: */
+      /** If the user is not blocked */
       404: {
         content: {
           "application/json": components["schemas"]["basic-error"];
