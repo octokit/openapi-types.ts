@@ -731,7 +731,6 @@ export interface paths {
   };
   "/gists/{gist_id}/forks": {
     get: operations["gists/list-forks"];
-    /** **Note**: This was previously `/gists/:gist_id/fork`. */
     post: operations["gists/fork"];
   };
   "/gists/{gist_id}/star": {
@@ -3389,27 +3388,67 @@ export interface paths {
   };
   "/repos/{owner}/{repo}/environments": {
     /**
-     * Get all environments for a repository.
+     * Lists the environments for a repository.
      *
      * Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
      */
     get: operations["repos/get-all-environments"];
   };
   "/repos/{owner}/{repo}/environments/{environment_name}": {
-    /** Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. */
+    /**
+     * **Note:** To get information about name patterns that branches must match in order to deploy to this environment, see "[Get a deployment branch policy](/rest/deployments/branch-policies#get-a-deployment-branch-policy)."
+     *
+     * Anyone with read access to the repository can use this endpoint. If the
+     * repository is private, you must use an access token with the `repo` scope. GitHub
+     * Apps must have the `actions:read` permission to use this endpoint.
+     */
     get: operations["repos/get-environment"];
     /**
      * Create or update an environment with protection rules, such as required reviewers. For more information about environment protection rules, see "[Environments](/actions/reference/environments#environment-protection-rules)."
      *
-     * **Note:** Although you can use this operation to specify that only branches that match specified name patterns can deploy to this environment, you must use the UI to set the name patterns. For more information, see "[Environments](/actions/reference/environments#deployment-branches)."
+     * **Note:** To create or update name patterns that branches must match in order to deploy to this environment, see "[Deployment branch policies](/rest/deployments/branch-policies)."
      *
      * **Note:** To create or update secrets for an environment, see "[Secrets](/rest/reference/actions#secrets)."
      *
-     * You must authenticate using an access token with the repo scope to use this endpoint.
+     * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration:write` permission for the repository to use this endpoint.
      */
     put: operations["repos/create-or-update-environment"];
     /** You must authenticate using an access token with the repo scope to use this endpoint. */
     delete: operations["repos/delete-an-environment"];
+  };
+  "/repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies": {
+    /**
+     * Lists the deployment branch policies for an environment.
+     *
+     * Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+     */
+    get: operations["repos/list-deployment-branch-policies"];
+    /**
+     * Creates a deployment branch policy for an environment.
+     *
+     * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration:write` permission for the repository to use this endpoint.
+     */
+    post: operations["repos/create-deployment-branch-policy"];
+  };
+  "/repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id}": {
+    /**
+     * Gets a deployment branch policy for an environment.
+     *
+     * Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+     */
+    get: operations["repos/get-deployment-branch-policy"];
+    /**
+     * Updates a deployment branch policy for an environment.
+     *
+     * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration:write` permission for the repository to use this endpoint.
+     */
+    put: operations["repos/update-deployment-branch-policy"];
+    /**
+     * Deletes a deployment branch policy for an environment.
+     *
+     * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration:write` permission for the repository to use this endpoint.
+     */
+    delete: operations["repos/delete-deployment-branch-policy"];
   };
   "/repos/{owner}/{repo}/events": {
     get: operations["activity/list-repo-events"];
@@ -3605,6 +3644,8 @@ export interface paths {
      * The tree creation API accepts nested entries. If you specify both a tree and a nested path modifying that tree, this endpoint will overwrite the contents of the tree with the new path contents, and create a new tree structure.
      *
      * If you use this endpoint to add, delete, or modify the file contents in a tree, you will need to commit the tree and then update a branch to point to the commit. For more information see "[Create a commit](https://docs.github.com/enterprise-server@3.5/rest/reference/git#create-a-commit)" and "[Update a reference](https://docs.github.com/enterprise-server@3.5/rest/reference/git#update-a-reference)."
+     *
+     * Returns an error if you try to delete a file that does not exist.
      */
     post: operations["git/create-tree"];
   };
@@ -3914,8 +3955,6 @@ export interface paths {
      *
      * To open or update a pull request in a public repository, you must have write access to the head or the source branch. For organization-owned repositories, you must be a member of the organization that owns the repository to open or update a pull request.
      *
-     * You can create a new pull request.
-     *
      * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
      */
     post: operations["pulls/create"];
@@ -4008,7 +4047,7 @@ export interface paths {
     put: operations["pulls/merge"];
   };
   "/repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers": {
-    /** Lists the users or teams whose review is requested for a pull request. Once a requested reviewer submits a review, they are no longer considered a requested reviewer. Their review will instead be returned by the [List reviews for a pull request](https://docs.github.com/enterprise-server@3.5/rest/pulls/reviews#list-reviews-for-a-pull-request) operation. */
+    /** Gets the users or teams whose review is requested for a pull request. Once a requested reviewer submits a review, they are no longer considered a requested reviewer. Their review will instead be returned by the [List reviews for a pull request](https://docs.github.com/enterprise-server@3.5/rest/pulls/reviews#list-reviews-for-a-pull-request) operation. */
     get: operations["pulls/list-requested-reviewers"];
     /** This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.5/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details. */
     post: operations["pulls/request-reviewers"];
@@ -4020,7 +4059,7 @@ export interface paths {
     /**
      * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
      *
-     * Pull request reviews created in the `PENDING` state do not include the `submitted_at` property in the response.
+     * Pull request reviews created in the `PENDING` state are not submitted and therefore do not include the `submitted_at` property in the response. To create a pending review for a pull request, leave the `event` parameter blank. For more information about submitting a `PENDING` review, see "[Submit a review for a pull request](https://docs.github.com/enterprise-server@3.5/rest/pulls#submit-a-review-for-a-pull-request)."
      *
      * **Note:** To comment on a specific line in a file, you need to first determine the _position_ of that line in the diff. The GitHub REST API v3 offers the `application/vnd.github.v3.diff` [media type](https://docs.github.com/enterprise-server@3.5/rest/overview/media-types#commits-commit-comparison-and-pull-requests). To see a pull request diff, add this media type to the `Accept` header of a call to the [single pull request](https://docs.github.com/enterprise-server@3.5/rest/reference/pulls#get-a-pull-request) endpoint.
      *
@@ -4043,6 +4082,7 @@ export interface paths {
     put: operations["pulls/dismiss-review"];
   };
   "/repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/events": {
+    /** Submits a pending review for a pull request. For more information about creating a pending review for a pull request, see "[Create a review for a pull request](https://docs.github.com/enterprise-server@3.5/rest/pulls#create-a-review-for-a-pull-request)." */
     post: operations["pulls/submit-review"];
   };
   "/repos/{owner}/{repo}/pulls/{pull_number}/update-branch": {
@@ -4304,7 +4344,8 @@ export interface paths {
      * Gets a redirect URL to download a zip archive for a repository. If you omit `:ref`, the repository’s default branch (usually
      * `master`) will be used. Please make sure your HTTP framework is configured to follow redirects or you will need to use
      * the `Location` header to make a second `GET` request.
-     * **Note**: For private repositories, these links are temporary and expire after five minutes.
+     *
+     * **Note**: For private repositories, these links are temporary and expire after five minutes. If the repository is empty, you will receive a 404 when you follow the redirect.
      */
     get: operations["repos/download-zipball-archive"];
   };
@@ -4522,7 +4563,7 @@ export interface paths {
     /**
      * Find users via various criteria. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#pagination).
      *
-     * When searching for users, you can get text match metadata for the issue **login**, **email**, and **name** fields when you pass the `text-match` media type. For more details about highlighting search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.5/rest/reference/search#text-match-metadata). For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.5/rest/reference/search#text-match-metadata).
+     * When searching for users, you can get text match metadata for the issue **login**, public **email**, and **name** fields when you pass the `text-match` media type. For more details about highlighting search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.5/rest/reference/search#text-match-metadata). For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.5/rest/reference/search#text-match-metadata).
      *
      * For example, if you're looking for a list of popular users, you might try this query:
      *
@@ -5265,587 +5306,21 @@ export interface paths {
      */
     get: operations["repos/compare-commits"];
   };
-  "/enterprise-installation/{enterprise_or_org}/server-statistics": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["enterprise-admin/get-server-statistics"];
-  };
-  "/enterprises/{enterprise}/actions/oidc/customization/issuer": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    put: operations["actions/set-actions-oidc-custom-issuer-policy-for-enterprise"];
-  };
   "/enterprises/{enterprise}/actions/permissions/workflow": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
+    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in 3.6 */
     get: operations["actions/get-github-actions-default-workflow-permissions-enterprise"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
+    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in 3.6 */
     put: operations["actions/set-github-actions-default-workflow-permissions-enterprise"];
   };
-  "/enterprises/{enterprise}/code-scanning/alerts": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["code-scanning/list-alerts-for-enterprise"];
-  };
-  "/enterprises/{enterprise}/settings/billing/actions": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["billing/get-github-actions-billing-ghe"];
-  };
-  "/enterprises/{enterprise}/settings/billing/packages": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["billing/get-github-packages-billing-ghe"];
-  };
-  "/enterprises/{enterprise}/settings/billing/shared-storage": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["billing/get-shared-storage-billing-ghe"];
-  };
-  "/marketplace_listing/accounts/{account_id}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["apps/get-subscription-plan-for-account"];
-  };
-  "/marketplace_listing/plans": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["apps/list-plans"];
-  };
-  "/marketplace_listing/plans/{plan_id}/accounts": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["apps/list-accounts-for-plan"];
-  };
-  "/marketplace_listing/stubbed/accounts/{account_id}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["apps/get-subscription-plan-for-account-stubbed"];
-  };
-  "/marketplace_listing/stubbed/plans": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["apps/list-plans-stubbed"];
-  };
-  "/marketplace_listing/stubbed/plans/{plan_id}/accounts": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["apps/list-accounts-for-plan-stubbed"];
-  };
-  "/orgs/{org}/actions/oidc/customization/sub": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["oidc/get-oidc-custom-sub-template-for-org"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    put: operations["oidc/update-oidc-custom-sub-template-for-org"];
-  };
-  "/orgs/{org}/blocks": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["orgs/list-blocked-users"];
-  };
-  "/orgs/{org}/blocks/{username}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["orgs/check-blocked-user"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    put: operations["orgs/block-user"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["orgs/unblock-user"];
-  };
-  "/orgs/{org}/codespaces": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["codespaces/list-in-organization"];
-  };
-  "/orgs/{org}/credential-authorizations": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["orgs/list-saml-sso-authorizations"];
-  };
-  "/orgs/{org}/credential-authorizations/{credential_id}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["orgs/remove-saml-sso-authorization"];
-  };
-  "/orgs/{org}/external-group/{group_id}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["teams/external-idp-group-info-for-org"];
-  };
-  "/orgs/{org}/external-groups": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["teams/list-external-idp-groups-for-org"];
-  };
-  "/orgs/{org}/failed_invitations": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["orgs/list-failed-invitations"];
-  };
-  "/orgs/{org}/interaction-limits": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["interactions/get-restrictions-for-org"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    put: operations["interactions/set-restrictions-for-org"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["interactions/remove-restrictions-for-org"];
-  };
-  "/orgs/{org}/invitations": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["orgs/list-pending-invitations"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    post: operations["orgs/create-invitation"];
-  };
-  "/orgs/{org}/invitations/{invitation_id}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["orgs/cancel-invitation"];
-  };
-  "/orgs/{org}/invitations/{invitation_id}/teams": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["orgs/list-invitation-teams"];
-  };
-  "/orgs/{org}/members/{username}/codespaces/{codespace_name}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["codespaces/delete-from-organization"];
-  };
-  "/orgs/{org}/members/{username}/codespaces/{codespace_name}/stop": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    post: operations["codespaces/stop-in-organization"];
-  };
-  "/orgs/{org}/migrations/{migration_id}/archive": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["migrations/download-archive-for-org"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["migrations/delete-archive-for-org"];
-  };
-  "/orgs/{org}/migrations/{migration_id}/repos/{repo_name}/lock": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["migrations/unlock-repo-for-org"];
-  };
-  "/orgs/{org}/migrations/{migration_id}/repositories": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["migrations/list-repos-for-org"];
-  };
-  "/orgs/{org}/packages": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["packages/list-packages-for-organization"];
-  };
-  "/orgs/{org}/packages/{package_type}/{package_name}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["packages/get-package-for-organization"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["packages/delete-package-for-org"];
-  };
-  "/orgs/{org}/packages/{package_type}/{package_name}/restore": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    post: operations["packages/restore-package-for-org"];
-  };
-  "/orgs/{org}/packages/{package_type}/{package_name}/versions": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["packages/get-all-package-versions-for-package-owned-by-org"];
-  };
-  "/orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["packages/get-package-version-for-organization"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["packages/delete-package-version-for-org"];
-  };
-  "/orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    post: operations["packages/restore-package-version-for-org"];
-  };
-  "/orgs/{org}/settings/billing/actions": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["billing/get-github-actions-billing-org"];
-  };
-  "/orgs/{org}/settings/billing/packages": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["billing/get-github-packages-billing-org"];
-  };
-  "/orgs/{org}/settings/billing/shared-storage": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["billing/get-shared-storage-billing-org"];
-  };
-  "/orgs/{org}/team-sync/groups": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["teams/list-idp-groups-for-org"];
-  };
-  "/orgs/{org}/teams/{team_slug}/external-groups": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["teams/list-linked-external-idp-groups-to-team-for-org"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["teams/unlink-external-idp-group-from-team-for-org"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    patch: operations["teams/link-external-idp-group-to-team-for-org"];
-  };
-  "/orgs/{org}/teams/{team_slug}/invitations": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["teams/list-pending-invitations-in-org"];
-  };
-  "/orgs/{org}/teams/{team_slug}/team-sync/group-mappings": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["teams/list-idp-groups-in-org"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    patch: operations["teams/create-or-update-idp-group-connections-in-org"];
-  };
-  "/repos/{owner}/{repo}/actions/caches": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["actions/get-actions-cache-list"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["actions/delete-actions-cache-by-key"];
-  };
-  "/repos/{owner}/{repo}/actions/caches/{cache_id}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["actions/delete-actions-cache-by-id"];
-  };
-  "/repos/{owner}/{repo}/actions/oidc/customization/sub": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["actions/get-custom-oidc-sub-claim-for-repo"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    put: operations["actions/set-custom-oidc-sub-claim-for-repo"];
-  };
   "/repos/{owner}/{repo}/actions/permissions/workflow": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
+    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in 3.6 */
     get: operations["actions/get-github-actions-default-workflow-permissions-repository"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
+    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in 3.6 */
     put: operations["actions/set-github-actions-default-workflow-permissions-repository"];
   };
-  "/repos/{owner}/{repo}/actions/runs/{run_id}/approve": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    post: operations["actions/approve-workflow-run"];
-  };
-  "/repos/{owner}/{repo}/actions/runs/{run_id}/timing": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["actions/get-workflow-run-usage"];
-  };
-  "/repos/{owner}/{repo}/actions/workflows/{workflow_id}/timing": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["actions/get-workflow-usage"];
-  };
-  "/repos/{owner}/{repo}/automated-security-fixes": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    put: operations["repos/enable-automated-security-fixes"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["repos/disable-automated-security-fixes"];
-  };
-  "/repos/{owner}/{repo}/codespaces": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["codespaces/list-in-repository-for-authenticated-user"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    post: operations["codespaces/create-with-repo-for-authenticated-user"];
-  };
-  "/repos/{owner}/{repo}/codespaces/devcontainers": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["codespaces/list-devcontainers-in-repository-for-authenticated-user"];
-  };
-  "/repos/{owner}/{repo}/codespaces/machines": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["codespaces/repo-machines-for-authenticated-user"];
-  };
-  "/repos/{owner}/{repo}/codespaces/new": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["codespaces/pre-flight-with-repo-for-authenticated-user"];
-  };
-  "/repos/{owner}/{repo}/codespaces/secrets": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["codespaces/list-repo-secrets"];
-  };
-  "/repos/{owner}/{repo}/codespaces/secrets/public-key": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["codespaces/get-repo-public-key"];
-  };
-  "/repos/{owner}/{repo}/codespaces/secrets/{secret_name}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["codespaces/get-repo-secret"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    put: operations["codespaces/create-or-update-repo-secret"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["codespaces/delete-repo-secret"];
-  };
-  "/repos/{owner}/{repo}/community/profile": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["repos/get-community-profile-metrics"];
-  };
   "/repos/{owner}/{repo}/dependency-graph/compare/{basehead}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
+    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in 3.6 */
     get: operations["dependency-graph/diff-range"];
-  };
-  "/repos/{owner}/{repo}/dependency-graph/snapshots": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    post: operations["dependency-graph/create-repository-snapshot"];
-  };
-  "/repos/{owner}/{repo}/import": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["migrations/get-import-status"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    put: operations["migrations/start-import"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["migrations/cancel-import"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    patch: operations["migrations/update-import"];
-  };
-  "/repos/{owner}/{repo}/import/authors": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["migrations/get-commit-authors"];
-  };
-  "/repos/{owner}/{repo}/import/authors/{author_id}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    patch: operations["migrations/map-commit-author"];
-  };
-  "/repos/{owner}/{repo}/import/large_files": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["migrations/get-large-files"];
-  };
-  "/repos/{owner}/{repo}/import/lfs": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    patch: operations["migrations/set-lfs-preference"];
-  };
-  "/repos/{owner}/{repo}/interaction-limits": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["interactions/get-restrictions-for-repo"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    put: operations["interactions/set-restrictions-for-repo"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["interactions/remove-restrictions-for-repo"];
-  };
-  "/repos/{owner}/{repo}/pages/health": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["repos/get-pages-health-check"];
-  };
-  "/repos/{owner}/{repo}/pulls/{pull_number}/codespaces": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    post: operations["codespaces/create-with-pr-for-authenticated-user"];
-  };
-  "/repos/{owner}/{repo}/traffic/clones": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["repos/get-clones"];
-  };
-  "/repos/{owner}/{repo}/traffic/popular/paths": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["repos/get-top-paths"];
-  };
-  "/repos/{owner}/{repo}/traffic/popular/referrers": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["repos/get-top-referrers"];
-  };
-  "/repos/{owner}/{repo}/traffic/views": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["repos/get-views"];
-  };
-  "/repos/{owner}/{repo}/vulnerability-alerts": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["repos/check-vulnerability-alerts"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    put: operations["repos/enable-vulnerability-alerts"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["repos/disable-vulnerability-alerts"];
-  };
-  "/scim/v2/enterprises/{enterprise}/Groups": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["enterprise-admin/list-provisioned-groups-enterprise"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    post: operations["enterprise-admin/provision-and-invite-enterprise-group"];
-  };
-  "/scim/v2/enterprises/{enterprise}/Groups/{scim_group_id}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["enterprise-admin/get-provisioning-information-for-enterprise-group"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    put: operations["enterprise-admin/set-information-for-provisioned-enterprise-group"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["enterprise-admin/delete-scim-group-from-enterprise"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    patch: operations["enterprise-admin/update-attribute-for-enterprise-group"];
-  };
-  "/scim/v2/enterprises/{enterprise}/Users": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["enterprise-admin/list-provisioned-identities-enterprise"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    post: operations["enterprise-admin/provision-and-invite-enterprise-user"];
-  };
-  "/scim/v2/enterprises/{enterprise}/Users/{scim_user_id}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["enterprise-admin/get-provisioning-information-for-enterprise-user"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    put: operations["enterprise-admin/set-information-for-provisioned-enterprise-user"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["enterprise-admin/delete-user-from-enterprise"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    patch: operations["enterprise-admin/update-attribute-for-enterprise-user"];
-  };
-  "/scim/v2/organizations/{org}/Users": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["scim/list-provisioned-identities"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    post: operations["scim/provision-and-invite-user"];
-  };
-  "/scim/v2/organizations/{org}/Users/{scim_user_id}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["scim/get-provisioning-information-for-user"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    put: operations["scim/set-information-for-provisioned-user"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["scim/delete-user-from-org"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    patch: operations["scim/update-attribute-for-user"];
-  };
-  "/teams/{team_id}/invitations": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["teams/list-pending-invitations-legacy"];
-  };
-  "/teams/{team_id}/team-sync/group-mappings": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["teams/list-idp-groups-for-legacy"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    patch: operations["teams/create-or-update-idp-group-connections-legacy"];
-  };
-  "/user/blocks": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["users/list-blocked-by-authenticated-user"];
-  };
-  "/user/blocks/{username}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["users/check-blocked"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    put: operations["users/block"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["users/unblock"];
-  };
-  "/user/codespaces": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["codespaces/list-for-authenticated-user"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    post: operations["codespaces/create-for-authenticated-user"];
-  };
-  "/user/codespaces/secrets": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["codespaces/list-secrets-for-authenticated-user"];
-  };
-  "/user/codespaces/secrets/public-key": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["codespaces/get-public-key-for-authenticated-user"];
-  };
-  "/user/codespaces/secrets/{secret_name}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["codespaces/get-secret-for-authenticated-user"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    put: operations["codespaces/create-or-update-secret-for-authenticated-user"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["codespaces/delete-secret-for-authenticated-user"];
-  };
-  "/user/codespaces/secrets/{secret_name}/repositories": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["codespaces/list-repositories-for-secret-for-authenticated-user"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    put: operations["codespaces/set-repositories-for-secret-for-authenticated-user"];
-  };
-  "/user/codespaces/secrets/{secret_name}/repositories/{repository_id}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    put: operations["codespaces/add-repository-for-secret-for-authenticated-user"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["codespaces/remove-repository-for-secret-for-authenticated-user"];
-  };
-  "/user/codespaces/{codespace_name}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["codespaces/get-for-authenticated-user"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["codespaces/delete-for-authenticated-user"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    patch: operations["codespaces/update-for-authenticated-user"];
-  };
-  "/user/codespaces/{codespace_name}/exports": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    post: operations["codespaces/export-for-authenticated-user"];
-  };
-  "/user/codespaces/{codespace_name}/exports/{export_id}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["codespaces/get-export-details-for-authenticated-user"];
-  };
-  "/user/codespaces/{codespace_name}/machines": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["codespaces/codespace-machines-for-authenticated-user"];
-  };
-  "/user/codespaces/{codespace_name}/start": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    post: operations["codespaces/start-for-authenticated-user"];
-  };
-  "/user/codespaces/{codespace_name}/stop": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    post: operations["codespaces/stop-for-authenticated-user"];
-  };
-  "/user/email/visibility": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    patch: operations["users/set-primary-email-visibility-for-authenticated-user"];
-  };
-  "/user/interaction-limits": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["interactions/get-restrictions-for-authenticated-user"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    put: operations["interactions/set-restrictions-for-authenticated-user"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["interactions/remove-restrictions-for-authenticated-user"];
-  };
-  "/user/marketplace_purchases": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["apps/list-subscriptions-for-authenticated-user"];
-  };
-  "/user/marketplace_purchases/stubbed": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["apps/list-subscriptions-for-authenticated-user-stubbed"];
-  };
-  "/user/migrations/{migration_id}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["migrations/get-status-for-authenticated-user"];
-  };
-  "/user/migrations/{migration_id}/repos/{repo_name}/lock": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["migrations/unlock-repo-for-authenticated-user"];
-  };
-  "/user/packages": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["packages/list-packages-for-authenticated-user"];
-  };
-  "/user/packages/{package_type}/{package_name}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["packages/get-package-for-authenticated-user"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["packages/delete-package-for-authenticated-user"];
-  };
-  "/user/packages/{package_type}/{package_name}/restore": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    post: operations["packages/restore-package-for-authenticated-user"];
-  };
-  "/user/packages/{package_type}/{package_name}/versions": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["packages/get-all-package-versions-for-package-owned-by-authenticated-user"];
-  };
-  "/user/packages/{package_type}/{package_name}/versions/{package_version_id}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["packages/get-package-version-for-authenticated-user"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["packages/delete-package-version-for-authenticated-user"];
-  };
-  "/user/packages/{package_type}/{package_name}/versions/{package_version_id}/restore": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    post: operations["packages/restore-package-version-for-authenticated-user"];
-  };
-  "/users/{username}/packages": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["packages/list-packages-for-user"];
-  };
-  "/users/{username}/packages/{package_type}/{package_name}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["packages/get-package-for-user"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["packages/delete-package-for-user"];
-  };
-  "/users/{username}/packages/{package_type}/{package_name}/restore": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    post: operations["packages/restore-package-for-user"];
-  };
-  "/users/{username}/packages/{package_type}/{package_name}/versions": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["packages/get-all-package-versions-for-package-owned-by-user"];
-  };
-  "/users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["packages/get-package-version-for-user"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    delete: operations["packages/delete-package-version-for-user"];
-  };
-  "/users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    post: operations["packages/restore-package-version-for-user"];
-  };
-  "/users/{username}/settings/billing/actions": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["billing/get-github-actions-billing-user"];
-  };
-  "/users/{username}/settings/billing/packages": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["billing/get-github-packages-billing-user"];
-  };
-  "/users/{username}/settings/billing/shared-storage": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-    get: operations["billing/get-shared-storage-billing-user"];
   };
 }
 
@@ -5963,8 +5438,8 @@ export interface components {
       verified: boolean;
       /** Format: date-time */
       created_at: string;
-      /** Format: date-time */
-      last_used: string | null;
+    } & {
+      last_used: unknown;
     };
     "ldap-mapping-team": {
       ldap_dn?: string;
@@ -9677,7 +9152,9 @@ export interface components {
      * @description Custom repository roles created by organization administrators
      */
     "organization-custom-repository-role": {
+      /** @description The unique identifier of the custom role. */
       id: number;
+      /** @description The name of the custom role. */
       name: string;
     };
     /**
@@ -13315,7 +12792,7 @@ export interface components {
       state: string;
       context: string;
       /** Format: uri */
-      target_url: string;
+      target_url: string | null;
       required?: boolean | null;
       /** Format: uri */
       avatar_url: string | null;
@@ -13351,8 +12828,8 @@ export interface components {
       id: number;
       node_id: string;
       state: string;
-      description: string;
-      target_url: string;
+      description: string | null;
+      target_url: string | null;
       context: string;
       created_at: string;
       updated_at: string;
@@ -13463,7 +12940,8 @@ export interface components {
      * @description A list of directory items
      */
     "content-directory": {
-      type: string;
+      /** @enum {string} */
+      type: "dir" | "file" | "submodule" | "symlink";
       size: number;
       name: string;
       path: string;
@@ -13491,7 +12969,8 @@ export interface components {
      * @description Content File
      */
     "content-file": {
-      type: string;
+      /** @enum {string} */
+      type: "file";
       encoding: string;
       size: number;
       name: string;
@@ -13524,7 +13003,8 @@ export interface components {
      * @description An object describing a symlink
      */
     "content-symlink": {
-      type: string;
+      /** @enum {string} */
+      type: "symlink";
       target: string;
       size: number;
       name: string;
@@ -13548,11 +13028,12 @@ export interface components {
       };
     };
     /**
-     * Symlink Content
-     * @description An object describing a symlink
+     * Submodule Content
+     * @description An object describing a submodule
      */
     "content-submodule": {
-      type: string;
+      /** @enum {string} */
+      type: "submodule";
       /** Format: uri */
       submodule_git_url: string;
       size: number;
@@ -13769,7 +13250,7 @@ export interface components {
      */
     "wait-timer": number;
     /** @description The type of deployment branch policy for this environment. To allow all branches to deploy, set to `null`. */
-    "deployment-branch-policy": {
+    "deployment-branch-policy-settings": {
       /** @description Whether only branches with branch protection rules can deploy to this environment. If `protected_branches` is `true`, `custom_branch_policies` must be `false`; if `protected_branches` is `false`, `custom_branch_policies` must be `true`. */
       protected_branches: boolean;
       /** @description Whether only branches that match the specified name patterns can deploy to this environment.  If `custom_branch_policies` is `true`, `protected_branches` must be `false`; if `custom_branch_policies` is `false`, `protected_branches` must be `true`. */
@@ -13839,7 +13320,36 @@ export interface components {
           /** @example branch_policy */
           type: string;
         }>)[];
-      deployment_branch_policy?: components["schemas"]["deployment-branch-policy"];
+      deployment_branch_policy?: components["schemas"]["deployment-branch-policy-settings"];
+    };
+    /**
+     * Deployment branch policy
+     * @description Details of a deployment branch policy.
+     */
+    "deployment-branch-policy": {
+      /**
+       * @description The unique identifier of the branch policy.
+       * @example 361471
+       */
+      id?: number;
+      /** @example MDE2OkdhdGVCcmFuY2hQb2xpY3kzNjE0NzE= */
+      node_id?: string;
+      /**
+       * @description The name pattern that branches must match in order to deploy to the environment.
+       * @example release/*
+       */
+      name?: string;
+    };
+    /** Deployment branch policy name pattern */
+    "deployment-branch-policy-name-pattern": {
+      /**
+       * @description The name pattern that branches must match in order to deploy to the environment.
+       *
+       * Wildcard characters will not match `/`. For example, to match branches that begin with `release/` and contain an additional single slash, use `release/*\/*`.
+       * For more information about pattern matching syntax, see the [Ruby File.fnmatch documentation](https://ruby-doc.org/core-2.5.1/File.html#method-c-fnmatch).
+       * @example release/*
+       */
+      name: string;
     };
     /**
      * Short Blob
@@ -17515,7 +17025,7 @@ export interface components {
     "workflow-run-branch": string;
     /** @description Returns workflow run triggered by the event you specify. For example, `push`, `pull_request` or `issue`. For more information, see "[Events that trigger workflows](https://docs.github.com/en/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows)." */
     event: string;
-    /** @description Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. For a list of the possible `status` and `conclusion` options, see "[Create a check run](https://docs.github.com/enterprise-server@3.5/rest/reference/checks#create-a-check-run)." */
+    /** @description Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. */
     "workflow-run-status":
       | "completed"
       | "action_required"
@@ -17562,8 +17072,10 @@ export interface components {
     "commit-sha": string;
     /** @description deployment_id parameter */
     "deployment-id": number;
-    /** @description The name of the environment */
+    /** @description The name of the environment. */
     "environment-name": string;
+    /** @description The unique identifier of the branch policy. */
+    "branch-policy-id": number;
     /** @description The unique identifier of the invitation. */
     "invitation-id": number;
     /** @description The property to sort the results by. `created` means when the repository was starred. `updated` means when the repository was last pushed to. */
@@ -20847,7 +20359,6 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** **Note**: This was previously `/gists/:gist_id/fork`. */
   "gists/fork": {
     parameters: {
       path: {
@@ -21218,10 +20729,10 @@ export interface operations {
         since?: components["parameters"]["since"];
         /** Only show notifications updated before the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         before?: components["parameters"]["before"];
-        /** The number of results per page (max 100). */
-        per_page?: components["parameters"]["per-page"];
         /** Page number of the results to fetch. */
         page?: components["parameters"]["page"];
+        /** The number of results per page (max 50). */
+        per_page?: number;
       };
     };
     responses: {
@@ -25473,9 +24984,8 @@ export interface operations {
           /**
            * @description The permission to grant the team on this repository. If no permission is specified, the team's `permission` attribute will be used to determine what permission to grant the team on this repository.
            * @default push
-           * @enum {string}
            */
-          permission?: "pull" | "push" | "admin" | "maintain" | "triage";
+          permission?: string;
         };
       };
     };
@@ -26246,7 +25756,7 @@ export interface operations {
           homepage?: string;
           /**
            * @description Either `true` to make the repository private or `false` to make it public. Default: `false`.
-           * **Note**: You will get a `422` error if the organization restricts [changing repository visibility](https://docs.github.com/articles/repository-permission-levels-for-an-organization#changing-the-visibility-of-repositories) to organization owners and a non-owner tries to change the value of private. **Note**: You will get a `422` error if the organization restricts [changing repository visibility](https://docs.github.com/articles/repository-permission-levels-for-an-organization#changing-the-visibility-of-repositories) to organization owners and a non-owner tries to change the value of private.
+           * **Note**: You will get a `422` error if the organization restricts [changing repository visibility](https://docs.github.com/articles/repository-permission-levels-for-an-organization#changing-the-visibility-of-repositories) to organization owners and a non-owner tries to change the value of private.
            * @default false
            */
           private?: boolean;
@@ -26255,7 +25765,16 @@ export interface operations {
            * @enum {string}
            */
           visibility?: "public" | "private" | "internal";
-          /** @description Specify which security and analysis features to enable or disable. For example, to enable GitHub Advanced Security, use this data in the body of the PATCH request: `{"security_and_analysis": {"advanced_security": {"status": "enabled"}}}`. If you have admin permissions for a private repository covered by an Advanced Security license, you can check which security and analysis features are currently enabled by using a `GET /repos/{owner}/{repo}` request. */
+          /**
+           * @description Specify which security and analysis features to enable or disable for the repository.
+           *
+           * To use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/enterprise-server@3.5/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+           *
+           * For example, to enable GitHub Advanced Security, use this data in the body of the `PATCH` request:
+           * `{ "security_and_analysis": {"advanced_security": { "status": "enabled" } } }`.
+           *
+           * You can check which security and analysis features are currently enabled by using a `GET /repos/{owner}/{repo}` request.
+           */
           security_and_analysis?: {
             /** @description Use the `status` property to enable or disable GitHub Advanced Security for this repository. For more information, see "[About GitHub Advanced Security](/github/getting-started-with-github/learning-about-github/about-github-advanced-security)." */
             advanced_security?: {
@@ -27046,7 +26565,7 @@ export interface operations {
         branch?: components["parameters"]["workflow-run-branch"];
         /** Returns workflow run triggered by the event you specify. For example, `push`, `pull_request` or `issue`. For more information, see "[Events that trigger workflows](https://docs.github.com/en/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows)." */
         event?: components["parameters"]["event"];
-        /** Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. For a list of the possible `status` and `conclusion` options, see "[Create a check run](https://docs.github.com/enterprise-server@3.5/rest/reference/checks#create-a-check-run)." */
+        /** Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. */
         status?: components["parameters"]["workflow-run-status"];
         /** The number of results per page (max 100). */
         per_page?: components["parameters"]["per-page"];
@@ -27826,7 +27345,7 @@ export interface operations {
         branch?: components["parameters"]["workflow-run-branch"];
         /** Returns workflow run triggered by the event you specify. For example, `push`, `pull_request` or `issue`. For more information, see "[Events that trigger workflows](https://docs.github.com/en/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows)." */
         event?: components["parameters"]["event"];
-        /** Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. For a list of the possible `status` and `conclusion` options, see "[Create a check run](https://docs.github.com/enterprise-server@3.5/rest/reference/checks#create-a-check-run)." */
+        /** Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. */
         status?: components["parameters"]["workflow-run-status"];
         /** The number of results per page (max 100). */
         per_page?: components["parameters"]["per-page"];
@@ -30273,9 +29792,8 @@ export interface operations {
           /**
            * @description The permission to grant the collaborator. **Only valid on organization-owned repositories.**
            * @default push
-           * @enum {string}
            */
-          permission?: "pull" | "push" | "admin" | "maintain" | "triage";
+          permission?: string;
         };
       };
     };
@@ -31060,7 +30578,7 @@ export interface operations {
       /** Response */
       200: {
         content: {
-          "application/vnd.github.v3.object": components["schemas"]["content-tree"];
+          "application/vnd.github.object": components["schemas"]["content-tree"];
           "application/json":
             | components["schemas"]["content-directory"]
             | components["schemas"]["content-file"]
@@ -31786,7 +31304,7 @@ export interface operations {
     };
   };
   /**
-   * Get all environments for a repository.
+   * Lists the environments for a repository.
    *
    * Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
    */
@@ -31821,7 +31339,13 @@ export interface operations {
       };
     };
   };
-  /** Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. */
+  /**
+   * **Note:** To get information about name patterns that branches must match in order to deploy to this environment, see "[Get a deployment branch policy](/rest/deployments/branch-policies#get-a-deployment-branch-policy)."
+   *
+   * Anyone with read access to the repository can use this endpoint. If the
+   * repository is private, you must use an access token with the `repo` scope. GitHub
+   * Apps must have the `actions:read` permission to use this endpoint.
+   */
   "repos/get-environment": {
     parameters: {
       path: {
@@ -31829,7 +31353,7 @@ export interface operations {
         owner: components["parameters"]["owner"];
         /** The name of the repository. The name is not case sensitive. */
         repo: components["parameters"]["repo"];
-        /** The name of the environment */
+        /** The name of the environment. */
         environment_name: components["parameters"]["environment-name"];
       };
     };
@@ -31845,11 +31369,11 @@ export interface operations {
   /**
    * Create or update an environment with protection rules, such as required reviewers. For more information about environment protection rules, see "[Environments](/actions/reference/environments#environment-protection-rules)."
    *
-   * **Note:** Although you can use this operation to specify that only branches that match specified name patterns can deploy to this environment, you must use the UI to set the name patterns. For more information, see "[Environments](/actions/reference/environments#deployment-branches)."
+   * **Note:** To create or update name patterns that branches must match in order to deploy to this environment, see "[Deployment branch policies](/rest/deployments/branch-policies)."
    *
    * **Note:** To create or update secrets for an environment, see "[Secrets](/rest/reference/actions#secrets)."
    *
-   * You must authenticate using an access token with the repo scope to use this endpoint.
+   * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration:write` permission for the repository to use this endpoint.
    */
   "repos/create-or-update-environment": {
     parameters: {
@@ -31858,7 +31382,7 @@ export interface operations {
         owner: components["parameters"]["owner"];
         /** The name of the repository. The name is not case sensitive. */
         repo: components["parameters"]["repo"];
-        /** The name of the environment */
+        /** The name of the environment. */
         environment_name: components["parameters"]["environment-name"];
       };
     };
@@ -31891,7 +31415,7 @@ export interface operations {
                 id?: number;
               }[]
             | null;
-          deployment_branch_policy?: components["schemas"]["deployment-branch-policy"];
+          deployment_branch_policy?: components["schemas"]["deployment-branch-policy-settings"];
         } | null;
       };
     };
@@ -31904,12 +31428,166 @@ export interface operations {
         owner: components["parameters"]["owner"];
         /** The name of the repository. The name is not case sensitive. */
         repo: components["parameters"]["repo"];
-        /** The name of the environment */
+        /** The name of the environment. */
         environment_name: components["parameters"]["environment-name"];
       };
     };
     responses: {
       /** Default response */
+      204: never;
+    };
+  };
+  /**
+   * Lists the deployment branch policies for an environment.
+   *
+   * Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+   */
+  "repos/list-deployment-branch-policies": {
+    parameters: {
+      path: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: components["parameters"]["owner"];
+        /** The name of the repository. The name is not case sensitive. */
+        repo: components["parameters"]["repo"];
+        /** The name of the environment. */
+        environment_name: components["parameters"]["environment-name"];
+      };
+      query: {
+        /** The number of results per page (max 100). */
+        per_page?: components["parameters"]["per-page"];
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": {
+            /**
+             * @description The number of deployment branch policies for the environment.
+             * @example 2
+             */
+            total_count: number;
+            branch_policies: components["schemas"]["deployment-branch-policy"][];
+          };
+        };
+      };
+    };
+  };
+  /**
+   * Creates a deployment branch policy for an environment.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration:write` permission for the repository to use this endpoint.
+   */
+  "repos/create-deployment-branch-policy": {
+    parameters: {
+      path: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: components["parameters"]["owner"];
+        /** The name of the repository. The name is not case sensitive. */
+        repo: components["parameters"]["repo"];
+        /** The name of the environment. */
+        environment_name: components["parameters"]["environment-name"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["deployment-branch-policy"];
+        };
+      };
+      /** Response if the same branch name pattern already exists */
+      303: never;
+      /** Not Found or `deployment_branch_policy.custom_branch_policies` property for the environment is set to false */
+      404: unknown;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["deployment-branch-policy-name-pattern"];
+      };
+    };
+  };
+  /**
+   * Gets a deployment branch policy for an environment.
+   *
+   * Anyone with read access to the repository can use this endpoint. If the repository is private, you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
+   */
+  "repos/get-deployment-branch-policy": {
+    parameters: {
+      path: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: components["parameters"]["owner"];
+        /** The name of the repository. The name is not case sensitive. */
+        repo: components["parameters"]["repo"];
+        /** The name of the environment. */
+        environment_name: components["parameters"]["environment-name"];
+        /** The unique identifier of the branch policy. */
+        branch_policy_id: components["parameters"]["branch-policy-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["deployment-branch-policy"];
+        };
+      };
+    };
+  };
+  /**
+   * Updates a deployment branch policy for an environment.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration:write` permission for the repository to use this endpoint.
+   */
+  "repos/update-deployment-branch-policy": {
+    parameters: {
+      path: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: components["parameters"]["owner"];
+        /** The name of the repository. The name is not case sensitive. */
+        repo: components["parameters"]["repo"];
+        /** The name of the environment. */
+        environment_name: components["parameters"]["environment-name"];
+        /** The unique identifier of the branch policy. */
+        branch_policy_id: components["parameters"]["branch-policy-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["deployment-branch-policy"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["deployment-branch-policy-name-pattern"];
+      };
+    };
+  };
+  /**
+   * Deletes a deployment branch policy for an environment.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration:write` permission for the repository to use this endpoint.
+   */
+  "repos/delete-deployment-branch-policy": {
+    parameters: {
+      path: {
+        /** The account owner of the repository. The name is not case sensitive. */
+        owner: components["parameters"]["owner"];
+        /** The name of the repository. The name is not case sensitive. */
+        repo: components["parameters"]["repo"];
+        /** The name of the environment. */
+        environment_name: components["parameters"]["environment-name"];
+        /** The unique identifier of the branch policy. */
+        branch_policy_id: components["parameters"]["branch-policy-id"];
+      };
+    };
+    responses: {
+      /** Response */
       204: never;
     };
   };
@@ -32230,12 +31908,6 @@ export interface operations {
         /** ref parameter */
         ref: string;
       };
-      query: {
-        /** The number of results per page (max 100). */
-        per_page?: components["parameters"]["per-page"];
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
-      };
     };
     responses: {
       /** Response */
@@ -32332,7 +32004,7 @@ export interface operations {
         owner: components["parameters"]["owner"];
         /** The name of the repository. The name is not case sensitive. */
         repo: components["parameters"]["repo"];
-        /** ref parameter */
+        /** The name of the fully qualified reference to update. For example, `refs/heads/master`. If the value doesn't start with `refs` and have at least two slashes, it will be rejected. */
         ref: string;
       };
     };
@@ -32496,6 +32168,8 @@ export interface operations {
    * The tree creation API accepts nested entries. If you specify both a tree and a nested path modifying that tree, this endpoint will overwrite the contents of the tree with the new path contents, and create a new tree structure.
    *
    * If you use this endpoint to add, delete, or modify the file contents in a tree, you will need to commit the tree and then update a branch to point to the commit. For more information see "[Create a commit](https://docs.github.com/enterprise-server@3.5/rest/reference/git#create-a-commit)" and "[Update a reference](https://docs.github.com/enterprise-server@3.5/rest/reference/git#update-a-reference)."
+   *
+   * Returns an error if you try to delete a file that does not exist.
    */
   "git/create-tree": {
     parameters: {
@@ -34664,6 +34338,11 @@ export interface operations {
           https_enforced?: boolean;
           /** @description Configures access controls for the GitHub Pages site. If public is set to `true`, the site is accessible to anyone on the internet. If set to `false`, the site will only be accessible to users who have at least `read` access to the repository that published the site. This includes anyone in your Enterprise if the repository is set to `internal` visibility. This feature is only available to repositories in an organization on an Enterprise plan. */
           public?: boolean;
+          /**
+           * @description The process by which the GitHub Pages site will be built. `workflow` means that the site is built by a custom GitHub Actions workflow. `legacy` means that the site is built by GitHub when changes are pushed to a specific branch.
+           * @enum {string}
+           */
+          build_type?: "legacy" | "workflow";
           source?: Partial<"gh-pages" | "master" | "master /docs"> &
             Partial<{
               /** @description The repository branch used to publish your site's source files. */
@@ -34701,6 +34380,11 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
+          /**
+           * @description The process in which the Page will be built. Possible values are `"legacy"` and `"workflow"`.
+           * @enum {string}
+           */
+          build_type?: "legacy" | "workflow";
           /** @description The source branch and directory used to publish your Pages site. */
           source?: {
             /** @description The repository branch used to publish your site's source files. */
@@ -35032,8 +34716,6 @@ export interface operations {
    *
    * To open or update a pull request in a public repository, you must have write access to the head or the source branch. For organization-owned repositories, you must be a member of the organization that owns the repository to open or update a pull request.
    *
-   * You can create a new pull request.
-   *
    * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
    */
   "pulls/create": {
@@ -35061,7 +34743,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** @description The title of the new pull request. */
+          /** @description The title of the new pull request. Required unless `issue` is specified. */
           title?: string;
           /** @description The name of the branch where your changes are implemented. For cross-repository pull requests in the same network, namespace `head` with a user like this: `username:branch`. */
           head: string;
@@ -35073,7 +34755,10 @@ export interface operations {
           maintainer_can_modify?: boolean;
           /** @description Indicates whether the pull request is a draft. See "[Draft Pull Requests](https://docs.github.com/en/articles/about-pull-requests#draft-pull-requests)" in the GitHub Help documentation to learn more. */
           draft?: boolean;
-          /** @example 1 */
+          /**
+           * @description An issue in the repository to convert to a pull request. The issue title, body, and comments will become the title, body, and comments on the new pull request. Required unless `title` is specified.
+           * @example 1
+           */
           issue?: number;
         };
       };
@@ -35447,9 +35132,9 @@ export interface operations {
           /** @description The text of the review comment. */
           body: string;
           /** @description The SHA of the commit needing a comment. Not using the latest commit SHA may render your comment outdated if a subsequent commit modifies the line you specify as the `position`. */
-          commit_id?: string;
+          commit_id: string;
           /** @description The relative path to the file that necessitates a comment. */
-          path?: string;
+          path: string;
           /**
            * @deprecated
            * @description **This parameter is deprecated. Use `line` instead**. The position in the diff where you want to add a review comment. Note this value is not the same as the line number in the file. For help finding the position value, read the note above.
@@ -35461,7 +35146,7 @@ export interface operations {
            */
           side?: "LEFT" | "RIGHT";
           /** @description The line of the blob in the pull request diff that the comment applies to. For a multi-line comment, the last line of the range that your comment applies to. */
-          line?: number;
+          line: number;
           /** @description **Required when using multi-line comments unless using `in_reply_to`**. The `start_line` is the first line in the pull request diff that your multi-line comment applies to. To learn more about multi-line comments, see "[Commenting on a pull request](https://docs.github.com/en/articles/commenting-on-a-pull-request#adding-line-comments-to-a-pull-request)" in the GitHub Help documentation. */
           start_line?: number;
           /**
@@ -35652,7 +35337,7 @@ export interface operations {
       };
     };
   };
-  /** Lists the users or teams whose review is requested for a pull request. Once a requested reviewer submits a review, they are no longer considered a requested reviewer. Their review will instead be returned by the [List reviews for a pull request](https://docs.github.com/enterprise-server@3.5/rest/pulls/reviews#list-reviews-for-a-pull-request) operation. */
+  /** Gets the users or teams whose review is requested for a pull request. Once a requested reviewer submits a review, they are no longer considered a requested reviewer. Their review will instead be returned by the [List reviews for a pull request](https://docs.github.com/enterprise-server@3.5/rest/pulls/reviews#list-reviews-for-a-pull-request) operation. */
   "pulls/list-requested-reviewers": {
     parameters: {
       path: {
@@ -35662,12 +35347,6 @@ export interface operations {
         repo: components["parameters"]["repo"];
         /** The number that identifies the pull request. */
         pull_number: components["parameters"]["pull-number"];
-      };
-      query: {
-        /** The number of results per page (max 100). */
-        per_page?: components["parameters"]["per-page"];
-        /** Page number of the results to fetch. */
-        page?: components["parameters"]["page"];
       };
     };
     responses: {
@@ -35776,7 +35455,7 @@ export interface operations {
   /**
    * This endpoint triggers [notifications](https://docs.github.com/en/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
    *
-   * Pull request reviews created in the `PENDING` state do not include the `submitted_at` property in the response.
+   * Pull request reviews created in the `PENDING` state are not submitted and therefore do not include the `submitted_at` property in the response. To create a pending review for a pull request, leave the `event` parameter blank. For more information about submitting a `PENDING` review, see "[Submit a review for a pull request](https://docs.github.com/enterprise-server@3.5/rest/pulls#submit-a-review-for-a-pull-request)."
    *
    * **Note:** To comment on a specific line in a file, you need to first determine the _position_ of that line in the diff. The GitHub REST API v3 offers the `application/vnd.github.v3.diff` [media type](https://docs.github.com/enterprise-server@3.5/rest/overview/media-types#commits-commit-comparison-and-pull-requests). To see a pull request diff, add this media type to the `Accept` header of a call to the [single pull request](https://docs.github.com/enterprise-server@3.5/rest/reference/pulls#get-a-pull-request) endpoint.
    *
@@ -35811,7 +35490,7 @@ export interface operations {
           /** @description **Required** when using `REQUEST_CHANGES` or `COMMENT` for the `event` parameter. The body text of the pull request review. */
           body?: string;
           /**
-           * @description The review action you want to perform. The review actions include: `APPROVE`, `REQUEST_CHANGES`, or `COMMENT`. By leaving this blank, you set the review action state to `PENDING`, which means you will need to [submit the pull request review](https://docs.github.com/enterprise-server@3.5/rest/reference/pulls#submit-a-review-for-a-pull-request) when you are ready.
+           * @description The review action you want to perform. The review actions include: `APPROVE`, `REQUEST_CHANGES`, or `COMMENT`. By leaving this blank, you set the review action state to `PENDING`, which means you will need to [submit the pull request review](https://docs.github.com/enterprise-server@3.5/rest/pulls#submit-a-review-for-a-pull-request) when you are ready.
            * @enum {string}
            */
           event?: "APPROVE" | "REQUEST_CHANGES" | "COMMENT";
@@ -35975,12 +35654,16 @@ export interface operations {
         "application/json": {
           /** @description The message for the pull request review dismissal */
           message: string;
-          /** @example "APPROVE" */
-          event?: string;
+          /**
+           * @example "DISMISS"
+           * @enum {string}
+           */
+          event?: "DISMISS";
         };
       };
     };
   };
+  /** Submits a pending review for a pull request. For more information about creating a pending review for a pull request, see "[Create a review for a pull request](https://docs.github.com/enterprise-server@3.5/rest/pulls#create-a-review-for-a-pull-request)." */
   "pulls/submit-review": {
     parameters: {
       path: {
@@ -36213,7 +35896,7 @@ export interface operations {
       };
     };
     responses: {
-      /** To download the asset's binary content, set the `Accept` header of the request to [`application/octet-stream`](https://docs.github.com/enterprise-server@3.5/rest/overview/media-types). The API will either redirect the client to the location, or stream it directly if possible. API clients should handle both a `200` or `302` response. */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["release-asset"];
@@ -36881,12 +36564,7 @@ export interface operations {
       };
     };
     responses: {
-      /**
-       * *   `w` - Start of the week, given as a [Unix timestamp](http://en.wikipedia.org/wiki/Unix_time).
-       * *   `a` - Number of additions
-       * *   `d` - Number of deletions
-       * *   `c` - Number of commits
-       */
+      /** Response */
       200: {
         content: {
           "application/json": components["schemas"]["contributor-activity"][];
@@ -36987,9 +36665,9 @@ export interface operations {
            * For example, if your continuous integration system is posting build status, you would want to provide the deep link for the build output for this specific SHA:
            * `http://ci.example.com/user/repo/build/sha`
            */
-          target_url?: string;
+          target_url?: string | null;
           /** @description A short description of the status. */
-          description?: string;
+          description?: string | null;
           /**
            * @description A string label to differentiate this status from the status of other systems. This field is case-insensitive.
            * @default default
@@ -37326,7 +37004,8 @@ export interface operations {
    * Gets a redirect URL to download a zip archive for a repository. If you omit `:ref`, the repository’s default branch (usually
    * `master`) will be used. Please make sure your HTTP framework is configured to follow redirects or you will need to use
    * the `Location` header to make a second `GET` request.
-   * **Note**: For private repositories, these links are temporary and expire after five minutes.
+   *
+   * **Note**: For private repositories, these links are temporary and expire after five minutes. If the repository is empty, you will receive a 404 when you follow the redirect.
    */
   "repos/download-zipball-archive": {
     parameters: {
@@ -37430,7 +37109,7 @@ export interface operations {
       path: {
         /** The unique identifier of the repository. */
         repository_id: components["parameters"]["repository-id"];
-        /** The name of the environment */
+        /** The name of the environment. */
         environment_name: components["parameters"]["environment-name"];
       };
       query: {
@@ -37459,7 +37138,7 @@ export interface operations {
       path: {
         /** The unique identifier of the repository. */
         repository_id: components["parameters"]["repository-id"];
-        /** The name of the environment */
+        /** The name of the environment. */
         environment_name: components["parameters"]["environment-name"];
       };
     };
@@ -37478,7 +37157,7 @@ export interface operations {
       path: {
         /** The unique identifier of the repository. */
         repository_id: components["parameters"]["repository-id"];
-        /** The name of the environment */
+        /** The name of the environment. */
         environment_name: components["parameters"]["environment-name"];
         /** The name of the secret. */
         secret_name: components["parameters"]["secret-name"];
@@ -37575,7 +37254,7 @@ export interface operations {
       path: {
         /** The unique identifier of the repository. */
         repository_id: components["parameters"]["repository-id"];
-        /** The name of the environment */
+        /** The name of the environment. */
         environment_name: components["parameters"]["environment-name"];
         /** The name of the secret. */
         secret_name: components["parameters"]["secret-name"];
@@ -37608,7 +37287,7 @@ export interface operations {
       path: {
         /** The unique identifier of the repository. */
         repository_id: components["parameters"]["repository-id"];
-        /** The name of the environment */
+        /** The name of the environment. */
         environment_name: components["parameters"]["environment-name"];
         /** The name of the secret. */
         secret_name: components["parameters"]["secret-name"];
@@ -37893,7 +37572,7 @@ export interface operations {
   /**
    * Find users via various criteria. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#pagination).
    *
-   * When searching for users, you can get text match metadata for the issue **login**, **email**, and **name** fields when you pass the `text-match` media type. For more details about highlighting search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.5/rest/reference/search#text-match-metadata). For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.5/rest/reference/search#text-match-metadata).
+   * When searching for users, you can get text match metadata for the issue **login**, public **email**, and **name** fields when you pass the `text-match` media type. For more details about highlighting search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.5/rest/reference/search#text-match-metadata). For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.5/rest/reference/search#text-match-metadata).
    *
    * For example, if you're looking for a list of popular users, you might try this query:
    *
@@ -41098,1212 +40777,36 @@ export interface operations {
       500: components["responses"]["internal_error"];
     };
   };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "enterprise-admin/get-server-statistics": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "actions/set-actions-oidc-custom-issuer-policy-for-enterprise": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
+  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in 3.6 */
   "actions/get-github-actions-default-workflow-permissions-enterprise": {
     responses: {
       /** Not Implemented */
       501: unknown;
     };
   };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
+  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in 3.6 */
   "actions/set-github-actions-default-workflow-permissions-enterprise": {
     responses: {
       /** Not Implemented */
       501: unknown;
     };
   };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "code-scanning/list-alerts-for-enterprise": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "billing/get-github-actions-billing-ghe": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "billing/get-github-packages-billing-ghe": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "billing/get-shared-storage-billing-ghe": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "apps/get-subscription-plan-for-account": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "apps/list-plans": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "apps/list-accounts-for-plan": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "apps/get-subscription-plan-for-account-stubbed": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "apps/list-plans-stubbed": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "apps/list-accounts-for-plan-stubbed": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "oidc/get-oidc-custom-sub-template-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "oidc/update-oidc-custom-sub-template-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "orgs/list-blocked-users": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "orgs/check-blocked-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "orgs/block-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "orgs/unblock-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/list-in-organization": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "orgs/list-saml-sso-authorizations": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "orgs/remove-saml-sso-authorization": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "teams/external-idp-group-info-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "teams/list-external-idp-groups-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "orgs/list-failed-invitations": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "interactions/get-restrictions-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "interactions/set-restrictions-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "interactions/remove-restrictions-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "orgs/list-pending-invitations": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "orgs/create-invitation": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "orgs/cancel-invitation": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "orgs/list-invitation-teams": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/delete-from-organization": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/stop-in-organization": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "migrations/download-archive-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "migrations/delete-archive-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "migrations/unlock-repo-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "migrations/list-repos-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "packages/list-packages-for-organization": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "packages/get-package-for-organization": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "packages/delete-package-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "packages/restore-package-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "packages/get-all-package-versions-for-package-owned-by-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "packages/get-package-version-for-organization": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "packages/delete-package-version-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "packages/restore-package-version-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "billing/get-github-actions-billing-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "billing/get-github-packages-billing-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "billing/get-shared-storage-billing-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "teams/list-idp-groups-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "teams/list-linked-external-idp-groups-to-team-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "teams/unlink-external-idp-group-from-team-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "teams/link-external-idp-group-to-team-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "teams/list-pending-invitations-in-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "teams/list-idp-groups-in-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "teams/create-or-update-idp-group-connections-in-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "actions/get-actions-cache-list": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "actions/delete-actions-cache-by-key": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "actions/delete-actions-cache-by-id": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "actions/get-custom-oidc-sub-claim-for-repo": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "actions/set-custom-oidc-sub-claim-for-repo": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
+  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in 3.6 */
   "actions/get-github-actions-default-workflow-permissions-repository": {
     responses: {
       /** Not Implemented */
       501: unknown;
     };
   };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
+  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in 3.6 */
   "actions/set-github-actions-default-workflow-permissions-repository": {
     responses: {
       /** Not Implemented */
       501: unknown;
     };
   };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "actions/approve-workflow-run": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "actions/get-workflow-run-usage": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "actions/get-workflow-usage": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "repos/enable-automated-security-fixes": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "repos/disable-automated-security-fixes": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/list-in-repository-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/create-with-repo-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/list-devcontainers-in-repository-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/repo-machines-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/pre-flight-with-repo-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/list-repo-secrets": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/get-repo-public-key": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/get-repo-secret": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/create-or-update-repo-secret": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/delete-repo-secret": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "repos/get-community-profile-metrics": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
+  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in 3.6 */
   "dependency-graph/diff-range": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "dependency-graph/create-repository-snapshot": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "migrations/get-import-status": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "migrations/start-import": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "migrations/cancel-import": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "migrations/update-import": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "migrations/get-commit-authors": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "migrations/map-commit-author": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "migrations/get-large-files": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "migrations/set-lfs-preference": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "interactions/get-restrictions-for-repo": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "interactions/set-restrictions-for-repo": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "interactions/remove-restrictions-for-repo": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "repos/get-pages-health-check": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/create-with-pr-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "repos/get-clones": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "repos/get-top-paths": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "repos/get-top-referrers": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "repos/get-views": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "repos/check-vulnerability-alerts": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "repos/enable-vulnerability-alerts": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "repos/disable-vulnerability-alerts": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "enterprise-admin/list-provisioned-groups-enterprise": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "enterprise-admin/provision-and-invite-enterprise-group": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "enterprise-admin/get-provisioning-information-for-enterprise-group": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "enterprise-admin/set-information-for-provisioned-enterprise-group": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "enterprise-admin/delete-scim-group-from-enterprise": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "enterprise-admin/update-attribute-for-enterprise-group": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "enterprise-admin/list-provisioned-identities-enterprise": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "enterprise-admin/provision-and-invite-enterprise-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "enterprise-admin/get-provisioning-information-for-enterprise-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "enterprise-admin/set-information-for-provisioned-enterprise-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "enterprise-admin/delete-user-from-enterprise": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "enterprise-admin/update-attribute-for-enterprise-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "scim/list-provisioned-identities": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "scim/provision-and-invite-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "scim/get-provisioning-information-for-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "scim/set-information-for-provisioned-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "scim/delete-user-from-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "scim/update-attribute-for-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "teams/list-pending-invitations-legacy": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "teams/list-idp-groups-for-legacy": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "teams/create-or-update-idp-group-connections-legacy": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "users/list-blocked-by-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "users/check-blocked": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "users/block": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "users/unblock": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/list-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/create-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/list-secrets-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/get-public-key-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/get-secret-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/create-or-update-secret-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/delete-secret-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/list-repositories-for-secret-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/set-repositories-for-secret-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/add-repository-for-secret-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/remove-repository-for-secret-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/get-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/delete-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/update-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/export-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/get-export-details-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/codespace-machines-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/start-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "codespaces/stop-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "users/set-primary-email-visibility-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "interactions/get-restrictions-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "interactions/set-restrictions-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "interactions/remove-restrictions-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "apps/list-subscriptions-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "apps/list-subscriptions-for-authenticated-user-stubbed": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "migrations/get-status-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "migrations/unlock-repo-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "packages/list-packages-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "packages/get-package-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "packages/delete-package-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "packages/restore-package-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "packages/get-all-package-versions-for-package-owned-by-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "packages/get-package-version-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "packages/delete-package-version-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "packages/restore-package-version-for-authenticated-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "packages/list-packages-for-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "packages/get-package-for-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "packages/delete-package-for-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "packages/restore-package-for-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "packages/get-all-package-versions-for-package-owned-by-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "packages/get-package-version-for-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "packages/delete-package-version-for-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "packages/restore-package-version-for-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "billing/get-github-actions-billing-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "billing/get-github-packages-billing-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.5. It was added in api.github.com */
-  "billing/get-shared-storage-billing-user": {
     responses: {
       /** Not Implemented */
       501: unknown;
