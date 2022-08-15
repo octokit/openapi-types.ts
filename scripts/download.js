@@ -2,6 +2,7 @@ import { writeFileSync } from "node:fs";
 import { mkdir, rm } from "node:fs/promises";
 
 import { Octokit } from "@octokit/core";
+import { paginateRest } from "@octokit/plugin-paginate-rest";
 import gheVersions from "github-enterprise-server-versions";
 const { getCurrentVersions } = gheVersions;
 
@@ -14,7 +15,9 @@ run(process.env.OCTOKIT_OPENAPI_VERSION.replace(/^v/, "")).then(
   console.error
 );
 
-const octokit = new Octokit({
+const OctokitWithPlugins = Octokit.plugin(paginateRest);
+
+const octokit = new OctokitWithPlugins({
   auth: process.env.GITHUB_TOKEN,
 });
 
@@ -30,7 +33,7 @@ async function run(version) {
     tag: `v${version}`,
   });
 
-  const { data: releaseAssets } = await octokit.request(
+  const releaseAssets = await octokit.paginate(
     "GET /repos/{owner}/{repo}/releases/{release_id}/assets",
     {
       owner: "octokit",
