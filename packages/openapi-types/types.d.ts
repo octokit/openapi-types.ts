@@ -452,6 +452,22 @@ export interface paths {
      */
     get: operations["code-scanning/list-alerts-for-enterprise"];
   };
+  "/enterprises/{enterprise}/consumed-licenses": {
+    /**
+     * Lists the license consumption information for all users, including those from connected servers, associated with an enterprise.
+     * To use this endpoint, you must be an enterprise admin, and you must use an access
+     * token with the `read:enterprise` scope.
+     */
+    get: operations["enterprise-admin/get-consumed-licenses"];
+  };
+  "/enterprises/{enterprise}/license-sync-status": {
+    /**
+     * Gets information about the status of a license sync job for an enterprise.
+     * To use this endpoint, you must be an enterprise admin, and you must use an access
+     * token with the `read:enterprise` scope.
+     */
+    get: operations["enterprise-admin/get-license-sync-status"];
+  };
   "/enterprises/{enterprise}/secret-scanning/alerts": {
     /**
      * Lists secret scanning alerts for eligible repositories in an enterprise, from newest to oldest.
@@ -8554,6 +8570,47 @@ export interface components {
       tool: components["schemas"]["code-scanning-analysis-tool"];
       most_recent_instance: components["schemas"]["code-scanning-alert-instance"];
       repository: components["schemas"]["simple-repository"];
+    };
+    /**
+     * Enterprise Consumed Licenses
+     * @description A breakdown of the licenses consumed by an enterprise.
+     */
+    "get-consumed-licenses": {
+      total_seats_consumed?: number;
+      total_seats_purchased?: number;
+      users?: {
+        github_com_login?: string;
+        github_com_name?: string | null;
+        github_com_profile?: string | null;
+        license_type?: string;
+        github_com_member_roles?: string[];
+        github_com_enterprise_role?: string | null;
+        visual_studio_subscription_user?: boolean;
+        github_com_verified_domain_emails?: string[];
+        github_com_saml_name_id?: string | null;
+        enterprise_server_user?: boolean | null;
+        enterprise_server_emails?: string[];
+        github_com_user?: boolean;
+        total_user_accounts?: number;
+        enterprise_server_user_ids?: string[];
+        github_com_orgs_with_pending_invites?: string[];
+        visual_studio_subscription_email?: string | null;
+      }[];
+    };
+    /**
+     * License Sync Status
+     * @description Information about the status of a license sync job for an enterprise.
+     */
+    "get-license-sync-status": {
+      server_instances?: {
+        server_id?: string;
+        hostname?: string;
+        last_sync?: {
+          date?: string;
+          status?: string;
+          error?: string;
+        };
+      }[];
     };
     /**
      * Format: date-time
@@ -21479,6 +21536,55 @@ export interface operations {
     };
   };
   /**
+   * Lists the license consumption information for all users, including those from connected servers, associated with an enterprise.
+   * To use this endpoint, you must be an enterprise admin, and you must use an access
+   * token with the `read:enterprise` scope.
+   */
+  "enterprise-admin/get-consumed-licenses": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+      };
+      query: {
+        /** The number of results per page (max 100). */
+        per_page?: components["parameters"]["per-page"];
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
+      };
+    };
+    responses: {
+      /** Consumed Licenses Response */
+      200: {
+        headers: {};
+        content: {
+          "application/json": components["schemas"]["get-consumed-licenses"];
+        };
+      };
+    };
+  };
+  /**
+   * Gets information about the status of a license sync job for an enterprise.
+   * To use this endpoint, you must be an enterprise admin, and you must use an access
+   * token with the `read:enterprise` scope.
+   */
+  "enterprise-admin/get-license-sync-status": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+      };
+    };
+    responses: {
+      /** License Sync Status Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["get-license-sync-status"];
+        };
+      };
+    };
+  };
+  /**
    * Lists secret scanning alerts for eligible repositories in an enterprise, from newest to oldest.
    * To use this endpoint, you must be a member of the enterprise, and you must use an access token with the `repo` scope or `security_events` scope. Alerts are only returned for organizations in the enterprise for which you are an organization owner or a [security manager](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization).
    */
@@ -33018,6 +33124,7 @@ export interface operations {
           "application/json": components["schemas"]["codespace"];
         };
       };
+      400: components["responses"]["bad_request"];
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];

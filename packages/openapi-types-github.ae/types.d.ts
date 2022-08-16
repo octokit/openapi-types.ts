@@ -4408,6 +4408,14 @@ export interface paths {
     /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
     get: operations["code-scanning/list-alerts-for-enterprise"];
   };
+  "/enterprises/{enterprise}/consumed-licenses": {
+    /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+    get: operations["enterprise-admin/get-consumed-licenses"];
+  };
+  "/enterprises/{enterprise}/license-sync-status": {
+    /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+    get: operations["enterprise-admin/get-license-sync-status"];
+  };
   "/enterprises/{enterprise}/secret-scanning/alerts": {
     /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
     get: operations["secret-scanning/list-alerts-for-enterprise"];
@@ -36429,6 +36437,20 @@ export interface operations {
   };
   /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
   "code-scanning/list-alerts-for-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+  "enterprise-admin/get-consumed-licenses": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+  "enterprise-admin/get-license-sync-status": {
     responses: {
       /** Not Implemented */
       501: unknown;
