@@ -5367,6 +5367,14 @@ export interface paths {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     get: operations["code-scanning/list-alerts-for-enterprise"];
   };
+  "/enterprises/{enterprise}/consumed-licenses": {
+    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+    get: operations["enterprise-admin/get-consumed-licenses"];
+  };
+  "/enterprises/{enterprise}/license-sync-status": {
+    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+    get: operations["enterprise-admin/get-license-sync-status"];
+  };
   "/enterprises/{enterprise}/settings/billing/actions": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     get: operations["billing/get-github-actions-billing-ghe"];
@@ -41676,6 +41684,20 @@ export interface operations {
   };
   /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
   "code-scanning/list-alerts-for-enterprise": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+  "enterprise-admin/get-consumed-licenses": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+  "enterprise-admin/get-license-sync-status": {
     responses: {
       /** Not Implemented */
       501: unknown;
