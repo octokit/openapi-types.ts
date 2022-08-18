@@ -7065,6 +7065,11 @@ export interface components {
        */
       contents?: "read" | "write";
       /**
+       * @description The level of permission to grant the access token for custom roles management.
+       * @enum {string}
+       */
+      organization_custom_roles?: "read" | "write";
+      /**
        * @description The level of permission to grant the access token for deployments and deployment statuses.
        * @enum {string}
        */
@@ -15411,10 +15416,6 @@ export interface components {
     metadata: {
       [key: string]: Partial<string> & Partial<number> & Partial<boolean>;
     };
-    /**
-     * Dependency
-     * @description A single package dependency.
-     */
     dependency: {
       /**
        * @description Package-url (PURL) of dependency. See https://github.com/package-url/purl-spec for more details.
@@ -15440,10 +15441,6 @@ export interface components {
        */
       dependencies?: string[];
     };
-    /**
-     * manifest
-     * @description A collection of related dependencies declared in a file or representing a logical group of dependencies.
-     */
     manifest: {
       /**
        * @description The name of the manifest.
@@ -15458,6 +15455,7 @@ export interface components {
         source_location?: string;
       };
       metadata?: components["schemas"]["metadata"];
+      /** @description A collection of resolved package dependencies. */
       resolved?: { [key: string]: components["schemas"]["dependency"] };
     };
     /**
@@ -15513,7 +15511,7 @@ export interface components {
         url: string;
       };
       metadata?: components["schemas"]["metadata"];
-      /** @description A collection of package manifests */
+      /** @description A collection of package manifests, which are a collection of related dependencies declared in a file or representing a logical group of dependencies. */
       manifests?: { [key: string]: components["schemas"]["manifest"] };
       /**
        * Format: date-time
@@ -19498,17 +19496,17 @@ export interface components {
        */
       node_id: string;
     };
-    "merge-group-checks-requested": {
+    "webhook-merge-group-checks-requested": {
       action: string;
       installation?: components["schemas"]["simple-installation"];
+      merge_group: {
+        base_ref: string;
+        head_ref: string;
+        head_sha: string;
+      };
       organization?: components["schemas"]["organization-simple"];
       repository?: components["schemas"]["repository"];
       sender?: components["schemas"]["simple-user"];
-      merge_group: {
-        head_sha: string;
-        head_ref: string;
-        base_ref: string;
-      };
     };
   };
   responses: {
