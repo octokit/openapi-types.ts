@@ -5666,6 +5666,11 @@ export interface components {
        */
       contents?: "read" | "write";
       /**
+       * @description The level of permission to grant the access token for custom roles management.
+       * @enum {string}
+       */
+      organization_custom_roles?: "read" | "write";
+      /**
        * @description The level of permission to grant the access token for deployments and deployment statuses.
        * @enum {string}
        */
