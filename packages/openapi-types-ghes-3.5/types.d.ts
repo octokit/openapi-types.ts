@@ -20949,6 +20949,7 @@ export interface operations {
   "orgs/list-custom-roles": {
     parameters: {
       path: {
+        /** The unique identifier of the organization. */
         organization_id: string;
       };
     };
@@ -23831,6 +23832,40 @@ export interface operations {
            * @default false
            */
           use_squash_pr_title_as_default?: boolean;
+          /**
+           * @description The default value for a squash merge commit title:
+           *
+           * - `PR_TITLE` - default to the pull request's title.
+           * - `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit).
+           * @enum {string}
+           */
+          squash_merge_commit_title?: "PR_TITLE" | "COMMIT_OR_PR_TITLE";
+          /**
+           * @description The default value for a squash merge commit message:
+           *
+           * - `PR_BODY` - default to the pull request's body.
+           * - `COMMIT_MESSAGES` - default to the branch's commit messages.
+           * - `BLANK` - default to a blank commit message.
+           * @enum {string}
+           */
+          squash_merge_commit_message?: "PR_BODY" | "COMMIT_MESSAGES" | "BLANK";
+          /**
+           * @description The default value for a merge commit title.
+           *
+           * - `PR_TITLE` - default to the pull request's title.
+           * - `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name).
+           * @enum {string}
+           */
+          merge_commit_title?: "PR_TITLE" | "MERGE_MESSAGE";
+          /**
+           * @description The default value for a merge commit message.
+           *
+           * - `PR_TITLE` - default to the pull request's title.
+           * - `PR_BODY` - default to the pull request's body.
+           * - `BLANK` - default to a blank commit message.
+           * @enum {string}
+           */
+          merge_commit_message?: "PR_BODY" | "PR_TITLE" | "BLANK";
         };
       };
     };
@@ -25855,6 +25890,40 @@ export interface operations {
            */
           use_squash_pr_title_as_default?: boolean;
           /**
+           * @description The default value for a squash merge commit title:
+           *
+           * - `PR_TITLE` - default to the pull request's title.
+           * - `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit).
+           * @enum {string}
+           */
+          squash_merge_commit_title?: "PR_TITLE" | "COMMIT_OR_PR_TITLE";
+          /**
+           * @description The default value for a squash merge commit message:
+           *
+           * - `PR_BODY` - default to the pull request's body.
+           * - `COMMIT_MESSAGES` - default to the branch's commit messages.
+           * - `BLANK` - default to a blank commit message.
+           * @enum {string}
+           */
+          squash_merge_commit_message?: "PR_BODY" | "COMMIT_MESSAGES" | "BLANK";
+          /**
+           * @description The default value for a merge commit title.
+           *
+           * - `PR_TITLE` - default to the pull request's title.
+           * - `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name).
+           * @enum {string}
+           */
+          merge_commit_title?: "PR_TITLE" | "MERGE_MESSAGE";
+          /**
+           * @description The default value for a merge commit message.
+           *
+           * - `PR_TITLE` - default to the pull request's title.
+           * - `PR_BODY` - default to the pull request's body.
+           * - `BLANK` - default to a blank commit message.
+           * @enum {string}
+           */
+          merge_commit_message?: "PR_BODY" | "PR_TITLE" | "BLANK";
+          /**
            * @description `true` to archive this repository. **Note**: You cannot unarchive repositories through the API.
            * @default false
            */
@@ -26801,7 +26870,7 @@ export interface operations {
       /** Response */
       202: {
         content: {
-          "application/json": { [key: string]: unknown };
+          "application/json": components["schemas"]["empty-object"];
         };
       };
       409: components["responses"]["conflict"];
@@ -26972,7 +27041,7 @@ export interface operations {
       /** Response */
       201: {
         content: {
-          "application/json": { [key: string]: unknown };
+          "application/json": components["schemas"]["empty-object"];
         };
       };
     };
@@ -27169,7 +27238,7 @@ export interface operations {
       /** Response when creating a secret */
       201: {
         content: {
-          "application/json": { [key: string]: unknown };
+          "application/json": components["schemas"]["empty-object"];
         };
       };
       /** Response when updating a secret */
@@ -39911,6 +39980,40 @@ export interface operations {
            * @example false
            */
           delete_branch_on_merge?: boolean;
+          /**
+           * @description The default value for a squash merge commit title:
+           *
+           * - `PR_TITLE` - default to the pull request's title.
+           * - `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit).
+           * @enum {string}
+           */
+          squash_merge_commit_title?: "PR_TITLE" | "COMMIT_OR_PR_TITLE";
+          /**
+           * @description The default value for a squash merge commit message:
+           *
+           * - `PR_BODY` - default to the pull request's body.
+           * - `COMMIT_MESSAGES` - default to the branch's commit messages.
+           * - `BLANK` - default to a blank commit message.
+           * @enum {string}
+           */
+          squash_merge_commit_message?: "PR_BODY" | "COMMIT_MESSAGES" | "BLANK";
+          /**
+           * @description The default value for a merge commit title.
+           *
+           * - `PR_TITLE` - default to the pull request's title.
+           * - `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name).
+           * @enum {string}
+           */
+          merge_commit_title?: "PR_TITLE" | "MERGE_MESSAGE";
+          /**
+           * @description The default value for a merge commit message.
+           *
+           * - `PR_TITLE` - default to the pull request's title.
+           * - `PR_BODY` - default to the pull request's body.
+           * - `BLANK` - default to a blank commit message.
+           * @enum {string}
+           */
+          merge_commit_message?: "PR_BODY" | "PR_TITLE" | "BLANK";
           /**
            * @description Whether downloads are enabled.
            * @default true
