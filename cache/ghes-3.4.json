@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "version": "7.4.0",
+    "version": "7.5.0",
     "title": "GitHub's official OpenAPI spec + Octokit extension",
     "description": "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs",
     "license": {
@@ -84554,7 +84554,6 @@
             "node_id": "MDc6TGljZW5zZW1pdA==",
             "html_url": "https://github.com/licenses/mit"
           },
-          "language": null,
           "forks_count": 9,
           "forks": 9,
           "stargazers_count": 80,

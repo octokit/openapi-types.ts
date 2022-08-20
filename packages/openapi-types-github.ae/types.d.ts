@@ -6587,6 +6587,11 @@ export interface components {
       allow_merge_commit?: boolean;
       /** @description Whether to allow forking this repo */
       allow_forking?: boolean;
+      /**
+       * @description Whether to require contributors to sign off on web-based commits
+       * @default false
+       */
+      web_commit_signoff_required?: boolean;
       subscribers_count?: number;
       network_count?: number;
       open_issues: number;
@@ -8177,6 +8182,11 @@ export interface components {
       allow_merge_commit?: boolean;
       /** @description Whether to allow forking this repo */
       allow_forking?: boolean;
+      /**
+       * @description Whether to require contributors to sign off on web-based commits
+       * @default false
+       */
+      web_commit_signoff_required?: boolean;
       subscribers_count?: number;
       network_count?: number;
       open_issues: number;
@@ -8391,6 +8401,8 @@ export interface components {
       /** @example 0 */
       watchers?: number;
       allow_forking?: boolean;
+      /** @example false */
+      web_commit_signoff_required?: boolean;
     };
     /**
      * Thread
@@ -8568,6 +8580,8 @@ export interface components {
       members_can_create_private_pages?: boolean;
       /** @example false */
       members_can_fork_private_repositories?: boolean | null;
+      /** @example false */
+      web_commit_signoff_required?: boolean;
       /** Format: date-time */
       updated_at: string;
     };
@@ -9629,6 +9643,12 @@ export interface components {
        * @example false
        */
       allow_forking?: boolean;
+      /**
+       * @description Whether to require contributors to sign off on web-based commits
+       * @default false
+       * @example false
+       */
+      web_commit_signoff_required?: boolean;
       subscribers_count?: number;
       network_count?: number;
       open_issues: number;
@@ -10038,6 +10058,8 @@ export interface components {
       use_squash_pr_title_as_default?: boolean;
       /** @example true */
       allow_forking?: boolean;
+      /** @example false */
+      web_commit_signoff_required?: boolean;
       /** @example 42 */
       subscribers_count: number;
       /** @example 0 */
@@ -14559,6 +14581,7 @@ export interface components {
           updated_at: string;
           allow_forking?: boolean;
           is_template?: boolean;
+          web_commit_signoff_required?: boolean;
         } | null;
         sha: string;
         user: {
@@ -14732,6 +14755,7 @@ export interface components {
           /** Format: date-time */
           updated_at: string;
           allow_forking?: boolean;
+          web_commit_signoff_required?: boolean;
         };
         sha: string;
         user: {
@@ -15551,6 +15575,8 @@ export interface components {
       delete_branch_on_merge?: boolean;
       allow_forking?: boolean;
       is_template?: boolean;
+      /** @example false */
+      web_commit_signoff_required?: boolean;
     };
     /**
      * Topic Search Result Item
@@ -19064,6 +19090,11 @@ export interface operations {
            * @default false
            */
           members_can_fork_private_repositories?: boolean;
+          /**
+           * @description Whether contributors to organization repositories are required to sign off on commits they make through GitHub's web interface.
+           * @default false
+           */
+          web_commit_signoff_required?: boolean;
           /** @example "http://github.blog" */
           blog?: string;
         };
@@ -23011,6 +23042,11 @@ export interface operations {
            * @default false
            */
           allow_forking?: boolean;
+          /**
+           * @description Either `true` to require contributors to sign off on web-based commits, or `false` to not require contributors to sign off on web-based commits.
+           * @default false
+           */
+          web_commit_signoff_required?: boolean;
         };
       };
     };
