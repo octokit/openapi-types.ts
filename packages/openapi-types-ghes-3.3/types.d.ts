@@ -2765,10 +2765,11 @@ export interface paths {
      * type](https://docs.github.com/enterprise-server@3.3/rest/reference/repos#custom-media-types) to ensure the content is returned in a consistent
      * object format.
      *
-     * **Note**:
+     * **Notes**:
      * *   To get a repository's contents recursively, you can [recursively get the tree](https://docs.github.com/enterprise-server@3.3/rest/reference/git#trees).
      * *   This API has an upper limit of 1,000 files for a directory. If you need to retrieve more files, use the [Git Trees
      * API](https://docs.github.com/enterprise-server@3.3/rest/reference/git#get-a-tree).
+     *  *  Download URLs expire and are meant to be used just once. To ensure the download URL does not expire, please use the contents API to obtain a fresh download URL for each download.
      * *   This API supports files up to 1 megabyte in size.
      *
      * #### If the content is a directory
@@ -5354,11 +5355,6 @@ export interface components {
        * @enum {string}
        */
       contents?: "read" | "write";
-      /**
-       * @description The level of permission to grant the access token for custom roles management.
-       * @enum {string}
-       */
-      organization_custom_roles?: "read" | "write";
       /**
        * @description The level of permission to grant the access token for deployments and deployment statuses.
        * @enum {string}
@@ -9168,6 +9164,132 @@ export interface components {
       parent: components["schemas"]["nullable-team-simple"];
     };
     /**
+     * Team Organization
+     * @description Team Organization
+     */
+    "team-organization": {
+      /** @example github */
+      login: string;
+      /** @example 1 */
+      id: number;
+      /** @example MDEyOk9yZ2FuaXphdGlvbjE= */
+      node_id: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/orgs/github
+       */
+      url: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/orgs/github/repos
+       */
+      repos_url: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/orgs/github/events
+       */
+      events_url: string;
+      /** @example https://api.github.com/orgs/github/hooks */
+      hooks_url: string;
+      /** @example https://api.github.com/orgs/github/issues */
+      issues_url: string;
+      /** @example https://api.github.com/orgs/github/members{/member} */
+      members_url: string;
+      /** @example https://api.github.com/orgs/github/public_members{/member} */
+      public_members_url: string;
+      /** @example https://github.com/images/error/octocat_happy.gif */
+      avatar_url: string;
+      /** @example A great organization */
+      description: string | null;
+      /** @example github */
+      name?: string;
+      /** @example GitHub */
+      company?: string;
+      /**
+       * Format: uri
+       * @example https://github.com/blog
+       */
+      blog?: string;
+      /** @example San Francisco */
+      location?: string;
+      /**
+       * Format: email
+       * @example octocat@github.com
+       */
+      email?: string;
+      /** @example github */
+      twitter_username?: string | null;
+      /** @example true */
+      is_verified?: boolean;
+      /** @example true */
+      has_organization_projects: boolean;
+      /** @example true */
+      has_repository_projects: boolean;
+      /** @example 2 */
+      public_repos: number;
+      /** @example 1 */
+      public_gists: number;
+      /** @example 20 */
+      followers: number;
+      /** @example 0 */
+      following: number;
+      /**
+       * Format: uri
+       * @example https://github.com/octocat
+       */
+      html_url: string;
+      /**
+       * Format: date-time
+       * @example 2008-01-14T04:33:35Z
+       */
+      created_at: string;
+      /** @example Organization */
+      type: string;
+      /** @example 100 */
+      total_private_repos?: number;
+      /** @example 100 */
+      owned_private_repos?: number;
+      /** @example 81 */
+      private_gists?: number | null;
+      /** @example 10000 */
+      disk_usage?: number | null;
+      /** @example 8 */
+      collaborators?: number | null;
+      /**
+       * Format: email
+       * @example org@example.com
+       */
+      billing_email?: string | null;
+      plan?: {
+        name: string;
+        space: number;
+        private_repos: number;
+        filled_seats?: number;
+        seats?: number;
+      };
+      default_repository_permission?: string | null;
+      /** @example true */
+      members_can_create_repositories?: boolean | null;
+      /** @example true */
+      two_factor_requirement_enabled?: boolean | null;
+      /** @example all */
+      members_allowed_repository_creation_type?: string;
+      /** @example true */
+      members_can_create_public_repositories?: boolean;
+      /** @example true */
+      members_can_create_private_repositories?: boolean;
+      /** @example true */
+      members_can_create_internal_repositories?: boolean;
+      /** @example true */
+      members_can_create_pages?: boolean;
+      /** @example true */
+      members_can_create_public_pages?: boolean;
+      /** @example true */
+      members_can_create_private_pages?: boolean;
+      /** Format: date-time */
+      updated_at: string;
+    };
+    /**
      * Full Team
      * @description Groups of organization members that gives permissions on specified repositories.
      */
@@ -9232,7 +9354,7 @@ export interface components {
        * @example 2017-08-17T12:37:15Z
        */
       updated_at: string;
-      organization: components["schemas"]["organization-full"];
+      organization: components["schemas"]["team-organization"];
       /**
        * @description Distinguished Name (DN) that team maps to within LDAP environment
        * @example uid=example,ou=users,dc=github,dc=com
@@ -26030,7 +26152,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** @description contexts parameter */
+          /** @description The name of the status checks */
           contexts: string[];
         };
       };
@@ -26062,7 +26184,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** @description contexts parameter */
+          /** @description The name of the status checks */
           contexts: string[];
         };
       };
@@ -26093,7 +26215,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** @description contexts parameter */
+          /** @description The name of the status checks */
           contexts: string[];
         };
       };
@@ -26346,7 +26468,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** @description teams parameter */
+          /** @description The slug values for teams */
           teams: string[];
         };
       };
@@ -26384,7 +26506,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** @description teams parameter */
+          /** @description The slug values for teams */
           teams: string[];
         };
       };
@@ -26422,7 +26544,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** @description teams parameter */
+          /** @description The slug values for teams */
           teams: string[];
         };
       };
@@ -26486,7 +26608,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** @description users parameter */
+          /** @description The username for users */
           users: string[];
         };
       };
@@ -26524,7 +26646,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** @description users parameter */
+          /** @description The username for users */
           users: string[];
         };
       };
@@ -26562,7 +26684,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** @description users parameter */
+          /** @description The username for users */
           users: string[];
         };
       };
@@ -28471,10 +28593,11 @@ export interface operations {
    * type](https://docs.github.com/enterprise-server@3.3/rest/reference/repos#custom-media-types) to ensure the content is returned in a consistent
    * object format.
    *
-   * **Note**:
+   * **Notes**:
    * *   To get a repository's contents recursively, you can [recursively get the tree](https://docs.github.com/enterprise-server@3.3/rest/reference/git#trees).
    * *   This API has an upper limit of 1,000 files for a directory. If you need to retrieve more files, use the [Git Trees
    * API](https://docs.github.com/enterprise-server@3.3/rest/reference/git#get-a-tree).
+   *  *  Download URLs expire and are meant to be used just once. To ensure the download URL does not expire, please use the contents API to obtain a fresh download URL for each download.
    * *   This API supports files up to 1 megabyte in size.
    *
    * #### If the content is a directory
@@ -30899,6 +31022,11 @@ export interface operations {
            * @enum {string}
            */
           state?: "open" | "closed";
+          /**
+           * @description The reason for the current state
+           * @example not_planned
+           */
+          state_reason?: string | null;
           milestone?: (string | number) | null;
           /** @description Labels to associate with this issue. Pass one or more Labels to _replace_ the set of Labels on this Issue. Send an empty array (`[]`) to clear all Labels from the Issue. _NOTE: Only users with push access can set labels for issues. Labels are silently dropped otherwise._ */
           labels?: (
