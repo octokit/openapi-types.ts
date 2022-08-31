@@ -5571,6 +5571,10 @@ export interface paths {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     patch: operations["teams/create-or-update-idp-group-connections-in-org"];
   };
+  "/orgs/{org}/{security_product}/{enablement}": {
+    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+    post: operations["orgs/enable-or-disable-security-product-on-all-org-repos"];
+  };
   "/repos/{owner}/{repo}/actions/caches": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     get: operations["actions/get-actions-cache-list"];
@@ -5905,6 +5909,18 @@ export interface paths {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     post: operations["packages/restore-package-version-for-authenticated-user"];
   };
+  "/user/ssh_signing_keys": {
+    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+    get: operations["users/list-ssh-signing-keys-for-authenticated-user"];
+    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+    post: operations["users/create-ssh-signing-key-for-authenticated-user"];
+  };
+  "/user/ssh_signing_keys/{ssh_signing_key_id}": {
+    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+    get: operations["users/get-ssh-signing-key-for-authenticated-user"];
+    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+    delete: operations["users/delete-ssh-signing-key-for-authenticated-user"];
+  };
   "/users/{username}/packages": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     get: operations["packages/list-packages-for-user"];
@@ -5944,6 +5960,10 @@ export interface paths {
   "/users/{username}/settings/billing/shared-storage": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     get: operations["billing/get-shared-storage-billing-user"];
+  };
+  "/users/{username}/ssh_signing_keys": {
+    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+    get: operations["users/list-ssh-signing-keys-for-user"];
   };
 }
 
@@ -42541,6 +42561,13 @@ export interface operations {
     };
   };
   /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+  "orgs/enable-or-disable-security-product-on-all-org-repos": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
   "actions/get-actions-cache-list": {
     responses: {
       /** Not Implemented */
@@ -43262,6 +43289,34 @@ export interface operations {
     };
   };
   /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+  "users/list-ssh-signing-keys-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+  "users/create-ssh-signing-key-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+  "users/get-ssh-signing-key-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+  "users/delete-ssh-signing-key-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
   "packages/list-packages-for-user": {
     responses: {
       /** Not Implemented */
@@ -43333,6 +43388,13 @@ export interface operations {
   };
   /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
   "billing/get-shared-storage-billing-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+  "users/list-ssh-signing-keys-for-user": {
     responses: {
       /** Not Implemented */
       501: unknown;
