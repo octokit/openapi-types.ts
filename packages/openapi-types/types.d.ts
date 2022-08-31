@@ -2092,6 +2092,19 @@ export interface paths {
      */
     get: operations["teams/list-child-in-org"];
   };
+  "/orgs/{org}/{security_product}/{enablement}": {
+    /**
+     * Enables or disables the specified security feature for all repositories in an organization.
+     *
+     * To use this endpoint, you must be an organization owner or be member of a team with the security manager role.
+     * A token with the 'write:org' scope is also required.
+     *
+     * GitHub Apps must have the `organization_administration:write` permission to use this endpoint.
+     *
+     * For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+     */
+    post: operations["orgs/enable-or-disable-security-product-on-all-org-repos"];
+  };
   "/projects/columns/cards/{card_id}": {
     get: operations["projects/get-card"];
     delete: operations["projects/delete-card"];
@@ -6192,6 +6205,18 @@ export interface paths {
     delete: operations["repos/decline-invitation-for-authenticated-user"];
     patch: operations["repos/accept-invitation-for-authenticated-user"];
   };
+  "/user/ssh_signing_keys": {
+    /** Lists the SSH signing keys for the authenticated user's GitHub account. You must authenticate with Basic Authentication, or you must authenticate with OAuth with at least `read:ssh_signing_key` scope. For more information, see "[Understanding scopes for OAuth apps](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/)." */
+    get: operations["users/list-ssh-signing-keys-for-authenticated-user"];
+    /** Creates an SSH signing key for the authenticated user's GitHub account. You must authenticate with Basic Authentication, or you must authenticate with OAuth with at least `write:ssh_signing_key` scope. For more information, see "[Understanding scopes for OAuth apps](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/)." */
+    post: operations["users/create-ssh-signing-key-for-authenticated-user"];
+  };
+  "/user/ssh_signing_keys/{ssh_signing_key_id}": {
+    /** Gets extended details for an SSH signing key. You must authenticate with Basic Authentication, or you must authenticate with OAuth with at least `read:ssh_signing_key` scope. For more information, see "[Understanding scopes for OAuth apps](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/)." */
+    get: operations["users/get-ssh-signing-key-for-authenticated-user"];
+    /** Deletes an SSH signing key from the authenticated user's GitHub account. You must authenticate with Basic Authentication, or you must authenticate with OAuth with at least `admin:ssh_signing_key` scope. For more information, see "[Understanding scopes for OAuth apps](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/)." */
+    delete: operations["users/delete-ssh-signing-key-for-authenticated-user"];
+  };
   "/user/starred": {
     /**
      * Lists repositories the authenticated user has starred.
@@ -6420,6 +6445,10 @@ export interface paths {
      * Access tokens must have the `user` scope.
      */
     get: operations["billing/get-shared-storage-billing-user"];
+  };
+  "/users/{username}/ssh_signing_keys": {
+    /** Lists the SSH signing keys for a user. This operation is accessible by anyone. */
+    get: operations["users/list-ssh-signing-keys-for-user"];
   };
   "/users/{username}/starred": {
     /**
@@ -10678,6 +10707,53 @@ export interface components {
       web_commit_signoff_required?: boolean;
       /** Format: date-time */
       updated_at: string;
+      /**
+       * @description Whether GitHub Advanced Security is enabled for new repositories and repositories transferred to this organization.
+       *
+       * This field is only visible to organization owners or members of a team with the security manager role.
+       * @example false
+       */
+      advanced_security_enabled_for_new_repositories?: boolean;
+      /**
+       * @description Whether GitHub Advanced Security is automatically enabled for new repositories and repositories transferred to
+       * this organization.
+       *
+       * This field is only visible to organization owners or members of a team with the security manager role.
+       * @example false
+       */
+      dependabot_alerts_enabled_for_new_repositories?: boolean;
+      /**
+       * @description Whether dependabot security updates are automatically enabled for new repositories and repositories transferred
+       * to this organization.
+       *
+       * This field is only visible to organization owners or members of a team with the security manager role.
+       * @example false
+       */
+      dependabot_security_updates_enabled_for_new_repositories?: boolean;
+      /**
+       * @description Whether dependency graph is automatically enabled for new repositories and repositories transferred to this
+       * organization.
+       *
+       * This field is only visible to organization owners or members of a team with the security manager role.
+       * @example false
+       */
+      dependency_graph_enabled_for_new_repositories?: boolean;
+      /**
+       * @description Whether secret scanning is automatically enabled for new repositories and repositories transferred to this
+       * organization.
+       *
+       * This field is only visible to organization owners or members of a team with the security manager role.
+       * @example false
+       */
+      secret_scanning_enabled_for_new_repositories?: boolean;
+      /**
+       * @description Whether secret scanning push protection is automatically enabled for new repositories and repositories
+       * transferred to this organization.
+       *
+       * This field is only visible to organization owners or members of a team with the security manager role.
+       * @example false
+       */
+      secret_scanning_push_protection_enabled_for_new_repositories?: boolean;
     };
     /**
      * Actions Cache Usage by repository
@@ -10999,6 +11075,11 @@ export interface components {
        * @example 2011-01-26T20:01:12Z
        */
       retention_expires_at?: string | null;
+      /**
+       * @description The text to display to a user when a codespace has been stopped for a potentially actionable reason.
+       * @example you've used 100% of your spending limit for Codespaces
+       */
+      last_known_stop_notice?: string | null;
     };
     /**
      * Credential Authorization
@@ -19788,6 +19869,17 @@ export interface components {
       plan: components["schemas"]["marketplace-listing-plan"];
     };
     /**
+     * SSH Signing Key
+     * @description A public SSH key used to sign Git commits
+     */
+    "ssh-signing-key": {
+      key: string;
+      id: number;
+      title: string;
+      /** Format: date-time */
+      created_at: string;
+    };
+    /**
      * Starred Repository
      * @description Starred Repository
      */
@@ -20169,6 +20261,21 @@ export interface components {
     "reaction-id": number;
     /** @description The unique identifier of the project. */
     "project-id": number;
+    /** @description The security feature to enable or disable. */
+    "security-product":
+      | "dependency_graph"
+      | "dependabot_alerts"
+      | "dependabot_security_updates"
+      | "advanced_security"
+      | "secret_scanning"
+      | "secret_scanning_push_protection";
+    /**
+     * @description The action to take.
+     *
+     * `enable_all` means to enable the specified security feature for all repositories in the organization.
+     * `disable_all` means to disable the specified security feature for all repositories in the organization.
+     */
+    "org-security-product-enablement": "enable_all" | "disable_all";
     /** @description The unique identifier of the card. */
     "card-id": number;
     /** @description The unique identifier of the column. */
@@ -20287,6 +20394,8 @@ export interface components {
     "export-id": string;
     /** @description The unique identifier of the GPG key. */
     "gpg-key-id": number;
+    /** @description The unique identifier of the SSH signing key. */
+    "ssh-signing-key-id": number;
   };
   headers: {
     link?: string;
@@ -23394,6 +23503,54 @@ export interface operations {
           web_commit_signoff_required?: boolean;
           /** @example "http://github.blog" */
           blog?: string;
+          /**
+           * @description Whether GitHub Advanced Security is automatically enabled for new repositories.
+           *
+           * To use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+           *
+           * You can check which security and analysis features are currently enabled by using a `GET /orgs/{org}` request.
+           */
+          advanced_security_enabled_for_new_repositories?: boolean;
+          /**
+           * @description Whether Dependabot alerts is automatically enabled for new repositories.
+           *
+           * To use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+           *
+           * You can check which security and analysis features are currently enabled by using a `GET /orgs/{org}` request.
+           */
+          dependabot_alerts_enabled_for_new_repositories?: boolean;
+          /**
+           * @description Whether Dependabot security updates is automatically enabled for new repositories.
+           *
+           * To use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+           *
+           * You can check which security and analysis features are currently enabled by using a `GET /orgs/{org}` request.
+           */
+          dependabot_security_updates_enabled_for_new_repositories?: boolean;
+          /**
+           * @description Whether dependency graph is automatically enabled for new repositories.
+           *
+           * To use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+           *
+           * You can check which security and analysis features are currently enabled by using a `GET /orgs/{org}` request.
+           */
+          dependency_graph_enabled_for_new_repositories?: boolean;
+          /**
+           * @description Whether secret scanning is automatically enabled for new repositories.
+           *
+           * To use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+           *
+           * You can check which security and analysis features are currently enabled by using a `GET /orgs/{org}` request.
+           */
+          secret_scanning_enabled_for_new_repositories?: boolean;
+          /**
+           * @description Whether secret scanning push protection is automatically enabled for new repositories.
+           *
+           * To use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+           *
+           * You can check which security and analysis features are currently enabled by using a `GET /orgs/{org}` request.
+           */
+          secret_scanning_push_protection_enabled_for_new_repositories?: boolean;
         };
       };
     };
@@ -28521,6 +28678,39 @@ export interface operations {
           "application/json": components["schemas"]["team"][];
         };
       };
+    };
+  };
+  /**
+   * Enables or disables the specified security feature for all repositories in an organization.
+   *
+   * To use this endpoint, you must be an organization owner or be member of a team with the security manager role.
+   * A token with the 'write:org' scope is also required.
+   *
+   * GitHub Apps must have the `organization_administration:write` permission to use this endpoint.
+   *
+   * For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+   */
+  "orgs/enable-or-disable-security-product-on-all-org-repos": {
+    parameters: {
+      path: {
+        /** The organization name. The name is not case sensitive. */
+        org: components["parameters"]["org"];
+        /** The security feature to enable or disable. */
+        security_product: components["parameters"]["security-product"];
+        /**
+         * The action to take.
+         *
+         * `enable_all` means to enable the specified security feature for all repositories in the organization.
+         * `disable_all` means to disable the specified security feature for all repositories in the organization.
+         */
+        enablement: components["parameters"]["org-security-product-enablement"];
+      };
+    };
+    responses: {
+      /** Action started */
+      204: never;
+      /** The action could not be taken due to an in progress enablement, or a policy is preventing enablement */
+      422: unknown;
     };
   };
   "projects/get-card": {
@@ -46595,6 +46785,98 @@ export interface operations {
       409: components["responses"]["conflict"];
     };
   };
+  /** Lists the SSH signing keys for the authenticated user's GitHub account. You must authenticate with Basic Authentication, or you must authenticate with OAuth with at least `read:ssh_signing_key` scope. For more information, see "[Understanding scopes for OAuth apps](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/)." */
+  "users/list-ssh-signing-keys-for-authenticated-user": {
+    parameters: {
+      query: {
+        /** The number of results per page (max 100). */
+        per_page?: components["parameters"]["per-page"];
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        headers: {};
+        content: {
+          "application/json": components["schemas"]["ssh-signing-key"][];
+        };
+      };
+      304: components["responses"]["not_modified"];
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+    };
+  };
+  /** Creates an SSH signing key for the authenticated user's GitHub account. You must authenticate with Basic Authentication, or you must authenticate with OAuth with at least `write:ssh_signing_key` scope. For more information, see "[Understanding scopes for OAuth apps](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/)." */
+  "users/create-ssh-signing-key-for-authenticated-user": {
+    parameters: {};
+    responses: {
+      /** Response */
+      201: {
+        content: {
+          "application/json": components["schemas"]["ssh-signing-key"];
+        };
+      };
+      304: components["responses"]["not_modified"];
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      422: components["responses"]["validation_failed"];
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /**
+           * @description A descriptive name for the new key.
+           * @example Personal MacBook Air
+           */
+          title?: string;
+          /** @description The public SSH key to add to your GitHub account. For more information, see "[Checking for existing SSH keys](https://docs.github.com/authentication/connecting-to-github-with-ssh/checking-for-existing-ssh-keys)." */
+          key: string;
+        };
+      };
+    };
+  };
+  /** Gets extended details for an SSH signing key. You must authenticate with Basic Authentication, or you must authenticate with OAuth with at least `read:ssh_signing_key` scope. For more information, see "[Understanding scopes for OAuth apps](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/)." */
+  "users/get-ssh-signing-key-for-authenticated-user": {
+    parameters: {
+      path: {
+        /** The unique identifier of the SSH signing key. */
+        ssh_signing_key_id: components["parameters"]["ssh-signing-key-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["ssh-signing-key"];
+        };
+      };
+      304: components["responses"]["not_modified"];
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+    };
+  };
+  /** Deletes an SSH signing key from the authenticated user's GitHub account. You must authenticate with Basic Authentication, or you must authenticate with OAuth with at least `admin:ssh_signing_key` scope. For more information, see "[Understanding scopes for OAuth apps](https://docs.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/)." */
+  "users/delete-ssh-signing-key-for-authenticated-user": {
+    parameters: {
+      path: {
+        /** The unique identifier of the SSH signing key. */
+        ssh_signing_key_id: components["parameters"]["ssh-signing-key-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+      304: components["responses"]["not_modified"];
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+    };
+  };
   /**
    * Lists repositories the authenticated user has starred.
    *
@@ -47484,6 +47766,30 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["combined-billing-usage"];
+        };
+      };
+    };
+  };
+  /** Lists the SSH signing keys for a user. This operation is accessible by anyone. */
+  "users/list-ssh-signing-keys-for-user": {
+    parameters: {
+      path: {
+        /** The handle for the GitHub user account. */
+        username: components["parameters"]["username"];
+      };
+      query: {
+        /** The number of results per page (max 100). */
+        per_page?: components["parameters"]["per-page"];
+        /** Page number of the results to fetch. */
+        page?: components["parameters"]["page"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        headers: {};
+        content: {
+          "application/json": components["schemas"]["ssh-signing-key"][];
         };
       };
     };

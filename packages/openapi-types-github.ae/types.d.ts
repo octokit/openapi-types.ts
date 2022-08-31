@@ -4717,6 +4717,10 @@ export interface paths {
     /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
     patch: operations["teams/create-or-update-idp-group-connections-in-org"];
   };
+  "/orgs/{org}/{security_product}/{enablement}": {
+    /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+    post: operations["orgs/enable-or-disable-security-product-on-all-org-repos"];
+  };
   "/repos/{owner}/{repo}/actions/cache/usage": {
     /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
     get: operations["actions/get-actions-cache-usage"];
@@ -5161,6 +5165,18 @@ export interface paths {
     /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
     get: operations["users/list-public-emails-for-authenticated-user"];
   };
+  "/user/ssh_signing_keys": {
+    /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+    get: operations["users/list-ssh-signing-keys-for-authenticated-user"];
+    /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+    post: operations["users/create-ssh-signing-key-for-authenticated-user"];
+  };
+  "/user/ssh_signing_keys/{ssh_signing_key_id}": {
+    /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+    get: operations["users/get-ssh-signing-key-for-authenticated-user"];
+    /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+    delete: operations["users/delete-ssh-signing-key-for-authenticated-user"];
+  };
   "/users/{username}/events/public": {
     /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
     get: operations["activity/list-public-events-for-user"];
@@ -5212,6 +5228,10 @@ export interface paths {
   "/users/{username}/settings/billing/shared-storage": {
     /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
     get: operations["billing/get-shared-storage-billing-user"];
+  };
+  "/users/{username}/ssh_signing_keys": {
+    /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+    get: operations["users/list-ssh-signing-keys-for-user"];
   };
 }
 
@@ -8580,6 +8600,53 @@ export interface components {
       web_commit_signoff_required?: boolean;
       /** Format: date-time */
       updated_at: string;
+      /**
+       * @description Whether GitHub Advanced Security is enabled for new repositories and repositories transferred to this organization.
+       *
+       * This field is only visible to organization owners or members of a team with the security manager role.
+       * @example false
+       */
+      advanced_security_enabled_for_new_repositories?: boolean;
+      /**
+       * @description Whether GitHub Advanced Security is automatically enabled for new repositories and repositories transferred to
+       * this organization.
+       *
+       * This field is only visible to organization owners or members of a team with the security manager role.
+       * @example false
+       */
+      dependabot_alerts_enabled_for_new_repositories?: boolean;
+      /**
+       * @description Whether dependabot security updates are automatically enabled for new repositories and repositories transferred
+       * to this organization.
+       *
+       * This field is only visible to organization owners or members of a team with the security manager role.
+       * @example false
+       */
+      dependabot_security_updates_enabled_for_new_repositories?: boolean;
+      /**
+       * @description Whether dependency graph is automatically enabled for new repositories and repositories transferred to this
+       * organization.
+       *
+       * This field is only visible to organization owners or members of a team with the security manager role.
+       * @example false
+       */
+      dependency_graph_enabled_for_new_repositories?: boolean;
+      /**
+       * @description Whether secret scanning is automatically enabled for new repositories and repositories transferred to this
+       * organization.
+       *
+       * This field is only visible to organization owners or members of a team with the security manager role.
+       * @example false
+       */
+      secret_scanning_enabled_for_new_repositories?: boolean;
+      /**
+       * @description Whether secret scanning push protection is automatically enabled for new repositories and repositories
+       * transferred to this organization.
+       *
+       * This field is only visible to organization owners or members of a team with the security manager role.
+       * @example false
+       */
+      secret_scanning_push_protection_enabled_for_new_repositories?: boolean;
     };
     /**
      * @description The policy that controls the repositories in the organization that are allowed to run GitHub Actions.
@@ -19223,6 +19290,54 @@ export interface operations {
           web_commit_signoff_required?: boolean;
           /** @example "http://github.blog" */
           blog?: string;
+          /**
+           * @description Whether GitHub Advanced Security is automatically enabled for new repositories.
+           *
+           * To use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/github-ae@latest/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+           *
+           * You can check which security and analysis features are currently enabled by using a `GET /orgs/{org}` request.
+           */
+          advanced_security_enabled_for_new_repositories?: boolean;
+          /**
+           * @description Whether Dependabot alerts is automatically enabled for new repositories.
+           *
+           * To use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/github-ae@latest/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+           *
+           * You can check which security and analysis features are currently enabled by using a `GET /orgs/{org}` request.
+           */
+          dependabot_alerts_enabled_for_new_repositories?: boolean;
+          /**
+           * @description Whether Dependabot security updates is automatically enabled for new repositories.
+           *
+           * To use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/github-ae@latest/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+           *
+           * You can check which security and analysis features are currently enabled by using a `GET /orgs/{org}` request.
+           */
+          dependabot_security_updates_enabled_for_new_repositories?: boolean;
+          /**
+           * @description Whether dependency graph is automatically enabled for new repositories.
+           *
+           * To use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/github-ae@latest/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+           *
+           * You can check which security and analysis features are currently enabled by using a `GET /orgs/{org}` request.
+           */
+          dependency_graph_enabled_for_new_repositories?: boolean;
+          /**
+           * @description Whether secret scanning is automatically enabled for new repositories.
+           *
+           * To use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/github-ae@latest/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+           *
+           * You can check which security and analysis features are currently enabled by using a `GET /orgs/{org}` request.
+           */
+          secret_scanning_enabled_for_new_repositories?: boolean;
+          /**
+           * @description Whether secret scanning push protection is automatically enabled for new repositories.
+           *
+           * To use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/github-ae@latest/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+           *
+           * You can check which security and analysis features are currently enabled by using a `GET /orgs/{org}` request.
+           */
+          secret_scanning_push_protection_enabled_for_new_repositories?: boolean;
         };
       };
     };
@@ -37345,6 +37460,13 @@ export interface operations {
     };
   };
   /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+  "orgs/enable-or-disable-security-product-on-all-org-repos": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
   "actions/get-actions-cache-usage": {
     responses: {
       /** Not Implemented */
@@ -38297,6 +38419,34 @@ export interface operations {
     };
   };
   /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+  "users/list-ssh-signing-keys-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+  "users/create-ssh-signing-key-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+  "users/get-ssh-signing-key-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+  "users/delete-ssh-signing-key-for-authenticated-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
   "activity/list-public-events-for-user": {
     responses: {
       /** Not Implemented */
@@ -38389,6 +38539,13 @@ export interface operations {
   };
   /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
   "billing/get-shared-storage-billing-user": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+  "users/list-ssh-signing-keys-for-user": {
     responses: {
       /** Not Implemented */
       501: unknown;
