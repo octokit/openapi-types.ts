@@ -4354,7 +4354,7 @@ export interface paths {
   };
   "/repos/{template_owner}/{template_repo}/generate": {
     /**
-     * Creates a new repository using a repository template. Use the `template_owner` and `template_repo` route parameters to specify the repository to use as the template. The authenticated user must own or be a member of an organization that owns the repository. To check if a repository is available to use as a template, get the repository's information using the [Get a repository](https://docs.github.com/enterprise-server@3.5/rest/reference/repos#get-a-repository) endpoint and check that the `is_template` key is `true`.
+     * Creates a new repository using a repository template. Use the `template_owner` and `template_repo` route parameters to specify the repository to use as the template. If the repository is not public, the authenticated user must own or be a member of an organization that owns the repository. To check if a repository is available to use as a template, get the repository's information using the [Get a repository](https://docs.github.com/enterprise-server@3.5/rest/reference/repos#get-a-repository) endpoint and check that the `is_template` key is `true`.
      *
      * **OAuth scope requirements**
      *
@@ -6869,6 +6869,8 @@ export interface components {
       master_branch?: string;
       /** @example "2020-07-09T00:17:42Z" */
       starred_at?: string;
+      /** @description Whether anonymous git access is enabled for this repository */
+      anonymous_access_enabled?: boolean;
     };
     /**
      * Installation Token
@@ -8891,6 +8893,8 @@ export interface components {
       master_branch?: string;
       /** @example "2020-07-09T00:17:42Z" */
       starred_at?: string;
+      /** @description Whether anonymous git access is enabled for this repository */
+      anonymous_access_enabled?: boolean;
     } | null;
     /**
      * Minimal Repository
@@ -9473,6 +9477,8 @@ export interface components {
       tags?: string[] | null;
       /** @description Detailed documentation for the rule as GitHub Flavored Markdown. */
       help?: string | null;
+      /** @description A link to the documentation for the rule used to detect the alert. */
+      help_uri?: string | null;
     };
     /** @description The version of the tool used to generate the code scanning analysis. */
     "code-scanning-analysis-tool-version": string | null;
@@ -23243,8 +23249,6 @@ export interface operations {
           "application/json": components["schemas"]["simple-user"][];
         };
       };
-      /** Response if requester is not an organization member */
-      302: never;
       422: components["responses"]["validation_failed"];
     };
   };
@@ -27686,6 +27690,11 @@ export interface operations {
           key_prefix: string;
           /** @description The URL must contain `<num>` for the reference number. */
           url_template: string;
+          /**
+           * @description Whether this autolink reference matches alphanumeric characters. If true, the `<num>` parameter of the `url_template` matches alphanumeric characters `A-Z` (case insensitive), `0-9`, and `-`. If false, this autolink reference only matches numeric characters.
+           * @default true
+           */
+          is_alphanumeric?: boolean;
         };
       };
     };
@@ -30504,6 +30513,7 @@ export interface operations {
       404: components["responses"]["not_found"];
       422: components["responses"]["validation_failed"];
       500: components["responses"]["internal_error"];
+      503: components["responses"]["service_unavailable"];
     };
   };
   /**
@@ -30725,6 +30735,7 @@ export interface operations {
       };
       404: components["responses"]["not_found"];
       500: components["responses"]["internal_error"];
+      503: components["responses"]["service_unavailable"];
     };
   };
   /**
@@ -35219,6 +35230,7 @@ export interface operations {
       304: components["responses"]["not_modified"];
       404: components["responses"]["not_found"];
       500: components["responses"]["internal_error"];
+      503: components["responses"]["service_unavailable"];
     };
   };
   /**
@@ -35466,6 +35478,7 @@ export interface operations {
       };
       422: components["responses"]["validation_failed"];
       500: components["responses"]["internal_error"];
+      503: components["responses"]["service_unavailable"];
     };
   };
   "pulls/check-if-merged": {
@@ -37231,7 +37244,7 @@ export interface operations {
     };
   };
   /**
-   * Creates a new repository using a repository template. Use the `template_owner` and `template_repo` route parameters to specify the repository to use as the template. The authenticated user must own or be a member of an organization that owns the repository. To check if a repository is available to use as a template, get the repository's information using the [Get a repository](https://docs.github.com/enterprise-server@3.5/rest/reference/repos#get-a-repository) endpoint and check that the `is_template` key is `true`.
+   * Creates a new repository using a repository template. Use the `template_owner` and `template_repo` route parameters to specify the repository to use as the template. If the repository is not public, the authenticated user must own or be a member of an organization that owns the repository. To check if a repository is available to use as a template, get the repository's information using the [Get a repository](https://docs.github.com/enterprise-server@3.5/rest/reference/repos#get-a-repository) endpoint and check that the `is_template` key is `true`.
    *
    * **OAuth scope requirements**
    *
