@@ -6920,8 +6920,9 @@ export interface components {
       /**
        * @description The reason for the current state
        * @example not_planned
+       * @enum {string|null}
        */
-      state_reason?: string | null;
+      state_reason?: ("completed" | "reopened" | "not_planned") | null;
       /**
        * @description Title of the issue
        * @example Widget creation fails in Safari on OS X 10.8
@@ -12566,8 +12567,9 @@ export interface components {
       /**
        * @description The reason for the current state
        * @example not_planned
+       * @enum {string|null}
        */
-      state_reason?: string | null;
+      state_reason?: ("completed" | "reopened" | "not_planned") | null;
       /**
        * @description Title of the issue
        * @example Widget creation fails in Safari on OS X 10.8
@@ -30176,8 +30178,9 @@ export interface operations {
           /**
            * @description The reason for the current state
            * @example not_planned
+           * @enum {string|null}
            */
-          state_reason?: string | null;
+          state_reason?: ("completed" | "not_planned" | "reopened") | null;
           milestone?: (string | number) | null;
           /** @description Labels to associate with this issue. Pass one or more Labels to _replace_ the set of Labels on this Issue. Send an empty array (`[]`) to clear all Labels from the Issue. _NOTE: Only users with push access can set labels for issues. Labels are silently dropped otherwise._ */
           labels?: (
