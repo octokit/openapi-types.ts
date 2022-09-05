@@ -9081,8 +9081,9 @@ export interface components {
       /**
        * @description The reason for the current state
        * @example not_planned
+       * @enum {string|null}
        */
-      state_reason?: string | null;
+      state_reason?: ("completed" | "reopened" | "not_planned") | null;
       /**
        * @description Title of the issue
        * @example Widget creation fails in Safari on OS X 10.8
@@ -16560,8 +16561,9 @@ export interface components {
       /**
        * @description The reason for the current state
        * @example not_planned
+       * @enum {string|null}
        */
-      state_reason?: string | null;
+      state_reason?: ("completed" | "reopened" | "not_planned") | null;
       /**
        * @description Title of the issue
        * @example Widget creation fails in Safari on OS X 10.8
@@ -20333,6 +20335,8 @@ export interface components {
     "exclude-pull-requests": boolean;
     /** @description Returns workflow runs with the `check_suite_id` that you specify. */
     "workflow-run-check-suite-id": number;
+    /** @description Only returns workflow runs that are associated with the specified `head_sha`. */
+    "workflow-run-head-sha": string;
     /** @description The unique identifier of the workflow run. */
     "run-id": number;
     /** @description The attempt number of the workflow run. */
@@ -30453,6 +30457,8 @@ export interface operations {
         exclude_pull_requests?: components["parameters"]["exclude-pull-requests"];
         /** Returns workflow runs with the `check_suite_id` that you specify. */
         check_suite_id?: components["parameters"]["workflow-run-check-suite-id"];
+        /** Only returns workflow runs that are associated with the specified `head_sha`. */
+        head_sha?: components["parameters"]["workflow-run-head-sha"];
       };
     };
     responses: {
@@ -31297,6 +31303,8 @@ export interface operations {
         exclude_pull_requests?: components["parameters"]["exclude-pull-requests"];
         /** Returns workflow runs with the `check_suite_id` that you specify. */
         check_suite_id?: components["parameters"]["workflow-run-check-suite-id"];
+        /** Only returns workflow runs that are associated with the specified `head_sha`. */
+        head_sha?: components["parameters"]["workflow-run-head-sha"];
       };
     };
     responses: {
@@ -38021,8 +38029,9 @@ export interface operations {
           /**
            * @description The reason for the current state
            * @example not_planned
+           * @enum {string|null}
            */
-          state_reason?: string | null;
+          state_reason?: ("completed" | "not_planned" | "reopened") | null;
           milestone?: (string | number) | null;
           /** @description Labels to associate with this issue. Pass one or more Labels to _replace_ the set of Labels on this Issue. Send an empty array (`[]`) to clear all Labels from the Issue. _NOTE: Only users with push access can set labels for issues. Labels are silently dropped otherwise._ */
           labels?: (
