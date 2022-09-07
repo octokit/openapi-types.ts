@@ -1265,6 +1265,44 @@ export interface paths {
      */
     delete: operations["orgs/remove-saml-sso-authorization"];
   };
+  "/orgs/{org}/custom_roles": {
+    /**
+     * **Note**: This operation is in beta and is subject to change.
+     *
+     * Creates a custom repository role that can be used by all repositories owned by the organization.
+     *
+     * To use this endpoint the authenticated user must be an administrator for the organization and must use an access token with `admin:org` scope.
+     * GitHub Apps must have the `organization_custom_roles:write` organization permission to use this endpoint.
+     *
+     * For more information on custom repository roles, see "[Managing custom repository roles for an organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-custom-repository-roles-for-an-organization)."
+     */
+    post: operations["orgs/create-custom-role"];
+  };
+  "/orgs/{org}/custom_roles/{role_id}": {
+    /**
+     * **Note**: This operation is in beta and is subject to change.
+     *
+     * Deletes a custom role from an organization. Once the custom role has been deleted, any
+     * user, team, or invitation with the deleted custom role will be reassigned the inherited role.
+     *
+     * To use this endpoint the authenticated user must be an administrator for the organization and must use an access token with `admin:org` scope.
+     * GitHub Apps must have the `organization_custom_roles:write` organization permission to use this endpoint.
+     *
+     * For more information about custom repository roles, see "[Managing custom repository roles for an organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-custom-repository-roles-for-an-organization)."
+     */
+    delete: operations["orgs/delete-custom-role"];
+    /**
+     * **Note**: This operation is in beta and subject to change.
+     *
+     * Updates a custom repository role that can be used by all repositories owned by the organization.
+     *
+     * To use this endpoint the authenticated user must be an administrator for the organization and must use an access token with `admin:org` scope.
+     * GitHub Apps must have the `organization_custom_roles:write` organization permission to use this endpoint.
+     *
+     * For more information about custom repository roles, see "[Managing custom repository roles for an organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-custom-repository-roles-for-an-organization)."
+     */
+    patch: operations["orgs/update-custom-role"];
+  };
   "/orgs/{org}/dependabot/secrets": {
     /** Lists all secrets available in an organization without revealing their encrypted values. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` organization permission to use this endpoint. */
     get: operations["dependabot/list-org-secrets"];
@@ -1391,6 +1429,17 @@ export interface paths {
   "/orgs/{org}/failed_invitations": {
     /** The return hash contains `failed_at` and `failed_reason` fields which represent the time at which the invitation failed and the reason for the failure. */
     get: operations["orgs/list-failed-invitations"];
+  };
+  "/orgs/{org}/fine_grained_permissions": {
+    /**
+     * **Note**: This operation is in beta and subject to change.
+     *
+     * Lists the fine-grained permissions available for an organization.
+     *
+     * To use this endpoint the authenticated user must be an administrator for the organization or of an repository of the organizaiton and must use an access token with `admin:org repo` scope.
+     * GitHub Apps must have the `organization_custom_roles:read` organization permission to use this endpoint.
+     */
+    get: operations["orgs/list-fine-grained-permissions"];
   };
   "/orgs/{org}/hooks": {
     get: operations["orgs/list-webhooks"];
@@ -1620,7 +1669,7 @@ export interface paths {
   };
   "/orgs/{org}/packages/{package_type}/{package_name}/versions": {
     /**
-     * Returns all package versions for a package owned by an organization.
+     * Lists package versions for a package owned by an organization.
      *
      * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
      * If `package_type` is not `container`, your token must also include the `repo` scope.
@@ -6135,7 +6184,7 @@ export interface paths {
   };
   "/user/packages/{package_type}/{package_name}/versions": {
     /**
-     * Returns all package versions for a package owned by the authenticated user.
+     * Lists package versions for a package owned by the authenticated user.
      *
      * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
      * If `package_type` is not `container`, your token must also include the `repo` scope.
@@ -6364,7 +6413,7 @@ export interface paths {
   };
   "/users/{username}/packages/{package_type}/{package_name}/versions": {
     /**
-     * Returns all package versions for a public package owned by a specified user.
+     * Lists package versions for a public package owned by a specified user.
      *
      * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
      * If `package_type` is not `container`, your token must also include the `repo` scope.
@@ -7748,7 +7797,8 @@ export interface components {
        */
       allow_update_branch?: boolean;
       /**
-       * @description Whether a squash merge commit can use the pull request title as default.
+       * @deprecated
+       * @description Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
        * @default false
        */
       use_squash_pr_title_as_default?: boolean;
@@ -10254,7 +10304,8 @@ export interface components {
        */
       allow_update_branch?: boolean;
       /**
-       * @description Whether a squash merge commit can use the pull request title as default.
+       * @deprecated
+       * @description Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
        * @default false
        */
       use_squash_pr_title_as_default?: boolean;
@@ -10584,6 +10635,20 @@ export interface components {
       id: number;
       /** @description The name of the custom role. */
       name: string;
+      /** @description A short description about who this role is for or what permissions it grants. */
+      description?: string | null;
+      /**
+       * @description The system role from which this role inherits permissions.
+       * @enum {string}
+       */
+      base_role?: "read" | "triage" | "write" | "maintain";
+      /** @description A list of additional permissions included in this role. */
+      permissions?: string[];
+      organization?: components["schemas"]["simple-user"];
+      /** Format: date-time */
+      created_at?: string;
+      /** Format: date-time */
+      updated_at?: string;
     };
     /**
      * Organization Full
@@ -11338,6 +11403,14 @@ export interface components {
       node_id: string;
       /** @example "https://api.github.com/organizations/16/invitations/1/teams" */
       invitation_teams_url: string;
+    };
+    /**
+     * Organization Fine-Grained Permission
+     * @description Fine-grained permissions available for the organization
+     */
+    "organization-fine-grained-permission": {
+      name: string;
+      description: string;
     };
     /**
      * Org Hook
@@ -20232,6 +20305,8 @@ export interface components {
     "secret-name": string;
     /** @description The handle for the GitHub user account. */
     username: string;
+    /** @description The unique identifier of the role. */
+    "role-id": number;
     /** @description The unique identifier of the group. */
     "group-id": number;
     /** @description The unique identifier of the hook. */
@@ -25118,6 +25193,123 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
+  /**
+   * **Note**: This operation is in beta and is subject to change.
+   *
+   * Creates a custom repository role that can be used by all repositories owned by the organization.
+   *
+   * To use this endpoint the authenticated user must be an administrator for the organization and must use an access token with `admin:org` scope.
+   * GitHub Apps must have the `organization_custom_roles:write` organization permission to use this endpoint.
+   *
+   * For more information on custom repository roles, see "[Managing custom repository roles for an organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-custom-repository-roles-for-an-organization)."
+   */
+  "orgs/create-custom-role": {
+    parameters: {
+      path: {
+        /** The organization name. The name is not case sensitive. */
+        org: components["parameters"]["org"];
+      };
+    };
+    responses: {
+      /** Response */
+      201: {
+        content: {
+          "application/json": components["schemas"]["organization-custom-repository-role"];
+        };
+      };
+      404: components["responses"]["not_found"];
+      422: components["responses"]["validation_failed"];
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @description The name of the custom role. */
+          name: string;
+          /** @description A short description about the intended usage of this role or what permissions it grants. */
+          description?: string;
+          /**
+           * @description The system role from which this role inherits permissions.
+           * @enum {string}
+           */
+          base_role: "read" | "triage" | "write" | "maintain";
+          /** @description A list of additional permissions included in this role. */
+          permissions: string[];
+        };
+      };
+    };
+  };
+  /**
+   * **Note**: This operation is in beta and is subject to change.
+   *
+   * Deletes a custom role from an organization. Once the custom role has been deleted, any
+   * user, team, or invitation with the deleted custom role will be reassigned the inherited role.
+   *
+   * To use this endpoint the authenticated user must be an administrator for the organization and must use an access token with `admin:org` scope.
+   * GitHub Apps must have the `organization_custom_roles:write` organization permission to use this endpoint.
+   *
+   * For more information about custom repository roles, see "[Managing custom repository roles for an organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-custom-repository-roles-for-an-organization)."
+   */
+  "orgs/delete-custom-role": {
+    parameters: {
+      path: {
+        /** The organization name. The name is not case sensitive. */
+        org: components["parameters"]["org"];
+        /** The unique identifier of the role. */
+        role_id: components["parameters"]["role-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+    };
+  };
+  /**
+   * **Note**: This operation is in beta and subject to change.
+   *
+   * Updates a custom repository role that can be used by all repositories owned by the organization.
+   *
+   * To use this endpoint the authenticated user must be an administrator for the organization and must use an access token with `admin:org` scope.
+   * GitHub Apps must have the `organization_custom_roles:write` organization permission to use this endpoint.
+   *
+   * For more information about custom repository roles, see "[Managing custom repository roles for an organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-custom-repository-roles-for-an-organization)."
+   */
+  "orgs/update-custom-role": {
+    parameters: {
+      path: {
+        /** The organization name. The name is not case sensitive. */
+        org: components["parameters"]["org"];
+        /** The unique identifier of the role. */
+        role_id: components["parameters"]["role-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["organization-custom-repository-role"];
+        };
+      };
+      404: components["responses"]["not_found"];
+      422: components["responses"]["validation_failed"];
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @description The name of the custom role. */
+          name?: string;
+          /** @description A short description about who this role is for or what permissions it grants. */
+          description?: string;
+          /**
+           * @description The system role from which this role inherits permissions.
+           * @enum {string}
+           */
+          base_role?: "read" | "triage" | "write" | "maintain";
+          /** @description A list of additional permissions included in this role. If specified, these permissions will replace any currently set on the role. */
+          permissions?: string[];
+        };
+      };
+    };
+  };
   /** Lists all secrets available in an organization without revealing their encrypted values. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` organization permission to use this endpoint. */
   "dependabot/list-org-secrets": {
     parameters: {
@@ -25497,6 +25689,30 @@ export interface operations {
         };
       };
       404: components["responses"]["not_found"];
+    };
+  };
+  /**
+   * **Note**: This operation is in beta and subject to change.
+   *
+   * Lists the fine-grained permissions available for an organization.
+   *
+   * To use this endpoint the authenticated user must be an administrator for the organization or of an repository of the organizaiton and must use an access token with `admin:org repo` scope.
+   * GitHub Apps must have the `organization_custom_roles:read` organization permission to use this endpoint.
+   */
+  "orgs/list-fine-grained-permissions": {
+    parameters: {
+      path: {
+        /** The organization name. The name is not case sensitive. */
+        org: components["parameters"]["org"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["organization-fine-grained-permission"][];
+        };
+      };
     };
   };
   "orgs/list-webhooks": {
@@ -26692,7 +26908,7 @@ export interface operations {
     };
   };
   /**
-   * Returns all package versions for a package owned by an organization.
+   * Lists package versions for a package owned by an organization.
    *
    * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
    * If `package_type` is not `container`, your token must also include the `repo` scope.
@@ -27092,7 +27308,8 @@ export interface operations {
            */
           delete_branch_on_merge?: boolean;
           /**
-           * @description Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message.
+           * @deprecated
+           * @description Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
            * @default false
            */
           use_squash_pr_title_as_default?: boolean;
@@ -29526,7 +29743,8 @@ export interface operations {
            */
           allow_update_branch?: boolean;
           /**
-           * @description Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message.
+           * @deprecated
+           * @description Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
            * @default false
            */
           use_squash_pr_title_as_default?: boolean;
@@ -35159,7 +35377,7 @@ export interface operations {
         "application/json": {
           /** @description The commit message. */
           message: string;
-          /** @description The blob SHA of the file being replaced. */
+          /** @description The blob SHA of the file being deleted. */
           sha: string;
           /** @description The branch name. Default: the repository’s default branch (usually `master`) */
           branch?: string;
@@ -46378,7 +46596,7 @@ export interface operations {
     };
   };
   /**
-   * Returns all package versions for a package owned by the authenticated user.
+   * Lists package versions for a package owned by the authenticated user.
    *
    * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
    * If `package_type` is not `container`, your token must also include the `repo` scope.
@@ -47509,7 +47727,7 @@ export interface operations {
     };
   };
   /**
-   * Returns all package versions for a public package owned by a specified user.
+   * Lists package versions for a public package owned by a specified user.
    *
    * To use this endpoint, you must authenticate using an access token with the `packages:read` scope.
    * If `package_type` is not `container`, your token must also include the `repo` scope.

@@ -23963,7 +23963,8 @@ export interface operations {
            */
           delete_branch_on_merge?: boolean;
           /**
-           * @description Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message.
+           * @deprecated
+           * @description Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
            * @default false
            */
           use_squash_pr_title_as_default?: boolean;
@@ -26020,7 +26021,8 @@ export interface operations {
            */
           allow_update_branch?: boolean;
           /**
-           * @description Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message.
+           * @deprecated
+           * @description Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
            * @default false
            */
           use_squash_pr_title_as_default?: boolean;
@@ -30906,7 +30908,7 @@ export interface operations {
         "application/json": {
           /** @description The commit message. */
           message: string;
-          /** @description The blob SHA of the file being replaced. */
+          /** @description The blob SHA of the file being deleted. */
           sha: string;
           /** @description The branch name. Default: the repository’s default branch (usually `master`) */
           branch?: string;

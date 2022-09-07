@@ -4553,6 +4553,16 @@ export interface paths {
     /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
     delete: operations["orgs/remove-saml-sso-authorization"];
   };
+  "/orgs/{org}/custom_roles": {
+    /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+    post: operations["orgs/create-custom-role"];
+  };
+  "/orgs/{org}/custom_roles/{role_id}": {
+    /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+    delete: operations["orgs/delete-custom-role"];
+    /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+    patch: operations["orgs/update-custom-role"];
+  };
   "/orgs/{org}/dependabot/secrets": {
     /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
     get: operations["dependabot/list-org-secrets"];
@@ -4588,6 +4598,10 @@ export interface paths {
   "/orgs/{org}/failed_invitations": {
     /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
     get: operations["orgs/list-failed-invitations"];
+  };
+  "/orgs/{org}/fine_grained_permissions": {
+    /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+    get: operations["orgs/list-fine-grained-permissions"];
   };
   "/orgs/{org}/interaction-limits": {
     /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
@@ -21206,7 +21220,8 @@ export interface operations {
            */
           delete_branch_on_merge?: boolean;
           /**
-           * @description Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message.
+           * @deprecated
+           * @description Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
            * @default false
            */
           use_squash_pr_title_as_default?: boolean;
@@ -23241,7 +23256,8 @@ export interface operations {
            */
           allow_update_branch?: boolean;
           /**
-           * @description Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message.
+           * @deprecated
+           * @description Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
            * @default false
            */
           use_squash_pr_title_as_default?: boolean;
@@ -27716,7 +27732,7 @@ export interface operations {
         "application/json": {
           /** @description The commit message. */
           message: string;
-          /** @description The blob SHA of the file being replaced. */
+          /** @description The blob SHA of the file being deleted. */
           sha: string;
           /** @description The branch name. Default: the repository’s default branch (usually `master`) */
           branch?: string;
@@ -37140,6 +37156,27 @@ export interface operations {
     };
   };
   /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+  "orgs/create-custom-role": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+  "orgs/delete-custom-role": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+  "orgs/update-custom-role": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
   "dependabot/list-org-secrets": {
     responses: {
       /** Not Implemented */
@@ -37211,6 +37248,13 @@ export interface operations {
   };
   /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
   "orgs/list-failed-invitations": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint is currently not supported by GitHub AE. It only exists in api.github.com right now. */
+  "orgs/list-fine-grained-permissions": {
     responses: {
       /** Not Implemented */
       501: unknown;
