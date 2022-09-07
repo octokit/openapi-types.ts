@@ -5443,6 +5443,16 @@ export interface paths {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     delete: operations["orgs/remove-saml-sso-authorization"];
   };
+  "/orgs/{org}/custom_roles": {
+    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+    post: operations["orgs/create-custom-role"];
+  };
+  "/orgs/{org}/custom_roles/{role_id}": {
+    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+    delete: operations["orgs/delete-custom-role"];
+    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+    patch: operations["orgs/update-custom-role"];
+  };
   "/orgs/{org}/external-group/{group_id}": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     get: operations["teams/external-idp-group-info-for-org"];
@@ -5454,6 +5464,10 @@ export interface paths {
   "/orgs/{org}/failed_invitations": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     get: operations["orgs/list-failed-invitations"];
+  };
+  "/orgs/{org}/fine_grained_permissions": {
+    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+    get: operations["orgs/list-fine-grained-permissions"];
   };
   "/orgs/{org}/interaction-limits": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
@@ -7530,7 +7544,8 @@ export interface components {
        */
       allow_update_branch?: boolean;
       /**
-       * @description Whether a squash merge commit can use the pull request title as default.
+       * @deprecated
+       * @description Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
        * @default false
        */
       use_squash_pr_title_as_default?: boolean;
@@ -9657,7 +9672,8 @@ export interface components {
        */
       allow_update_branch?: boolean;
       /**
-       * @description Whether a squash merge commit can use the pull request title as default.
+       * @deprecated
+       * @description Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
        * @default false
        */
       use_squash_pr_title_as_default?: boolean;
@@ -24962,7 +24978,8 @@ export interface operations {
            */
           delete_branch_on_merge?: boolean;
           /**
-           * @description Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message.
+           * @deprecated
+           * @description Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
            * @default false
            */
           use_squash_pr_title_as_default?: boolean;
@@ -27024,7 +27041,8 @@ export interface operations {
            */
           allow_update_branch?: boolean;
           /**
-           * @description Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message.
+           * @deprecated
+           * @description Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
            * @default false
            */
           use_squash_pr_title_as_default?: boolean;
@@ -31993,7 +32011,7 @@ export interface operations {
         "application/json": {
           /** @description The commit message. */
           message: string;
-          /** @description The blob SHA of the file being replaced. */
+          /** @description The blob SHA of the file being deleted. */
           sha: string;
           /** @description The branch name. Default: the repository’s default branch (usually `master`) */
           branch?: string;
@@ -42318,6 +42336,27 @@ export interface operations {
     };
   };
   /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+  "orgs/create-custom-role": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+  "orgs/delete-custom-role": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+  "orgs/update-custom-role": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
   "teams/external-idp-group-info-for-org": {
     responses: {
       /** Not Implemented */
@@ -42333,6 +42372,13 @@ export interface operations {
   };
   /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
   "orgs/list-failed-invitations": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+  "orgs/list-fine-grained-permissions": {
     responses: {
       /** Not Implemented */
       501: unknown;
