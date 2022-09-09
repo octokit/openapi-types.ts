@@ -3657,6 +3657,9 @@ export interface paths {
      * Returns a single tree using the SHA1 value for that tree.
      *
      * If `truncated` is `true` in the response then the number of items in the `tree` array exceeded our maximum limit. If you need to fetch more items, use the non-recursive method of fetching trees, and fetch one sub-tree at a time.
+     *
+     *
+     * **Note**: The limit for the `tree` array is 100,000 entries with a maximum size of 7 MB when using the `recursive` parameter.
      */
     get: operations["git/get-tree"];
   };
@@ -24223,12 +24226,21 @@ export interface operations {
       };
     };
     responses: {
+      /** Response when the updated information already exists */
+      200: {
+        content: {
+          "application/json": components["schemas"]["team-full"];
+        };
+      };
       /** Response */
       201: {
         content: {
           "application/json": components["schemas"]["team-full"];
         };
       };
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      422: components["responses"]["validation_failed"];
     };
     requestBody: {
       content: {
@@ -32455,6 +32467,9 @@ export interface operations {
    * Returns a single tree using the SHA1 value for that tree.
    *
    * If `truncated` is `true` in the response then the number of items in the `tree` array exceeded our maximum limit. If you need to fetch more items, use the non-recursive method of fetching trees, and fetch one sub-tree at a time.
+   *
+   *
+   * **Note**: The limit for the `tree` array is 100,000 entries with a maximum size of 7 MB when using the `recursive` parameter.
    */
   "git/get-tree": {
     parameters: {
