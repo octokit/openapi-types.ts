@@ -2584,7 +2584,7 @@ export interface paths {
      * github.com URLs (`html_url` and `_links["html"]`) will have null values.
      */
     get: operations["repos/get-content"];
-    /** Creates a new file or replaces an existing file in a repository. */
+    /** Creates a new file or replaces an existing file in a repository. You must authenticate using an access token with the `workflow` scope to use this endpoint. */
     put: operations["repos/create-or-update-file-contents"];
     /**
      * Deletes a file in a repository.
@@ -2975,6 +2975,7 @@ export interface paths {
     get: operations["git/get-tree"];
   };
   "/repos/{owner}/{repo}/hooks": {
+    /** Lists webhooks for a repository. `last response` may return null if there have not been any deliveries within 30 days. */
     get: operations["repos/list-webhooks"];
     /**
      * Repositories can have multiple webhooks installed. Each webhook should have a unique `config`. Multiple webhooks can
@@ -26741,6 +26742,8 @@ export interface operations {
       query: {
         /** Filter collaborators returned by their affiliation. `outside` means all outside collaborators of an organization-owned repository. `direct` means all collaborators with permissions to an organization-owned repository, regardless of organization membership status. `all` means all collaborators the authenticated user can see. */
         affiliation?: "outside" | "direct" | "all";
+        /** Filter collaborators by the permissions they have on the repository. If not specified, all collaborators will be returned. */
+        permission?: "pull" | "triage" | "push" | "maintain" | "admin";
         /** The number of results per page (max 100). */
         per_page?: components["parameters"]["per-page"];
         /** Page number of the results to fetch. */
@@ -27645,7 +27648,7 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Creates a new file or replaces an existing file in a repository. */
+  /** Creates a new file or replaces an existing file in a repository. You must authenticate using an access token with the `workflow` scope to use this endpoint. */
   "repos/create-or-update-file-contents": {
     parameters: {
       path: {
@@ -29125,6 +29128,7 @@ export interface operations {
       422: components["responses"]["validation_failed"];
     };
   };
+  /** Lists webhooks for a repository. `last response` may return null if there have not been any deliveries within 30 days. */
   "repos/list-webhooks": {
     parameters: {
       path: {
