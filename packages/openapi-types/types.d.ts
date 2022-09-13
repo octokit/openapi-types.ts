@@ -457,6 +457,9 @@ export interface paths {
      * Lists the license consumption information for all users, including those from connected servers, associated with an enterprise.
      * To use this endpoint, you must be an enterprise admin, and you must use an access
      * token with the `read:enterprise` scope.
+     *
+     * **Note:** The license consumption API endpoints for enterprise accounts are currently
+     * in Beta and are subject to change.
      */
     get: operations["enterprise-admin/get-consumed-licenses"];
   };
@@ -3730,7 +3733,7 @@ export interface paths {
      * github.com URLs (`html_url` and `_links["html"]`) will have null values.
      */
     get: operations["repos/get-content"];
-    /** Creates a new file or replaces an existing file in a repository. */
+    /** Creates a new file or replaces an existing file in a repository. You must authenticate using an access token with the `workflow` scope to use this endpoint. */
     put: operations["repos/create-or-update-file-contents"];
     /**
      * Deletes a file in a repository.
@@ -4221,6 +4224,7 @@ export interface paths {
     get: operations["git/get-tree"];
   };
   "/repos/{owner}/{repo}/hooks": {
+    /** Lists webhooks for a repository. `last response` may return null if there have not been any deliveries within 30 days. */
     get: operations["repos/list-webhooks"];
     /**
      * Repositories can have multiple webhooks installed. Each webhook should have a unique `config`. Multiple webhooks can
@@ -8750,7 +8754,10 @@ export interface components {
         github_com_profile?: string | null;
         license_type?: string;
         github_com_member_roles?: string[];
+        /** @description Deprecated: The most permissive enterprise role for a user. */
         github_com_enterprise_role?: string | null;
+        /** @description All enterprise roles for a user. */
+        github_com_enterprise_roles?: string[];
         visual_studio_subscription_user?: boolean;
         github_com_verified_domain_emails?: string[];
         github_com_saml_name_id?: string | null;
@@ -22071,6 +22078,9 @@ export interface operations {
    * Lists the license consumption information for all users, including those from connected servers, associated with an enterprise.
    * To use this endpoint, you must be an enterprise admin, and you must use an access
    * token with the `read:enterprise` scope.
+   *
+   * **Note:** The license consumption API endpoints for enterprise accounts are currently
+   * in Beta and are subject to change.
    */
   "enterprise-admin/get-consumed-licenses": {
     parameters: {
@@ -34351,6 +34361,8 @@ export interface operations {
       query: {
         /** Filter collaborators returned by their affiliation. `outside` means all outside collaborators of an organization-owned repository. `direct` means all collaborators with permissions to an organization-owned repository, regardless of organization membership status. `all` means all collaborators the authenticated user can see. */
         affiliation?: "outside" | "direct" | "all";
+        /** Filter collaborators by the permissions they have on the repository. If not specified, all collaborators will be returned. */
+        permission?: "pull" | "triage" | "push" | "maintain" | "admin";
         /** The number of results per page (max 100). */
         per_page?: components["parameters"]["per-page"];
         /** Page number of the results to fetch. */
@@ -35290,7 +35302,7 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Creates a new file or replaces an existing file in a repository. */
+  /** Creates a new file or replaces an existing file in a repository. You must authenticate using an access token with the `workflow` scope to use this endpoint. */
   "repos/create-or-update-file-contents": {
     parameters: {
       path: {
@@ -37030,6 +37042,7 @@ export interface operations {
       422: components["responses"]["validation_failed"];
     };
   };
+  /** Lists webhooks for a repository. `last response` may return null if there have not been any deliveries within 30 days. */
   "repos/list-webhooks": {
     parameters: {
       path: {
