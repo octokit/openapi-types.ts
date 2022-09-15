@@ -1404,6 +1404,22 @@ export interface paths {
   "/orgs/{org}/events": {
     get: operations["activity/list-public-org-events"];
   };
+  "/orgs/{org}/external-group/{group_id}": {
+    /**
+     * Displays information about the specific group's usage.  Provides a list of the group's external members as well as a list of teams that this group is connected to.
+     *
+     * You can manage team membership with your identity provider using Enterprise Managed Users for GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/enterprise-server@3.6/github/getting-started-with-github/githubs-products)" in the GitHub Help documentation.
+     */
+    get: operations["teams/external-idp-group-info-for-org"];
+  };
+  "/orgs/{org}/external-groups": {
+    /**
+     * Lists external groups available in an organization. You can query the groups using the `display_name` parameter, only groups with a `group_name` containing the text provided in the `display_name` parameter will be returned.  You can also limit your page results using the `per_page` parameter. GitHub Enterprise Server generates a url-encoded `page` token using a cursor value for where the next page begins. For more information on cursor pagination, see "[Offset and Cursor Pagination explained](https://dev.to/jackmarchant/offset-and-cursor-pagination-explained-b89)."
+     *
+     * You can manage team membership with your identity provider using Enterprise Managed Users for GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/enterprise-server@3.6/github/getting-started-with-github/githubs-products)" in the GitHub Help documentation.
+     */
+    get: operations["teams/list-external-idp-groups-for-org"];
+  };
   "/orgs/{org}/hooks": {
     get: operations["orgs/list-webhooks"];
     /** Here's how you can create a hook that posts payloads in JSON format: */
@@ -1745,6 +1761,26 @@ export interface paths {
      * Delete a reaction to a [team discussion](https://docs.github.com/enterprise-server@3.6/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.6/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
     delete: operations["reactions/delete-for-team-discussion"];
+  };
+  "/orgs/{org}/teams/{team_slug}/external-groups": {
+    /**
+     * Lists a connection between a team and an external group.
+     *
+     * You can manage team membership with your identity provider using Enterprise Managed Users for GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/enterprise-server@3.6/github/getting-started-with-github/githubs-products)" in the GitHub Help documentation.
+     */
+    get: operations["teams/list-linked-external-idp-groups-to-team-for-org"];
+    /**
+     * Deletes a connection between a team and an external group.
+     *
+     * You can manage team membership with your IdP using Enterprise Managed Users for GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/enterprise-server@3.6/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+     */
+    delete: operations["teams/unlink-external-idp-group-from-team-for-org"];
+    /**
+     * Creates a connection between a team and an external group.  Only one external group can be linked to a team.
+     *
+     * You can manage team membership with your identity provider using Enterprise Managed Users for GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/enterprise-server@3.6/github/getting-started-with-github/githubs-products)" in the GitHub Help documentation.
+     */
+    patch: operations["teams/link-external-idp-group-to-team-for-org"];
   };
   "/orgs/{org}/teams/{team_slug}/members": {
     /**
@@ -3225,7 +3261,11 @@ export interface paths {
      * github.com URLs (`html_url` and `_links["html"]`) will have null values.
      */
     get: operations["repos/get-content"];
-    /** Creates a new file or replaces an existing file in a repository. You must authenticate using an access token with the `workflow` scope to use this endpoint. */
+    /**
+     * Creates a new file or replaces an existing file in a repository. You must authenticate using an access token with the `workflow` scope to use this endpoint.
+     *
+     * **Note:** If you use this endpoint and the "[Delete a file](https://docs.github.com/enterprise-server@3.6/rest/reference/repos/#delete-file)" endpoint in parallel, the concurrent requests will conflict and you will receive errors. You must use these endpoints serially instead.
+     */
     put: operations["repos/create-or-update-file-contents"];
     /**
      * Deletes a file in a repository.
@@ -3235,6 +3275,8 @@ export interface paths {
      * The `author` section is optional and is filled in with the `committer` information if omitted. If the `committer` information is omitted, the authenticated user's information is used.
      *
      * You must provide values for both `name` and `email`, whether you choose to use `author` or `committer`. Otherwise, you'll receive a `422` status code.
+     *
+     * **Note:** If you use this endpoint and the "[Create or update file contents](https://docs.github.com/enterprise-server@3.6/rest/reference/repos/#create-or-update-file-contents)" endpoint in parallel, the concurrent requests will conflict and you will receive errors. You must use these endpoints serially instead.
      */
     delete: operations["repos/delete-file"];
   };
@@ -5457,14 +5499,6 @@ export interface paths {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     patch: operations["orgs/update-custom-role"];
   };
-  "/orgs/{org}/external-group/{group_id}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    get: operations["teams/external-idp-group-info-for-org"];
-  };
-  "/orgs/{org}/external-groups": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    get: operations["teams/list-external-idp-groups-for-org"];
-  };
   "/orgs/{org}/failed_invitations": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     get: operations["orgs/list-failed-invitations"];
@@ -5571,14 +5605,6 @@ export interface paths {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     get: operations["teams/list-idp-groups-for-org"];
   };
-  "/orgs/{org}/teams/{team_slug}/external-groups": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    get: operations["teams/list-linked-external-idp-groups-to-team-for-org"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    delete: operations["teams/unlink-external-idp-group-from-team-for-org"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    patch: operations["teams/link-external-idp-group-to-team-for-org"];
-  };
   "/orgs/{org}/teams/{team_slug}/invitations": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     get: operations["teams/list-pending-invitations-in-org"];
@@ -5626,6 +5652,14 @@ export interface paths {
     put: operations["repos/enable-automated-security-fixes"];
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     delete: operations["repos/disable-automated-security-fixes"];
+  };
+  "/repos/{owner}/{repo}/code-scanning/codeql/databases": {
+    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+    get: operations["code-scanning/list-codeql-databases"];
+  };
+  "/repos/{owner}/{repo}/code-scanning/codeql/databases/{language}": {
+    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+    get: operations["code-scanning/get-codeql-database"];
   };
   "/repos/{owner}/{repo}/codespaces": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
@@ -8092,7 +8126,7 @@ export interface components {
      */
     "alert-html-url": string;
     /**
-     * @description Sets the state of the secret scanning alert. Can be either `open` or `resolved`. You must provide `resolution` when you set the state to `resolved`.
+     * @description Sets the state of the secret scanning alert. You must provide `resolution` when you set the state to `resolved`.
      * @enum {string}
      */
     "secret-scanning-alert-state": "open" | "resolved";
@@ -10424,6 +10458,129 @@ export interface components {
       key: string;
     };
     /**
+     * ExternalGroup
+     * @description Information about an external group's usage and its members
+     */
+    "external-group": {
+      /**
+       * @description The internal ID of the group
+       * @example 1
+       */
+      group_id: number;
+      /**
+       * @description The display name for the group
+       * @example group-azuread-test
+       */
+      group_name: string;
+      /**
+       * @description The date when the group was last updated_at
+       * @example 2021-01-03 22:27:15:000 -700
+       */
+      updated_at?: string;
+      /**
+       * @description An array of teams linked to this group
+       * @example [
+       *   {
+       *     "team_id": 1,
+       *     "team_name": "team-test"
+       *   },
+       *   {
+       *     "team_id": 2,
+       *     "team_name": "team-test2"
+       *   }
+       * ]
+       */
+      teams: {
+        /**
+         * @description The id for a team
+         * @example 1
+         */
+        team_id: number;
+        /**
+         * @description The name of the team
+         * @example team-test
+         */
+        team_name: string;
+      }[];
+      /**
+       * @description An array of external members linked to this group
+       * @example [
+       *   {
+       *     "member_id": 1,
+       *     "member_login": "mona-lisa_eocsaxrs",
+       *     "member_name": "Mona Lisa",
+       *     "member_email": "mona_lisa@github.com"
+       *   },
+       *   {
+       *     "member_id": 2,
+       *     "member_login": "octo-lisa_eocsaxrs",
+       *     "member_name": "Octo Lisa",
+       *     "member_email": "octo_lisa@github.com"
+       *   }
+       * ]
+       */
+      members: {
+        /**
+         * @description The internal user ID of the identity
+         * @example 1
+         */
+        member_id: number;
+        /**
+         * @description The handle/login for the user
+         * @example mona-lisa_eocsaxrs
+         */
+        member_login: string;
+        /**
+         * @description The user display name/profile name
+         * @example Mona Lisa
+         */
+        member_name: string;
+        /**
+         * @description An email attached to a user
+         * @example mona_lisa@github.com
+         */
+        member_email: string;
+      }[];
+    };
+    /**
+     * ExternalGroups
+     * @description A list of external groups available to be connected to a team
+     */
+    "external-groups": {
+      /**
+       * @description An array of external groups available to be mapped to a team
+       * @example [
+       *   {
+       *     "group_id": 1,
+       *     "group_name": "group-azuread-test",
+       *     "updated_at": "2021-01-03 22:27:15:000 -700"
+       *   },
+       *   {
+       *     "group_id": 2,
+       *     "group_name": "group-azuread-test2",
+       *     "updated_at": "2021-06-03 22:27:15:000 -700"
+       *   }
+       * ]
+       */
+      groups?: {
+        /**
+         * @description The internal ID of the group
+         * @example 1
+         */
+        group_id: number;
+        /**
+         * @description The display name of the group
+         * @example group-azuread-test
+         */
+        group_name: string;
+        /**
+         * @description The time of the last update for this group
+         * @example 2019-06-03 22:27:15:000 -700
+         */
+        updated_at: string;
+      }[];
+    };
+    /**
      * Org Hook
      * @description Org Hook
      */
@@ -11989,8 +12146,19 @@ export interface components {
       /**
        * @description The outcome of the job.
        * @example success
+       * @enum {string|null}
        */
-      conclusion: string | null;
+      conclusion:
+        | (
+            | "success"
+            | "failure"
+            | "neutral"
+            | "cancelled"
+            | "skipped"
+            | "timed_out"
+            | "action_required"
+          )
+        | null;
       /**
        * Format: date-time
        * @description The time that the job started, in ISO 8601 format.
@@ -17964,7 +18132,7 @@ export interface components {
         "application/json": components["schemas"]["basic-error"];
       };
     };
-    /** Response if the repository is archived or if github advanced security is not enabled for this repository */
+    /** Response if the repository is archived or if GitHub Advanced Security is not enabled for this repository */
     code_scanning_forbidden_write: {
       content: {
         "application/json": components["schemas"]["basic-error"];
@@ -18094,6 +18262,8 @@ export interface components {
     "tool-name": components["schemas"]["code-scanning-analysis-tool-name"];
     /** @description The GUID of a code scanning tool. Only results by this tool will be listed. Note that some code scanning tools may not include a GUID in their analysis data. You can specify the tool by using either `tool_guid` or `tool_name`, but not both. */
     "tool-guid": components["schemas"]["code-scanning-analysis-tool-guid"];
+    /** @description The unique identifier of the group. */
+    "group-id": number;
     /** @description The unique identifier of the migration. */
     "migration-id": number;
     /** @description The slug of the team name. */
@@ -21705,11 +21875,11 @@ export interface operations {
           | "subscribed"
           | "repos"
           | "all";
-        /** Indicates the state of the issues to return. Can be either `open`, `closed`, or `all`. */
+        /** Indicates the state of the issues to return. */
         state?: "open" | "closed" | "all";
         /** A list of comma separated label names. Example: `bug,ui,@high` */
         labels?: components["parameters"]["labels"];
-        /** What to sort results by. Can be either `created`, `updated`, `comments`. */
+        /** What to sort results by. */
         sort?: "created" | "updated" | "comments";
         /** The direction to sort the results by. */
         direction?: components["parameters"]["direction"];
@@ -21796,7 +21966,7 @@ export interface operations {
           /** @description The Markdown text to render in HTML. */
           text: string;
           /**
-           * @description The rendering mode. Can be either `markdown` or `gfm`.
+           * @description The rendering mode.
            * @default markdown
            * @example markdown
            * @enum {string}
@@ -23848,6 +24018,61 @@ export interface operations {
       };
     };
   };
+  /**
+   * Displays information about the specific group's usage.  Provides a list of the group's external members as well as a list of teams that this group is connected to.
+   *
+   * You can manage team membership with your identity provider using Enterprise Managed Users for GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/enterprise-server@3.6/github/getting-started-with-github/githubs-products)" in the GitHub Help documentation.
+   */
+  "teams/external-idp-group-info-for-org": {
+    parameters: {
+      path: {
+        /** The organization name. The name is not case sensitive. */
+        org: components["parameters"]["org"];
+        /** The unique identifier of the group. */
+        group_id: components["parameters"]["group-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["external-group"];
+        };
+      };
+    };
+  };
+  /**
+   * Lists external groups available in an organization. You can query the groups using the `display_name` parameter, only groups with a `group_name` containing the text provided in the `display_name` parameter will be returned.  You can also limit your page results using the `per_page` parameter. GitHub Enterprise Server generates a url-encoded `page` token using a cursor value for where the next page begins. For more information on cursor pagination, see "[Offset and Cursor Pagination explained](https://dev.to/jackmarchant/offset-and-cursor-pagination-explained-b89)."
+   *
+   * You can manage team membership with your identity provider using Enterprise Managed Users for GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/enterprise-server@3.6/github/getting-started-with-github/githubs-products)" in the GitHub Help documentation.
+   */
+  "teams/list-external-idp-groups-for-org": {
+    parameters: {
+      path: {
+        /** The organization name. The name is not case sensitive. */
+        org: components["parameters"]["org"];
+      };
+      query: {
+        /** The number of results per page (max 100). */
+        per_page?: components["parameters"]["per-page"];
+        /** Page token */
+        page?: number;
+        /** Limits the list to groups containing the text in the group name */
+        display_name?: string;
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        headers: {
+          Link?: string;
+        };
+        content: {
+          "application/json": components["schemas"]["external-groups"];
+        };
+      };
+    };
+  };
   "orgs/list-webhooks": {
     parameters: {
       path: {
@@ -24217,11 +24442,11 @@ export interface operations {
           | "subscribed"
           | "repos"
           | "all";
-        /** Indicates the state of the issues to return. Can be either `open`, `closed`, or `all`. */
+        /** Indicates the state of the issues to return. */
         state?: "open" | "closed" | "all";
         /** A list of comma separated label names. Example: `bug,ui,@high` */
         labels?: components["parameters"]["labels"];
-        /** What to sort results by. Can be either `created`, `updated`, `comments`. */
+        /** What to sort results by. */
         sort?: "created" | "updated" | "comments";
         /** The direction to sort the results by. */
         direction?: components["parameters"]["direction"];
@@ -24714,7 +24939,7 @@ export interface operations {
         org: components["parameters"]["org"];
       };
       query: {
-        /** Indicates the state of the projects to return. Can be either `open`, `closed`, or `all`. */
+        /** Indicates the state of the projects to return. */
         state?: "open" | "closed" | "all";
         /** The number of results per page (max 100). */
         per_page?: components["parameters"]["per-page"];
@@ -25835,6 +26060,82 @@ export interface operations {
     responses: {
       /** Response */
       204: never;
+    };
+  };
+  /**
+   * Lists a connection between a team and an external group.
+   *
+   * You can manage team membership with your identity provider using Enterprise Managed Users for GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/enterprise-server@3.6/github/getting-started-with-github/githubs-products)" in the GitHub Help documentation.
+   */
+  "teams/list-linked-external-idp-groups-to-team-for-org": {
+    parameters: {
+      path: {
+        /** The organization name. The name is not case sensitive. */
+        org: components["parameters"]["org"];
+        /** The slug of the team name. */
+        team_slug: components["parameters"]["team-slug"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["external-groups"];
+        };
+      };
+    };
+  };
+  /**
+   * Deletes a connection between a team and an external group.
+   *
+   * You can manage team membership with your IdP using Enterprise Managed Users for GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/enterprise-server@3.6/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   */
+  "teams/unlink-external-idp-group-from-team-for-org": {
+    parameters: {
+      path: {
+        /** The organization name. The name is not case sensitive. */
+        org: components["parameters"]["org"];
+        /** The slug of the team name. */
+        team_slug: components["parameters"]["team-slug"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+    };
+  };
+  /**
+   * Creates a connection between a team and an external group.  Only one external group can be linked to a team.
+   *
+   * You can manage team membership with your identity provider using Enterprise Managed Users for GitHub Enterprise Cloud. For more information, see "[GitHub's products](https://docs.github.com/enterprise-server@3.6/github/getting-started-with-github/githubs-products)" in the GitHub Help documentation.
+   */
+  "teams/link-external-idp-group-to-team-for-org": {
+    parameters: {
+      path: {
+        /** The organization name. The name is not case sensitive. */
+        org: components["parameters"]["org"];
+        /** The slug of the team name. */
+        team_slug: components["parameters"]["team-slug"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["external-group"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /**
+           * @description External Group Id
+           * @example 1
+           */
+          group_id: number;
+        };
+      };
     };
   };
   /**
@@ -31927,7 +32228,11 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Creates a new file or replaces an existing file in a repository. You must authenticate using an access token with the `workflow` scope to use this endpoint. */
+  /**
+   * Creates a new file or replaces an existing file in a repository. You must authenticate using an access token with the `workflow` scope to use this endpoint.
+   *
+   * **Note:** If you use this endpoint and the "[Delete a file](https://docs.github.com/enterprise-server@3.6/rest/reference/repos/#delete-file)" endpoint in parallel, the concurrent requests will conflict and you will receive errors. You must use these endpoints serially instead.
+   */
   "repos/create-or-update-file-contents": {
     parameters: {
       path: {
@@ -31997,6 +32302,8 @@ export interface operations {
    * The `author` section is optional and is filled in with the `committer` information if omitted. If the `committer` information is omitted, the authenticated user's information is used.
    *
    * You must provide values for both `name` and `email`, whether you choose to use `author` or `committer`. Otherwise, you'll receive a `422` status code.
+   *
+   * **Note:** If you use this endpoint and the "[Create or update file contents](https://docs.github.com/enterprise-server@3.6/rest/reference/repos/#create-or-update-file-contents)" endpoint in parallel, the concurrent requests will conflict and you will receive errors. You must use these endpoints serially instead.
    */
   "repos/delete-file": {
     parameters: {
@@ -32988,7 +33295,7 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** The sort order. Can be either `newest`, `oldest`, or `stargazers`. */
+        /** The sort order. `stargazers` will sort by star count. */
         sort?: "newest" | "oldest" | "stargazers" | "watchers";
         /** The number of results per page (max 100). */
         per_page?: components["parameters"]["per-page"];
@@ -34100,7 +34407,7 @@ export interface operations {
       query: {
         /** If an `integer` is passed, it should refer to a milestone by its `number` field. If the string `*` is passed, issues with any milestone are accepted. If the string `none` is passed, issues without milestones are returned. */
         milestone?: string;
-        /** Indicates the state of the issues to return. Can be either `open`, `closed`, or `all`. */
+        /** Indicates the state of the issues to return. */
         state?: "open" | "closed" | "all";
         /** Can be the name of a user. Pass in `none` for issues with no assigned user, and `*` for issues assigned to any user. */
         assignee?: string;
@@ -34110,7 +34417,7 @@ export interface operations {
         mentioned?: string;
         /** A list of comma separated label names. Example: `bug,ui,@high` */
         labels?: components["parameters"]["labels"];
-        /** What to sort results by. Can be either `created`, `updated`, `comments`. */
+        /** What to sort results by. */
         sort?: "created" | "updated" | "comments";
         /** The direction to sort the results by. */
         direction?: components["parameters"]["direction"];
@@ -35990,7 +36297,7 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** Indicates the state of the projects to return. Can be either `open`, `closed`, or `all`. */
+        /** Indicates the state of the projects to return. */
         state?: "open" | "closed" | "all";
         /** The number of results per page (max 100). */
         per_page?: components["parameters"]["per-page"];
@@ -36063,9 +36370,9 @@ export interface operations {
         head?: string;
         /** Filter pulls by base branch name. Example: `gh-pages`. */
         base?: string;
-        /** What to sort results by. Can be either `created`, `updated`, `popularity` (comment count) or `long-running` (age, filtering by pulls updated in the last month). */
+        /** What to sort results by. `popularity` will sort by the number of comments. `long-running` will sort by date created and will limit the results to pull requests that have been open for more than a month and have had activity within the past month. */
         sort?: "created" | "updated" | "popularity" | "long-running";
-        /** The direction of the sort. Can be either `asc` or `desc`. Default: `desc` when sort is `created` or sort is not specified, otherwise `asc`. */
+        /** The direction of the sort. Default: `desc` when sort is `created` or sort is not specified, otherwise `asc`. */
         direction?: "asc" | "desc";
         /** The number of results per page (max 100). */
         per_page?: components["parameters"]["per-page"];
@@ -36149,7 +36456,7 @@ export interface operations {
       };
       query: {
         sort?: "created" | "updated" | "created_at";
-        /** Can be either `asc` or `desc`. Ignored without `sort` parameter. */
+        /** The direction to sort results. Ignored without `sort` parameter. */
         direction?: "asc" | "desc";
         /** Only show notifications updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         since?: components["parameters"]["since"];
@@ -36448,7 +36755,7 @@ export interface operations {
       query: {
         /** The property to sort the results by. `created` means when the repository was starred. `updated` means when the repository was last pushed to. */
         sort?: components["parameters"]["sort"];
-        /** Can be either `asc` or `desc`. Ignored without `sort` parameter. */
+        /** The direction to sort results. Ignored without `sort` parameter. */
         direction?: "asc" | "desc";
         /** Only show notifications updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         since?: components["parameters"]["since"];
@@ -40701,11 +41008,11 @@ export interface operations {
           | "subscribed"
           | "repos"
           | "all";
-        /** Indicates the state of the issues to return. Can be either `open`, `closed`, or `all`. */
+        /** Indicates the state of the issues to return. */
         state?: "open" | "closed" | "all";
         /** A list of comma separated label names. Example: `bug,ui,@high` */
         labels?: components["parameters"]["labels"];
-        /** What to sort results by. Can be either `created`, `updated`, `comments`. */
+        /** What to sort results by. */
         sort?: "created" | "updated" | "comments";
         /** The direction to sort the results by. */
         direction?: components["parameters"]["direction"];
@@ -40824,7 +41131,7 @@ export interface operations {
   "orgs/list-memberships-for-authenticated-user": {
     parameters: {
       query: {
-        /** Indicates the state of the memberships to return. Can be either `active` or `pending`. If not specified, the API returns both active and pending memberships. */
+        /** Indicates the state of the memberships to return. If not specified, the API returns both active and pending memberships. */
         state?: "active" | "pending";
         /** The number of results per page (max 100). */
         per_page?: components["parameters"]["per-page"];
@@ -41885,7 +42192,7 @@ export interface operations {
         username: components["parameters"]["username"];
       };
       query: {
-        /** Indicates the state of the projects to return. Can be either `open`, `closed`, or `all`. */
+        /** Indicates the state of the projects to return. */
         state?: "open" | "closed" | "all";
         /** The number of results per page (max 100). */
         per_page?: components["parameters"]["per-page"];
@@ -42376,20 +42683,6 @@ export interface operations {
     };
   };
   /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "teams/external-idp-group-info-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "teams/list-external-idp-groups-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
   "orgs/list-failed-invitations": {
     responses: {
       /** Not Implemented */
@@ -42600,27 +42893,6 @@ export interface operations {
     };
   };
   /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "teams/list-linked-external-idp-groups-to-team-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "teams/unlink-external-idp-group-from-team-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "teams/link-external-idp-group-to-team-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
   "teams/list-pending-invitations-in-org": {
     responses: {
       /** Not Implemented */
@@ -42713,6 +42985,20 @@ export interface operations {
   };
   /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
   "repos/disable-automated-security-fixes": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+  "code-scanning/list-codeql-databases": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+  "code-scanning/get-codeql-database": {
     responses: {
       /** Not Implemented */
       501: unknown;
