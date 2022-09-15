@@ -2746,7 +2746,11 @@ export interface paths {
      * github.com URLs (`html_url` and `_links["html"]`) will have null values.
      */
     get: operations["repos/get-content"];
-    /** Creates a new file or replaces an existing file in a repository. You must authenticate using an access token with the `workflow` scope to use this endpoint. */
+    /**
+     * Creates a new file or replaces an existing file in a repository. You must authenticate using an access token with the `workflow` scope to use this endpoint.
+     *
+     * **Note:** If you use this endpoint and the "[Delete a file](https://docs.github.com/enterprise-server@3.2/rest/reference/repos/#delete-file)" endpoint in parallel, the concurrent requests will conflict and you will receive errors. You must use these endpoints serially instead.
+     */
     put: operations["repos/create-or-update-file-contents"];
     /**
      * Deletes a file in a repository.
@@ -2756,6 +2760,8 @@ export interface paths {
      * The `author` section is optional and is filled in with the `committer` information if omitted. If the `committer` information is omitted, the authenticated user's information is used.
      *
      * You must provide values for both `name` and `email`, whether you choose to use `author` or `committer`. Otherwise, you'll receive a `422` status code.
+     *
+     * **Note:** If you use this endpoint and the "[Create or update file contents](https://docs.github.com/enterprise-server@3.2/rest/reference/repos/#create-or-update-file-contents)" endpoint in parallel, the concurrent requests will conflict and you will receive errors. You must use these endpoints serially instead.
      */
     delete: operations["repos/delete-file"];
   };
@@ -9859,8 +9865,19 @@ export interface components {
       /**
        * @description The outcome of the job.
        * @example success
+       * @enum {string|null}
        */
-      conclusion: string | null;
+      conclusion:
+        | (
+            | "success"
+            | "failure"
+            | "neutral"
+            | "cancelled"
+            | "skipped"
+            | "timed_out"
+            | "action_required"
+          )
+        | null;
       /**
        * Format: date-time
        * @description The time that the job started, in ISO 8601 format.
@@ -14598,7 +14615,7 @@ export interface components {
      */
     "alert-updated-at": string;
     /**
-     * @description Sets the state of the secret scanning alert. Can be either `open` or `resolved`. You must provide `resolution` when you set the state to `resolved`.
+     * @description Sets the state of the secret scanning alert. You must provide `resolution` when you set the state to `resolved`.
      * @enum {string}
      */
     "secret-scanning-alert-state": "open" | "resolved";
@@ -15662,7 +15679,7 @@ export interface components {
         "application/json": components["schemas"]["basic-error"];
       };
     };
-    /** Response if the repository is archived or if github advanced security is not enabled for this repository */
+    /** Response if the repository is archived or if GitHub Advanced Security is not enabled for this repository */
     code_scanning_forbidden_write: {
       content: {
         "application/json": components["schemas"]["basic-error"];
@@ -19095,11 +19112,11 @@ export interface operations {
           | "subscribed"
           | "repos"
           | "all";
-        /** Indicates the state of the issues to return. Can be either `open`, `closed`, or `all`. */
+        /** Indicates the state of the issues to return. */
         state?: "open" | "closed" | "all";
         /** A list of comma separated label names. Example: `bug,ui,@high` */
         labels?: components["parameters"]["labels"];
-        /** What to sort results by. Can be either `created`, `updated`, `comments`. */
+        /** What to sort results by. */
         sort?: "created" | "updated" | "comments";
         /** The direction to sort the results by. */
         direction?: components["parameters"]["direction"];
@@ -19186,7 +19203,7 @@ export interface operations {
           /** @description The Markdown text to render in HTML. */
           text: string;
           /**
-           * @description The rendering mode. Can be either `markdown` or `gfm`.
+           * @description The rendering mode.
            * @default markdown
            * @example markdown
            * @enum {string}
@@ -20946,11 +20963,11 @@ export interface operations {
           | "subscribed"
           | "repos"
           | "all";
-        /** Indicates the state of the issues to return. Can be either `open`, `closed`, or `all`. */
+        /** Indicates the state of the issues to return. */
         state?: "open" | "closed" | "all";
         /** A list of comma separated label names. Example: `bug,ui,@high` */
         labels?: components["parameters"]["labels"];
-        /** What to sort results by. Can be either `created`, `updated`, `comments`. */
+        /** What to sort results by. */
         sort?: "created" | "updated" | "comments";
         /** The direction to sort the results by. */
         direction?: components["parameters"]["direction"];
@@ -21310,7 +21327,7 @@ export interface operations {
         org: components["parameters"]["org"];
       };
       query: {
-        /** Indicates the state of the projects to return. Can be either `open`, `closed`, or `all`. */
+        /** Indicates the state of the projects to return. */
         state?: "open" | "closed" | "all";
         /** The number of results per page (max 100). */
         per_page?: components["parameters"]["per-page"];
@@ -27812,7 +27829,11 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Creates a new file or replaces an existing file in a repository. You must authenticate using an access token with the `workflow` scope to use this endpoint. */
+  /**
+   * Creates a new file or replaces an existing file in a repository. You must authenticate using an access token with the `workflow` scope to use this endpoint.
+   *
+   * **Note:** If you use this endpoint and the "[Delete a file](https://docs.github.com/enterprise-server@3.2/rest/reference/repos/#delete-file)" endpoint in parallel, the concurrent requests will conflict and you will receive errors. You must use these endpoints serially instead.
+   */
   "repos/create-or-update-file-contents": {
     parameters: {
       path: {
@@ -27882,6 +27903,8 @@ export interface operations {
    * The `author` section is optional and is filled in with the `committer` information if omitted. If the `committer` information is omitted, the authenticated user's information is used.
    *
    * You must provide values for both `name` and `email`, whether you choose to use `author` or `committer`. Otherwise, you'll receive a `422` status code.
+   *
+   * **Note:** If you use this endpoint and the "[Create or update file contents](https://docs.github.com/enterprise-server@3.2/rest/reference/repos/#create-or-update-file-contents)" endpoint in parallel, the concurrent requests will conflict and you will receive errors. You must use these endpoints serially instead.
    */
   "repos/delete-file": {
     parameters: {
@@ -28659,7 +28682,7 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** The sort order. Can be either `newest`, `oldest`, or `stargazers`. */
+        /** The sort order. `stargazers` will sort by star count. */
         sort?: "newest" | "oldest" | "stargazers" | "watchers";
         /** The number of results per page (max 100). */
         per_page?: components["parameters"]["per-page"];
@@ -29771,7 +29794,7 @@ export interface operations {
       query: {
         /** If an `integer` is passed, it should refer to a milestone by its `number` field. If the string `*` is passed, issues with any milestone are accepted. If the string `none` is passed, issues without milestones are returned. */
         milestone?: string;
-        /** Indicates the state of the issues to return. Can be either `open`, `closed`, or `all`. */
+        /** Indicates the state of the issues to return. */
         state?: "open" | "closed" | "all";
         /** Can be the name of a user. Pass in `none` for issues with no assigned user, and `*` for issues assigned to any user. */
         assignee?: string;
@@ -29781,7 +29804,7 @@ export interface operations {
         mentioned?: string;
         /** A list of comma separated label names. Example: `bug,ui,@high` */
         labels?: components["parameters"]["labels"];
-        /** What to sort results by. Can be either `created`, `updated`, `comments`. */
+        /** What to sort results by. */
         sort?: "created" | "updated" | "comments";
         /** The direction to sort the results by. */
         direction?: components["parameters"]["direction"];
@@ -31595,7 +31618,7 @@ export interface operations {
         repo: components["parameters"]["repo"];
       };
       query: {
-        /** Indicates the state of the projects to return. Can be either `open`, `closed`, or `all`. */
+        /** Indicates the state of the projects to return. */
         state?: "open" | "closed" | "all";
         /** The number of results per page (max 100). */
         per_page?: components["parameters"]["per-page"];
@@ -31668,9 +31691,9 @@ export interface operations {
         head?: string;
         /** Filter pulls by base branch name. Example: `gh-pages`. */
         base?: string;
-        /** What to sort results by. Can be either `created`, `updated`, `popularity` (comment count) or `long-running` (age, filtering by pulls updated in the last month). */
+        /** What to sort results by. `popularity` will sort by the number of comments. `long-running` will sort by date created and will limit the results to pull requests that have been open for more than a month and have had activity within the past month. */
         sort?: "created" | "updated" | "popularity" | "long-running";
-        /** The direction of the sort. Can be either `asc` or `desc`. Default: `desc` when sort is `created` or sort is not specified, otherwise `asc`. */
+        /** The direction of the sort. Default: `desc` when sort is `created` or sort is not specified, otherwise `asc`. */
         direction?: "asc" | "desc";
         /** The number of results per page (max 100). */
         per_page?: components["parameters"]["per-page"];
@@ -31754,7 +31777,7 @@ export interface operations {
       };
       query: {
         sort?: "created" | "updated" | "created_at";
-        /** Can be either `asc` or `desc`. Ignored without `sort` parameter. */
+        /** The direction to sort results. Ignored without `sort` parameter. */
         direction?: "asc" | "desc";
         /** Only show notifications updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         since?: components["parameters"]["since"];
@@ -32053,7 +32076,7 @@ export interface operations {
       query: {
         /** The property to sort the results by. `created` means when the repository was starred. `updated` means when the repository was last pushed to. */
         sort?: components["parameters"]["sort"];
-        /** Can be either `asc` or `desc`. Ignored without `sort` parameter. */
+        /** The direction to sort results. Ignored without `sort` parameter. */
         direction?: "asc" | "desc";
         /** Only show notifications updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         since?: components["parameters"]["since"];
@@ -36110,11 +36133,11 @@ export interface operations {
           | "subscribed"
           | "repos"
           | "all";
-        /** Indicates the state of the issues to return. Can be either `open`, `closed`, or `all`. */
+        /** Indicates the state of the issues to return. */
         state?: "open" | "closed" | "all";
         /** A list of comma separated label names. Example: `bug,ui,@high` */
         labels?: components["parameters"]["labels"];
-        /** What to sort results by. Can be either `created`, `updated`, `comments`. */
+        /** What to sort results by. */
         sort?: "created" | "updated" | "comments";
         /** The direction to sort the results by. */
         direction?: components["parameters"]["direction"];
@@ -36233,7 +36256,7 @@ export interface operations {
   "orgs/list-memberships-for-authenticated-user": {
     parameters: {
       query: {
-        /** Indicates the state of the memberships to return. Can be either `active` or `pending`. If not specified, the API returns both active and pending memberships. */
+        /** Indicates the state of the memberships to return. If not specified, the API returns both active and pending memberships. */
         state?: "active" | "pending";
         /** The number of results per page (max 100). */
         per_page?: components["parameters"]["per-page"];
@@ -37137,7 +37160,7 @@ export interface operations {
         username: components["parameters"]["username"];
       };
       query: {
-        /** Indicates the state of the projects to return. Can be either `open`, `closed`, or `all`. */
+        /** Indicates the state of the projects to return. */
         state?: "open" | "closed" | "all";
         /** The number of results per page (max 100). */
         per_page?: components["parameters"]["per-page"];
