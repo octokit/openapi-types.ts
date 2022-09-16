@@ -10637,6 +10637,7 @@ export interface components {
       /** @example 5 */
       head_repository_id?: number;
     } & {
+      display_title: unknown;
       path: unknown;
     };
     /**

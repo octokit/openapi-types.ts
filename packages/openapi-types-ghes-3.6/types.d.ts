@@ -12435,6 +12435,8 @@ export interface components {
       head_repository: components["schemas"]["minimal-repository"];
       /** @example 5 */
       head_repository_id?: number;
+    } & {
+      display_title: unknown;
     };
     /**
      * Environment Approval
