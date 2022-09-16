@@ -13801,6 +13801,11 @@ export interface components {
       head_repository: components["schemas"]["minimal-repository"];
       /** @example 5 */
       head_repository_id?: number;
+      /**
+       * @description The event-specific title associated with the run or the run-name if set, or the value of `run-name` if it is set in the workflow.
+       * @example Simple Workflow
+       */
+      display_title: string;
     };
     /**
      * Environment Approval
