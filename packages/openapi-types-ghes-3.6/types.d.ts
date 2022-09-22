@@ -4331,7 +4331,7 @@ export interface paths {
     /**
      * Lists the people that have starred the repository.
      *
-     * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@3.6/rest/overview/media-types/) via the `Accept` header:
+     * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@3.6/rest/overview/media-types/) via the `Accept` header: `application/vnd.github.star+json`.
      */
     get: operations["activity/list-stargazers-for-repo"];
   };
@@ -4560,6 +4560,102 @@ export interface paths {
     put: operations["actions/create-or-update-environment-secret"];
     /** Deletes a secret in an environment using the secret name. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint. */
     delete: operations["actions/delete-environment-secret"];
+  };
+  "/scim/v2/enterprises/{enterprise}/Groups": {
+    /** **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change. */
+    get: operations["enterprise-admin/list-provisioned-groups-enterprise"];
+    /**
+     * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+     *
+     * Provision an enterprise group, and invite users to the group. This sends invitation emails to the email address of the invited users to join the GitHub organization that the SCIM group corresponds to.
+     */
+    post: operations["enterprise-admin/provision-and-invite-enterprise-group"];
+  };
+  "/scim/v2/enterprises/{enterprise}/Groups/{scim_group_id}": {
+    /** **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change. */
+    get: operations["enterprise-admin/get-provisioning-information-for-enterprise-group"];
+    /**
+     * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+     *
+     * Replaces an existing provisioned group’s information. You must provide all the information required for the group as if you were provisioning it for the first time. Any existing group information that you don't provide will be removed, including group membership. If you want to only update a specific attribute, use the [Update an attribute for a SCIM enterprise group](#update-an-attribute-for-a-scim-enterprise-group) endpoint instead.
+     */
+    put: operations["enterprise-admin/set-information-for-provisioned-enterprise-group"];
+    /** **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change. */
+    delete: operations["enterprise-admin/delete-scim-group-from-enterprise"];
+    /**
+     * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+     *
+     * Allows you to change a provisioned group’s individual attributes. To change a group’s values, you must provide a specific Operations JSON format that contains at least one of the add, remove, or replace operations. For examples and more information on the SCIM operations format, see the [SCIM specification](https://tools.ietf.org/html/rfc7644#section-3.5.2).
+     */
+    patch: operations["enterprise-admin/update-attribute-for-enterprise-group"];
+  };
+  "/scim/v2/enterprises/{enterprise}/Users": {
+    /**
+     * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+     *
+     * Retrieves a paginated list of all provisioned enterprise members, including pending invitations.
+     *
+     * When a user with a SAML-provisioned external identity leaves (or is removed from) an enterprise, the account's metadata is immediately removed. However, the returned list of user accounts might not always match the organization or enterprise member list you see on GitHub Enterprise Server. This can happen in certain cases where an external identity associated with an organization will not match an organization member:
+     *   - When a user with a SCIM-provisioned external identity is removed from an enterprise, the account's metadata is preserved to allow the user to re-join the organization in the future.
+     *   - When inviting a user to join an organization, you can expect to see their external identity in the results before they accept the invitation, or if the invitation is cancelled (or never accepted).
+     *   - When a user is invited over SCIM, an external identity is created that matches with the invitee's email address. However, this identity is only linked to a user account when the user accepts the invitation by going through SAML SSO.
+     *
+     * The returned list of external identities can include an entry for a `null` user. These are unlinked SAML identities that are created when a user goes through the following Single Sign-On (SSO) process but does not sign in to their GitHub Enterprise Server account after completing SSO:
+     *
+     * 1. The user is granted access by the IdP and is not a member of the GitHub Enterprise Server enterprise.
+     *
+     * 1. The user attempts to access the GitHub Enterprise Server enterprise and initiates the SAML SSO process, and is not currently signed in to their GitHub Enterprise Server account.
+     *
+     * 1. After successfully authenticating with the SAML SSO IdP, the `null` external identity entry is created and the user is prompted to sign in to their GitHub Enterprise Server account:
+     *    - If the user signs in, their GitHub Enterprise Server account is linked to this entry.
+     *    - If the user does not sign in (or does not create a new account when prompted), they are not added to the GitHub Enterprise Server enterprise, and the external identity `null` entry remains in place.
+     */
+    get: operations["enterprise-admin/list-provisioned-identities-enterprise"];
+    /**
+     * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+     *
+     * Provision enterprise membership for a user, and send organization invitation emails to the email address.
+     *
+     * You can optionally include the groups a user will be invited to join. If you do not provide a list of `groups`, the user is provisioned for the enterprise, but no organization invitation emails will be sent.
+     */
+    post: operations["enterprise-admin/provision-and-invite-enterprise-user"];
+  };
+  "/scim/v2/enterprises/{enterprise}/Users/{scim_user_id}": {
+    /** **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change. */
+    get: operations["enterprise-admin/get-provisioning-information-for-enterprise-user"];
+    /**
+     * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+     *
+     * Replaces an existing provisioned user's information. You must provide all the information required for the user as if you were provisioning them for the first time. Any existing user information that you don't provide will be removed. If you want to only update a specific attribute, use the [Update an attribute for a SCIM user](#update-an-attribute-for-an-enterprise-scim-user) endpoint instead.
+     *
+     * You must at least provide the required values for the user: `userName`, `name`, and `emails`.
+     *
+     * **Warning:** Setting `active: false` removes the user from the enterprise, deletes the external identity, and deletes the associated `{scim_user_id}`.
+     */
+    put: operations["enterprise-admin/set-information-for-provisioned-enterprise-user"];
+    /** **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change. */
+    delete: operations["enterprise-admin/delete-user-from-enterprise"];
+    /**
+     * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+     *
+     * Allows you to change a provisioned user's individual attributes. To change a user's values, you must provide a specific `Operations` JSON format that contains at least one of the `add`, `remove`, or `replace` operations. For examples and more information on the SCIM operations format, see the [SCIM specification](https://tools.ietf.org/html/rfc7644#section-3.5.2).
+     *
+     * **Note:** Complicated SCIM `path` selectors that include filters are not supported. For example, a `path` selector defined as `"path": "emails[type eq \"work\"]"` will not work.
+     *
+     * **Warning:** If you set `active:false` using the `replace` operation (as shown in the JSON example below), it removes the user from the enterprise, deletes the external identity, and deletes the associated `:scim_user_id`.
+     *
+     * ```
+     * {
+     *   "Operations":[{
+     *     "op":"replace",
+     *     "value":{
+     *       "active":false
+     *     }
+     *   }]
+     * }
+     * ```
+     */
+    patch: operations["enterprise-admin/update-attribute-for-enterprise-user"];
   };
   "/search/code": {
     /**
@@ -5209,7 +5305,7 @@ export interface paths {
     /**
      * Lists repositories the authenticated user has starred.
      *
-     * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@3.6/rest/overview/media-types/) via the `Accept` header:
+     * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@3.6/rest/overview/media-types/) via the `Accept` header: `application/vnd.github.star+json`.
      */
     get: operations["activity/list-repos-starred-by-authenticated-user"];
   };
@@ -5334,7 +5430,7 @@ export interface paths {
     /**
      * Lists repositories a user has starred.
      *
-     * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@3.6/rest/overview/media-types/) via the `Accept` header:
+     * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@3.6/rest/overview/media-types/) via the `Accept` header: `application/vnd.github.star+json`.
      */
     get: operations["activity/list-repos-starred-by-user"];
   };
@@ -5407,33 +5503,9 @@ export interface paths {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     get: operations["enterprise-admin/get-server-statistics"];
   };
-  "/enterprises/{enterprise}/actions/oidc/customization/issuer": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    put: operations["actions/set-actions-oidc-custom-issuer-policy-for-enterprise"];
-  };
   "/enterprises/{enterprise}/code-scanning/alerts": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     get: operations["code-scanning/list-alerts-for-enterprise"];
-  };
-  "/enterprises/{enterprise}/consumed-licenses": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    get: operations["enterprise-admin/get-consumed-licenses"];
-  };
-  "/enterprises/{enterprise}/license-sync-status": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    get: operations["enterprise-admin/get-license-sync-status"];
-  };
-  "/enterprises/{enterprise}/settings/billing/actions": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    get: operations["billing/get-github-actions-billing-ghe"];
-  };
-  "/enterprises/{enterprise}/settings/billing/packages": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    get: operations["billing/get-github-packages-billing-ghe"];
-  };
-  "/enterprises/{enterprise}/settings/billing/shared-storage": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    get: operations["billing/get-shared-storage-billing-ghe"];
   };
   "/marketplace_listing/accounts/{account_id}": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
@@ -5459,11 +5531,33 @@ export interface paths {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     get: operations["apps/list-accounts-for-plan-stubbed"];
   };
-  "/orgs/{org}/actions/oidc/customization/sub": {
+  "/organizations/{org}/codespaces/secrets": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    get: operations["oidc/get-oidc-custom-sub-template-for-org"];
+    get: operations["codespaces/list-org-secrets"];
+  };
+  "/organizations/{org}/codespaces/secrets/public-key": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    put: operations["oidc/update-oidc-custom-sub-template-for-org"];
+    get: operations["codespaces/get-org-public-key"];
+  };
+  "/organizations/{org}/codespaces/secrets/{secret_name}": {
+    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+    get: operations["codespaces/get-org-secret"];
+    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+    put: operations["codespaces/create-or-update-org-secret"];
+    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+    delete: operations["codespaces/delete-org-secret"];
+  };
+  "/organizations/{org}/codespaces/secrets/{secret_name}/repositories": {
+    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+    get: operations["codespaces/list-selected-repos-for-org-secret"];
+    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+    put: operations["codespaces/set-selected-repos-for-org-secret"];
+  };
+  "/organizations/{org}/codespaces/secrets/{secret_name}/repositories/{repository_id}": {
+    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+    put: operations["codespaces/add-selected-repo-to-org-secret"];
+    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+    delete: operations["codespaces/remove-selected-repo-from-org-secret"];
   };
   "/orgs/{org}/blocks": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
@@ -5480,14 +5574,6 @@ export interface paths {
   "/orgs/{org}/codespaces": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     get: operations["codespaces/list-in-organization"];
-  };
-  "/orgs/{org}/credential-authorizations": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    get: operations["orgs/list-saml-sso-authorizations"];
-  };
-  "/orgs/{org}/credential-authorizations/{credential_id}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    delete: operations["orgs/remove-saml-sso-authorization"];
   };
   "/orgs/{org}/custom_roles": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
@@ -5601,19 +5687,9 @@ export interface paths {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     get: operations["billing/get-shared-storage-billing-org"];
   };
-  "/orgs/{org}/team-sync/groups": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    get: operations["teams/list-idp-groups-for-org"];
-  };
   "/orgs/{org}/teams/{team_slug}/invitations": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     get: operations["teams/list-pending-invitations-in-org"];
-  };
-  "/orgs/{org}/teams/{team_slug}/team-sync/group-mappings": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    get: operations["teams/list-idp-groups-in-org"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    patch: operations["teams/create-or-update-idp-group-connections-in-org"];
   };
   "/orgs/{org}/{security_product}/{enablement}": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
@@ -5628,12 +5704,6 @@ export interface paths {
   "/repos/{owner}/{repo}/actions/caches/{cache_id}": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     delete: operations["actions/delete-actions-cache-by-id"];
-  };
-  "/repos/{owner}/{repo}/actions/oidc/customization/sub": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    get: operations["actions/get-custom-oidc-sub-claim-for-repo"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    put: operations["actions/set-custom-oidc-sub-claim-for-repo"];
   };
   "/repos/{owner}/{repo}/actions/runs/{run_id}/approve": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
@@ -5698,6 +5768,16 @@ export interface paths {
   "/repos/{owner}/{repo}/community/profile": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     get: operations["repos/get-community-profile-metrics"];
+  };
+  "/repos/{owner}/{repo}/dependabot/alerts": {
+    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+    get: operations["dependabot/list-alerts-for-repo"];
+  };
+  "/repos/{owner}/{repo}/dependabot/alerts/{alert_number}": {
+    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+    get: operations["dependabot/get-alert"];
+    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+    patch: operations["dependabot/update-alert"];
   };
   "/repos/{owner}/{repo}/dependency-graph/snapshots": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
@@ -5773,63 +5853,9 @@ export interface paths {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     delete: operations["repos/disable-vulnerability-alerts"];
   };
-  "/scim/v2/enterprises/{enterprise}/Groups": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    get: operations["enterprise-admin/list-provisioned-groups-enterprise"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    post: operations["enterprise-admin/provision-and-invite-enterprise-group"];
-  };
-  "/scim/v2/enterprises/{enterprise}/Groups/{scim_group_id}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    get: operations["enterprise-admin/get-provisioning-information-for-enterprise-group"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    put: operations["enterprise-admin/set-information-for-provisioned-enterprise-group"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    delete: operations["enterprise-admin/delete-scim-group-from-enterprise"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    patch: operations["enterprise-admin/update-attribute-for-enterprise-group"];
-  };
-  "/scim/v2/enterprises/{enterprise}/Users": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    get: operations["enterprise-admin/list-provisioned-identities-enterprise"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    post: operations["enterprise-admin/provision-and-invite-enterprise-user"];
-  };
-  "/scim/v2/enterprises/{enterprise}/Users/{scim_user_id}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    get: operations["enterprise-admin/get-provisioning-information-for-enterprise-user"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    put: operations["enterprise-admin/set-information-for-provisioned-enterprise-user"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    delete: operations["enterprise-admin/delete-user-from-enterprise"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    patch: operations["enterprise-admin/update-attribute-for-enterprise-user"];
-  };
-  "/scim/v2/organizations/{org}/Users": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    get: operations["scim/list-provisioned-identities"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    post: operations["scim/provision-and-invite-user"];
-  };
-  "/scim/v2/organizations/{org}/Users/{scim_user_id}": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    get: operations["scim/get-provisioning-information-for-user"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    put: operations["scim/set-information-for-provisioned-user"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    delete: operations["scim/delete-user-from-org"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    patch: operations["scim/update-attribute-for-user"];
-  };
   "/teams/{team_id}/invitations": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
     get: operations["teams/list-pending-invitations-legacy"];
-  };
-  "/teams/{team_id}/team-sync/group-mappings": {
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    get: operations["teams/list-idp-groups-for-legacy"];
-    /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-    patch: operations["teams/create-or-update-idp-group-connections-legacy"];
   };
   "/user/blocks": {
     /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
@@ -7338,7 +7364,10 @@ export interface components {
       stargazers_count: number;
       /** @example 80 */
       watchers_count: number;
-      /** @example 108 */
+      /**
+       * @description The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0.
+       * @example 108
+       */
       size: number;
       /**
        * @description The default branch of the repository.
@@ -9466,7 +9495,10 @@ export interface components {
       stargazers_count: number;
       /** @example 80 */
       watchers_count: number;
-      /** @example 108 */
+      /**
+       * @description The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0.
+       * @example 108
+       */
       size: number;
       /**
        * @description The default branch of the repository.
@@ -9921,6 +9953,7 @@ export interface components {
       forks_count?: number;
       stargazers_count?: number;
       watchers_count?: number;
+      /** @description The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0. */
       size?: number;
       default_branch?: string;
       open_issues_count?: number;
@@ -11915,7 +11948,10 @@ export interface components {
       stargazers_count: number;
       /** @example 80 */
       watchers_count: number;
-      /** @example 108 */
+      /**
+       * @description The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0.
+       * @example 108
+       */
       size: number;
       /** @example master */
       default_branch: string;
@@ -17205,6 +17241,102 @@ export interface components {
     topic: {
       names: string[];
     };
+    "scim-group-list-enterprise": {
+      schemas: string[];
+      totalResults: number;
+      itemsPerPage: number;
+      startIndex: number;
+      Resources: {
+        schemas: string[];
+        id: string;
+        externalId?: string | null;
+        displayName?: string;
+        members?: {
+          value?: string;
+          $ref?: string;
+          display?: string;
+        }[];
+        meta?: {
+          resourceType?: string;
+          created?: string;
+          lastModified?: string;
+          location?: string;
+        };
+      }[];
+    };
+    "scim-enterprise-group": {
+      schemas: string[];
+      id: string;
+      externalId?: string | null;
+      displayName?: string;
+      members?: {
+        value?: string;
+        $ref?: string;
+        display?: string;
+      }[];
+      meta?: {
+        resourceType?: string;
+        created?: string;
+        lastModified?: string;
+        location?: string;
+      };
+    };
+    "scim-user-list-enterprise": {
+      schemas: string[];
+      totalResults: number;
+      itemsPerPage: number;
+      startIndex: number;
+      Resources: {
+        schemas: string[];
+        id: string;
+        externalId?: string;
+        userName?: string;
+        name?: {
+          givenName?: string;
+          familyName?: string;
+        };
+        emails?: {
+          value?: string;
+          primary?: boolean;
+          type?: string;
+        }[];
+        groups?: {
+          value?: string;
+        }[];
+        active?: boolean;
+        meta?: {
+          resourceType?: string;
+          created?: string;
+          lastModified?: string;
+          location?: string;
+        };
+      }[];
+    };
+    "scim-enterprise-user": {
+      schemas: string[];
+      id: string;
+      externalId?: string;
+      userName?: string;
+      name?: {
+        givenName?: string;
+        familyName?: string;
+      };
+      emails?: {
+        value?: string;
+        type?: string;
+        primary?: boolean;
+      }[];
+      groups?: {
+        value?: string;
+      }[];
+      active?: boolean;
+      meta?: {
+        resourceType?: string;
+        created?: string;
+        lastModified?: string;
+        location?: string;
+      };
+    };
     /** Search Result Text Matches */
     "search-result-text-matches": {
       object_url?: string;
@@ -18017,7 +18149,7 @@ export interface components {
         "application/json": components["schemas"]["basic-error"];
       };
     };
-    /** Validation failed */
+    /** Validation failed, or the endpoint has been spammed. */
     validation_failed_simple: {
       content: {
         "application/json": components["schemas"]["validation-error-simple"];
@@ -18030,7 +18162,7 @@ export interface components {
         "application/scim+json": components["schemas"]["scim-error"];
       };
     };
-    /** Validation failed */
+    /** Validation failed, or the endpoint has been spammed. */
     validation_failed: {
       content: {
         "application/json": components["schemas"]["validation-error"];
@@ -18367,6 +18499,14 @@ export interface components {
     "tag-protection-id": number;
     /** @description A repository ID. Only return repositories with an ID greater than this ID. */
     "since-repo": number;
+    /** @description Used for pagination: the index of the first result to return. */
+    "start-index": number;
+    /** @description Used for pagination: the number of results to return. */
+    count: number;
+    /** @description Identifier generated by the GitHub SCIM endpoint. */
+    "scim-group-id": string;
+    /** @description The unique identifier of the SCIM user. */
+    "scim-user-id": string;
     /** @description Determines whether the first search result returned is the highest number of matches (`desc`) or lowest number of matches (`asc`). This parameter is ignored unless you provide `sort`. */
     order: "desc" | "asc";
     /** @description The unique identifier of the GPG key. */
@@ -35036,6 +35176,8 @@ export interface operations {
           "application/json": components["schemas"]["label"][];
         };
       };
+      301: components["responses"]["moved_permanently"];
+      404: components["responses"]["not_found"];
       410: components["responses"]["gone"];
     };
   };
@@ -35058,6 +35200,8 @@ export interface operations {
           "application/json": components["schemas"]["label"][];
         };
       };
+      301: components["responses"]["moved_permanently"];
+      404: components["responses"]["not_found"];
       410: components["responses"]["gone"];
       422: components["responses"]["validation_failed"];
     };
@@ -35094,6 +35238,8 @@ export interface operations {
           "application/json": components["schemas"]["label"][];
         };
       };
+      301: components["responses"]["moved_permanently"];
+      404: components["responses"]["not_found"];
       410: components["responses"]["gone"];
       422: components["responses"]["validation_failed"];
     };
@@ -35126,6 +35272,8 @@ export interface operations {
     responses: {
       /** Response */
       204: never;
+      301: components["responses"]["moved_permanently"];
+      404: components["responses"]["not_found"];
       410: components["responses"]["gone"];
     };
   };
@@ -35149,6 +35297,7 @@ export interface operations {
           "application/json": components["schemas"]["label"][];
         };
       };
+      301: components["responses"]["moved_permanently"];
       404: components["responses"]["not_found"];
       410: components["responses"]["gone"];
     };
@@ -36010,6 +36159,7 @@ export interface operations {
       /** Response */
       204: never;
       400: components["responses"]["bad_request"];
+      409: components["responses"]["conflict"];
       422: components["responses"]["validation_failed"];
     };
     requestBody: {
@@ -36096,6 +36246,7 @@ export interface operations {
       /** Response */
       204: never;
       404: components["responses"]["not_found"];
+      409: components["responses"]["conflict"];
       422: components["responses"]["validation_failed"];
     };
   };
@@ -38164,7 +38315,7 @@ export interface operations {
   /**
    * Lists the people that have starred the repository.
    *
-   * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@3.6/rest/overview/media-types/) via the `Accept` header:
+   * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@3.6/rest/overview/media-types/) via the `Accept` header: `application/vnd.github.star+json`.
    */
   "activity/list-stargazers-for-repo": {
     parameters: {
@@ -38985,6 +39136,416 @@ export interface operations {
     responses: {
       /** Default response */
       204: never;
+    };
+  };
+  /** **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change. */
+  "enterprise-admin/list-provisioned-groups-enterprise": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+      };
+      query: {
+        /** Used for pagination: the index of the first result to return. */
+        startIndex?: components["parameters"]["start-index"];
+        /** Used for pagination: the number of results to return. */
+        count?: components["parameters"]["count"];
+        /** filter results */
+        filter?: string;
+        /** attributes to exclude */
+        excludedAttributes?: string;
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["scim-group-list-enterprise"];
+        };
+      };
+    };
+  };
+  /**
+   * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+   *
+   * Provision an enterprise group, and invite users to the group. This sends invitation emails to the email address of the invited users to join the GitHub organization that the SCIM group corresponds to.
+   */
+  "enterprise-admin/provision-and-invite-enterprise-group": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+      };
+    };
+    responses: {
+      /** Response */
+      201: {
+        content: {
+          "application/json": components["schemas"]["scim-enterprise-group"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @description The SCIM schema URIs. */
+          schemas: string[];
+          /** @description The name of the SCIM group. This must match the GitHub organization that the group maps to. */
+          displayName: string;
+          members?: {
+            /** @description The SCIM user ID for a user. */
+            value: string;
+          }[];
+        };
+      };
+    };
+  };
+  /** **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change. */
+  "enterprise-admin/get-provisioning-information-for-enterprise-group": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+        /** Identifier generated by the GitHub SCIM endpoint. */
+        scim_group_id: components["parameters"]["scim-group-id"];
+      };
+      query: {
+        /** Attributes to exclude. */
+        excludedAttributes?: string;
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["scim-enterprise-group"];
+        };
+      };
+    };
+  };
+  /**
+   * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+   *
+   * Replaces an existing provisioned group’s information. You must provide all the information required for the group as if you were provisioning it for the first time. Any existing group information that you don't provide will be removed, including group membership. If you want to only update a specific attribute, use the [Update an attribute for a SCIM enterprise group](#update-an-attribute-for-a-scim-enterprise-group) endpoint instead.
+   */
+  "enterprise-admin/set-information-for-provisioned-enterprise-group": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+        /** Identifier generated by the GitHub SCIM endpoint. */
+        scim_group_id: components["parameters"]["scim-group-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["scim-enterprise-group"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @description The SCIM schema URIs. */
+          schemas: string[];
+          /** @description The name of the SCIM group. This must match the GitHub organization that the group maps to. */
+          displayName: string;
+          members?: {
+            /** @description The SCIM user ID for a user. */
+            value: string;
+          }[];
+        };
+      };
+    };
+  };
+  /** **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change. */
+  "enterprise-admin/delete-scim-group-from-enterprise": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+        /** Identifier generated by the GitHub SCIM endpoint. */
+        scim_group_id: components["parameters"]["scim-group-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+    };
+  };
+  /**
+   * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+   *
+   * Allows you to change a provisioned group’s individual attributes. To change a group’s values, you must provide a specific Operations JSON format that contains at least one of the add, remove, or replace operations. For examples and more information on the SCIM operations format, see the [SCIM specification](https://tools.ietf.org/html/rfc7644#section-3.5.2).
+   */
+  "enterprise-admin/update-attribute-for-enterprise-group": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+        /** Identifier generated by the GitHub SCIM endpoint. */
+        scim_group_id: components["parameters"]["scim-group-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["scim-enterprise-group"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @description The SCIM schema URIs. */
+          schemas: string[];
+          /** @description Array of [SCIM operations](https://tools.ietf.org/html/rfc7644#section-3.5.2). */
+          Operations: {
+            /** @enum {string} */
+            op: "add" | "Add" | "remove" | "Remove" | "replace" | "Replace";
+            path?: string;
+            /** @description Can be any value - string, number, array or object. */
+            value?: unknown;
+          }[];
+        };
+      };
+    };
+  };
+  /**
+   * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+   *
+   * Retrieves a paginated list of all provisioned enterprise members, including pending invitations.
+   *
+   * When a user with a SAML-provisioned external identity leaves (or is removed from) an enterprise, the account's metadata is immediately removed. However, the returned list of user accounts might not always match the organization or enterprise member list you see on GitHub Enterprise Server. This can happen in certain cases where an external identity associated with an organization will not match an organization member:
+   *   - When a user with a SCIM-provisioned external identity is removed from an enterprise, the account's metadata is preserved to allow the user to re-join the organization in the future.
+   *   - When inviting a user to join an organization, you can expect to see their external identity in the results before they accept the invitation, or if the invitation is cancelled (or never accepted).
+   *   - When a user is invited over SCIM, an external identity is created that matches with the invitee's email address. However, this identity is only linked to a user account when the user accepts the invitation by going through SAML SSO.
+   *
+   * The returned list of external identities can include an entry for a `null` user. These are unlinked SAML identities that are created when a user goes through the following Single Sign-On (SSO) process but does not sign in to their GitHub Enterprise Server account after completing SSO:
+   *
+   * 1. The user is granted access by the IdP and is not a member of the GitHub Enterprise Server enterprise.
+   *
+   * 1. The user attempts to access the GitHub Enterprise Server enterprise and initiates the SAML SSO process, and is not currently signed in to their GitHub Enterprise Server account.
+   *
+   * 1. After successfully authenticating with the SAML SSO IdP, the `null` external identity entry is created and the user is prompted to sign in to their GitHub Enterprise Server account:
+   *    - If the user signs in, their GitHub Enterprise Server account is linked to this entry.
+   *    - If the user does not sign in (or does not create a new account when prompted), they are not added to the GitHub Enterprise Server enterprise, and the external identity `null` entry remains in place.
+   */
+  "enterprise-admin/list-provisioned-identities-enterprise": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+      };
+      query: {
+        /** Used for pagination: the index of the first result to return. */
+        startIndex?: components["parameters"]["start-index"];
+        /** Used for pagination: the number of results to return. */
+        count?: components["parameters"]["count"];
+        /** filter results */
+        filter?: string;
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["scim-user-list-enterprise"];
+        };
+      };
+    };
+  };
+  /**
+   * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+   *
+   * Provision enterprise membership for a user, and send organization invitation emails to the email address.
+   *
+   * You can optionally include the groups a user will be invited to join. If you do not provide a list of `groups`, the user is provisioned for the enterprise, but no organization invitation emails will be sent.
+   */
+  "enterprise-admin/provision-and-invite-enterprise-user": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+      };
+    };
+    responses: {
+      /** Response */
+      201: {
+        content: {
+          "application/json": components["schemas"]["scim-enterprise-user"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @description The SCIM schema URIs. */
+          schemas: string[];
+          /** @description The username for the user. */
+          userName: string;
+          name: {
+            /** @description The first name of the user. */
+            givenName: string;
+            /** @description The last name of the user. */
+            familyName: string;
+          };
+          /** @description List of user emails. */
+          emails: {
+            /** @description The email address. */
+            value: string;
+            /** @description The type of email address. */
+            type: string;
+            /** @description Whether this email address is the primary address. */
+            primary: boolean;
+          }[];
+          /** @description List of SCIM group IDs the user is a member of. */
+          groups?: {
+            value?: string;
+          }[];
+        };
+      };
+    };
+  };
+  /** **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change. */
+  "enterprise-admin/get-provisioning-information-for-enterprise-user": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+        /** The unique identifier of the SCIM user. */
+        scim_user_id: components["parameters"]["scim-user-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["scim-enterprise-user"];
+        };
+      };
+    };
+  };
+  /**
+   * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+   *
+   * Replaces an existing provisioned user's information. You must provide all the information required for the user as if you were provisioning them for the first time. Any existing user information that you don't provide will be removed. If you want to only update a specific attribute, use the [Update an attribute for a SCIM user](#update-an-attribute-for-an-enterprise-scim-user) endpoint instead.
+   *
+   * You must at least provide the required values for the user: `userName`, `name`, and `emails`.
+   *
+   * **Warning:** Setting `active: false` removes the user from the enterprise, deletes the external identity, and deletes the associated `{scim_user_id}`.
+   */
+  "enterprise-admin/set-information-for-provisioned-enterprise-user": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+        /** The unique identifier of the SCIM user. */
+        scim_user_id: components["parameters"]["scim-user-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["scim-enterprise-user"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @description The SCIM schema URIs. */
+          schemas: string[];
+          /** @description The username for the user. */
+          userName: string;
+          name: {
+            /** @description The first name of the user. */
+            givenName: string;
+            /** @description The last name of the user. */
+            familyName: string;
+          };
+          /** @description List of user emails. */
+          emails: {
+            /** @description The email address. */
+            value: string;
+            /** @description The type of email address. */
+            type: string;
+            /** @description Whether this email address is the primary address. */
+            primary: boolean;
+          }[];
+          /** @description List of SCIM group IDs the user is a member of. */
+          groups?: {
+            value?: string;
+          }[];
+        };
+      };
+    };
+  };
+  /** **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change. */
+  "enterprise-admin/delete-user-from-enterprise": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+        /** The unique identifier of the SCIM user. */
+        scim_user_id: components["parameters"]["scim-user-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      204: never;
+    };
+  };
+  /**
+   * **Note:** The SCIM API endpoints for enterprise accounts are currently in beta and are subject to change.
+   *
+   * Allows you to change a provisioned user's individual attributes. To change a user's values, you must provide a specific `Operations` JSON format that contains at least one of the `add`, `remove`, or `replace` operations. For examples and more information on the SCIM operations format, see the [SCIM specification](https://tools.ietf.org/html/rfc7644#section-3.5.2).
+   *
+   * **Note:** Complicated SCIM `path` selectors that include filters are not supported. For example, a `path` selector defined as `"path": "emails[type eq \"work\"]"` will not work.
+   *
+   * **Warning:** If you set `active:false` using the `replace` operation (as shown in the JSON example below), it removes the user from the enterprise, deletes the external identity, and deletes the associated `:scim_user_id`.
+   *
+   * ```
+   * {
+   *   "Operations":[{
+   *     "op":"replace",
+   *     "value":{
+   *       "active":false
+   *     }
+   *   }]
+   * }
+   * ```
+   */
+  "enterprise-admin/update-attribute-for-enterprise-user": {
+    parameters: {
+      path: {
+        /** The slug version of the enterprise name. You can also substitute this value with the enterprise id. */
+        enterprise: components["parameters"]["enterprise"];
+        /** The unique identifier of the SCIM user. */
+        scim_user_id: components["parameters"]["scim-user-id"];
+      };
+    };
+    responses: {
+      /** Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["scim-enterprise-user"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @description The SCIM schema URIs. */
+          schemas: string[];
+          /** @description Array of [SCIM operations](https://tools.ietf.org/html/rfc7644#section-3.5.2). */
+          Operations: { [key: string]: unknown }[];
+        };
+      };
     };
   };
   /**
@@ -41706,7 +42267,7 @@ export interface operations {
   /**
    * Lists repositories the authenticated user has starred.
    *
-   * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@3.6/rest/overview/media-types/) via the `Accept` header:
+   * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@3.6/rest/overview/media-types/) via the `Accept` header: `application/vnd.github.star+json`.
    */
   "activity/list-repos-starred-by-authenticated-user": {
     parameters: {
@@ -42317,7 +42878,7 @@ export interface operations {
   /**
    * Lists repositories a user has starred.
    *
-   * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@3.6/rest/overview/media-types/) via the `Accept` header:
+   * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@3.6/rest/overview/media-types/) via the `Accept` header: `application/vnd.github.star+json`.
    */
   "activity/list-repos-starred-by-user": {
     parameters: {
@@ -42510,49 +43071,7 @@ export interface operations {
     };
   };
   /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "actions/set-actions-oidc-custom-issuer-policy-for-enterprise": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
   "code-scanning/list-alerts-for-enterprise": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "enterprise-admin/get-consumed-licenses": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "enterprise-admin/get-license-sync-status": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "billing/get-github-actions-billing-ghe": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "billing/get-github-packages-billing-ghe": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "billing/get-shared-storage-billing-ghe": {
     responses: {
       /** Not Implemented */
       501: unknown;
@@ -42601,14 +43120,63 @@ export interface operations {
     };
   };
   /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "oidc/get-oidc-custom-sub-template-for-org": {
+  "codespaces/list-org-secrets": {
     responses: {
       /** Not Implemented */
       501: unknown;
     };
   };
   /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "oidc/update-oidc-custom-sub-template-for-org": {
+  "codespaces/get-org-public-key": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+  "codespaces/get-org-secret": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+  "codespaces/create-or-update-org-secret": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+  "codespaces/delete-org-secret": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+  "codespaces/list-selected-repos-for-org-secret": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+  "codespaces/set-selected-repos-for-org-secret": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+  "codespaces/add-selected-repo-to-org-secret": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+  "codespaces/remove-selected-repo-from-org-secret": {
     responses: {
       /** Not Implemented */
       501: unknown;
@@ -42644,20 +43212,6 @@ export interface operations {
   };
   /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
   "codespaces/list-in-organization": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "orgs/list-saml-sso-authorizations": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "orgs/remove-saml-sso-authorization": {
     responses: {
       /** Not Implemented */
       501: unknown;
@@ -42888,28 +43442,7 @@ export interface operations {
     };
   };
   /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "teams/list-idp-groups-for-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
   "teams/list-pending-invitations-in-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "teams/list-idp-groups-in-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "teams/create-or-update-idp-group-connections-in-org": {
     responses: {
       /** Not Implemented */
       501: unknown;
@@ -42938,20 +43471,6 @@ export interface operations {
   };
   /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
   "actions/delete-actions-cache-by-id": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "actions/get-custom-oidc-sub-claim-for-repo": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "actions/set-custom-oidc-sub-claim-for-repo": {
     responses: {
       /** Not Implemented */
       501: unknown;
@@ -43078,6 +43597,27 @@ export interface operations {
   };
   /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
   "repos/get-community-profile-metrics": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+  "dependabot/list-alerts-for-repo": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+  "dependabot/get-alert": {
+    responses: {
+      /** Not Implemented */
+      501: unknown;
+    };
+  };
+  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
+  "dependabot/update-alert": {
     responses: {
       /** Not Implemented */
       501: unknown;
@@ -43238,147 +43778,7 @@ export interface operations {
     };
   };
   /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "enterprise-admin/list-provisioned-groups-enterprise": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "enterprise-admin/provision-and-invite-enterprise-group": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "enterprise-admin/get-provisioning-information-for-enterprise-group": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "enterprise-admin/set-information-for-provisioned-enterprise-group": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "enterprise-admin/delete-scim-group-from-enterprise": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "enterprise-admin/update-attribute-for-enterprise-group": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "enterprise-admin/list-provisioned-identities-enterprise": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "enterprise-admin/provision-and-invite-enterprise-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "enterprise-admin/get-provisioning-information-for-enterprise-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "enterprise-admin/set-information-for-provisioned-enterprise-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "enterprise-admin/delete-user-from-enterprise": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "enterprise-admin/update-attribute-for-enterprise-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "scim/list-provisioned-identities": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "scim/provision-and-invite-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "scim/get-provisioning-information-for-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "scim/set-information-for-provisioned-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "scim/delete-user-from-org": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "scim/update-attribute-for-user": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
   "teams/list-pending-invitations-legacy": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "teams/list-idp-groups-for-legacy": {
-    responses: {
-      /** Not Implemented */
-      501: unknown;
-    };
-  };
-  /** This endpoint does not exist in GitHub Enterprise Server 3.6. It was added in api.github.com */
-  "teams/create-or-update-idp-group-connections-legacy": {
     responses: {
       /** Not Implemented */
       501: unknown;
