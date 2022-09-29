@@ -3754,7 +3754,7 @@ export interface paths {
     /**
      * Lists the people that have starred the repository.
      *
-     * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@3.3/rest/overview/media-types/) via the `Accept` header: `application/vnd.github.star+json`.
+     * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@3.3/rest/overview/media-types/) via the `Accept` header:
      */
     get: operations["activity/list-stargazers-for-repo"];
   };
@@ -4576,7 +4576,7 @@ export interface paths {
     /**
      * Lists repositories the authenticated user has starred.
      *
-     * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@3.3/rest/overview/media-types/) via the `Accept` header: `application/vnd.github.star+json`.
+     * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@3.3/rest/overview/media-types/) via the `Accept` header:
      */
     get: operations["activity/list-repos-starred-by-authenticated-user"];
   };
@@ -4701,7 +4701,7 @@ export interface paths {
     /**
      * Lists repositories a user has starred.
      *
-     * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@3.3/rest/overview/media-types/) via the `Accept` header: `application/vnd.github.star+json`.
+     * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@3.3/rest/overview/media-types/) via the `Accept` header:
      */
     get: operations["activity/list-repos-starred-by-user"];
   };
@@ -6244,10 +6244,7 @@ export interface components {
       stargazers_count: number;
       /** @example 80 */
       watchers_count: number;
-      /**
-       * @description The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0.
-       * @example 108
-       */
+      /** @example 108 */
       size: number;
       /**
        * @description The default branch of the repository.
@@ -7946,10 +7943,7 @@ export interface components {
       stargazers_count: number;
       /** @example 80 */
       watchers_count: number;
-      /**
-       * @description The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0.
-       * @example 108
-       */
+      /** @example 108 */
       size: number;
       /**
        * @description The default branch of the repository.
@@ -8324,7 +8318,6 @@ export interface components {
       forks_count?: number;
       stargazers_count?: number;
       watchers_count?: number;
-      /** @description The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0. */
       size?: number;
       default_branch?: string;
       open_issues_count?: number;
@@ -10218,10 +10211,7 @@ export interface components {
       stargazers_count: number;
       /** @example 80 */
       watchers_count: number;
-      /**
-       * @description The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0.
-       * @example 108
-       */
+      /** @example 108 */
       size: number;
       /** @example master */
       default_branch: string;
@@ -16192,7 +16182,7 @@ export interface components {
         "application/json": components["schemas"]["basic-error"];
       };
     };
-    /** Validation failed, or the endpoint has been spammed. */
+    /** Validation failed */
     validation_failed_simple: {
       content: {
         "application/json": components["schemas"]["validation-error-simple"];
@@ -16205,7 +16195,7 @@ export interface components {
         "application/scim+json": components["schemas"]["scim-error"];
       };
     };
-    /** Validation failed, or the endpoint has been spammed. */
+    /** Validation failed */
     validation_failed: {
       content: {
         "application/json": components["schemas"]["validation-error"];
@@ -31292,8 +31282,6 @@ export interface operations {
           "application/json": components["schemas"]["label"][];
         };
       };
-      301: components["responses"]["moved_permanently"];
-      404: components["responses"]["not_found"];
       410: components["responses"]["gone"];
     };
   };
@@ -31316,8 +31304,6 @@ export interface operations {
           "application/json": components["schemas"]["label"][];
         };
       };
-      301: components["responses"]["moved_permanently"];
-      404: components["responses"]["not_found"];
       410: components["responses"]["gone"];
       422: components["responses"]["validation_failed"];
     };
@@ -31354,8 +31340,6 @@ export interface operations {
           "application/json": components["schemas"]["label"][];
         };
       };
-      301: components["responses"]["moved_permanently"];
-      404: components["responses"]["not_found"];
       410: components["responses"]["gone"];
       422: components["responses"]["validation_failed"];
     };
@@ -31388,8 +31372,6 @@ export interface operations {
     responses: {
       /** Response */
       204: never;
-      301: components["responses"]["moved_permanently"];
-      404: components["responses"]["not_found"];
       410: components["responses"]["gone"];
     };
   };
@@ -31413,7 +31395,6 @@ export interface operations {
           "application/json": components["schemas"]["label"][];
         };
       };
-      301: components["responses"]["moved_permanently"];
       404: components["responses"]["not_found"];
       410: components["responses"]["gone"];
     };
@@ -32275,7 +32256,6 @@ export interface operations {
       /** Response */
       204: never;
       400: components["responses"]["bad_request"];
-      409: components["responses"]["conflict"];
       422: components["responses"]["validation_failed"];
     };
     requestBody: {
@@ -32362,7 +32342,6 @@ export interface operations {
       /** Response */
       204: never;
       404: components["responses"]["not_found"];
-      409: components["responses"]["conflict"];
       422: components["responses"]["validation_failed"];
     };
   };
@@ -34382,7 +34361,7 @@ export interface operations {
   /**
    * Lists the people that have starred the repository.
    *
-   * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@3.3/rest/overview/media-types/) via the `Accept` header: `application/vnd.github.star+json`.
+   * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@3.3/rest/overview/media-types/) via the `Accept` header:
    */
   "activity/list-stargazers-for-repo": {
     parameters: {
@@ -37691,7 +37670,7 @@ export interface operations {
   /**
    * Lists repositories the authenticated user has starred.
    *
-   * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@3.3/rest/overview/media-types/) via the `Accept` header: `application/vnd.github.star+json`.
+   * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@3.3/rest/overview/media-types/) via the `Accept` header:
    */
   "activity/list-repos-starred-by-authenticated-user": {
     parameters: {
@@ -38302,7 +38281,7 @@ export interface operations {
   /**
    * Lists repositories a user has starred.
    *
-   * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@3.3/rest/overview/media-types/) via the `Accept` header: `application/vnd.github.star+json`.
+   * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/enterprise-server@3.3/rest/overview/media-types/) via the `Accept` header:
    */
   "activity/list-repos-starred-by-user": {
     parameters: {
