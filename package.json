@@ -20,7 +20,7 @@
     "@octokit/core": "^4.0.0",
     "@octokit/plugin-paginate-rest": "^5.0.0",
     "github-enterprise-server-versions": "^1.0.0",
-    "openapi-typescript": "^6.0.0",
+    "openapi-typescript": "^5.4.1",
     "prettier": "2.8.3"
   },
   "prettier": {},
