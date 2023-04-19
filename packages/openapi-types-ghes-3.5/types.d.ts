@@ -249,6 +249,13 @@ export interface paths {
      */
     post: operations["apps/redeliver-webhook-delivery"];
   };
+  "/app/installation-requests": {
+    /**
+     * List installation requests for the authenticated app
+     * @description Lists all the pending installation requests for the authenticated GitHub App.
+     */
+    get: operations["apps/list-installation-requests-for-authenticated-app"];
+  };
   "/app/installations": {
     /**
      * List installations for the authenticated app
@@ -328,32 +335,32 @@ export interface paths {
   "/applications/{client_id}/grant": {
     /**
      * Delete an app authorization
-     * @description OAuth application owners can revoke a grant for their OAuth application and a specific user. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.5/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. You must also provide a valid OAuth `access_token` as an input parameter and the grant for the token's owner will be deleted.
-     * Deleting an OAuth application's grant will also delete all OAuth tokens associated with the application for the user. Once deleted, the application will have no access to the user's account and will no longer be listed on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized).
+     * @description OAuth and GitHub application owners can revoke a grant for their application and a specific user. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.5/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. You must also provide a valid OAuth `access_token` as an input parameter and the grant for the token's owner will be deleted.
+     * Deleting an application's grant will also delete all OAuth tokens associated with the application for the user. Once deleted, the application will have no access to the user's account and will no longer be listed on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized).
      */
     delete: operations["apps/delete-authorization"];
   };
   "/applications/{client_id}/token": {
     /**
      * Check a token
-     * @description OAuth applications can use a special API method for checking OAuth token validity without exceeding the normal rate limits for failed login attempts. Authentication works differently with this particular endpoint. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.5/rest/overview/other-authentication-methods#basic-authentication) to use this endpoint, where the username is the OAuth application `client_id` and the password is its `client_secret`. Invalid tokens will return `404 NOT FOUND`.
+     * @description OAuth applications and GitHub applications with OAuth authorizations can use this API method for checking OAuth token validity without exceeding the normal rate limits for failed login attempts. Authentication works differently with this particular endpoint. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.5/rest/overview/other-authentication-methods#basic-authentication) to use this endpoint, where the username is the application `client_id` and the password is its `client_secret`. Invalid tokens will return `404 NOT FOUND`.
      */
     post: operations["apps/check-token"];
     /**
      * Delete an app token
-     * @description OAuth application owners can revoke a single token for an OAuth application. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.5/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password.
+     * @description OAuth  or GitHub application owners can revoke a single token for an OAuth application or a GitHub application with an OAuth authorization. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.5/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the application's `client_id` and `client_secret` as the username and password.
      */
     delete: operations["apps/delete-token"];
     /**
      * Reset a token
-     * @description OAuth applications can use this API method to reset a valid OAuth token without end-user involvement. Applications must save the "token" property in the response because changes take effect immediately. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.5/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.
+     * @description OAuth applications and GitHub applications with OAuth authorizations can use this API method to reset a valid OAuth token without end-user involvement. Applications must save the "token" property in the response because changes take effect immediately. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.5/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.
      */
     patch: operations["apps/reset-token"];
   };
   "/applications/{client_id}/token/scoped": {
     /**
      * Create a scoped access token
-     * @description Use a non-scoped user-to-server OAuth access token to create a repository scoped and/or permission scoped user-to-server OAuth access token. You can specify which repositories the token can access and which permissions are granted to the token. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.5/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.
+     * @description Use a non-scoped user-to-server access token to create a repository scoped and/or permission scoped user-to-server access token. You can specify which repositories the token can access and which permissions are granted to the token. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.5/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the `client_id` and `client_secret` of the GitHub App as the username and password. Invalid tokens will return `404 NOT FOUND`.
      */
     post: operations["apps/scope-token"];
   };
@@ -538,14 +545,12 @@ export interface paths {
      * Get GitHub Actions cache usage policy for an enterprise
      * @description Gets the GitHub Actions cache usage policy for an enterprise.
      * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
-     * GitHub Apps must have the `enterprise_administration:write` permission to use this endpoint.
      */
     get: operations["actions/get-actions-cache-usage-policy-for-enterprise"];
     /**
      * Set GitHub Actions cache usage policy for an enterprise
      * @description Sets the GitHub Actions cache usage policy for an enterprise.
      * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
-     * GitHub Apps must have the `enterprise_administration:write` permission to use this endpoint.
      */
     patch: operations["actions/set-actions-cache-usage-policy-for-enterprise"];
   };
@@ -1097,13 +1102,14 @@ export interface paths {
      * List organizations
      * @description Lists all organizations, in the order that they were created on GitHub Enterprise Server.
      *
-     * **Note:** Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of organizations.
+     * **Note:** Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@3.5/rest/guides/using-pagination-in-the-rest-api#using-link-headers) to get the URL for the next page of organizations.
      */
     get: operations["orgs/list"];
   };
   "/organizations/{organization_id}/custom_roles": {
     /**
      * List custom repository roles in an organization
+     * @deprecated
      * @description List the custom repository roles available in this organization. In order to see custom
      * repository roles in an organization, the authenticated user must be an organization owner.
      *
@@ -1258,12 +1264,14 @@ export interface paths {
     /**
      * Get a self-hosted runner group for an organization
      * @description Gets a specific self-hosted runner group for an organization.
+     *
      * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
      */
     get: operations["actions/get-self-hosted-runner-group-for-org"];
     /**
      * Delete a self-hosted runner group from an organization
      * @description Deletes a self-hosted runner group for an organization.
+     *
      * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
      */
     delete: operations["actions/delete-self-hosted-runner-group-from-org"];
@@ -1885,7 +1893,9 @@ export interface paths {
   "/orgs/{org}/migrations": {
     /**
      * List organization migrations
-     * @description Lists the most recent migrations.
+     * @description Lists the most recent migrations, including both exports (which can be started through the REST API) and imports (which cannot be started using the REST API).
+     *
+     * A list of `repositories` is only returned for export migrations.
      */
     get: operations["migrations/list-for-org"];
     /**
@@ -1907,6 +1917,32 @@ export interface paths {
      * *   `failed`, which means the migration failed.
      */
     get: operations["migrations/get-status-for-org"];
+  };
+  "/orgs/{org}/migrations/{migration_id}/archive": {
+    /**
+     * Download an organization migration archive
+     * @description Fetches the URL to a migration archive.
+     */
+    get: operations["migrations/download-archive-for-org"];
+    /**
+     * Delete an organization migration archive
+     * @description Deletes a previous migration archive. Migration archives are automatically deleted after seven days.
+     */
+    delete: operations["migrations/delete-archive-for-org"];
+  };
+  "/orgs/{org}/migrations/{migration_id}/repos/{repo_name}/lock": {
+    /**
+     * Unlock an organization repository
+     * @description Unlocks a repository that was locked for migration. You should unlock each migrated repository and [delete them](https://docs.github.com/enterprise-server@3.5/rest/repos/repos#delete-a-repository) when the migration is complete and you no longer need the source data.
+     */
+    delete: operations["migrations/unlock-repo-for-org"];
+  };
+  "/orgs/{org}/migrations/{migration_id}/repositories": {
+    /**
+     * List repositories in an organization migration
+     * @description List all the repositories for this organization migration.
+     */
+    get: operations["migrations/list-repos-for-org"];
   };
   "/orgs/{org}/outside_collaborators": {
     /**
@@ -2039,7 +2075,7 @@ export interface paths {
   "/orgs/{org}/teams/{team_slug}": {
     /**
      * Get a team by name
-     * @description Gets a team using the team's `slug`. GitHub Enterprise Server generates the `slug` from the team `name`.
+     * @description Gets a team using the team's `slug`. To create the `slug`, GitHub Enterprise Server replaces special characters in the `name` string, changes all words to lowercase, and replaces spaces with a `-` separator. For example, `"My TEam Näme"` would become `my-team-name`.
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}`.
      */
@@ -3216,10 +3252,6 @@ export interface paths {
      * @description Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/enterprise-server@3.5/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
      *
      * Replaces the list of teams that have push access to this branch. This removes all teams that previously had push access and grants push access to the new list of teams. Team restrictions include child teams.
-     *
-     * | Type    | Description                                                                                                                                |
-     * | ------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-     * | `array` | The teams that can have push access. Use the team's `slug`. **Note**: The list of users, apps, and teams in total is limited to 100 items. |
      */
     put: operations["repos/set-team-access-restrictions"];
     /**
@@ -3227,10 +3259,6 @@ export interface paths {
      * @description Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/enterprise-server@3.5/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
      *
      * Grants the specified teams push access for this branch. You can also give push access to child teams.
-     *
-     * | Type    | Description                                                                                                                                |
-     * | ------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-     * | `array` | The teams that can have push access. Use the team's `slug`. **Note**: The list of users, apps, and teams in total is limited to 100 items. |
      */
     post: operations["repos/add-team-access-restrictions"];
     /**
@@ -3238,10 +3266,6 @@ export interface paths {
      * @description Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/enterprise-server@3.5/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
      *
      * Removes the ability of a team to push to this branch. You can also remove push access for child teams.
-     *
-     * | Type    | Description                                                                                                                                         |
-     * | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-     * | `array` | Teams that should no longer have push access. Use the team's `slug`. **Note**: The list of users, apps, and teams in total is limited to 100 items. |
      */
     delete: operations["repos/remove-team-access-restrictions"];
   };
@@ -3568,7 +3592,7 @@ export interface paths {
      * ```
      * <br>
      * SARIF upload supports a maximum number of entries per the following data objects, and an analysis will be rejected if any of these objects is above its maximum value. For some objects, there are additional values over which the entries will be ignored while keeping the most important entries whenever applicable.
-     * To get the most out of your analysis when it includes data above the supported limits, try to optimize the analysis configuration (For example, for the CodeQL tool, identify and remove the most noisy queries).
+     * To get the most out of your analysis when it includes data above the supported limits, try to optimize the analysis configuration. For example, for the CodeQL tool, identify and remove the most noisy queries.
      *
      *
      * | **SARIF data**                   | **Maximum values** | **Additional limits**                                                            |
@@ -3578,7 +3602,6 @@ export interface paths {
      * | Rules per run                    |       25,000       |                                                                                  |
      * | Thread Flow Locations per result |       10,000       | Only the top 1,000 Thread Flow Locations will be included, using prioritization. |
      * | Location per result	             |       1,000        | Only 100 locations will be included.                                             |
-     *
      *
      * The `202 Accepted` response includes an `id` value.
      * You can use this ID to check the status of the upload by using it in the `/sarifs/{sarif_id}` endpoint.
@@ -3726,7 +3749,7 @@ export interface paths {
      * | `unsigned` | The object does not include a signature. |
      * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
      * | `no_user` | No user was associated with the `committer` email address in the commit. |
-     * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
+     * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on their account. |
      * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
      * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
      * | `malformed_signature` | There was an error parsing the signature. |
@@ -3798,7 +3821,7 @@ export interface paths {
      * | `unsigned` | The object does not include a signature. |
      * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
      * | `no_user` | No user was associated with the `committer` email address in the commit. |
-     * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
+     * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on their account. |
      * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
      * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
      * | `malformed_signature` | There was an error parsing the signature. |
@@ -3853,7 +3876,7 @@ export interface paths {
      * Compare two commits
      * @description Compares two commits against one another. You can compare branches in the same repository, or you can compare branches that exist in different repositories within the same repository network, including fork branches. For more information about how to view a repository's network, see "[Understanding connections between repositories](https://docs.github.com/enterprise-server@3.5/repositories/viewing-activity-and-data-for-your-repository/understanding-connections-between-repositories)."
      *
-     * This endpoint is equivalent to running the `git log BASE...HEAD` command, but it returns commits in a different order. The `git log BASE...HEAD` command returns commits in reverse chronological order, whereas the API returns commits in chronological order. You can pass the appropriate [media type](https://docs.github.com/enterprise-server@3.5/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.
+     * This endpoint is equivalent to running the `git log BASE..HEAD` command, but it returns commits in a different order. The `git log BASE..HEAD` command returns commits in reverse chronological order, whereas the API returns commits in chronological order. You can pass the appropriate [media type](https://docs.github.com/enterprise-server@3.5/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.
      *
      * The API response includes details about the files that were changed between the two commits. This includes the status of the change (if a file was added, removed, modified, or renamed), and details of the change itself. For example, files with a `renamed` status have a `previous_filename` field showing the previous filename of the file, and files with a `modified` status have a `patch` field showing the changes made to the file.
      *
@@ -3890,7 +3913,7 @@ export interface paths {
      * | `unsigned` | The object does not include a signature. |
      * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
      * | `no_user` | No user was associated with the `committer` email address in the commit. |
-     * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
+     * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on their account. |
      * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
      * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
      * | `malformed_signature` | There was an error parsing the signature. |
@@ -4269,6 +4292,8 @@ export interface paths {
      * @description Create a fork for the authenticated user.
      *
      * **Note**: Forking a Repository happens asynchronously. You may have to wait a short period of time before you can access the git objects. If this takes longer than 5 minutes, be sure to contact [GitHub Enterprise Server Support](https://support.github.com/contact?tags=dotcom-rest-api).
+     *
+     * **Note**: Although this endpoint works with GitHub Apps, the GitHub App must be installed on the destination account with access to all repositories and on the source account with access to the source repository.
      */
     post: operations["repos/create-fork"];
   };
@@ -4312,7 +4337,7 @@ export interface paths {
      * | `unsigned` | The object does not include a signature. |
      * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
      * | `no_user` | No user was associated with the `committer` email address in the commit. |
-     * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
+     * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on their account. |
      * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
      * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
      * | `malformed_signature` | There was an error parsing the signature. |
@@ -4348,7 +4373,7 @@ export interface paths {
      * | `unsigned` | The object does not include a signature. |
      * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
      * | `no_user` | No user was associated with the `committer` email address in the commit. |
-     * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
+     * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on their account. |
      * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
      * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
      * | `malformed_signature` | There was an error parsing the signature. |
@@ -4419,7 +4444,7 @@ export interface paths {
      * | `unsigned` | The object does not include a signature. |
      * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
      * | `no_user` | No user was associated with the `committer` email address in the commit. |
-     * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
+     * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on their account. |
      * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
      * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
      * | `malformed_signature` | There was an error parsing the signature. |
@@ -4453,7 +4478,7 @@ export interface paths {
      * | `unsigned` | The object does not include a signature. |
      * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
      * | `no_user` | No user was associated with the `committer` email address in the commit. |
-     * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
+     * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on their account. |
      * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
      * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
      * | `malformed_signature` | There was an error parsing the signature. |
@@ -4609,16 +4634,27 @@ export interface paths {
   "/repos/{owner}/{repo}/issues/comments": {
     /**
      * List issue comments for a repository
-     * @description By default, Issue Comments are ordered by ascending ID.
+     * @description You can use the REST API to list comments on issues and pull requests for a repository. Every pull request is an issue, but not every issue is a pull request.
+     *
+     * By default, issue comments are ordered by ascending ID.
      */
     get: operations["issues/list-comments-for-repo"];
   };
   "/repos/{owner}/{repo}/issues/comments/{comment_id}": {
-    /** Get an issue comment */
+    /**
+     * Get an issue comment
+     * @description You can use the REST API to get comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request.
+     */
     get: operations["issues/get-comment"];
-    /** Delete an issue comment */
+    /**
+     * Delete an issue comment
+     * @description You can use the REST API to delete comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request.
+     */
     delete: operations["issues/delete-comment"];
-    /** Update an issue comment */
+    /**
+     * Update an issue comment
+     * @description You can use the REST API to update comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request.
+     */
     patch: operations["issues/update-comment"];
   };
   "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
@@ -4698,12 +4734,21 @@ export interface paths {
   "/repos/{owner}/{repo}/issues/{issue_number}/comments": {
     /**
      * List issue comments
-     * @description Issue Comments are ordered by ascending ID.
+     * @description You can use the REST API to list comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request.
+     *
+     * Issue comments are ordered by ascending ID.
      */
     get: operations["issues/list-comments"];
     /**
      * Create an issue comment
-     * @description This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.5/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+     * @description
+     * You can use the REST API to create comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request.
+     *
+     * This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.5/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+     * Creating content too quickly using this endpoint may result in secondary rate limiting.
+     * See "[Secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#secondary-rate-limits)"
+     * and "[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)"
+     * for details.
      */
     post: operations["issues/create-comment"];
   };
@@ -4878,21 +4923,21 @@ export interface paths {
      * Update information about a GitHub Enterprise Server Pages site
      * @description Updates information for a GitHub Enterprise Server Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages).
      *
-     * To use this endpoint, you must be a repository administrator, maintainer, or have the 'manage GitHub Pages settings' permission. A token with the `repo` scope or Pages write permission is required. GitHub Apps must have the `administrative:write` and `pages:write` permissions.
+     * To use this endpoint, you must be a repository administrator, maintainer, or have the 'manage GitHub Pages settings' permission. A token with the `repo` scope or Pages write permission is required. GitHub Apps must have the `administration:write` and `pages:write` permissions.
      */
     put: operations["repos/update-information-about-pages-site"];
     /**
      * Create a GitHub Enterprise Server Pages site
      * @description Configures a GitHub Enterprise Server Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages)."
      *
-     * To use this endpoint, you must be a repository administrator, maintainer, or have the 'manage GitHub Pages settings' permission. A token with the `repo` scope or Pages write permission is required. GitHub Apps must have the `administrative:write` and `pages:write` permissions.
+     * To use this endpoint, you must be a repository administrator, maintainer, or have the 'manage GitHub Pages settings' permission. A token with the `repo` scope or Pages write permission is required. GitHub Apps must have the `administration:write` and `pages:write` permissions.
      */
     post: operations["repos/create-pages-site"];
     /**
      * Delete a GitHub Enterprise Server Pages site
-     * @description Deletes a a GitHub Enterprise Server Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages).
+     * @description Deletes a GitHub Enterprise Server Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages).
      *
-     * To use this endpoint, you must be a repository administrator, maintainer, or have the 'manage GitHub Pages settings' permission. A token with the `repo` scope or Pages write permission is required. GitHub Apps must have the `administrative:write` and `pages:write` permissions.
+     * To use this endpoint, you must be a repository administrator, maintainer, or have the 'manage GitHub Pages settings' permission. A token with the `repo` scope or Pages write permission is required. GitHub Apps must have the `administration:write` and `pages:write` permissions.
      */
     delete: operations["repos/delete-pages-site"];
   };
@@ -5255,7 +5300,7 @@ export interface paths {
     /**
      * Upload a release asset
      * @description This endpoint makes use of [a Hypermedia relation](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#hypermedia) to determine which URL to access. The endpoint you call to upload release assets is specific to your release. Use the `upload_url` returned in
-     * the response of the [Create a release endpoint](https://docs.github.com/enterprise-server@3.5/rest/reference/repos#create-a-release) to upload a release asset.
+     * the response of the [Create a release endpoint](https://docs.github.com/enterprise-server@3.5/rest/releases/releases#create-a-release) to upload a release asset.
      *
      * You need to use an HTTP client which supports [SNI](http://en.wikipedia.org/wiki/Server_Name_Indication) to make calls to this endpoint.
      *
@@ -5271,6 +5316,7 @@ export interface paths {
      * **Notes:**
      * *   GitHub Enterprise Server renames asset filenames that have special characters, non-alphanumeric characters, and leading or trailing periods. The "[List assets for a release](https://docs.github.com/enterprise-server@3.5/rest/reference/repos#list-assets-for-a-release)"
      * endpoint lists the renamed filenames. For more information and help, contact [GitHub Enterprise Server Support](https://support.github.com/contact?tags=dotcom-rest-api).
+     * *   To find the `release_id` query the [`GET /repos/{owner}/{repo}/releases/latest` endpoint](https://docs.github.com/enterprise-server@3.5/rest/releases/releases#get-the-latest-release).
      * *   If you upload an asset with the same filename as another uploaded asset, you'll receive an error and must delete the old file before you can re-upload the new asset.
      */
     post: operations["repos/upload-release-asset"];
@@ -5519,7 +5565,7 @@ export interface paths {
      *
      * Note:
      * - For GitHub Enterprise Server, this endpoint will only list repositories available to all users on the enterprise.
-     * - Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of repositories.
+     * - Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@3.5/rest/guides/using-pagination-in-the-rest-api#using-link-headers) to get the URL for the next page of repositories.
      */
     get: operations["repos/list-public"];
   };
@@ -6483,7 +6529,7 @@ export interface paths {
   "/user/teams": {
     /**
      * List teams for the authenticated user
-     * @description List all of the teams across all of the organizations to which the authenticated user belongs. This method requires `user`, `repo`, or `read:org` [scope](https://docs.github.com/enterprise-server@3.5/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/) when authenticating via [OAuth](https://docs.github.com/enterprise-server@3.5/apps/building-oauth-apps/).
+     * @description List all of the teams across all of the organizations to which the authenticated user belongs. This method requires `user`, `repo`, or `read:org` [scope](https://docs.github.com/enterprise-server@3.5/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/) when authenticating via [OAuth](https://docs.github.com/enterprise-server@3.5/apps/building-oauth-apps/). When using a fine-grained personal access token, the resource owner of the token [must be a single organization](https://docs.github.com/enterprise-server@3.5/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token#fine-grained-personal-access-tokens), and have at least read-only member organization permissions. The response payload only contains the teams from a single organization when using a fine-grained personal access token.
      */
     get: operations["teams/list-for-authenticated-user"];
   };
@@ -6492,7 +6538,7 @@ export interface paths {
      * List users
      * @description Lists all users, in the order that they signed up on GitHub Enterprise Server. This list includes personal user accounts and organization accounts.
      *
-     * Note: Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of users.
+     * Note: Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@3.5/rest/guides/using-pagination-in-the-rest-api#using-link-headers) to get the URL for the next page of users.
      */
     get: operations["users/list"];
   };
@@ -7390,6 +7436,16 @@ export interface components {
        */
       organization_hooks?: "read" | "write";
       /**
+       * @description The level of permission to grant the access token for viewing and managing fine-grained personal access token requests to an organization.
+       * @enum {string}
+       */
+      organization_personal_access_tokens?: "read" | "write";
+      /**
+       * @description The level of permission to grant the access token for viewing and managing fine-grained personal access tokens that have been approved by an organization.
+       * @enum {string}
+       */
+      organization_personal_access_token_requests?: "read" | "write";
+      /**
        * @description The level of permission to grant the access token for viewing an organization's plan.
        * @enum {string}
        */
@@ -7901,6 +7957,28 @@ export interface components {
       updated_at: string | null;
       /** Format: uri */
       avatar_url: string;
+    };
+    /**
+     * Integration Installation Request
+     * @description Request to install an integration on a target
+     */
+    "integration-installation-request": {
+      /**
+       * @description Unique identifier of the request installation.
+       * @example 42
+       */
+      id: number;
+      /** @example MDExOkludGVncmF0aW9uMQ== */
+      node_id?: string;
+      account:
+        | components["schemas"]["simple-user"]
+        | components["schemas"]["enterprise"];
+      requester: components["schemas"]["simple-user"];
+      /**
+       * Format: date-time
+       * @example 2022-07-08T16:18:44-04:00
+       */
+      created_at: string;
     };
     /**
      * Installation
@@ -8680,7 +8758,7 @@ export interface components {
     "selected-actions": {
       /** @description Whether GitHub-owned actions are allowed. For example, this includes the actions in the `actions` organization. */
       github_owned_allowed: boolean;
-      /** @description Specifies a list of string-matching patterns to allow specific action(s). Wildcards, tags, and SHAs are allowed. For example, `monalisa/octocat@*`, `monalisa/octocat@v2`, `monalisa/*`." */
+      /** @description Specifies a list of string-matching patterns to allow specific action(s). Wildcards, tags, and SHAs are allowed. For example, `monalisa/octocat@*`, `monalisa/octocat@v2`, `monalisa/*`. */
       patterns_allowed: string[];
     };
     "runner-groups-enterprise": {
@@ -8729,6 +8807,11 @@ export interface components {
        * @example 5
        */
       id: number;
+      /**
+       * @description The id of the runner group.
+       * @example 1
+       */
+      runner_group_id?: number;
       /**
        * @description The name of the runner.
        * @example iMac
@@ -8887,7 +8970,6 @@ export interface components {
      * @enum {string|null}
      */
     "secret-scanning-alert-resolution":
-      | ""
       | "false_positive"
       | "wont_fix"
       | "revoked"
@@ -9382,6 +9464,7 @@ export interface components {
      * @description Issues are a great way to keep track of tasks, enhancements, and bugs for your projects.
      */
     issue: {
+      /** Format: int64 */
       id: number;
       node_id: string;
       /**
@@ -9490,6 +9573,7 @@ export interface components {
      */
     "issue-comment": {
       /**
+       * Format: int64
        * @description Unique identifier of the issue comment
        * @example 42
        */
@@ -10034,16 +10118,13 @@ export interface components {
       verifiable_password_authentication: boolean;
       /**
        * @example [
-       *   "13.65.0.0/16",
-       *   "157.55.204.33/32",
-       *   "2a01:111:f403:f90c::/62"
+       *   "192.0.2.1"
        * ]
        */
       packages?: string[];
       /**
        * @example [
-       *   "192.168.7.15/32",
-       *   "192.168.7.16/32"
+       *   "192.0.2.1"
        * ]
        */
       dependabot?: string[];
@@ -10857,6 +10938,7 @@ export interface components {
       exclude_releases: boolean;
       exclude_owner_projects: boolean;
       org_metadata_only: boolean;
+      /** @description The repositories included in the migration. Only returned for export migrations. */
       repositories: components["schemas"]["repository"][];
       /**
        * Format: uri
@@ -10876,7 +10958,8 @@ export interface components {
       node_id: string;
       /** Format: uri */
       archive_url?: string;
-      exclude?: Record<string, never>[];
+      /** @description Exclude related items from being returned in the response in order to improve performance of the request. The array can include any of: `"repositories"`. */
+      exclude?: string[];
     };
     "org-pre-receive-hook": {
       id?: number;
@@ -12994,11 +13077,11 @@ export interface components {
         updated_at?: string;
       }[];
       /**
-       * @description Whether deployment to the environment(s) was approved or rejected
+       * @description Whether deployment to the environment(s) was approved or rejected or pending (with comments)
        * @example approved
        * @enum {string}
        */
-      state: "approved" | "rejected";
+      state: "approved" | "rejected" | "pending";
       user: components["schemas"]["simple-user"];
       /**
        * @description The comment submitted with the deployment review
@@ -15018,6 +15101,7 @@ export interface components {
        * @example 2020-11-23T22:00:40Z
        */
       updated_at: string;
+      /** @description Built-in deployment protection rules for the environment. */
       protection_rules?: (
         | {
             /** @example 3515 */
@@ -15403,6 +15487,7 @@ export interface components {
      * @description Issues are a great way to keep track of tasks, enhancements, and bugs for your projects.
      */
     "nullable-issue": {
+      /** Format: int64 */
       id: number;
       node_id: string;
       /**
@@ -15554,7 +15639,10 @@ export interface components {
      * @description Issue Event
      */
     "issue-event": {
-      /** @example 1 */
+      /**
+       * Format: int64
+       * @example 1
+       */
       id: number;
       /** @example MDEwOklzc3VlRXZlbnQx */
       node_id: string;
@@ -16180,12 +16268,12 @@ export interface components {
        * @description The line index in the diff to which the comment applies. This field is deprecated; use `line` instead.
        * @example 1
        */
-      position: number;
+      position?: number;
       /**
        * @description The index of the original line in the diff to which the comment applies. This field is deprecated; use `original_line` instead.
        * @example 4
        */
-      original_position: number;
+      original_position?: number;
       /**
        * @description The SHA of the commit to which the comment applies.
        * @example 6dcb09b5b57875f334f61aebed695e2e4193db5e
@@ -16285,6 +16373,11 @@ export interface components {
        * @enum {string}
        */
       side?: "LEFT" | "RIGHT";
+      /**
+       * @description The level at which the comment is targeted, can be a diff line or a file.
+       * @enum {string}
+       */
+      subject_type?: "line" | "file";
       reactions?: components["schemas"]["reaction-rollup"];
       /** @example "<p>comment body</p>" */
       body_html?: string;
@@ -16785,7 +16878,7 @@ export interface components {
        * @example Amazing new feature
        */
       title: string;
-      user: components["schemas"]["nullable-simple-user"];
+      user: components["schemas"]["simple-user"];
       /** @example Please pull these awesome changes */
       body: string | null;
       labels: {
@@ -17790,6 +17883,7 @@ export interface components {
       events_url: string;
       /** Format: uri */
       html_url: string;
+      /** Format: int64 */
       id: number;
       node_id: string;
       number: number;
@@ -18421,7 +18515,10 @@ export interface components {
         primary_key_id?: number;
         key_id?: string;
         public_key?: string;
-        emails?: Record<string, never>[];
+        emails?: {
+          email?: string;
+          verified?: boolean;
+        }[];
         subkeys?: Record<string, never>[];
         can_sign?: boolean;
         can_encrypt_comms?: boolean;
@@ -18520,20 +18617,20 @@ export interface components {
         "application/json": Record<string, never>;
       };
     };
-    /** @description Forbidden */
-    forbidden: {
-      content: {
-        "application/json": components["schemas"]["basic-error"];
-      };
-    };
+    /** @description Not modified */
+    not_modified: never;
     /** @description Requires authentication */
     requires_authentication: {
       content: {
         "application/json": components["schemas"]["basic-error"];
       };
     };
-    /** @description Not modified */
-    not_modified: never;
+    /** @description Forbidden */
+    forbidden: {
+      content: {
+        "application/json": components["schemas"]["basic-error"];
+      };
+    };
     /** @description Gone */
     gone: {
       content: {
@@ -18672,8 +18769,8 @@ export interface components {
     "runner-id": number;
     /** @description The name of a self-hosted runner's custom label. */
     "runner-label-name": string;
-    /** @description A search phrase. For more information, see [Searching the audit log](https://docs.github.com/enterprise-server@3.5/github/setting-up-and-managing-organizations-and-teams/reviewing-the-audit-log-for-your-organization#searching-the-audit-log). */
-    "audit-log-phrase": string;
+    /** @description A search phrase. For more information, see [Searching the audit log](https://docs.github.com/enterprise-server@3.5/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/searching-the-audit-log-for-your-enterprise#searching-the-audit-log). */
+    "audit-log-enterprise-phrase": string;
     /**
      * @description The event types to include:
      *
@@ -18684,9 +18781,9 @@ export interface components {
      * The default is `web`.
      */
     "audit-log-include": "web" | "git" | "all";
-    /** @description A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events after this cursor. */
+    /** @description A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.5/rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for events after this cursor. */
     "audit-log-after": string;
-    /** @description A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for events before this cursor. */
+    /** @description A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.5/rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for events before this cursor. */
     "audit-log-before": string;
     /**
      * @description The order of audit log events. To list newest events first, specify `desc`. To list oldest events first, specify `asc`.
@@ -18704,9 +18801,9 @@ export interface components {
     "secret-scanning-alert-secret-type": string;
     /** @description A comma-separated list of resolutions. Only secret scanning alerts with one of these resolutions are listed. Valid resolutions are `false_positive`, `wont_fix`, `revoked`, `pattern_edited`, `pattern_deleted` or `used_in_tests`. */
     "secret-scanning-alert-resolution": string;
-    /** @description A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for results before this cursor. */
+    /** @description A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.5/rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for results before this cursor. */
     "pagination-before": string;
-    /** @description A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#link-header). If specified, the query only searches for results after this cursor. */
+    /** @description A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.5/rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for results after this cursor. */
     "pagination-after": string;
     /** @description The unique identifier of the gist. */
     "gist-id": string;
@@ -18732,12 +18829,16 @@ export interface components {
     "repository-id": number;
     /** @description The name of the secret. */
     "secret-name": string;
+    /** @description A search phrase. For more information, see [Searching the audit log](https://docs.github.com/enterprise-server@3.5/github/setting-up-and-managing-organizations-and-teams/reviewing-the-audit-log-for-your-organization#searching-the-audit-log). */
+    "audit-log-phrase": string;
     /** @description The name of a code scanning tool. Only results by this tool will be listed. You can specify the tool by using either `tool_name` or `tool_guid`, but not both. */
     "tool-name": components["schemas"]["code-scanning-analysis-tool-name"];
     /** @description The GUID of a code scanning tool. Only results by this tool will be listed. Note that some code scanning tools may not include a GUID in their analysis data. You can specify the tool by using either `tool_guid` or `tool_name`, but not both. */
     "tool-guid": components["schemas"]["code-scanning-analysis-tool-guid"];
     /** @description The unique identifier of the migration. */
     "migration-id": number;
+    /** @description repo_name parameter */
+    "repo-name": string;
     /** @description The slug of the team name. */
     "team-slug": string;
     /** @description The number that identifies the discussion. */
@@ -18776,7 +18877,8 @@ export interface components {
       | "in_progress"
       | "queued"
       | "requested"
-      | "waiting";
+      | "waiting"
+      | "pending";
     /** @description Returns workflow runs created within the given date-time range. For more information on the syntax, see "[Understanding the search syntax](https://docs.github.com/enterprise-server@3.5/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax#query-for-dates)." */
     created: string;
     /** @description If `true` pull requests are omitted from the response (empty array). */
@@ -18815,7 +18917,7 @@ export interface components {
     "branch-policy-id": number;
     /** @description The unique identifier of the invitation. */
     "invitation-id": number;
-    /** @description The property to sort the results by. `created` means when the repository was starred. `updated` means when the repository was last pushed to. */
+    /** @description The property to sort the results by. */
     sort: "created" | "updated";
     /** @description The number that identifies the issue. */
     "issue-number": number;
@@ -18839,6 +18941,12 @@ export interface components {
     order: "desc" | "asc";
     /** @description The unique identifier of the GPG key. */
     "gpg-key-id": number;
+    /** @description Only show repositories updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
+    "since-repo-date": string;
+    /** @description Only show repositories updated before the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
+    "before-repo-date": string;
+    /** @description The property to sort the results by. `created` means when the repository was starred. `updated` means when the repository was last pushed to. */
+    "sort-starred": "created" | "updated";
     /** @description A user ID. Only return users with an ID greater than this ID. */
     "since-user": number;
   };
@@ -18974,7 +19082,7 @@ export interface operations {
         hook_id: components["parameters"]["hook-id"];
       };
     };
-    requestBody?: {
+    requestBody: {
       content: {
         "application/json": {
           /** @description Key/value pairs to provide settings for this webhook. */
@@ -19818,6 +19926,28 @@ export interface operations {
     };
   };
   /**
+   * List installation requests for the authenticated app
+   * @description Lists all the pending installation requests for the authenticated GitHub App.
+   */
+  "apps/list-installation-requests-for-authenticated-app": {
+    parameters: {
+      query: {
+        per_page?: components["parameters"]["per-page"];
+        page?: components["parameters"]["page"];
+      };
+    };
+    responses: {
+      /** @description List of integration installation requests */
+      200: {
+        content: {
+          "application/json": components["schemas"]["integration-installation-request"][];
+        };
+      };
+      304: components["responses"]["not_modified"];
+      401: components["responses"]["requires_authentication"];
+    };
+  };
+  /**
    * List installations for the authenticated app
    * @description You must use a [JWT](https://docs.github.com/enterprise-server@3.5/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
    *
@@ -20039,8 +20169,8 @@ export interface operations {
   };
   /**
    * Delete an app authorization
-   * @description OAuth application owners can revoke a grant for their OAuth application and a specific user. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.5/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. You must also provide a valid OAuth `access_token` as an input parameter and the grant for the token's owner will be deleted.
-   * Deleting an OAuth application's grant will also delete all OAuth tokens associated with the application for the user. Once deleted, the application will have no access to the user's account and will no longer be listed on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized).
+   * @description OAuth and GitHub application owners can revoke a grant for their application and a specific user. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.5/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. You must also provide a valid OAuth `access_token` as an input parameter and the grant for the token's owner will be deleted.
+   * Deleting an application's grant will also delete all OAuth tokens associated with the application for the user. Once deleted, the application will have no access to the user's account and will no longer be listed on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized).
    */
   "apps/delete-authorization": {
     parameters: {
@@ -20064,7 +20194,7 @@ export interface operations {
   };
   /**
    * Check a token
-   * @description OAuth applications can use a special API method for checking OAuth token validity without exceeding the normal rate limits for failed login attempts. Authentication works differently with this particular endpoint. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.5/rest/overview/other-authentication-methods#basic-authentication) to use this endpoint, where the username is the OAuth application `client_id` and the password is its `client_secret`. Invalid tokens will return `404 NOT FOUND`.
+   * @description OAuth applications and GitHub applications with OAuth authorizations can use this API method for checking OAuth token validity without exceeding the normal rate limits for failed login attempts. Authentication works differently with this particular endpoint. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.5/rest/overview/other-authentication-methods#basic-authentication) to use this endpoint, where the username is the application `client_id` and the password is its `client_secret`. Invalid tokens will return `404 NOT FOUND`.
    */
   "apps/check-token": {
     parameters: {
@@ -20075,7 +20205,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** @description The access_token of the OAuth application. */
+          /** @description The access_token of the OAuth or GitHub application. */
           access_token: string;
         };
       };
@@ -20093,7 +20223,7 @@ export interface operations {
   };
   /**
    * Delete an app token
-   * @description OAuth application owners can revoke a single token for an OAuth application. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.5/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password.
+   * @description OAuth  or GitHub application owners can revoke a single token for an OAuth application or a GitHub application with an OAuth authorization. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.5/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the application's `client_id` and `client_secret` as the username and password.
    */
   "apps/delete-token": {
     parameters: {
@@ -20117,7 +20247,7 @@ export interface operations {
   };
   /**
    * Reset a token
-   * @description OAuth applications can use this API method to reset a valid OAuth token without end-user involvement. Applications must save the "token" property in the response because changes take effect immediately. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.5/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.
+   * @description OAuth applications and GitHub applications with OAuth authorizations can use this API method to reset a valid OAuth token without end-user involvement. Applications must save the "token" property in the response because changes take effect immediately. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.5/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.
    */
   "apps/reset-token": {
     parameters: {
@@ -20128,7 +20258,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** @description The access_token of the OAuth application. */
+          /** @description The access_token of the OAuth or GitHub application. */
           access_token: string;
         };
       };
@@ -20145,7 +20275,7 @@ export interface operations {
   };
   /**
    * Create a scoped access token
-   * @description Use a non-scoped user-to-server OAuth access token to create a repository scoped and/or permission scoped user-to-server OAuth access token. You can specify which repositories the token can access and which permissions are granted to the token. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.5/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the OAuth application's `client_id` and `client_secret` as the username and password. Invalid tokens will return `404 NOT FOUND`.
+   * @description Use a non-scoped user-to-server access token to create a repository scoped and/or permission scoped user-to-server access token. You can specify which repositories the token can access and which permissions are granted to the token. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.5/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the `client_id` and `client_secret` of the GitHub App as the username and password. Invalid tokens will return `404 NOT FOUND`.
    */
   "apps/scope-token": {
     parameters: {
@@ -20157,7 +20287,7 @@ export interface operations {
       content: {
         "application/json": {
           /**
-           * @description The OAuth access token used to authenticate to the GitHub API.
+           * @description The access token used to authenticate to the GitHub API.
            * @example e72e16c7e42f292c6912e7710c838347ae178b4a
            */
           access_token: string;
@@ -20791,7 +20921,6 @@ export interface operations {
    * Get GitHub Actions cache usage policy for an enterprise
    * @description Gets the GitHub Actions cache usage policy for an enterprise.
    * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
-   * GitHub Apps must have the `enterprise_administration:write` permission to use this endpoint.
    */
   "actions/get-actions-cache-usage-policy-for-enterprise": {
     parameters: {
@@ -20815,7 +20944,6 @@ export interface operations {
    * Set GitHub Actions cache usage policy for an enterprise
    * @description Sets the GitHub Actions cache usage policy for an enterprise.
    * You must authenticate using an access token with the `admin:enterprise` scope to use this endpoint.
-   * GitHub Apps must have the `enterprise_administration:write` permission to use this endpoint.
    */
   "actions/set-actions-cache-usage-policy-for-enterprise": {
     parameters: {
@@ -21642,7 +21770,7 @@ export interface operations {
   "enterprise-admin/get-audit-log": {
     parameters: {
       query: {
-        phrase?: components["parameters"]["audit-log-phrase"];
+        phrase?: components["parameters"]["audit-log-enterprise-phrase"];
         include?: components["parameters"]["audit-log-include"];
         after?: components["parameters"]["audit-log-after"];
         before?: components["parameters"]["audit-log-before"];
@@ -22755,7 +22883,7 @@ export interface operations {
    * List organizations
    * @description Lists all organizations, in the order that they were created on GitHub Enterprise Server.
    *
-   * **Note:** Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of organizations.
+   * **Note:** Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@3.5/rest/guides/using-pagination-in-the-rest-api#using-link-headers) to get the URL for the next page of organizations.
    */
   "orgs/list": {
     parameters: {
@@ -22780,6 +22908,7 @@ export interface operations {
   };
   /**
    * List custom repository roles in an organization
+   * @deprecated
    * @description List the custom repository roles available in this organization. In order to see custom
    * repository roles in an organization, the authenticated user must be an organization owner.
    *
@@ -23292,6 +23421,7 @@ export interface operations {
   /**
    * Get a self-hosted runner group for an organization
    * @description Gets a specific self-hosted runner group for an organization.
+   *
    * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
    */
   "actions/get-self-hosted-runner-group-for-org": {
@@ -23313,6 +23443,7 @@ export interface operations {
   /**
    * Delete a self-hosted runner group from an organization
    * @description Deletes a self-hosted runner group for an organization.
+   *
    * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
    */
   "actions/delete-self-hosted-runner-group-from-org": {
@@ -25055,7 +25186,9 @@ export interface operations {
   };
   /**
    * List organization migrations
-   * @description Lists the most recent migrations.
+   * @description Lists the most recent migrations, including both exports (which can be started through the REST API) and imports (which cannot be started using the REST API).
+   *
+   * A list of `repositories` is only returned for export migrations.
    */
   "migrations/list-for-org": {
     parameters: {
@@ -25184,6 +25317,86 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["migration"];
+        };
+      };
+      404: components["responses"]["not_found"];
+    };
+  };
+  /**
+   * Download an organization migration archive
+   * @description Fetches the URL to a migration archive.
+   */
+  "migrations/download-archive-for-org": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+        migration_id: components["parameters"]["migration-id"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      302: never;
+      404: components["responses"]["not_found"];
+    };
+  };
+  /**
+   * Delete an organization migration archive
+   * @description Deletes a previous migration archive. Migration archives are automatically deleted after seven days.
+   */
+  "migrations/delete-archive-for-org": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+        migration_id: components["parameters"]["migration-id"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      204: never;
+      404: components["responses"]["not_found"];
+    };
+  };
+  /**
+   * Unlock an organization repository
+   * @description Unlocks a repository that was locked for migration. You should unlock each migrated repository and [delete them](https://docs.github.com/enterprise-server@3.5/rest/repos/repos#delete-a-repository) when the migration is complete and you no longer need the source data.
+   */
+  "migrations/unlock-repo-for-org": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+        migration_id: components["parameters"]["migration-id"];
+        repo_name: components["parameters"]["repo-name"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      204: never;
+      404: components["responses"]["not_found"];
+    };
+  };
+  /**
+   * List repositories in an organization migration
+   * @description List all the repositories for this organization migration.
+   */
+  "migrations/list-repos-for-org": {
+    parameters: {
+      query: {
+        per_page?: components["parameters"]["per-page"];
+        page?: components["parameters"]["page"];
+      };
+      path: {
+        org: components["parameters"]["org"];
+        migration_id: components["parameters"]["migration-id"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        headers: {
+          Link: components["headers"]["link"];
+        };
+        content: {
+          "application/json": components["schemas"]["minimal-repository"][];
         };
       };
       404: components["responses"]["not_found"];
@@ -25641,7 +25854,7 @@ export interface operations {
            */
           allow_auto_merge?: boolean;
           /**
-           * @description Either `true` to allow automatically deleting head branches when pull requests are merged, or `false` to prevent automatic deletion.
+           * @description Either `true` to allow automatically deleting head branches when pull requests are merged, or `false` to prevent automatic deletion. **The authenticated user must be an organization owner to set this property to `true`.**
            * @default false
            */
           delete_branch_on_merge?: boolean;
@@ -25855,7 +26068,7 @@ export interface operations {
   };
   /**
    * Get a team by name
-   * @description Gets a team using the team's `slug`. GitHub Enterprise Server generates the `slug` from the team `name`.
+   * @description Gets a team using the team's `slug`. To create the `slug`, GitHub Enterprise Server replaces special characters in the `name` string, changes all words to lowercase, and replaces spaces with a `-` separator. For example, `"My TEam Näme"` would become `my-team-name`.
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}`.
    */
@@ -26789,7 +27002,7 @@ export interface operations {
       content: {
         "application/json": {
           /**
-           * @description The permission to grant the team on this repository. If no permission is specified, the team's `permission` attribute will be used to determine what permission to grant the team on this repository.
+           * @description The permission to grant the team on this repository. We accept the following permissions to be set: `pull`, `triage`, `push`, `maintain`, `admin` and you can also specify a custom repository role name, if the owning organization has defined any. If no permission is specified, the team's `permission` attribute will be used to determine what permission to grant the team on this repository.
            * @default push
            */
           permission?: string;
@@ -27703,8 +27916,6 @@ export interface operations {
       query: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
-        /** @description Filters artifacts by exact match on their name field. */
-        name?: string;
       };
       path: {
         owner: components["parameters"]["owner"];
@@ -29073,7 +29284,7 @@ export interface operations {
           ref: string;
           /** @description Input keys and values configured in the workflow file. The maximum number of properties is 10. Any default properties configured in the workflow file will be used when `inputs` are omitted. */
           inputs?: {
-            [key: string]: string | undefined;
+            [key: string]: unknown | undefined;
           };
         };
       };
@@ -30117,10 +30328,6 @@ export interface operations {
    * @description Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/enterprise-server@3.5/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
    *
    * Replaces the list of teams that have push access to this branch. This removes all teams that previously had push access and grants push access to the new list of teams. Team restrictions include child teams.
-   *
-   * | Type    | Description                                                                                                                                |
-   * | ------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-   * | `array` | The teams that can have push access. Use the team's `slug`. **Note**: The list of users, apps, and teams in total is limited to 100 items. |
    */
   "repos/set-team-access-restrictions": {
     parameters: {
@@ -30153,10 +30360,6 @@ export interface operations {
    * @description Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/enterprise-server@3.5/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
    *
    * Grants the specified teams push access for this branch. You can also give push access to child teams.
-   *
-   * | Type    | Description                                                                                                                                |
-   * | ------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-   * | `array` | The teams that can have push access. Use the team's `slug`. **Note**: The list of users, apps, and teams in total is limited to 100 items. |
    */
   "repos/add-team-access-restrictions": {
     parameters: {
@@ -30189,10 +30392,6 @@ export interface operations {
    * @description Protected branches are available in public repositories with GitHub Free and GitHub Free for organizations, and in public and private repositories with GitHub Pro, GitHub Team, GitHub Enterprise Cloud, and GitHub Enterprise Server. For more information, see [GitHub's products](https://docs.github.com/enterprise-server@3.5/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
    *
    * Removes the ability of a team to push to this branch. You can also remove push access for child teams.
-   *
-   * | Type    | Description                                                                                                                                         |
-   * | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-   * | `array` | Teams that should no longer have push access. Use the team's `slug`. **Note**: The list of users, apps, and teams in total is limited to 100 items. |
    */
   "repos/remove-team-access-restrictions": {
     parameters: {
@@ -30523,7 +30722,7 @@ export interface operations {
             summary: string;
             /** @description Can contain Markdown. */
             text?: string;
-            /** @description Adds information from your analysis to specific lines of code. Annotations are visible in GitHub's pull request UI. Annotations are visible in GitHub's pull request UI. The Checks API limits the number of annotations to a maximum of 50 per API request. To create more than 50 annotations, you have to make multiple requests to the [Update a check run](https://docs.github.com/enterprise-server@3.5/rest/reference/checks#update-a-check-run) endpoint. Each time you update the check run, annotations are appended to the list of annotations that already exist for the check run. For details about annotations in the UI, see "[About status checks](https://docs.github.com/enterprise-server@3.5/articles/about-status-checks#checks)". */
+            /** @description Adds information from your analysis to specific lines of code. Annotations are visible in GitHub's pull request UI. Annotations are visible in GitHub's pull request UI. The Checks API limits the number of annotations to a maximum of 50 per API request. To create more than 50 annotations, you have to make multiple requests to the [Update a check run](https://docs.github.com/enterprise-server@3.5/rest/reference/checks#update-a-check-run) endpoint. Each time you update the check run, annotations are appended to the list of annotations that already exist for the check run. GitHub Actions are limited to 10 warning annotations and 10 error annotations per step. For details about annotations in the UI, see "[About status checks](https://docs.github.com/enterprise-server@3.5/articles/about-status-checks#checks)". */
             annotations?: {
               /** @description The path of the file to add an annotation to. For example, `assets/css/main.css`. */
               path: string;
@@ -31149,7 +31348,7 @@ export interface operations {
    * ```
    * <br>
    * SARIF upload supports a maximum number of entries per the following data objects, and an analysis will be rejected if any of these objects is above its maximum value. For some objects, there are additional values over which the entries will be ignored while keeping the most important entries whenever applicable.
-   * To get the most out of your analysis when it includes data above the supported limits, try to optimize the analysis configuration (For example, for the CodeQL tool, identify and remove the most noisy queries).
+   * To get the most out of your analysis when it includes data above the supported limits, try to optimize the analysis configuration. For example, for the CodeQL tool, identify and remove the most noisy queries.
    *
    *
    * | **SARIF data**                   | **Maximum values** | **Additional limits**                                                            |
@@ -31159,7 +31358,6 @@ export interface operations {
    * | Rules per run                    |       25,000       |                                                                                  |
    * | Thread Flow Locations per result |       10,000       | Only the top 1,000 Thread Flow Locations will be included, using prioritization. |
    * | Location per result	             |       1,000        | Only 100 locations will be included.                                             |
-   *
    *
    * The `202 Accepted` response includes an `id` value.
    * You can use this ID to check the status of the upload by using it in the `/sarifs/{sarif_id}` endpoint.
@@ -31644,7 +31842,7 @@ export interface operations {
    * | `unsigned` | The object does not include a signature. |
    * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
    * | `no_user` | No user was associated with the `committer` email address in the commit. |
-   * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
+   * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on their account. |
    * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
    * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
    * | `malformed_signature` | There was an error parsing the signature. |
@@ -31658,8 +31856,10 @@ export interface operations {
         sha?: string;
         /** @description Only commits containing this file path will be returned. */
         path?: string;
-        /** @description GitHub login or email address by which to filter by commit author. */
+        /** @description GitHub username or email address to use to filter by commit author. */
         author?: string;
+        /** @description GitHub username or email address to use to filter by commit committer. */
+        committer?: string;
         since?: components["parameters"]["since"];
         /** @description Only commits before this date will be returned. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
         until?: string;
@@ -31842,7 +32042,7 @@ export interface operations {
    * | `unsigned` | The object does not include a signature. |
    * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
    * | `no_user` | No user was associated with the `committer` email address in the commit. |
-   * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
+   * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on their account. |
    * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
    * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
    * | `malformed_signature` | There was an error parsing the signature. |
@@ -32024,7 +32224,7 @@ export interface operations {
    * Compare two commits
    * @description Compares two commits against one another. You can compare branches in the same repository, or you can compare branches that exist in different repositories within the same repository network, including fork branches. For more information about how to view a repository's network, see "[Understanding connections between repositories](https://docs.github.com/enterprise-server@3.5/repositories/viewing-activity-and-data-for-your-repository/understanding-connections-between-repositories)."
    *
-   * This endpoint is equivalent to running the `git log BASE...HEAD` command, but it returns commits in a different order. The `git log BASE...HEAD` command returns commits in reverse chronological order, whereas the API returns commits in chronological order. You can pass the appropriate [media type](https://docs.github.com/enterprise-server@3.5/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.
+   * This endpoint is equivalent to running the `git log BASE..HEAD` command, but it returns commits in a different order. The `git log BASE..HEAD` command returns commits in reverse chronological order, whereas the API returns commits in chronological order. You can pass the appropriate [media type](https://docs.github.com/enterprise-server@3.5/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.
    *
    * The API response includes details about the files that were changed between the two commits. This includes the status of the change (if a file was added, removed, modified, or renamed), and details of the change itself. For example, files with a `renamed` status have a `previous_filename` field showing the previous filename of the file, and files with a `modified` status have a `patch` field showing the changes made to the file.
    *
@@ -32061,7 +32261,7 @@ export interface operations {
    * | `unsigned` | The object does not include a signature. |
    * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
    * | `no_user` | No user was associated with the `committer` email address in the commit. |
-   * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
+   * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on their account. |
    * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
    * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
    * | `malformed_signature` | There was an error parsing the signature. |
@@ -32132,7 +32332,7 @@ export interface operations {
   "repos/get-content": {
     parameters: {
       query: {
-        /** @description The name of the commit/branch/tag. Default: the repository’s default branch (usually `master`) */
+        /** @description The name of the commit/branch/tag. Default: the repository’s default branch. */
         ref?: string;
       };
       path: {
@@ -32183,7 +32383,7 @@ export interface operations {
           content: string;
           /** @description **Required if you are updating a file**. The blob SHA of the file being replaced. */
           sha?: string;
-          /** @description The branch name. Default: the repository’s default branch (usually `master`) */
+          /** @description The branch name. Default: the repository’s default branch. */
           branch?: string;
           /** @description The person that committed the file. Default: the authenticated user. */
           committer?: {
@@ -32252,7 +32452,7 @@ export interface operations {
           message: string;
           /** @description The blob SHA of the file being deleted. */
           sha: string;
-          /** @description The branch name. Default: the repository’s default branch (usually `master`) */
+          /** @description The branch name. Default: the repository’s default branch */
           branch?: string;
           /** @description object containing information about the committer. */
           committer?: {
@@ -33197,6 +33397,8 @@ export interface operations {
    * @description Create a fork for the authenticated user.
    *
    * **Note**: Forking a Repository happens asynchronously. You may have to wait a short period of time before you can access the git objects. If this takes longer than 5 minutes, be sure to contact [GitHub Enterprise Server Support](https://support.github.com/contact?tags=dotcom-rest-api).
+   *
+   * **Note**: Although this endpoint works with GitHub Apps, the GitHub App must be installed on the destination account with access to all repositories and on the source account with access to the source repository.
    */
   "repos/create-fork": {
     parameters: {
@@ -33316,7 +33518,7 @@ export interface operations {
    * | `unsigned` | The object does not include a signature. |
    * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
    * | `no_user` | No user was associated with the `committer` email address in the commit. |
-   * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
+   * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on their account. |
    * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
    * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
    * | `malformed_signature` | There was an error parsing the signature. |
@@ -33409,7 +33611,7 @@ export interface operations {
    * | `unsigned` | The object does not include a signature. |
    * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
    * | `no_user` | No user was associated with the `committer` email address in the commit. |
-   * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
+   * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on their account. |
    * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
    * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
    * | `malformed_signature` | There was an error parsing the signature. |
@@ -33605,7 +33807,7 @@ export interface operations {
    * | `unsigned` | The object does not include a signature. |
    * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
    * | `no_user` | No user was associated with the `committer` email address in the commit. |
-   * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
+   * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on their account. |
    * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
    * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
    * | `malformed_signature` | There was an error parsing the signature. |
@@ -33686,7 +33888,7 @@ export interface operations {
    * | `unsigned` | The object does not include a signature. |
    * | `unknown_signature_type` | A non-PGP signature was found in the commit. |
    * | `no_user` | No user was associated with the `committer` email address in the commit. |
-   * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on her/his account. |
+   * | `unverified_email` | The `committer` email address in the commit was associated with a user, but the email address is not verified on their account. |
    * | `bad_email` | The `committer` email address in the commit is not included in the identities of the PGP key that made the signature. |
    * | `unknown_key` | The key that made the signature has not been registered with any user's account. |
    * | `malformed_signature` | There was an error parsing the signature. |
@@ -34361,7 +34563,9 @@ export interface operations {
   };
   /**
    * List issue comments for a repository
-   * @description By default, Issue Comments are ordered by ascending ID.
+   * @description You can use the REST API to list comments on issues and pull requests for a repository. Every pull request is an issue, but not every issue is a pull request.
+   *
+   * By default, issue comments are ordered by ascending ID.
    */
   "issues/list-comments-for-repo": {
     parameters: {
@@ -34392,7 +34596,10 @@ export interface operations {
       422: components["responses"]["validation_failed"];
     };
   };
-  /** Get an issue comment */
+  /**
+   * Get an issue comment
+   * @description You can use the REST API to get comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request.
+   */
   "issues/get-comment": {
     parameters: {
       path: {
@@ -34411,7 +34618,10 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Delete an issue comment */
+  /**
+   * Delete an issue comment
+   * @description You can use the REST API to delete comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request.
+   */
   "issues/delete-comment": {
     parameters: {
       path: {
@@ -34425,7 +34635,10 @@ export interface operations {
       204: never;
     };
   };
-  /** Update an issue comment */
+  /**
+   * Update an issue comment
+   * @description You can use the REST API to update comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request.
+   */
   "issues/update-comment": {
     parameters: {
       path: {
@@ -34658,21 +34871,21 @@ export interface operations {
           title?: string | number;
           /** @description The contents of the issue. */
           body?: string | null;
-          /** @description Login for the user that this issue should be assigned to. **This field is deprecated.** */
+          /** @description Username to assign to this issue. **This field is deprecated.** */
           assignee?: string | null;
           /**
-           * @description State of the issue. Either `open` or `closed`.
+           * @description The open or closed state of the issue.
            * @enum {string}
            */
           state?: "open" | "closed";
           /**
-           * @description The reason for the current state
+           * @description The reason for the state change. Ignored unless `state` is changed.
            * @example not_planned
            * @enum {string|null}
            */
           state_reason?: "completed" | "not_planned" | "reopened" | null;
           milestone?: string | number;
-          /** @description Labels to associate with this issue. Pass one or more Labels to _replace_ the set of Labels on this Issue. Send an empty array (`[]`) to clear all Labels from the Issue. _NOTE: Only users with push access can set labels for issues. Labels are silently dropped otherwise._ */
+          /** @description Labels to associate with this issue. Pass one or more labels to _replace_ the set of labels on this issue. Send an empty array (`[]`) to clear all labels from the issue. Only users with push access can set labels for issues. Without push access to the repository, label changes are silently dropped. */
           labels?: OneOf<
             [
               string,
@@ -34684,7 +34897,7 @@ export interface operations {
               }
             ]
           >[];
-          /** @description Logins for Users to assign to this issue. Pass one or more user logins to _replace_ the set of assignees on this Issue. Send an empty array (`[]`) to clear all assignees from the Issue. _NOTE: Only users with push access can set assignees for new issues. Assignees are silently dropped otherwise._ */
+          /** @description Usernames to assign to this issue. Pass one or more user logins to _replace_ the set of assignees on this issue. Send an empty array (`[]`) to clear all assignees from the issue. Only users with push access can set assignees for new issues. Without push access to the repository, assignee changes are silently dropped. */
           assignees?: string[];
         };
       };
@@ -34792,7 +35005,9 @@ export interface operations {
   };
   /**
    * List issue comments
-   * @description Issue Comments are ordered by ascending ID.
+   * @description You can use the REST API to list comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request.
+   *
+   * Issue comments are ordered by ascending ID.
    */
   "issues/list-comments": {
     parameters: {
@@ -34823,7 +35038,14 @@ export interface operations {
   };
   /**
    * Create an issue comment
-   * @description This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.5/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+   * @description
+   * You can use the REST API to create comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request.
+   *
+   * This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.5/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+   * Creating content too quickly using this endpoint may result in secondary rate limiting.
+   * See "[Secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#secondary-rate-limits)"
+   * and "[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)"
+   * for details.
    */
   "issues/create-comment": {
     parameters: {
@@ -35862,7 +36084,7 @@ export interface operations {
    * Update information about a GitHub Enterprise Server Pages site
    * @description Updates information for a GitHub Enterprise Server Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages).
    *
-   * To use this endpoint, you must be a repository administrator, maintainer, or have the 'manage GitHub Pages settings' permission. A token with the `repo` scope or Pages write permission is required. GitHub Apps must have the `administrative:write` and `pages:write` permissions.
+   * To use this endpoint, you must be a repository administrator, maintainer, or have the 'manage GitHub Pages settings' permission. A token with the `repo` scope or Pages write permission is required. GitHub Apps must have the `administration:write` and `pages:write` permissions.
    */
   "repos/update-information-about-pages-site": {
     parameters: {
@@ -35915,7 +36137,7 @@ export interface operations {
    * Create a GitHub Enterprise Server Pages site
    * @description Configures a GitHub Enterprise Server Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages)."
    *
-   * To use this endpoint, you must be a repository administrator, maintainer, or have the 'manage GitHub Pages settings' permission. A token with the `repo` scope or Pages write permission is required. GitHub Apps must have the `administrative:write` and `pages:write` permissions.
+   * To use this endpoint, you must be a repository administrator, maintainer, or have the 'manage GitHub Pages settings' permission. A token with the `repo` scope or Pages write permission is required. GitHub Apps must have the `administration:write` and `pages:write` permissions.
    */
   "repos/create-pages-site": {
     parameters: {
@@ -35961,9 +36183,9 @@ export interface operations {
   };
   /**
    * Delete a GitHub Enterprise Server Pages site
-   * @description Deletes a a GitHub Enterprise Server Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages).
+   * @description Deletes a GitHub Enterprise Server Pages site. For more information, see "[About GitHub Pages](/github/working-with-github-pages/about-github-pages).
    *
-   * To use this endpoint, you must be a repository administrator, maintainer, or have the 'manage GitHub Pages settings' permission. A token with the `repo` scope or Pages write permission is required. GitHub Apps must have the `administrative:write` and `pages:write` permissions.
+   * To use this endpoint, you must be a repository administrator, maintainer, or have the 'manage GitHub Pages settings' permission. A token with the `repo` scope or Pages write permission is required. GitHub Apps must have the `administration:write` and `pages:write` permissions.
    */
   "repos/delete-pages-site": {
     parameters: {
@@ -36299,6 +36521,7 @@ export interface operations {
           /** @description Indicates whether the pull request is a draft. See "[Draft Pull Requests](https://docs.github.com/enterprise-server@3.5/articles/about-pull-requests#draft-pull-requests)" in the GitHub Help documentation to learn more. */
           draft?: boolean;
           /**
+           * Format: int64
            * @description An issue in the repository to convert to a pull request. The issue title, body, and comments will become the title, body, and comments on the new pull request. Required unless `title` is specified.
            * @example 1
            */
@@ -37279,7 +37502,7 @@ export interface operations {
   "repos/get-readme": {
     parameters: {
       query: {
-        /** @description The name of the commit/branch/tag. Default: the repository’s default branch (usually `master`) */
+        /** @description The name of the commit/branch/tag. Default: the repository’s default branch. */
         ref?: string;
       };
       path: {
@@ -37307,7 +37530,7 @@ export interface operations {
   "repos/get-readme-in-directory": {
     parameters: {
       query: {
-        /** @description The name of the commit/branch/tag. Default: the repository’s default branch (usually `master`) */
+        /** @description The name of the commit/branch/tag. Default: the repository’s default branch. */
         ref?: string;
       };
       path: {
@@ -37376,7 +37599,7 @@ export interface operations {
         "application/json": {
           /** @description The name of the tag. */
           tag_name: string;
-          /** @description Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default: the repository's default branch (usually `master`). */
+          /** @description Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default: the repository's default branch. */
           target_commitish?: string;
           /** @description The name of the release. */
           name?: string;
@@ -37620,7 +37843,7 @@ export interface operations {
         "application/json": {
           /** @description The name of the tag. */
           tag_name?: string;
-          /** @description Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default: the repository's default branch (usually `master`). */
+          /** @description Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default: the repository's default branch. */
           target_commitish?: string;
           /** @description The name of the release. */
           name?: string;
@@ -37670,7 +37893,7 @@ export interface operations {
   /**
    * Upload a release asset
    * @description This endpoint makes use of [a Hypermedia relation](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#hypermedia) to determine which URL to access. The endpoint you call to upload release assets is specific to your release. Use the `upload_url` returned in
-   * the response of the [Create a release endpoint](https://docs.github.com/enterprise-server@3.5/rest/reference/repos#create-a-release) to upload a release asset.
+   * the response of the [Create a release endpoint](https://docs.github.com/enterprise-server@3.5/rest/releases/releases#create-a-release) to upload a release asset.
    *
    * You need to use an HTTP client which supports [SNI](http://en.wikipedia.org/wiki/Server_Name_Indication) to make calls to this endpoint.
    *
@@ -37686,6 +37909,7 @@ export interface operations {
    * **Notes:**
    * *   GitHub Enterprise Server renames asset filenames that have special characters, non-alphanumeric characters, and leading or trailing periods. The "[List assets for a release](https://docs.github.com/enterprise-server@3.5/rest/reference/repos#list-assets-for-a-release)"
    * endpoint lists the renamed filenames. For more information and help, contact [GitHub Enterprise Server Support](https://support.github.com/contact?tags=dotcom-rest-api).
+   * *   To find the `release_id` query the [`GET /repos/{owner}/{repo}/releases/latest` endpoint](https://docs.github.com/enterprise-server@3.5/rest/releases/releases#get-the-latest-release).
    * *   If you upload an asset with the same filename as another uploaded asset, you'll receive an error and must delete the old file before you can re-upload the new asset.
    */
   "repos/upload-release-asset": {
@@ -37702,7 +37926,7 @@ export interface operations {
     };
     requestBody?: {
       content: {
-        "*/*": string;
+        "application/octet-stream": string;
       };
     };
     responses: {
@@ -38580,7 +38804,7 @@ export interface operations {
    *
    * Note:
    * - For GitHub Enterprise Server, this endpoint will only list repositories available to all users on the enterprise.
-   * - Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of repositories.
+   * - Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@3.5/rest/guides/using-pagination-in-the-rest-api#using-link-headers) to get the URL for the next page of repositories.
    */
   "repos/list-public": {
     parameters: {
@@ -38829,7 +39053,8 @@ export interface operations {
         q: string;
         /** @description Sorts the results of your query. Can only be `indexed`, which indicates how recently a file has been indexed by the GitHub Enterprise Server search infrastructure. Default: [best match](https://docs.github.com/enterprise-server@3.5/rest/reference/search#ranking-search-results) */
         sort?: "indexed";
-        order?: components["parameters"]["order"];
+        /** @description Determines whether the first search result returned is the highest number of matches (`desc`) or lowest number of matches (`asc`). This parameter is ignored unless you provide `sort`. */
+        order?: "desc" | "asc";
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -41337,8 +41562,8 @@ export interface operations {
         direction?: "asc" | "desc";
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
-        since?: components["parameters"]["since"];
-        before?: components["parameters"]["before"];
+        since?: components["parameters"]["since-repo-date"];
+        before?: components["parameters"]["before-repo-date"];
       };
     };
     responses: {
@@ -41590,7 +41815,7 @@ export interface operations {
   "activity/list-repos-starred-by-authenticated-user": {
     parameters: {
       query: {
-        sort?: components["parameters"]["sort"];
+        sort?: components["parameters"]["sort-starred"];
         direction?: components["parameters"]["direction"];
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
@@ -41699,7 +41924,7 @@ export interface operations {
   };
   /**
    * List teams for the authenticated user
-   * @description List all of the teams across all of the organizations to which the authenticated user belongs. This method requires `user`, `repo`, or `read:org` [scope](https://docs.github.com/enterprise-server@3.5/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/) when authenticating via [OAuth](https://docs.github.com/enterprise-server@3.5/apps/building-oauth-apps/).
+   * @description List all of the teams across all of the organizations to which the authenticated user belongs. This method requires `user`, `repo`, or `read:org` [scope](https://docs.github.com/enterprise-server@3.5/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/) when authenticating via [OAuth](https://docs.github.com/enterprise-server@3.5/apps/building-oauth-apps/). When using a fine-grained personal access token, the resource owner of the token [must be a single organization](https://docs.github.com/enterprise-server@3.5/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token#fine-grained-personal-access-tokens), and have at least read-only member organization permissions. The response payload only contains the teams from a single organization when using a fine-grained personal access token.
    */
   "teams/list-for-authenticated-user": {
     parameters: {
@@ -41727,7 +41952,7 @@ export interface operations {
    * List users
    * @description Lists all users, in the order that they signed up on GitHub Enterprise Server. This list includes personal user accounts and organization accounts.
    *
-   * Note: Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#link-header) to get the URL for the next page of users.
+   * Note: Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@3.5/rest/guides/using-pagination-in-the-rest-api#using-link-headers) to get the URL for the next page of users.
    */
   "users/list": {
     parameters: {
@@ -42215,7 +42440,7 @@ export interface operations {
   "activity/list-repos-starred-by-user": {
     parameters: {
       query: {
-        sort?: components["parameters"]["sort"];
+        sort?: components["parameters"]["sort-starred"];
         direction?: components["parameters"]["direction"];
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
