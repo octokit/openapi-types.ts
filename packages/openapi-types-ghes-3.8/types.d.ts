@@ -4800,7 +4800,10 @@ export interface paths {
     delete: operations["repos/delete-deployment-branch-policy"];
   };
   "/repos/{owner}/{repo}/events": {
-    /** List repository events */
+    /**
+     * List repository events
+     * @description **Note**: This API is not built to serve real-time use cases. Depending on the time of day, event latency can be anywhere from 30s to 6h.
+     */
     get: operations["activity/list-repo-events"];
   };
   "/repos/{owner}/{repo}/forks": {
@@ -7901,6 +7904,13 @@ export interface paths {
      */
     post: operations["actions/approve-workflow-run"];
   };
+  "/repos/{owner}/{repo}/actions/runs/{run_id}/deployment_protection_rule": {
+    /**
+     * Review custom deployment protection rules for a workflow run
+     * @description This endpoint does not exist in GitHub Enterprise Server 3.8. It was added in api.github.com
+     */
+    post: operations["actions/review-custom-gates-for-run"];
+  };
   "/repos/{owner}/{repo}/actions/runs/{run_id}/timing": {
     /**
      * Get workflow run usage
@@ -8031,6 +8041,37 @@ export interface paths {
      */
     get: operations["dependency-graph/export-sbom"];
   };
+  "/repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules": {
+    /**
+     * Get all deployment protection rules for an environment
+     * @description This endpoint does not exist in GitHub Enterprise Server 3.8. It was added in api.github.com
+     */
+    get: operations["repos/get-all-deployment-protection-rules"];
+    /**
+     * Create a custom deployment protection rule on an environment
+     * @description This endpoint does not exist in GitHub Enterprise Server 3.8. It was added in api.github.com
+     */
+    post: operations["repos/create-deployment-protection-rule"];
+  };
+  "/repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/apps": {
+    /**
+     * List custom deployment rule integrations available for an environment
+     * @description This endpoint does not exist in GitHub Enterprise Server 3.8. It was added in api.github.com
+     */
+    get: operations["repos/list-custom-deployment-rule-integrations"];
+  };
+  "/repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/{protection_rule_id}": {
+    /**
+     * Get a custom deployment protection rule
+     * @description This endpoint does not exist in GitHub Enterprise Server 3.8. It was added in api.github.com
+     */
+    get: operations["repos/get-custom-deployment-protection-rule"];
+    /**
+     * Disable a custom protection rule for an environment
+     * @description This endpoint does not exist in GitHub Enterprise Server 3.8. It was added in api.github.com
+     */
+    delete: operations["repos/disable-deployment-protection-rule"];
+  };
   "/repos/{owner}/{repo}/import": {
     /**
      * Get an import status
@@ -8159,6 +8200,13 @@ export interface paths {
      * @description This endpoint does not exist in GitHub Enterprise Server 3.8. It was added in api.github.com
      */
     post: operations["security-advisories/create-repository-advisory"];
+  };
+  "/repos/{owner}/{repo}/security-advisories/reports": {
+    /**
+     * Privately report a security vulnerability
+     * @description This endpoint does not exist in GitHub Enterprise Server 3.8. It was added in api.github.com
+     */
+    post: operations["security-advisories/create-private-vulnerability-report"];
   };
   "/repos/{owner}/{repo}/security-advisories/{ghsa_id}": {
     /**
@@ -40632,6 +40680,25 @@ export interface components {
       repository?: components["schemas"]["repository"];
       sender: components["schemas"]["simple-user"];
     };
+    /** Ruby Gems metadata */
+    "webhook-rubygems-metadata": {
+      name?: string;
+      description?: string;
+      readme?: string;
+      homepage?: string;
+      version_info?: {
+        version?: string;
+      };
+      platform?: string;
+      metadata?: {
+        [key: string]: string | undefined;
+      };
+      repo?: string;
+      dependencies?: {
+        [key: string]: string | undefined;
+      }[];
+      commit_oid?: string;
+    };
     /** package published event */
     "webhook-package-published": {
       /** @enum {string} */
@@ -40737,7 +40804,9 @@ export interface components {
           } | null;
           created_at?: string;
           description: string;
-          docker_metadata?: Record<string, never>[];
+          docker_metadata?: {
+            tags?: string[];
+          }[];
           draft?: boolean;
           /** Format: uri */
           html_url: string;
@@ -40873,7 +40942,7 @@ export interface components {
             /** Format: uri */
             url: string;
           };
-          rubygems_metadata?: Record<string, never>[];
+          rubygems_metadata?: components["schemas"]["webhook-rubygems-metadata"][];
           source_url?: string;
           summary: string;
           tag_name?: string;
@@ -40993,14 +41062,18 @@ export interface components {
           body_html: string;
           created_at: string;
           description: string;
-          docker_metadata?: Record<string, never>[];
+          docker_metadata?: {
+            tags?: string[];
+          }[];
           draft?: boolean;
           /** Format: uri */
           html_url: string;
           id: number;
           installation_command: string;
           manifest?: string;
-          metadata: Record<string, never>[];
+          metadata: {
+            [key: string]: unknown | undefined;
+          }[];
           name: string;
           package_files: {
             content_type: string;
@@ -41069,7 +41142,7 @@ export interface components {
             /** Format: uri */
             url: string;
           };
-          rubygems_metadata?: Record<string, never>[];
+          rubygems_metadata?: components["schemas"]["webhook-rubygems-metadata"][];
           /** Format: uri */
           source_url?: string;
           summary: string;
@@ -71509,7 +71582,9 @@ export interface components {
           };
           created_at?: string;
           description: string;
-          docker_metadata?: Record<string, never>[];
+          docker_metadata?: {
+            tags?: string[];
+          }[];
           draft?: boolean;
           html_url: string;
           id: number;
@@ -71624,7 +71699,7 @@ export interface components {
             target_commitish?: string;
             url?: string;
           };
-          rubygems_metadata?: Record<string, never>[];
+          rubygems_metadata?: components["schemas"]["webhook-rubygems-metadata"][];
           summary: string;
           tag_name?: string;
           target_commitish?: string;
@@ -71703,13 +71778,17 @@ export interface components {
           body_html: string;
           created_at: string;
           description: string;
-          docker_metadata?: (Record<string, unknown> | null)[];
+          docker_metadata?: ({
+            tags?: string[];
+          } | null)[];
           draft?: boolean;
           html_url: string;
           id: number;
           installation_command: string;
           manifest?: string;
-          metadata: Record<string, never>[];
+          metadata: {
+            [key: string]: unknown | undefined;
+          }[];
           name: string;
           package_files: {
             content_type?: string;
@@ -71758,7 +71837,7 @@ export interface components {
             target_commitish: string;
             url: string;
           };
-          rubygems_metadata?: Record<string, never>[];
+          rubygems_metadata?: components["schemas"]["webhook-rubygems-metadata"][];
           summary: string;
           tag_name?: string;
           target_commitish: string;
@@ -95516,7 +95595,10 @@ export interface operations {
       204: never;
     };
   };
-  /** List repository events */
+  /**
+   * List repository events
+   * @description **Note**: This API is not built to serve real-time use cases. Depending on the time of day, event latency can be anywhere from 30s to 6h.
+   */
   "activity/list-repo-events": {
     parameters: {
       query: {
@@ -106158,6 +106240,16 @@ export interface operations {
     };
   };
   /**
+   * Review custom deployment protection rules for a workflow run
+   * @description This endpoint does not exist in GitHub Enterprise Server 3.8. It was added in api.github.com
+   */
+  "actions/review-custom-gates-for-run": {
+    responses: {
+      /** @description Not Implemented */
+      501: never;
+    };
+  };
+  /**
    * Get workflow run usage
    * @description This endpoint does not exist in GitHub Enterprise Server 3.8. It was added in api.github.com
    */
@@ -106352,6 +106444,56 @@ export interface operations {
    * @description This endpoint does not exist in GitHub Enterprise Server 3.8. It was added in api.github.com
    */
   "dependency-graph/export-sbom": {
+    responses: {
+      /** @description Not Implemented */
+      501: never;
+    };
+  };
+  /**
+   * Get all deployment protection rules for an environment
+   * @description This endpoint does not exist in GitHub Enterprise Server 3.8. It was added in api.github.com
+   */
+  "repos/get-all-deployment-protection-rules": {
+    responses: {
+      /** @description Not Implemented */
+      501: never;
+    };
+  };
+  /**
+   * Create a custom deployment protection rule on an environment
+   * @description This endpoint does not exist in GitHub Enterprise Server 3.8. It was added in api.github.com
+   */
+  "repos/create-deployment-protection-rule": {
+    responses: {
+      /** @description Not Implemented */
+      501: never;
+    };
+  };
+  /**
+   * List custom deployment rule integrations available for an environment
+   * @description This endpoint does not exist in GitHub Enterprise Server 3.8. It was added in api.github.com
+   */
+  "repos/list-custom-deployment-rule-integrations": {
+    responses: {
+      /** @description Not Implemented */
+      501: never;
+    };
+  };
+  /**
+   * Get a custom deployment protection rule
+   * @description This endpoint does not exist in GitHub Enterprise Server 3.8. It was added in api.github.com
+   */
+  "repos/get-custom-deployment-protection-rule": {
+    responses: {
+      /** @description Not Implemented */
+      501: never;
+    };
+  };
+  /**
+   * Disable a custom protection rule for an environment
+   * @description This endpoint does not exist in GitHub Enterprise Server 3.8. It was added in api.github.com
+   */
+  "repos/disable-deployment-protection-rule": {
     responses: {
       /** @description Not Implemented */
       501: never;
@@ -106562,6 +106704,16 @@ export interface operations {
    * @description This endpoint does not exist in GitHub Enterprise Server 3.8. It was added in api.github.com
    */
   "security-advisories/create-repository-advisory": {
+    responses: {
+      /** @description Not Implemented */
+      501: never;
+    };
+  };
+  /**
+   * Privately report a security vulnerability
+   * @description This endpoint does not exist in GitHub Enterprise Server 3.8. It was added in api.github.com
+   */
+  "security-advisories/create-private-vulnerability-report": {
     responses: {
       /** @description Not Implemented */
       501: never;

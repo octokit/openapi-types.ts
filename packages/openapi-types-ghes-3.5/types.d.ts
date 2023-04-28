@@ -4281,7 +4281,10 @@ export interface paths {
     delete: operations["repos/delete-deployment-branch-policy"];
   };
   "/repos/{owner}/{repo}/events": {
-    /** List repository events */
+    /**
+     * List repository events
+     * @description **Note**: This API is not built to serve real-time use cases. Depending on the time of day, event latency can be anywhere from 30s to 6h.
+     */
     get: operations["activity/list-repo-events"];
   };
   "/repos/{owner}/{repo}/forks": {
@@ -33344,7 +33347,10 @@ export interface operations {
       204: never;
     };
   };
-  /** List repository events */
+  /**
+   * List repository events
+   * @description **Note**: This API is not built to serve real-time use cases. Depending on the time of day, event latency can be anywhere from 30s to 6h.
+   */
   "activity/list-repo-events": {
     parameters: {
       query: {

@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "version": "11.0.0",
+    "version": "11.1.0",
     "title": "GitHub's official OpenAPI spec + Octokit extension",
     "description": "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs",
     "license": {
@@ -32516,7 +32516,7 @@
     "/repos/{owner}/{repo}/events": {
       "get": {
         "summary": "List repository events",
-        "description": "",
+        "description": "**Note**: This API is not built to serve real-time use cases. Depending on the time of day, event latency can be anywhere from 30s to 6h.\n",
         "tags": [
           "activity"
         ],
