@@ -5146,7 +5146,7 @@ export interface paths {
     get: operations["pulls/list-requested-reviewers"];
     /**
      * Request reviewers for a pull request
-     * @description This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.5/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+     * @description This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
      */
     post: operations["pulls/request-reviewers"];
     /** Remove requested reviewers from a pull request */
@@ -7898,17 +7898,17 @@ export interface components {
       request: {
         /** @description The request headers sent with the webhook delivery. */
         headers: {
-          [key: string]: unknown | undefined;
+          [key: string]: unknown;
         } | null;
         /** @description The webhook payload. */
         payload: {
-          [key: string]: unknown | undefined;
+          [key: string]: unknown;
         } | null;
       };
       response: {
         /** @description The response headers received when the delivery was made. */
         headers: {
-          [key: string]: unknown | undefined;
+          [key: string]: unknown;
         } | null;
         /** @description The response payload received. */
         payload: string | null;
@@ -8894,7 +8894,7 @@ export interface components {
         country_name?: string;
       };
       data?: {
-        [key: string]: unknown | undefined;
+        [key: string]: unknown;
       };
       org_id?: number;
       user_id?: number;
@@ -9746,8 +9746,8 @@ export interface components {
       comments_url: string;
       owner?: components["schemas"]["simple-user"];
       truncated?: boolean;
-      forks?: Record<string, never>[];
-      history?: Record<string, never>[];
+      forks?: unknown[];
+      history?: unknown[];
     };
     /**
      * Public User
@@ -9895,8 +9895,8 @@ export interface components {
         comments_url: string;
         owner?: components["schemas"]["nullable-simple-user"];
         truncated?: boolean;
-        forks?: Record<string, never>[];
-        history?: Record<string, never>[];
+        forks?: unknown[];
+        history?: unknown[];
       } | null;
       url?: string;
       forks_url?: string;
@@ -13177,7 +13177,7 @@ export interface components {
       payload: OneOf<
         [
           {
-            [key: string]: unknown | undefined;
+            [key: string]: unknown;
           },
           string
         ]
@@ -18232,13 +18232,13 @@ export interface components {
         ldap?: {
           host?: string | null;
           port?: number;
-          base?: Record<string, never>[];
+          base?: unknown[];
           uid?: string | null;
           bind_dn?: string | null;
           password?: string | null;
           method?: string;
           search_strategy?: string;
-          user_groups?: Record<string, never>[];
+          user_groups?: unknown[];
           admin_group?: string | null;
           virtual_attribute_enabled?: boolean;
           recursive_group_search?: boolean;
@@ -18522,7 +18522,7 @@ export interface components {
           email?: string;
           verified?: boolean;
         }[];
-        subkeys?: Record<string, never>[];
+        subkeys?: unknown[];
         can_sign?: boolean;
         can_encrypt_comms?: boolean;
         can_encrypt_storage?: boolean;
@@ -18725,13 +18725,13 @@ export interface components {
   };
   parameters: {
     /** @description The number of results per page (max 100). */
-    "per-page": number;
+    "per-page"?: number;
     /** @description Page number of the results to fetch. */
-    page: number;
+    page?: number;
     /** @description The unique identifier of the hook. */
     "hook-id": number;
     /** @description The direction to sort the results by. */
-    direction: "asc" | "desc";
+    direction?: "asc" | "desc";
     /** @description The unique identifier of the key. */
     "key-ids": string;
     /** @description The unique identifier of the team. */
@@ -18747,10 +18747,10 @@ export interface components {
     /** @description The unique identifier of the token. */
     "token-id": number;
     /** @description Used for pagination: the starting delivery from which the page of deliveries is fetched. Refer to the `link` header for the next and previous page cursors. */
-    cursor: string;
+    cursor?: string;
     "delivery-id": number;
     /** @description Only show notifications updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
-    since: string;
+    since?: string;
     /** @description The unique identifier of the installation. */
     "installation-id": number;
     /** @description The unique identifier of the grant. */
@@ -18773,7 +18773,7 @@ export interface components {
     /** @description The name of a self-hosted runner's custom label. */
     "runner-label-name": string;
     /** @description A search phrase. For more information, see [Searching the audit log](https://docs.github.com/enterprise-server@3.5/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/searching-the-audit-log-for-your-enterprise#searching-the-audit-log). */
-    "audit-log-enterprise-phrase": string;
+    "audit-log-enterprise-phrase"?: string;
     /**
      * @description The event types to include:
      *
@@ -18783,61 +18783,61 @@ export interface components {
      *
      * The default is `web`.
      */
-    "audit-log-include": "web" | "git" | "all";
+    "audit-log-include"?: "web" | "git" | "all";
     /** @description A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.5/rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for events after this cursor. */
-    "audit-log-after": string;
+    "audit-log-after"?: string;
     /** @description A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.5/rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for events before this cursor. */
-    "audit-log-before": string;
+    "audit-log-before"?: string;
     /**
      * @description The order of audit log events. To list newest events first, specify `desc`. To list oldest events first, specify `asc`.
      *
      * The default is `desc`.
      */
-    "audit-log-order": "desc" | "asc";
+    "audit-log-order"?: "desc" | "asc";
     /** @description Set to `open` or `resolved` to only list secret scanning alerts in a specific state. */
-    "secret-scanning-alert-state": "open" | "resolved";
+    "secret-scanning-alert-state"?: "open" | "resolved";
     /**
      * @description A comma-separated list of secret types to return. By default all secret types are returned.
      * See "[Secret scanning patterns](https://docs.github.com/enterprise-server@3.5/code-security/secret-scanning/secret-scanning-patterns#supported-secrets-for-advanced-security)"
      * for a complete list of secret types.
      */
-    "secret-scanning-alert-secret-type": string;
+    "secret-scanning-alert-secret-type"?: string;
     /** @description A comma-separated list of resolutions. Only secret scanning alerts with one of these resolutions are listed. Valid resolutions are `false_positive`, `wont_fix`, `revoked`, `pattern_edited`, `pattern_deleted` or `used_in_tests`. */
-    "secret-scanning-alert-resolution": string;
+    "secret-scanning-alert-resolution"?: string;
     /** @description A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.5/rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for results before this cursor. */
-    "pagination-before": string;
+    "pagination-before"?: string;
     /** @description A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.5/rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for results after this cursor. */
-    "pagination-after": string;
+    "pagination-after"?: string;
     /** @description The unique identifier of the gist. */
     "gist-id": string;
     /** @description The unique identifier of the comment. */
     "comment-id": number;
     /** @description A list of comma separated label names. Example: `bug,ui,@high` */
-    labels: string;
+    labels?: string;
     /** @description The account owner of the repository. The name is not case sensitive. */
     owner: string;
     /** @description The name of the repository. The name is not case sensitive. */
     repo: string;
     /** @description If `true`, show notifications marked as read. */
-    all: boolean;
+    all?: boolean;
     /** @description If `true`, only shows notifications in which the user is directly participating or mentioned. */
-    participating: boolean;
+    participating?: boolean;
     /** @description Only show notifications updated before the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
-    before: string;
+    before?: string;
     /** @description The unique identifier of the notification thread. This corresponds to the value returned in the `id` field when you retrieve notifications (for example with the [`GET /notifications` operation](https://docs.github.com/enterprise-server@3.5/rest/reference/activity#list-notifications-for-the-authenticated-user)). */
     "thread-id": number;
     /** @description An organization ID. Only return organizations with an ID greater than this ID. */
-    "since-org": number;
+    "since-org"?: number;
     /** @description The unique identifier of the repository. */
     "repository-id": number;
     /** @description The name of the secret. */
     "secret-name": string;
     /** @description A search phrase. For more information, see [Searching the audit log](https://docs.github.com/enterprise-server@3.5/github/setting-up-and-managing-organizations-and-teams/reviewing-the-audit-log-for-your-organization#searching-the-audit-log). */
-    "audit-log-phrase": string;
+    "audit-log-phrase"?: string;
     /** @description The name of a code scanning tool. Only results by this tool will be listed. You can specify the tool by using either `tool_name` or `tool_guid`, but not both. */
-    "tool-name": components["schemas"]["code-scanning-analysis-tool-name"];
+    "tool-name"?: components["schemas"]["code-scanning-analysis-tool-name"];
     /** @description The GUID of a code scanning tool. Only results by this tool will be listed. Note that some code scanning tools may not include a GUID in their analysis data. You can specify the tool by using either `tool_guid` or `tool_name`, but not both. */
-    "tool-guid": components["schemas"]["code-scanning-analysis-tool-guid"];
+    "tool-guid"?: components["schemas"]["code-scanning-analysis-tool-guid"];
     /** @description The unique identifier of the migration. */
     "migration-id": number;
     /** @description repo_name parameter */
@@ -18861,13 +18861,13 @@ export interface components {
     /** @description The unique identifier of the job. */
     "job-id": number;
     /** @description Returns someone's workflow runs. Use the login for the user who created the `push` associated with the check suite or workflow run. */
-    actor: string;
+    actor?: string;
     /** @description Returns workflow runs associated with a branch. Use the name of the branch of the `push`. */
-    "workflow-run-branch": string;
+    "workflow-run-branch"?: string;
     /** @description Returns workflow run triggered by the event you specify. For example, `push`, `pull_request` or `issue`. For more information, see "[Events that trigger workflows](https://docs.github.com/enterprise-server@3.5/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows)." */
-    event: string;
+    event?: string;
     /** @description Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. */
-    "workflow-run-status":
+    "workflow-run-status"?:
       | "completed"
       | "action_required"
       | "cancelled"
@@ -18883,11 +18883,11 @@ export interface components {
       | "waiting"
       | "pending";
     /** @description Returns workflow runs created within the given date-time range. For more information on the syntax, see "[Understanding the search syntax](https://docs.github.com/enterprise-server@3.5/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax#query-for-dates)." */
-    created: string;
+    created?: string;
     /** @description If `true` pull requests are omitted from the response (empty array). */
-    "exclude-pull-requests": boolean;
+    "exclude-pull-requests"?: boolean;
     /** @description Returns workflow runs with the `check_suite_id` that you specify. */
-    "workflow-run-check-suite-id": number;
+    "workflow-run-check-suite-id"?: number;
     /** @description The unique identifier of the workflow run. */
     "run-id": number;
     /** @description The attempt number of the workflow run. */
@@ -18903,11 +18903,11 @@ export interface components {
     /** @description The unique identifier of the check suite. */
     "check-suite-id": number;
     /** @description Returns check runs with the specified `name`. */
-    "check-name": string;
+    "check-name"?: string;
     /** @description Returns check runs with the specified `status`. */
-    status: "queued" | "in_progress" | "completed";
+    status?: "queued" | "in_progress" | "completed";
     /** @description The Git reference for the results you want to list. The `ref` for a branch can be formatted either as `refs/heads/<branch name>` or simply `<branch name>`. To reference a pull request use `refs/pull/<number>/merge`. */
-    "git-ref": components["schemas"]["code-scanning-ref"];
+    "git-ref"?: components["schemas"]["code-scanning-ref"];
     /** @description The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation. */
     "alert-number": components["schemas"]["alert-number"];
     /** @description The SHA of the commit. */
@@ -18921,7 +18921,7 @@ export interface components {
     /** @description The unique identifier of the invitation. */
     "invitation-id": number;
     /** @description The property to sort the results by. */
-    sort: "created" | "updated";
+    sort?: "created" | "updated";
     /** @description The number that identifies the issue. */
     "issue-number": number;
     /** @description The unique identifier of the key. */
@@ -18939,19 +18939,19 @@ export interface components {
     /** @description The unique identifier of the tag protection. */
     "tag-protection-id": number;
     /** @description A repository ID. Only return repositories with an ID greater than this ID. */
-    "since-repo": number;
+    "since-repo"?: number;
     /** @description Determines whether the first search result returned is the highest number of matches (`desc`) or lowest number of matches (`asc`). This parameter is ignored unless you provide `sort`. */
-    order: "desc" | "asc";
+    order?: "desc" | "asc";
     /** @description The unique identifier of the GPG key. */
     "gpg-key-id": number;
     /** @description Only show repositories updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
-    "since-repo-date": string;
+    "since-repo-date"?: string;
     /** @description Only show repositories updated before the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
-    "before-repo-date": string;
+    "before-repo-date"?: string;
     /** @description The property to sort the results by. `created` means when the repository was starred. `updated` means when the repository was last pushed to. */
-    "sort-starred": "created" | "updated";
+    "sort-starred"?: "created" | "updated";
     /** @description A user ID. Only return users with an ID greater than this ID. */
-    "since-user": number;
+    "since-user"?: number;
   };
   requestBodies: never;
   headers: {
@@ -19533,11 +19533,11 @@ export interface operations {
           script: string;
           /** @description The GitHub repository where the script is kept. */
           script_repository: {
-            [key: string]: unknown | undefined;
+            [key: string]: unknown;
           };
           /** @description The pre-receive environment where the script is executed. */
           environment: {
-            [key: string]: unknown | undefined;
+            [key: string]: unknown;
           };
           /** @description The state of enforcement for this hook. default: `disabled` */
           enforcement?: string;
@@ -19599,11 +19599,11 @@ export interface operations {
           script?: string;
           /** @description The GitHub repository where the script is kept. */
           script_repository?: {
-            [key: string]: unknown | undefined;
+            [key: string]: unknown;
           };
           /** @description The pre-receive environment where the script is executed. */
           environment?: {
-            [key: string]: unknown | undefined;
+            [key: string]: unknown;
           };
           /** @description The state of enforcement for this hook. */
           enforcement?: string;
@@ -19812,7 +19812,7 @@ export interface operations {
             client_secret: string;
             webhook_secret: string | null;
             pem: string;
-            [key: string]: unknown | undefined;
+            [key: string]: unknown;
           };
         };
       };
@@ -22082,44 +22082,40 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json":
-          | ({
-              /**
-               * @description The description of the gist.
-               * @example Example Ruby script
-               */
-              description?: string;
-              /**
-               * @description The gist files to be updated, renamed, or deleted. Each `key` must match the current filename
-               * (including extension) of the targeted gist file. For example: `hello.py`.
-               *
-               * To delete a file, set the whole file to null. For example: `hello.py : null`.
-               * @example {
-               *   "hello.rb": {
-               *     "content": "blah",
-               *     "filename": "goodbye.rb"
-               *   }
-               * }
-               */
-              files?: {
-                [key: string]:
-                  | (
-                      | ({
-                          /** @description The new content of the file. */
-                          content?: string;
-                          /** @description The new filename for the file. */
-                          filename?: string | null;
-                        } & (
-                          | Record<string, never>
-                          | Record<string, never>
-                          | Record<string, never>
-                        ))
-                      | null
-                    )
-                  | undefined;
-              };
-            } & (Record<string, never> | Record<string, never>))
-          | null;
+        "application/json": {
+          /**
+           * @description The description of the gist.
+           * @example Example Ruby script
+           */
+          description?: string;
+          /**
+           * @description The gist files to be updated, renamed, or deleted. Each `key` must match the current filename
+           * (including extension) of the targeted gist file. For example: `hello.py`.
+           *
+           * To delete a file, set the whole file to null. For example: `hello.py : null`.
+           * @example {
+           *   "hello.rb": {
+           *     "content": "blah",
+           *     "filename": "goodbye.rb"
+           *   }
+           * }
+           */
+          files?: {
+            [key: string]:
+              | OneOf<
+                  [
+                    {
+                      /** @description The new content of the file. */
+                      content?: string;
+                      /** @description The new filename for the file. */
+                      filename?: string | null;
+                    },
+                    Record<string, never>
+                  ]
+                >
+              | undefined;
+          };
+        } | null;
       };
     };
     responses: {
@@ -29287,7 +29283,7 @@ export interface operations {
           ref: string;
           /** @description Input keys and values configured in the workflow file. The maximum number of properties is 10. Any default properties configured in the workflow file will be used when `inputs` are omitted. */
           inputs?: {
-            [key: string]: unknown | undefined;
+            [key: string]: unknown;
           };
         };
       };
@@ -30622,12 +30618,12 @@ export interface operations {
             {
               /** @enum {unknown} */
               status: "completed";
-              [key: string]: unknown | undefined;
+              [key: string]: unknown;
             },
             {
               /** @enum {unknown} */
               status?: "queued" | "in_progress";
-              [key: string]: unknown | undefined;
+              [key: string]: unknown;
             }
           ]
         >;
@@ -30772,12 +30768,12 @@ export interface operations {
           | {
               /** @enum {unknown} */
               status?: "completed";
-              [key: string]: unknown | undefined;
+              [key: string]: unknown;
             }
           | {
               /** @enum {unknown} */
               status?: "queued" | "in_progress";
-              [key: string]: unknown | undefined;
+              [key: string]: unknown;
             }
         );
       };
@@ -31233,7 +31229,7 @@ export interface operations {
         content: {
           "application/json": components["schemas"]["code-scanning-analysis"];
           "application/json+sarif": {
-            [key: string]: unknown | undefined;
+            [key: string]: unknown;
           };
         };
       };
@@ -32828,7 +32824,7 @@ export interface operations {
           payload?: OneOf<
             [
               {
-                [key: string]: unknown | undefined;
+                [key: string]: unknown;
               },
               string
             ]
@@ -33070,7 +33066,7 @@ export interface operations {
           event_type: string;
           /** @description JSON payload with extra information about the webhook event that your action or workflow may use. The maximum number of top-level properties is 10. */
           client_payload?: {
-            [key: string]: unknown | undefined;
+            [key: string]: unknown;
           };
         };
       };
@@ -36122,13 +36118,7 @@ export interface operations {
                  */
                 path: "/" | "/docs";
               };
-        } & (
-          | Record<string, never>
-          | Record<string, never>
-          | Record<string, never>
-          | Record<string, never>
-          | Record<string, never>
-        );
+        };
       };
     };
     responses: {
@@ -36154,26 +36144,24 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json":
-          | ({
-              /**
-               * @description The process in which the Page will be built. Possible values are `"legacy"` and `"workflow"`.
-               * @enum {string}
-               */
-              build_type?: "legacy" | "workflow";
-              /** @description The source branch and directory used to publish your Pages site. */
-              source?: {
-                /** @description The repository branch used to publish your site's source files. */
-                branch: string;
-                /**
-                 * @description The repository directory that includes the source files for the Pages site. Allowed paths are `/` or `/docs`. Default: `/`
-                 * @default /
-                 * @enum {string}
-                 */
-                path?: "/" | "/docs";
-              };
-            } & (Record<string, never> | Record<string, never>))
-          | null;
+        "application/json": {
+          /**
+           * @description The process in which the Page will be built. Possible values are `"legacy"` and `"workflow"`.
+           * @enum {string}
+           */
+          build_type?: "legacy" | "workflow";
+          /** @description The source branch and directory used to publish your Pages site. */
+          source?: {
+            /** @description The repository branch used to publish your site's source files. */
+            branch: string;
+            /**
+             * @description The repository directory that includes the source files for the Pages site. Allowed paths are `/` or `/docs`. Default: `/`
+             * @default /
+             * @enum {string}
+             */
+            path?: "/" | "/docs";
+          };
+        } | null;
       };
     };
     responses: {
@@ -37138,7 +37126,7 @@ export interface operations {
   };
   /**
    * Request reviewers for a pull request
-   * @description This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.5/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.5/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+   * @description This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
    */
   "pulls/request-reviewers": {
     parameters: {
@@ -37155,7 +37143,7 @@ export interface operations {
           reviewers?: string[];
           /** @description An array of team `slug`s that will be requested. */
           team_reviewers?: string[];
-        } & (Record<string, never> | Record<string, never>);
+        };
       };
     };
     responses: {
