@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "version": "11.1.1",
+    "version": "11.1.2",
     "title": "GitHub's official OpenAPI spec + Octokit extension",
     "description": "OpenAPI specs from https://github.com/github/rest-api-description with the 'x-octokit' extension required by the Octokit SDKs",
     "license": {
@@ -7680,26 +7680,18 @@
                     },
                     "type": "object",
                     "additionalProperties": {
-                      "oneOf": [
-                        {
-                          "type": "object",
-                          "properties": {
-                            "content": {
-                              "description": "The new content of the file.",
-                              "type": "string"
-                            },
-                            "filename": {
-                              "description": "The new filename for the file.",
-                              "type": "string",
-                              "nullable": true
-                            }
-                          }
+                      "type": "object",
+                      "properties": {
+                        "content": {
+                          "description": "The new content of the file.",
+                          "type": "string"
                         },
-                        {
-                          "type": "object",
-                          "maxProperties": 0
+                        "filename": {
+                          "description": "The new filename for the file.",
+                          "type": "string",
+                          "nullable": true
                         }
-                      ]
+                      }
                     }
                   }
                 },
