@@ -78057,17 +78057,12 @@ export interface operations {
            */
           files?: {
             [key: string]:
-              | OneOf<
-                  [
-                    {
-                      /** @description The new content of the file. */
-                      content?: string;
-                      /** @description The new filename for the file. */
-                      filename?: string | null;
-                    },
-                    Record<string, never>
-                  ]
-                >
+              | {
+                  /** @description The new content of the file. */
+                  content?: string;
+                  /** @description The new filename for the file. */
+                  filename?: string | null;
+                }
               | undefined;
           };
         } | null;
