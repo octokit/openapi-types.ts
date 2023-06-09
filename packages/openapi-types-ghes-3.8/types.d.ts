@@ -1195,7 +1195,7 @@ export interface paths {
      * Update an organization
      * @description **Parameter Deprecation Notice:** GitHub Enterprise Server will replace and discontinue `members_allowed_repository_creation_type` in favor of more granular permissions. The new input parameters are `members_can_create_public_repositories`, `members_can_create_private_repositories` for all organizations and `members_can_create_internal_repositories` for organizations associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes).
      *
-     * Enables an authenticated organization owner with the `admin:org` scope to update the organization's profile and member privileges.
+     * Enables an authenticated organization owner with the `admin:org` scope or the `repo` scope to update the organization's profile and member privileges.
      */
     patch: operations["orgs/update"];
   };
@@ -2283,7 +2283,10 @@ export interface paths {
     get: operations["orgs/list-public-members"];
   };
   "/orgs/{org}/public_members/{username}": {
-    /** Check public organization membership for a user */
+    /**
+     * Check public organization membership for a user
+     * @description Check if the provided user is a public member of the organization.
+     */
     get: operations["orgs/check-public-membership-for-user"];
     /**
      * Set public organization membership for the authenticated user
@@ -2292,7 +2295,10 @@ export interface paths {
      * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@3.8/rest/overview/resources-in-the-rest-api#http-verbs)."
      */
     put: operations["orgs/set-public-membership-for-authenticated-user"];
-    /** Remove public organization membership for the authenticated user */
+    /**
+     * Remove public organization membership for the authenticated user
+     * @description Removes the public membership for the authenticated user from the specified organization, unless public visibility is enforced by default.
+     */
     delete: operations["orgs/remove-public-membership-for-authenticated-user"];
   };
   "/orgs/{org}/repos": {
@@ -2710,9 +2716,15 @@ export interface paths {
     post: operations["orgs/enable-or-disable-security-product-on-all-org-repos"];
   };
   "/projects/columns/cards/{card_id}": {
-    /** Get a project card */
+    /**
+     * Get a project card
+     * @description Gets information about a project card.
+     */
     get: operations["projects/get-card"];
-    /** Delete a project card */
+    /**
+     * Delete a project card
+     * @description Deletes a project card
+     */
     delete: operations["projects/delete-card"];
     /** Update an existing project card */
     patch: operations["projects/update-card"];
@@ -2722,15 +2734,24 @@ export interface paths {
     post: operations["projects/move-card"];
   };
   "/projects/columns/{column_id}": {
-    /** Get a project column */
+    /**
+     * Get a project column
+     * @description Gets information about a project column.
+     */
     get: operations["projects/get-column"];
-    /** Delete a project column */
+    /**
+     * Delete a project column
+     * @description Deletes a project column.
+     */
     delete: operations["projects/delete-column"];
     /** Update an existing project column */
     patch: operations["projects/update-column"];
   };
   "/projects/columns/{column_id}/cards": {
-    /** List project cards */
+    /**
+     * List project cards
+     * @description Lists the project cards in a project.
+     */
     get: operations["projects/list-cards"];
     /** Create a project card */
     post: operations["projects/create-card"];
@@ -2783,9 +2804,15 @@ export interface paths {
     get: operations["projects/get-permission-for-user"];
   };
   "/projects/{project_id}/columns": {
-    /** List project columns */
+    /**
+     * List project columns
+     * @description Lists the project columns in a project.
+     */
     get: operations["projects/list-columns"];
-    /** Create a project column */
+    /**
+     * Create a project column
+     * @description Creates a new project column.
+     */
     post: operations["projects/create-column"];
   };
   "/rate_limit": {
@@ -3313,7 +3340,7 @@ export interface paths {
      * token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use
      * this endpoint.
      *
-     * #### Example encrypting a secret using Node.js
+     * **Example encrypting a secret using Node.js**
      *
      * Encrypt your secret using the [libsodium-wrappers](https://www.npmjs.com/package/libsodium-wrappers) library.
      *
@@ -3338,7 +3365,7 @@ export interface paths {
      * });
      * ```
      *
-     * #### Example encrypting a secret using Python
+     * **Example encrypting a secret using Python**
      *
      * Encrypt your secret using [pynacl](https://pynacl.readthedocs.io/en/latest/public/#nacl-public-sealedbox) with Python 3.
      *
@@ -3354,7 +3381,7 @@ export interface paths {
      *   return b64encode(encrypted).decode("utf-8")
      * ```
      *
-     * #### Example encrypting a secret using C#
+     * **Example encrypting a secret using C#**
      *
      * Encrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/) package.
      *
@@ -3367,7 +3394,7 @@ export interface paths {
      * Console.WriteLine(Convert.ToBase64String(sealedPublicKeyBox));
      * ```
      *
-     * #### Example encrypting a secret using Ruby
+     * **Example encrypting a secret using Ruby**
      *
      * Encrypt your secret using the [rbnacl](https://github.com/RubyCrypto/rbnacl) gem.
      *
@@ -4152,7 +4179,30 @@ export interface paths {
      * You are limited to sending 50 invitations to a repository per 24 hour period. Note there is no limit if you are inviting organization members to an organization repository.
      */
     put: operations["repos/add-collaborator"];
-    /** Remove a repository collaborator */
+    /**
+     * Remove a repository collaborator
+     * @description Removes a collaborator from a repository.
+     *
+     * To use this endpoint, the authenticated user must either be an administrator of the repository or target themselves for removal.
+     *
+     * This endpoint also:
+     * - Cancels any outstanding invitations
+     * - Unasigns the user from any issues
+     * - Removes access to organization projects if the user is not an organization member and is not a collaborator on any other organization repositories.
+     * - Unstars the repository
+     * - Updates access permissions to packages
+     *
+     * Removing a user as a collaborator has the following effects on forks:
+     *  - If the user had access to a fork through their membership to this repository, the user will also be removed from the fork.
+     *  - If the user had their own fork of the repository, the fork will be deleted.
+     *  - If the user still has read access to the repository, open pull requests by this user from a fork will be denied.
+     *
+     * **Note**: A user can still have access to the repository through organization permissions like base repository permissions.
+     *
+     * Although the API responds immediately, the additional permission updates might take some extra time to complete in the background.
+     *
+     * For more information on fork permissions, see "[About permissions and visibility of forks](https://docs.github.com/enterprise-server@3.8/pull-requests/collaborating-with-pull-requests/working-with-forks/about-permissions-and-visibility-of-forks)".
+     */
     delete: operations["repos/remove-collaborator"];
   };
   "/repos/{owner}/{repo}/collaborators/{username}/permission": {
@@ -4492,6 +4542,8 @@ export interface paths {
      * @description You must use an access token with the `security_events` scope to use this endpoint with private repositories.
      * You can also use tokens with the `public_repo` scope for public repositories only.
      * GitHub Apps must have **Dependabot alerts** write permission to use this endpoint.
+     *
+     * To use this endpoint, you must have access to security alerts for the repository. For more information, see "[Granting access to security alerts](https://docs.github.com/enterprise-server@3.8/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-security-and-analysis-settings-for-your-repository#granting-access-to-security-alerts)."
      */
     patch: operations["dependabot/update-alert"];
   };
@@ -4522,7 +4574,7 @@ export interface paths {
      * token with the `repo` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` repository
      * permission to use this endpoint.
      *
-     * #### Example encrypting a secret using Node.js
+     * **Example encrypting a secret using Node.js**
      *
      * Encrypt your secret using the [libsodium-wrappers](https://www.npmjs.com/package/libsodium-wrappers) library.
      *
@@ -4547,7 +4599,7 @@ export interface paths {
      * });
      * ```
      *
-     * #### Example encrypting a secret using Python
+     * **Example encrypting a secret using Python**
      *
      * Encrypt your secret using [pynacl](https://pynacl.readthedocs.io/en/latest/public/#nacl-public-sealedbox) with Python 3.
      *
@@ -4563,7 +4615,7 @@ export interface paths {
      *   return b64encode(encrypted).decode("utf-8")
      * ```
      *
-     * #### Example encrypting a secret using C#
+     * **Example encrypting a secret using C#**
      *
      * Encrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/) package.
      *
@@ -4576,7 +4628,7 @@ export interface paths {
      * Console.WriteLine(Convert.ToBase64String(sealedPublicKeyBox));
      * ```
      *
-     * #### Example encrypting a secret using Ruby
+     * **Example encrypting a secret using Ruby**
      *
      * Encrypt your secret using the [rbnacl](https://github.com/RubyCrypto/rbnacl) gem.
      *
@@ -5201,11 +5253,17 @@ export interface paths {
     delete: operations["reactions/delete-for-issue-comment"];
   };
   "/repos/{owner}/{repo}/issues/events": {
-    /** List issue events for a repository */
+    /**
+     * List issue events for a repository
+     * @description Lists events for a repository.
+     */
     get: operations["issues/list-events-for-repo"];
   };
   "/repos/{owner}/{repo}/issues/events/{event_id}": {
-    /** Get an issue event */
+    /**
+     * Get an issue event
+     * @description Gets a single event by the event id.
+     */
     get: operations["issues/get-event"];
   };
   "/repos/{owner}/{repo}/issues/{issue_number}": {
@@ -5275,20 +5333,32 @@ export interface paths {
     post: operations["issues/create-comment"];
   };
   "/repos/{owner}/{repo}/issues/{issue_number}/events": {
-    /** List issue events */
+    /**
+     * List issue events
+     * @description Lists all events for an issue.
+     */
     get: operations["issues/list-events"];
   };
   "/repos/{owner}/{repo}/issues/{issue_number}/labels": {
-    /** List labels for an issue */
+    /**
+     * List labels for an issue
+     * @description Lists all labels for an issue.
+     */
     get: operations["issues/list-labels-on-issue"];
     /**
      * Set labels for an issue
      * @description Removes any previous labels and sets the new labels for an issue.
      */
     put: operations["issues/set-labels"];
-    /** Add labels to an issue */
+    /**
+     * Add labels to an issue
+     * @description Adds labels to an issue. If you provide an empty array of labels, all labels are removed from the issue.
+     */
     post: operations["issues/add-labels"];
-    /** Remove all labels from an issue */
+    /**
+     * Remove all labels from an issue
+     * @description Removes all labels from an issue.
+     */
     delete: operations["issues/remove-all-labels"];
   };
   "/repos/{owner}/{repo}/issues/{issue_number}/labels/{name}": {
@@ -5334,7 +5404,10 @@ export interface paths {
     delete: operations["reactions/delete-for-issue"];
   };
   "/repos/{owner}/{repo}/issues/{issue_number}/timeline": {
-    /** List timeline events for an issue */
+    /**
+     * List timeline events for an issue
+     * @description List all timeline events for an issue.
+     */
     get: operations["issues/list-events-for-timeline"];
   };
   "/repos/{owner}/{repo}/keys": {
@@ -5356,17 +5429,32 @@ export interface paths {
     delete: operations["repos/delete-deploy-key"];
   };
   "/repos/{owner}/{repo}/labels": {
-    /** List labels for a repository */
+    /**
+     * List labels for a repository
+     * @description Lists all labels for a repository.
+     */
     get: operations["issues/list-labels-for-repo"];
-    /** Create a label */
+    /**
+     * Create a label
+     * @description Creates a label for the specified repository with the given name and color. The name and color parameters are required. The color must be a valid [hexadecimal color code](http://www.color-hex.com/).
+     */
     post: operations["issues/create-label"];
   };
   "/repos/{owner}/{repo}/labels/{name}": {
-    /** Get a label */
+    /**
+     * Get a label
+     * @description Gets a label using the given name.
+     */
     get: operations["issues/get-label"];
-    /** Delete a label */
+    /**
+     * Delete a label
+     * @description Deletes a label using the given label name.
+     */
     delete: operations["issues/delete-label"];
-    /** Update a label */
+    /**
+     * Update a label
+     * @description Updates a label using the given label name.
+     */
     patch: operations["issues/update-label"];
   };
   "/repos/{owner}/{repo}/languages": {
@@ -5409,21 +5497,36 @@ export interface paths {
     post: operations["repos/merge"];
   };
   "/repos/{owner}/{repo}/milestones": {
-    /** List milestones */
+    /**
+     * List milestones
+     * @description Lists milestones for a repository.
+     */
     get: operations["issues/list-milestones"];
-    /** Create a milestone */
+    /**
+     * Create a milestone
+     * @description Creates a milestone.
+     */
     post: operations["issues/create-milestone"];
   };
   "/repos/{owner}/{repo}/milestones/{milestone_number}": {
-    /** Get a milestone */
+    /**
+     * Get a milestone
+     * @description Gets a milestone using the given milestone number.
+     */
     get: operations["issues/get-milestone"];
-    /** Delete a milestone */
+    /**
+     * Delete a milestone
+     * @description Deletes a milestone using the given milestone number.
+     */
     delete: operations["issues/delete-milestone"];
     /** Update a milestone */
     patch: operations["issues/update-milestone"];
   };
   "/repos/{owner}/{repo}/milestones/{milestone_number}/labels": {
-    /** List labels for issues in a milestone */
+    /**
+     * List labels for issues in a milestone
+     * @description Lists labels for issues in a milestone.
+     */
     get: operations["issues/list-labels-for-milestone"];
   };
   "/repos/{owner}/{repo}/notifications": {
@@ -5997,6 +6100,8 @@ export interface paths {
      * @description Returns the total commit counts for the `owner` and total commit counts in `all`. `all` is everyone combined, including the `owner` in the last 52 weeks. If you'd like to get the commit counts for non-owners, you can subtract `owner` from `all`.
      *
      * The array order is oldest week (index 0) to most recent week.
+     *
+     * The most recent week is seven days ago at UTC midnight to today at UTC midnight.
      */
     get: operations["repos/get-participation-stats"];
   };
@@ -6081,7 +6186,18 @@ export interface paths {
     get: operations["repos/download-tarball-archive"];
   };
   "/repos/{owner}/{repo}/teams": {
-    /** List repository teams */
+    /**
+     * List repository teams
+     * @description Lists the teams that have access to the specified repository and that are also visible to the authenticated user.
+     *
+     * For a public repository, a team is listed only if that team added the public repository explicitly.
+     *
+     * Personal access tokens require the following scopes:
+     * * `public_repo` to call this endpoint on a public repository
+     * * `repo` to call this endpoint on a private repository (this scope also includes public repositories)
+     *
+     * This endpoint is not compatible with fine-grained personal access tokens.
+     */
     get: operations["repos/list-teams"];
   };
   "/repos/{owner}/{repo}/topics": {
@@ -6160,7 +6276,7 @@ export interface paths {
      * token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use
      * this endpoint.
      *
-     * #### Example encrypting a secret using Node.js
+     * **Example encrypting a secret using Node.js**
      *
      * Encrypt your secret using the [libsodium-wrappers](https://www.npmjs.com/package/libsodium-wrappers) library.
      *
@@ -6185,7 +6301,7 @@ export interface paths {
      * });
      * ```
      *
-     * #### Example encrypting a secret using Python
+     * **Example encrypting a secret using Python**
      *
      * Encrypt your secret using [pynacl](https://pynacl.readthedocs.io/en/latest/public/#nacl-public-sealedbox) with Python 3.
      *
@@ -6201,7 +6317,7 @@ export interface paths {
      *   return b64encode(encrypted).decode("utf-8")
      * ```
      *
-     * #### Example encrypting a secret using C#
+     * **Example encrypting a secret using C#**
      *
      * Encrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/) package.
      *
@@ -6214,7 +6330,7 @@ export interface paths {
      * Console.WriteLine(Convert.ToBase64String(sealedPublicKeyBox));
      * ```
      *
-     * #### Example encrypting a secret using Ruby
+     * **Example encrypting a secret using Ruby**
      *
      * Encrypt your secret using the [rbnacl](https://github.com/RubyCrypto/rbnacl) gem.
      *
@@ -6953,7 +7069,7 @@ export interface paths {
   "/user": {
     /**
      * Get the authenticated user
-     * @description If the authenticated user is authenticated through basic authentication or OAuth with the `user` scope, then the response lists public and private profile information.
+     * @description If the authenticated user is authenticated with an OAuth token with the `user` scope, then the response lists public and private profile information.
      *
      * If the authenticated user is authenticated through OAuth without the `user` scope, then the response lists only public profile information.
      */
@@ -7114,13 +7230,22 @@ export interface paths {
     delete: operations["users/delete-public-ssh-key-for-authenticated-user"];
   };
   "/user/memberships/orgs": {
-    /** List organization memberships for the authenticated user */
+    /**
+     * List organization memberships for the authenticated user
+     * @description Lists all of the authenticated user's organization memberships.
+     */
     get: operations["orgs/list-memberships-for-authenticated-user"];
   };
   "/user/memberships/orgs/{org}": {
-    /** Get an organization membership for the authenticated user */
+    /**
+     * Get an organization membership for the authenticated user
+     * @description If the authenticated user is an active or pending member of the organization, this endpoint will return the user's membership. If the authenticated user is not affiliated with the organization, a `404` is returned. This endpoint will return a `403` if the request is made by a GitHub App that is blocked by the organization.
+     */
     get: operations["orgs/get-membership-for-authenticated-user"];
-    /** Update an organization membership for the authenticated user */
+    /**
+     * Update an organization membership for the authenticated user
+     * @description Converts the authenticated user to an active member of the organization, if that user has a pending invitation from the organization.
+     */
     patch: operations["orgs/update-membership-for-authenticated-user"];
   };
   "/user/migrations": {
@@ -7398,7 +7523,10 @@ export interface paths {
     get: operations["orgs/list-for-user"];
   };
   "/users/{username}/projects": {
-    /** List user projects */
+    /**
+     * List user projects
+     * @description Lists projects for a user.
+     */
     get: operations["projects/list-for-user"];
   };
   "/users/{username}/received_events": {
@@ -11461,6 +11589,12 @@ export interface components {
        * ]
        */
       dependabot?: string[];
+      domains?: {
+        website?: string[];
+        codespaces?: string[];
+        copilot?: string[];
+        packages?: string[];
+      };
       /** @example 3.8.0 */
       installed_version?: string;
     };
@@ -20989,7 +21123,6 @@ export interface components {
        *     "key_id": "4A595D4C72EE49C7",
        *     "public_key": "zsBNBFayYZ...",
        *     "emails": [],
-       *     "subkeys": [],
        *     "can_sign": false,
        *     "can_encrypt_comms": true,
        *     "can_encrypt_storage": true,
@@ -78433,7 +78566,7 @@ export interface components {
     labels?: string;
     /** @description The account owner of the repository. The name is not case sensitive. */
     owner: string;
-    /** @description The name of the repository. The name is not case sensitive. */
+    /** @description The name of the repository without the `.git` extension. The name is not case sensitive. */
     repo: string;
     /** @description If `true`, show notifications marked as read. */
     all?: boolean;
@@ -78675,7 +78808,7 @@ export interface operations {
   /** List global webhooks */
   "enterprise-admin/list-global-webhooks": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -78818,7 +78951,7 @@ export interface operations {
   /** List public keys */
   "enterprise-admin/list-public-keys": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
         direction?: components["parameters"]["direction"];
@@ -78997,7 +79130,7 @@ export interface operations {
   /** List pre-receive environments */
   "enterprise-admin/list-pre-receive-environments": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
         direction?: components["parameters"]["direction"];
@@ -79187,7 +79320,7 @@ export interface operations {
   /** List pre-receive hooks */
   "enterprise-admin/list-pre-receive-hooks": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
         direction?: components["parameters"]["direction"];
@@ -79309,7 +79442,7 @@ export interface operations {
    */
   "enterprise-admin/list-personal-access-tokens": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -79557,7 +79690,7 @@ export interface operations {
    */
   "apps/list-webhook-deliveries": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         cursor?: components["parameters"]["cursor"];
         redelivery?: boolean;
@@ -79621,7 +79754,7 @@ export interface operations {
    */
   "apps/list-installation-requests-for-authenticated-app": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -79645,7 +79778,7 @@ export interface operations {
    */
   "apps/list-installations": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
         since?: components["parameters"]["since"];
@@ -79790,7 +79923,7 @@ export interface operations {
    */
   "oauth-authorizations/list-grants": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
         /** @description The client ID of your GitHub app. */
@@ -80047,7 +80180,7 @@ export interface operations {
    */
   "oauth-authorizations/list-authorizations": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
         /** @description The client ID of your GitHub app. */
@@ -80705,7 +80838,7 @@ export interface operations {
    */
   "enterprise-admin/list-selected-organizations-enabled-github-actions-enterprise": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -80884,7 +81017,7 @@ export interface operations {
    */
   "enterprise-admin/list-self-hosted-runner-groups-for-enterprise": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
         visible_to_organization?: components["parameters"]["visible-to-organization"];
@@ -81051,7 +81184,7 @@ export interface operations {
    */
   "enterprise-admin/list-org-access-to-self-hosted-runner-group-in-enterprise": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -81144,7 +81277,7 @@ export interface operations {
    */
   "enterprise-admin/list-self-hosted-runners-in-group-for-enterprise": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -81241,7 +81374,7 @@ export interface operations {
    */
   "enterprise-admin/list-self-hosted-runners-for-enterprise": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -81507,7 +81640,7 @@ export interface operations {
    */
   "enterprise-admin/get-audit-log": {
     parameters: {
-      query: {
+      query?: {
         phrase?: components["parameters"]["audit-log-enterprise-phrase"];
         include?: components["parameters"]["audit-log-include"];
         after?: components["parameters"]["audit-log-after"];
@@ -81538,7 +81671,7 @@ export interface operations {
    */
   "code-scanning/list-alerts-for-enterprise": {
     parameters: {
-      query: {
+      query?: {
         tool_name?: components["parameters"]["tool-name"];
         tool_guid?: components["parameters"]["tool-guid"];
         before?: components["parameters"]["pagination-before"];
@@ -81626,7 +81759,7 @@ export interface operations {
    */
   "dependabot/list-alerts-for-enterprise": {
     parameters: {
-      query: {
+      query?: {
         state?: components["parameters"]["dependabot-alert-comma-separated-states"];
         severity?: components["parameters"]["dependabot-alert-comma-separated-severities"];
         ecosystem?: components["parameters"]["dependabot-alert-comma-separated-ecosystems"];
@@ -81664,7 +81797,7 @@ export interface operations {
    */
   "secret-scanning/list-alerts-for-enterprise": {
     parameters: {
-      query: {
+      query?: {
         state?: components["parameters"]["secret-scanning-alert-state"];
         secret_type?: components["parameters"]["secret-scanning-alert-secret-type"];
         resolution?: components["parameters"]["secret-scanning-alert-resolution"];
@@ -81702,7 +81835,7 @@ export interface operations {
    */
   "billing/get-github-advanced-security-billing-ghe": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -81748,7 +81881,7 @@ export interface operations {
    */
   "activity/list-public-events": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -81795,7 +81928,7 @@ export interface operations {
    */
   "gists/list": {
     parameters: {
-      query: {
+      query?: {
         since?: components["parameters"]["since"];
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
@@ -81875,7 +82008,7 @@ export interface operations {
    */
   "gists/list-public": {
     parameters: {
-      query: {
+      query?: {
         since?: components["parameters"]["since"];
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
@@ -81902,7 +82035,7 @@ export interface operations {
    */
   "gists/list-starred": {
     parameters: {
-      query: {
+      query?: {
         since?: components["parameters"]["since"];
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
@@ -82014,7 +82147,7 @@ export interface operations {
   /** List gist comments */
   "gists/list-comments": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -82139,7 +82272,7 @@ export interface operations {
   /** List gist commits */
   "gists/list-commits": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -82166,7 +82299,7 @@ export interface operations {
   /** List gist forks */
   "gists/list-forks": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -82330,7 +82463,7 @@ export interface operations {
    */
   "apps/list-repos-accessible-to-installation": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -82383,7 +82516,7 @@ export interface operations {
    */
   "issues/list": {
     parameters: {
-      query: {
+      query?: {
         /** @description Indicates which sorts of issues to return. `assigned` means issues assigned to you. `created` means issues created by you. `mentioned` means issues mentioning you. `subscribed` means issues you're subscribed to updates for. `all` or `repos` means all issues you can see, regardless of participation or creation. */
         filter?:
           | "assigned"
@@ -82425,7 +82558,7 @@ export interface operations {
   /** Get all commonly used licenses */
   "licenses/get-all-commonly-used": {
     parameters: {
-      query: {
+      query?: {
         featured?: boolean;
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
@@ -82534,7 +82667,7 @@ export interface operations {
   /** List public events for a network of repositories */
   "activity/list-public-events-for-repo-network": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -82562,7 +82695,7 @@ export interface operations {
    */
   "activity/list-notifications-for-authenticated-user": {
     parameters: {
-      query: {
+      query?: {
         all?: components["parameters"]["all"];
         participating?: components["parameters"]["participating"];
         since?: components["parameters"]["since"];
@@ -82746,7 +82879,7 @@ export interface operations {
    */
   "meta/get-octocat": {
     parameters: {
-      query: {
+      query?: {
         /** @description The words to show in Octocat's speech bubble */
         s?: string;
       };
@@ -82768,7 +82901,7 @@ export interface operations {
    */
   "orgs/list": {
     parameters: {
-      query: {
+      query?: {
         since?: components["parameters"]["since-org"];
         per_page?: components["parameters"]["per-page"];
       };
@@ -82847,7 +82980,7 @@ export interface operations {
    * Update an organization
    * @description **Parameter Deprecation Notice:** GitHub Enterprise Server will replace and discontinue `members_allowed_repository_creation_type` in favor of more granular permissions. The new input parameters are `members_can_create_public_repositories`, `members_can_create_private_repositories` for all organizations and `members_can_create_internal_repositories` for organizations associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes).
    *
-   * Enables an authenticated organization owner with the `admin:org` scope to update the organization's profile and member privileges.
+   * Enables an authenticated organization owner with the `admin:org` scope or the `repo` scope to update the organization's profile and member privileges.
    */
   "orgs/update": {
     parameters: {
@@ -83021,7 +83154,7 @@ export interface operations {
    */
   "actions/get-actions-cache-usage-by-repo-for-org": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -83149,7 +83282,7 @@ export interface operations {
    */
   "actions/list-selected-repositories-enabled-github-actions-organization": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -83336,7 +83469,7 @@ export interface operations {
    */
   "actions/list-required-workflows": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -83600,7 +83733,7 @@ export interface operations {
    */
   "actions/list-self-hosted-runner-groups-for-org": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
         visible_to_repository?: components["parameters"]["visible-to-repository"];
@@ -83767,7 +83900,7 @@ export interface operations {
    */
   "actions/list-repo-access-to-self-hosted-runner-group-in-org": {
     parameters: {
-      query: {
+      query?: {
         page?: components["parameters"]["page"];
         per_page?: components["parameters"]["per-page"];
       };
@@ -83861,7 +83994,7 @@ export interface operations {
    */
   "actions/list-self-hosted-runners-in-group-for-org": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -83958,7 +84091,7 @@ export interface operations {
    */
   "actions/list-self-hosted-runners-for-org": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -84223,7 +84356,7 @@ export interface operations {
    */
   "actions/list-org-secrets": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -84420,7 +84553,7 @@ export interface operations {
    */
   "actions/list-selected-repos-for-org-secret": {
     parameters: {
-      query: {
+      query?: {
         page?: components["parameters"]["page"];
         per_page?: components["parameters"]["per-page"];
       };
@@ -84509,7 +84642,7 @@ export interface operations {
    */
   "actions/list-org-variables": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["variables-per-page"];
         page?: components["parameters"]["page"];
       };
@@ -84649,7 +84782,7 @@ export interface operations {
    */
   "actions/list-selected-repos-for-org-variable": {
     parameters: {
-      query: {
+      query?: {
         page?: components["parameters"]["page"];
         per_page?: components["parameters"]["per-page"];
       };
@@ -84808,7 +84941,7 @@ export interface operations {
    */
   "orgs/get-audit-log": {
     parameters: {
-      query: {
+      query?: {
         phrase?: components["parameters"]["audit-log-phrase"];
         include?: components["parameters"]["audit-log-include"];
         after?: components["parameters"]["audit-log-after"];
@@ -84842,7 +84975,7 @@ export interface operations {
    */
   "code-scanning/list-alerts-for-org": {
     parameters: {
-      query: {
+      query?: {
         tool_name?: components["parameters"]["tool-name"];
         tool_guid?: components["parameters"]["tool-guid"];
         before?: components["parameters"]["pagination-before"];
@@ -84887,7 +85020,7 @@ export interface operations {
    */
   "dependabot/list-alerts-for-org": {
     parameters: {
-      query: {
+      query?: {
         state?: components["parameters"]["dependabot-alert-comma-separated-states"];
         severity?: components["parameters"]["dependabot-alert-comma-separated-severities"];
         ecosystem?: components["parameters"]["dependabot-alert-comma-separated-ecosystems"];
@@ -84925,7 +85058,7 @@ export interface operations {
    */
   "dependabot/list-org-secrets": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -85122,7 +85255,7 @@ export interface operations {
    */
   "dependabot/list-selected-repos-for-org-secret": {
     parameters: {
-      query: {
+      query?: {
         page?: components["parameters"]["page"];
         per_page?: components["parameters"]["per-page"];
       };
@@ -85208,7 +85341,7 @@ export interface operations {
   /** List public organization events */
   "activity/list-public-org-events": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -85255,7 +85388,7 @@ export interface operations {
    */
   "teams/list-external-idp-groups-for-org": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         /** @description Page token */
         page?: number;
@@ -85282,7 +85415,7 @@ export interface operations {
   /** List organization webhooks */
   "orgs/list-webhooks": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -85503,7 +85636,7 @@ export interface operations {
    */
   "orgs/list-webhook-deliveries": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         cursor?: components["parameters"]["cursor"];
         redelivery?: boolean;
@@ -85609,7 +85742,7 @@ export interface operations {
    */
   "orgs/list-app-installations": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -85643,7 +85776,7 @@ export interface operations {
    */
   "issues/list-for-org": {
     parameters: {
-      query: {
+      query?: {
         /** @description Indicates which sorts of issues to return. `assigned` means issues assigned to you. `created` means issues created by you. `mentioned` means issues mentioning you. `subscribed` means issues you're subscribed to updates for. `all` or `repos` means all issues you can see, regardless of participation or creation. */
         filter?:
           | "assigned"
@@ -85685,7 +85818,7 @@ export interface operations {
    */
   "orgs/list-members": {
     parameters: {
-      query: {
+      query?: {
         /** @description Filter members returned in the list. `2fa_disabled` means that only members without [two-factor authentication](https://github.com/blog/1614-two-factor-authentication) enabled will be returned. This options is only available for organization owners. */
         filter?: "2fa_disabled" | "all";
         /** @description Filter members returned by their role. */
@@ -85841,7 +85974,7 @@ export interface operations {
    */
   "migrations/list-for-org": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
         /** @description Exclude attributes from the API response to improve performance */
@@ -85947,7 +86080,7 @@ export interface operations {
    */
   "migrations/get-status-for-org": {
     parameters: {
-      query: {
+      query?: {
         /** @description Exclude attributes from the API response to improve performance */
         exclude?: "repositories"[];
       };
@@ -86029,7 +86162,7 @@ export interface operations {
    */
   "migrations/list-repos-for-org": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -86057,7 +86190,7 @@ export interface operations {
    */
   "orgs/list-outside-collaborators": {
     parameters: {
-      query: {
+      query?: {
         /** @description Filter the list of outside collaborators. `2fa_disabled` means that only outside collaborators without [two-factor authentication](https://github.com/blog/1614-two-factor-authentication) enabled will be returned. */
         filter?: "2fa_disabled" | "all";
         per_page?: components["parameters"]["per-page"];
@@ -86146,7 +86279,7 @@ export interface operations {
    */
   "enterprise-admin/list-pre-receive-hooks-for-org": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
         direction?: components["parameters"]["direction"];
@@ -86239,7 +86372,7 @@ export interface operations {
    */
   "projects/list-for-org": {
     parameters: {
-      query: {
+      query?: {
         /** @description Indicates the state of the projects to return. */
         state?: "open" | "closed" | "all";
         per_page?: components["parameters"]["per-page"];
@@ -86302,7 +86435,7 @@ export interface operations {
    */
   "orgs/list-public-members": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -86322,7 +86455,10 @@ export interface operations {
       };
     };
   };
-  /** Check public organization membership for a user */
+  /**
+   * Check public organization membership for a user
+   * @description Check if the provided user is a public member of the organization.
+   */
   "orgs/check-public-membership-for-user": {
     parameters: {
       path: {
@@ -86356,7 +86492,10 @@ export interface operations {
       403: components["responses"]["forbidden"];
     };
   };
-  /** Remove public organization membership for the authenticated user */
+  /**
+   * Remove public organization membership for the authenticated user
+   * @description Removes the public membership for the authenticated user from the specified organization, unless public visibility is enforced by default.
+   */
   "orgs/remove-public-membership-for-authenticated-user": {
     parameters: {
       path: {
@@ -86377,7 +86516,7 @@ export interface operations {
    */
   "repos/list-for-org": {
     parameters: {
-      query: {
+      query?: {
         /** @description Specifies the types of repositories you want returned. `internal` is not yet supported when a GitHub App calls this endpoint with an installation access token. */
         type?:
           | "all"
@@ -86577,7 +86716,7 @@ export interface operations {
    */
   "secret-scanning/list-alerts-for-org": {
     parameters: {
-      query: {
+      query?: {
         state?: components["parameters"]["secret-scanning-alert-state"];
         secret_type?: components["parameters"]["secret-scanning-alert-secret-type"];
         resolution?: components["parameters"]["secret-scanning-alert-resolution"];
@@ -86683,7 +86822,7 @@ export interface operations {
    */
   "billing/get-github-advanced-security-billing-org": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -86707,7 +86846,7 @@ export interface operations {
    */
   "teams/list": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -86897,7 +87036,7 @@ export interface operations {
    */
   "teams/list-discussions-in-org": {
     parameters: {
-      query: {
+      query?: {
         direction?: components["parameters"]["direction"];
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
@@ -87043,7 +87182,7 @@ export interface operations {
    */
   "teams/list-discussion-comments-in-org": {
     parameters: {
-      query: {
+      query?: {
         direction?: components["parameters"]["direction"];
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
@@ -87183,7 +87322,7 @@ export interface operations {
    */
   "reactions/list-for-team-discussion-comment-in-org": {
     parameters: {
-      query: {
+      query?: {
         /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.8/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a team discussion comment. */
         content?:
           | "+1"
@@ -87294,7 +87433,7 @@ export interface operations {
    */
   "reactions/list-for-team-discussion-in-org": {
     parameters: {
-      query: {
+      query?: {
         /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.8/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a team discussion. */
         content?:
           | "+1"
@@ -87475,7 +87614,7 @@ export interface operations {
    */
   "teams/list-members-in-org": {
     parameters: {
-      query: {
+      query?: {
         /** @description Filters members returned by their role in the team. */
         role?: "member" | "maintainer" | "all";
         per_page?: components["parameters"]["per-page"];
@@ -87610,7 +87749,7 @@ export interface operations {
    */
   "teams/list-projects-in-org": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -87722,7 +87861,7 @@ export interface operations {
    */
   "teams/list-repos-in-org": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -87836,7 +87975,7 @@ export interface operations {
    */
   "teams/list-child-in-org": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -87883,7 +88022,10 @@ export interface operations {
       422: never;
     };
   };
-  /** Get a project card */
+  /**
+   * Get a project card
+   * @description Gets information about a project card.
+   */
   "projects/get-card": {
     parameters: {
       path: {
@@ -87903,7 +88045,10 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Delete a project card */
+  /**
+   * Delete a project card
+   * @description Deletes a project card
+   */
   "projects/delete-card": {
     parameters: {
       path: {
@@ -88029,7 +88174,10 @@ export interface operations {
       };
     };
   };
-  /** Get a project column */
+  /**
+   * Get a project column
+   * @description Gets information about a project column.
+   */
   "projects/get-column": {
     parameters: {
       path: {
@@ -88049,7 +88197,10 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Delete a project column */
+  /**
+   * Delete a project column
+   * @description Deletes a project column.
+   */
   "projects/delete-column": {
     parameters: {
       path: {
@@ -88094,10 +88245,13 @@ export interface operations {
       403: components["responses"]["forbidden"];
     };
   };
-  /** List project cards */
+  /**
+   * List project cards
+   * @description Lists the project cards in a project.
+   */
   "projects/list-cards": {
     parameters: {
-      query: {
+      query?: {
         /** @description Filters the project cards that are returned by the card's state. */
         archived_state?: "all" | "archived" | "not_archived";
         per_page?: components["parameters"]["per-page"];
@@ -88341,7 +88495,7 @@ export interface operations {
    */
   "projects/list-collaborators": {
     parameters: {
-      query: {
+      query?: {
         /** @description Filters the collaborators by their affiliation. `outside` means outside collaborators of a project that are not a member of the project's organization. `direct` means collaborators with permissions to a project, regardless of organization membership status. `all` means all collaborators the authenticated user can see. */
         affiliation?: "outside" | "direct" | "all";
         per_page?: components["parameters"]["per-page"];
@@ -88448,10 +88602,13 @@ export interface operations {
       422: components["responses"]["validation_failed"];
     };
   };
-  /** List project columns */
+  /**
+   * List project columns
+   * @description Lists the project columns in a project.
+   */
   "projects/list-columns": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -88474,7 +88631,10 @@ export interface operations {
       403: components["responses"]["forbidden"];
     };
   };
-  /** Create a project column */
+  /**
+   * Create a project column
+   * @description Creates a new project column.
+   */
   "projects/create-column": {
     parameters: {
       path: {
@@ -88534,7 +88694,7 @@ export interface operations {
    */
   "actions/list-repo-required-workflows": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -88665,6 +88825,33 @@ export interface operations {
            */
           visibility?: "public" | "private" | "internal";
           /**
+           * @description Specify which security and analysis features to enable or disable for the repository.
+           *
+           * To use this parameter, you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/enterprise-server@3.8/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
+           *
+           * For example, to enable GitHub Advanced Security, use this data in the body of the `PATCH` request:
+           * `{ "security_and_analysis": {"advanced_security": { "status": "enabled" } } }`.
+           *
+           * You can check which security and analysis features are currently enabled by using a `GET /repos/{owner}/{repo}` request.
+           */
+          security_and_analysis?: {
+            /** @description Use the `status` property to enable or disable GitHub Advanced Security for this repository. For more information, see "[About GitHub Advanced Security](/github/getting-started-with-github/learning-about-github/about-github-advanced-security)." */
+            advanced_security?: {
+              /** @description Can be `enabled` or `disabled`. */
+              status?: string;
+            };
+            /** @description Use the `status` property to enable or disable secret scanning for this repository. For more information, see "[About secret scanning](/code-security/secret-security/about-secret-scanning)." */
+            secret_scanning?: {
+              /** @description Can be `enabled` or `disabled`. */
+              status?: string;
+            };
+            /** @description Use the `status` property to enable or disable secret scanning push protection for this repository. For more information, see "[Protecting pushes with secret scanning](/code-security/secret-scanning/protecting-pushes-with-secret-scanning)." */
+            secret_scanning_push_protection?: {
+              /** @description Can be `enabled` or `disabled`. */
+              status?: string;
+            };
+          } | null;
+          /**
            * @description Either `true` to enable issues for this repository or `false` to disable them.
            * @default true
            */
@@ -88788,7 +88975,7 @@ export interface operations {
    */
   "actions/list-artifacts-for-repo": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
         /** @description Filters artifacts by exact match on their name field. */
@@ -88949,7 +89136,7 @@ export interface operations {
    */
   "actions/get-actions-cache-list": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
         ref?: components["parameters"]["actions-cache-git-ref-full"];
@@ -89367,7 +89554,7 @@ export interface operations {
    */
   "actions/list-required-workflow-runs": {
     parameters: {
-      query: {
+      query?: {
         actor?: components["parameters"]["actor"];
         branch?: components["parameters"]["workflow-run-branch"];
         event?: components["parameters"]["event"];
@@ -89406,7 +89593,7 @@ export interface operations {
    */
   "actions/list-self-hosted-runners-for-repo": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -89688,7 +89875,7 @@ export interface operations {
    */
   "actions/list-workflow-runs-for-repo": {
     parameters: {
-      query: {
+      query?: {
         actor?: components["parameters"]["actor"];
         branch?: components["parameters"]["workflow-run-branch"];
         event?: components["parameters"]["event"];
@@ -89726,7 +89913,7 @@ export interface operations {
    */
   "actions/get-workflow-run": {
     parameters: {
-      query: {
+      query?: {
         exclude_pull_requests?: components["parameters"]["exclude-pull-requests"];
       };
       path: {
@@ -89790,7 +89977,7 @@ export interface operations {
    */
   "actions/list-workflow-run-artifacts": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -89824,7 +90011,7 @@ export interface operations {
    */
   "actions/get-workflow-run-attempt": {
     parameters: {
-      query: {
+      query?: {
         exclude_pull_requests?: components["parameters"]["exclude-pull-requests"];
       };
       path: {
@@ -89849,7 +90036,7 @@ export interface operations {
    */
   "actions/list-jobs-for-workflow-run-attempt": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -89925,7 +90112,7 @@ export interface operations {
    */
   "actions/list-jobs-for-workflow-run": {
     parameters: {
-      query: {
+      query?: {
         /** @description Filters jobs by their `completed_at` timestamp. `latest` returns jobs from the most recent execution of the workflow run. `all` returns all jobs for a workflow run, including from old executions of the workflow run. */
         filter?: "latest" | "all";
         per_page?: components["parameters"]["per-page"];
@@ -90132,7 +90319,7 @@ export interface operations {
    */
   "actions/list-repo-secrets": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -90204,7 +90391,7 @@ export interface operations {
    * token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use
    * this endpoint.
    *
-   * #### Example encrypting a secret using Node.js
+   * **Example encrypting a secret using Node.js**
    *
    * Encrypt your secret using the [libsodium-wrappers](https://www.npmjs.com/package/libsodium-wrappers) library.
    *
@@ -90229,7 +90416,7 @@ export interface operations {
    * });
    * ```
    *
-   * #### Example encrypting a secret using Python
+   * **Example encrypting a secret using Python**
    *
    * Encrypt your secret using [pynacl](https://pynacl.readthedocs.io/en/latest/public/#nacl-public-sealedbox) with Python 3.
    *
@@ -90245,7 +90432,7 @@ export interface operations {
    *   return b64encode(encrypted).decode("utf-8")
    * ```
    *
-   * #### Example encrypting a secret using C#
+   * **Example encrypting a secret using C#**
    *
    * Encrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/) package.
    *
@@ -90258,7 +90445,7 @@ export interface operations {
    * Console.WriteLine(Convert.ToBase64String(sealedPublicKeyBox));
    * ```
    *
-   * #### Example encrypting a secret using Ruby
+   * **Example encrypting a secret using Ruby**
    *
    * Encrypt your secret using the [rbnacl](https://github.com/RubyCrypto/rbnacl) gem.
    *
@@ -90328,7 +90515,7 @@ export interface operations {
    */
   "actions/list-repo-variables": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["variables-per-page"];
         page?: components["parameters"]["page"];
       };
@@ -90459,7 +90646,7 @@ export interface operations {
    */
   "actions/list-repo-workflows": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -90583,7 +90770,7 @@ export interface operations {
    */
   "actions/list-workflow-runs": {
     parameters: {
-      query: {
+      query?: {
         actor?: components["parameters"]["actor"];
         branch?: components["parameters"]["workflow-run-branch"];
         event?: components["parameters"]["event"];
@@ -90622,7 +90809,7 @@ export interface operations {
    */
   "issues/list-assignees": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -90679,7 +90866,7 @@ export interface operations {
    */
   "repos/list-autolinks": {
     parameters: {
-      query: {
+      query?: {
         page?: components["parameters"]["page"];
       };
       path: {
@@ -90783,7 +90970,7 @@ export interface operations {
   /** List branches */
   "repos/list-branches": {
     parameters: {
-      query: {
+      query?: {
         /** @description Setting to `true` returns only protected branches. When set to `false`, only unprotected branches are returned. Omitting this parameter returns all branches. */
         protected?: boolean;
         per_page?: components["parameters"]["per-page"];
@@ -92077,7 +92264,7 @@ export interface operations {
    */
   "checks/list-annotations": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -92238,7 +92425,7 @@ export interface operations {
    */
   "checks/list-for-suite": {
     parameters: {
-      query: {
+      query?: {
         check_name?: components["parameters"]["check-name"];
         status?: components["parameters"]["status"];
         /** @description Filters check runs by their `completed_at` timestamp. `latest` returns the most recent check runs. */
@@ -92305,7 +92492,7 @@ export interface operations {
    */
   "code-scanning/list-alerts-for-repo": {
     parameters: {
-      query: {
+      query?: {
         tool_name?: components["parameters"]["tool-name"];
         tool_guid?: components["parameters"]["tool-guid"];
         page?: components["parameters"]["page"];
@@ -92402,7 +92589,7 @@ export interface operations {
    */
   "code-scanning/list-alert-instances": {
     parameters: {
-      query: {
+      query?: {
         page?: components["parameters"]["page"];
         per_page?: components["parameters"]["per-page"];
         ref?: components["parameters"]["git-ref"];
@@ -92447,7 +92634,7 @@ export interface operations {
    */
   "code-scanning/list-recent-analyses": {
     parameters: {
-      query: {
+      query?: {
         tool_name?: components["parameters"]["tool-name"];
         tool_guid?: components["parameters"]["tool-guid"];
         page?: components["parameters"]["page"];
@@ -92593,7 +92780,7 @@ export interface operations {
    */
   "code-scanning/delete-analysis": {
     parameters: {
-      query: {
+      query?: {
         /** @description Allow deletion if the specified analysis is the last in a set. If you attempt to delete the final analysis in a set without setting this parameter to `true`, you'll get a 400 response with the message: `Analysis is last of its type and deletion may result in the loss of historical alert data. Please specify confirm_delete.` */
         confirm_delete?: string | null;
       };
@@ -92731,7 +92918,7 @@ export interface operations {
    */
   "repos/codeowners-errors": {
     parameters: {
-      query: {
+      query?: {
         /** @description A branch, tag or commit name used to determine which version of the CODEOWNERS file to use. Default: the repository's default branch (e.g. `main`) */
         ref?: string;
       };
@@ -92764,7 +92951,7 @@ export interface operations {
    */
   "repos/list-collaborators": {
     parameters: {
-      query: {
+      query?: {
         /** @description Filter collaborators returned by their affiliation. `outside` means all outside collaborators of an organization-owned repository. `direct` means all collaborators with permissions to an organization-owned repository, regardless of organization membership status. `all` means all collaborators the authenticated user can see. */
         affiliation?: "outside" | "direct" | "all";
         /** @description Filter collaborators by the permissions they have on the repository. If not specified, all collaborators will be returned. */
@@ -92876,7 +93063,30 @@ export interface operations {
       422: components["responses"]["validation_failed"];
     };
   };
-  /** Remove a repository collaborator */
+  /**
+   * Remove a repository collaborator
+   * @description Removes a collaborator from a repository.
+   *
+   * To use this endpoint, the authenticated user must either be an administrator of the repository or target themselves for removal.
+   *
+   * This endpoint also:
+   * - Cancels any outstanding invitations
+   * - Unasigns the user from any issues
+   * - Removes access to organization projects if the user is not an organization member and is not a collaborator on any other organization repositories.
+   * - Unstars the repository
+   * - Updates access permissions to packages
+   *
+   * Removing a user as a collaborator has the following effects on forks:
+   *  - If the user had access to a fork through their membership to this repository, the user will also be removed from the fork.
+   *  - If the user had their own fork of the repository, the fork will be deleted.
+   *  - If the user still has read access to the repository, open pull requests by this user from a fork will be denied.
+   *
+   * **Note**: A user can still have access to the repository through organization permissions like base repository permissions.
+   *
+   * Although the API responds immediately, the additional permission updates might take some extra time to complete in the background.
+   *
+   * For more information on fork permissions, see "[About permissions and visibility of forks](https://docs.github.com/enterprise-server@3.8/pull-requests/collaborating-with-pull-requests/working-with-forks/about-permissions-and-visibility-of-forks)".
+   */
   "repos/remove-collaborator": {
     parameters: {
       path: {
@@ -92886,8 +93096,10 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Response */
+      /** @description No Content when collaborator was removed from the repository. */
       204: never;
+      403: components["responses"]["forbidden"];
+      422: components["responses"]["validation_failed"];
     };
   };
   /**
@@ -92920,7 +93132,7 @@ export interface operations {
    */
   "repos/list-commit-comments-for-repo": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -93008,7 +93220,7 @@ export interface operations {
    */
   "reactions/list-for-commit-comment": {
     parameters: {
-      query: {
+      query?: {
         /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.8/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a commit comment. */
         content?:
           | "+1"
@@ -93141,7 +93353,7 @@ export interface operations {
    */
   "repos/list-commits": {
     parameters: {
-      query: {
+      query?: {
         /** @description SHA or branch to start listing commits from. Default: the repository’s default branch (usually `main`). */
         sha?: string;
         /** @description Only commits containing this file path will be returned. */
@@ -93207,7 +93419,7 @@ export interface operations {
    */
   "repos/list-comments-for-commit": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -93278,7 +93490,7 @@ export interface operations {
    */
   "repos/list-pull-requests-associated-with-commit": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -93341,7 +93553,7 @@ export interface operations {
    */
   "repos/get-commit": {
     parameters: {
-      query: {
+      query?: {
         page?: components["parameters"]["page"];
         per_page?: components["parameters"]["per-page"];
       };
@@ -93373,7 +93585,7 @@ export interface operations {
    */
   "checks/list-for-ref": {
     parameters: {
-      query: {
+      query?: {
         check_name?: components["parameters"]["check-name"];
         status?: components["parameters"]["status"];
         /** @description Filters check runs by their `completed_at` timestamp. `latest` returns the most recent check runs. */
@@ -93412,7 +93624,7 @@ export interface operations {
    */
   "checks/list-suites-for-ref": {
     parameters: {
-      query: {
+      query?: {
         /**
          * @description Filters check suites by GitHub App `id`.
          * @example 1
@@ -93457,7 +93669,7 @@ export interface operations {
    */
   "repos/get-combined-status-for-ref": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -93486,7 +93698,7 @@ export interface operations {
    */
   "repos/list-commit-statuses-for-ref": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -93560,7 +93772,7 @@ export interface operations {
    */
   "repos/compare-commits-with-basehead": {
     parameters: {
-      query: {
+      query?: {
         page?: components["parameters"]["page"];
         per_page?: components["parameters"]["per-page"];
       };
@@ -93625,7 +93837,7 @@ export interface operations {
    */
   "repos/get-content": {
     parameters: {
-      query: {
+      query?: {
         /** @description The name of the commit/branch/tag. Default: the repository’s default branch. */
         ref?: string;
       };
@@ -93786,7 +93998,7 @@ export interface operations {
    */
   "repos/list-contributors": {
     parameters: {
-      query: {
+      query?: {
         /** @description Set to `1` or `true` to include anonymous contributors in results. */
         anon?: string;
         per_page?: components["parameters"]["per-page"];
@@ -93821,7 +94033,7 @@ export interface operations {
    */
   "dependabot/list-alerts-for-repo": {
     parameters: {
-      query: {
+      query?: {
         state?: components["parameters"]["dependabot-alert-comma-separated-states"];
         severity?: components["parameters"]["dependabot-alert-comma-separated-severities"];
         ecosystem?: components["parameters"]["dependabot-alert-comma-separated-ecosystems"];
@@ -93895,6 +94107,8 @@ export interface operations {
    * @description You must use an access token with the `security_events` scope to use this endpoint with private repositories.
    * You can also use tokens with the `public_repo` scope for public repositories only.
    * GitHub Apps must have **Dependabot alerts** write permission to use this endpoint.
+   *
+   * To use this endpoint, you must have access to security alerts for the repository. For more information, see "[Granting access to security alerts](https://docs.github.com/enterprise-server@3.8/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-security-and-analysis-settings-for-your-repository#granting-access-to-security-alerts)."
    */
   "dependabot/update-alert": {
     parameters: {
@@ -93948,7 +94162,7 @@ export interface operations {
    */
   "dependabot/list-repo-secrets": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -94020,7 +94234,7 @@ export interface operations {
    * token with the `repo` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` repository
    * permission to use this endpoint.
    *
-   * #### Example encrypting a secret using Node.js
+   * **Example encrypting a secret using Node.js**
    *
    * Encrypt your secret using the [libsodium-wrappers](https://www.npmjs.com/package/libsodium-wrappers) library.
    *
@@ -94045,7 +94259,7 @@ export interface operations {
    * });
    * ```
    *
-   * #### Example encrypting a secret using Python
+   * **Example encrypting a secret using Python**
    *
    * Encrypt your secret using [pynacl](https://pynacl.readthedocs.io/en/latest/public/#nacl-public-sealedbox) with Python 3.
    *
@@ -94061,7 +94275,7 @@ export interface operations {
    *   return b64encode(encrypted).decode("utf-8")
    * ```
    *
-   * #### Example encrypting a secret using C#
+   * **Example encrypting a secret using C#**
    *
    * Encrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/) package.
    *
@@ -94074,7 +94288,7 @@ export interface operations {
    * Console.WriteLine(Convert.ToBase64String(sealedPublicKeyBox));
    * ```
    *
-   * #### Example encrypting a secret using Ruby
+   * **Example encrypting a secret using Ruby**
    *
    * Encrypt your secret using the [rbnacl](https://github.com/RubyCrypto/rbnacl) gem.
    *
@@ -94144,7 +94358,7 @@ export interface operations {
    */
   "dependency-graph/diff-range": {
     parameters: {
-      query: {
+      query?: {
         name?: components["parameters"]["manifest-path"];
       };
       path: {
@@ -94208,7 +94422,7 @@ export interface operations {
    */
   "repos/list-deployments": {
     parameters: {
-      query: {
+      query?: {
         /** @description The SHA recorded at creation time. */
         sha?: string;
         /** @description The name of the ref. This can be a branch, tag, or SHA. */
@@ -94408,7 +94622,7 @@ export interface operations {
    */
   "repos/list-deployment-statuses": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -94573,7 +94787,7 @@ export interface operations {
    */
   "repos/get-all-environments": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -94700,7 +94914,7 @@ export interface operations {
    */
   "repos/list-deployment-branch-policies": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -94837,7 +95051,7 @@ export interface operations {
    */
   "activity/list-repo-events": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -94858,7 +95072,7 @@ export interface operations {
   /** List forks */
   "repos/list-forks": {
     parameters: {
-      query: {
+      query?: {
         /** @description The sort order. `stargazers` will sort by star count. */
         sort?: "newest" | "oldest" | "stargazers" | "watchers";
         per_page?: components["parameters"]["per-page"];
@@ -95204,8 +95418,6 @@ export interface operations {
           ref: string;
           /** @description The SHA1 value for this reference. */
           sha: string;
-          /** @example "refs/heads/newbranch" */
-          key?: string;
         };
       };
     };
@@ -95487,7 +95699,7 @@ export interface operations {
    */
   "git/get-tree": {
     parameters: {
-      query: {
+      query?: {
         /** @description Setting this parameter to any value returns the objects or subtrees referenced by the tree specified in `:tree_sha`. For example, setting `recursive` to any of the following will enable returning objects or subtrees: `0`, `1`, `"true"`, and `"false"`. Omit this parameter to prevent recursively returning objects or subtrees. */
         recursive?: string;
       };
@@ -95514,7 +95726,7 @@ export interface operations {
    */
   "repos/list-webhooks": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -95750,7 +95962,7 @@ export interface operations {
    */
   "repos/list-webhook-deliveries": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         cursor?: components["parameters"]["cursor"];
         redelivery?: boolean;
@@ -95883,7 +96095,7 @@ export interface operations {
    */
   "repos/list-invitations": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -95958,7 +96170,7 @@ export interface operations {
    */
   "issues/list-for-repo": {
     parameters: {
-      query: {
+      query?: {
         /** @description If an `integer` is passed, it should refer to a milestone by its `number` field. If the string `*` is passed, issues with any milestone are accepted. If the string `none` is passed, issues without milestones are returned. */
         milestone?: string;
         /** @description Indicates the state of the issues to return. */
@@ -96048,6 +96260,7 @@ export interface operations {
           "application/json": components["schemas"]["issue"];
         };
       };
+      400: components["responses"]["bad_request"];
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
       410: components["responses"]["gone"];
@@ -96063,7 +96276,7 @@ export interface operations {
    */
   "issues/list-comments-for-repo": {
     parameters: {
-      query: {
+      query?: {
         sort?: components["parameters"]["sort"];
         /** @description Either `asc` or `desc`. Ignored without the `sort` parameter. */
         direction?: "asc" | "desc";
@@ -96165,7 +96378,7 @@ export interface operations {
    */
   "reactions/list-for-issue-comment": {
     parameters: {
-      query: {
+      query?: {
         /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.8/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to an issue comment. */
         content?:
           | "+1"
@@ -96265,10 +96478,13 @@ export interface operations {
       204: never;
     };
   };
-  /** List issue events for a repository */
+  /**
+   * List issue events for a repository
+   * @description Lists events for a repository.
+   */
   "issues/list-events-for-repo": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -96290,7 +96506,10 @@ export interface operations {
       422: components["responses"]["validation_failed"];
     };
   };
-  /** Get an issue event */
+  /**
+   * Get an issue event
+   * @description Gets a single event by the event id.
+   */
   "issues/get-event": {
     parameters: {
       path: {
@@ -96505,7 +96724,7 @@ export interface operations {
    */
   "issues/list-comments": {
     parameters: {
-      query: {
+      query?: {
         since?: components["parameters"]["since"];
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
@@ -96574,10 +96793,13 @@ export interface operations {
       422: components["responses"]["validation_failed"];
     };
   };
-  /** List issue events */
+  /**
+   * List issue events
+   * @description Lists all events for an issue.
+   */
   "issues/list-events": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -96600,10 +96822,13 @@ export interface operations {
       410: components["responses"]["gone"];
     };
   };
-  /** List labels for an issue */
+  /**
+   * List labels for an issue
+   * @description Lists all labels for an issue.
+   */
   "issues/list-labels-on-issue": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -96670,7 +96895,10 @@ export interface operations {
       422: components["responses"]["validation_failed"];
     };
   };
-  /** Add labels to an issue */
+  /**
+   * Add labels to an issue
+   * @description Adds labels to an issue. If you provide an empty array of labels, all labels are removed from the issue.
+   */
   "issues/add-labels": {
     parameters: {
       path: {
@@ -96709,7 +96937,10 @@ export interface operations {
       422: components["responses"]["validation_failed"];
     };
   };
-  /** Remove all labels from an issue */
+  /**
+   * Remove all labels from an issue
+   * @description Removes all labels from an issue.
+   */
   "issues/remove-all-labels": {
     parameters: {
       path: {
@@ -96814,7 +97045,7 @@ export interface operations {
    */
   "reactions/list-for-issue": {
     parameters: {
-      query: {
+      query?: {
         /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.8/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to an issue. */
         content?:
           | "+1"
@@ -96915,10 +97146,13 @@ export interface operations {
       204: never;
     };
   };
-  /** List timeline events for an issue */
+  /**
+   * List timeline events for an issue
+   * @description List all timeline events for an issue.
+   */
   "issues/list-events-for-timeline": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -96945,7 +97179,7 @@ export interface operations {
   /** List deploy keys */
   "repos/list-deploy-keys": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -97043,10 +97277,13 @@ export interface operations {
       204: never;
     };
   };
-  /** List labels for a repository */
+  /**
+   * List labels for a repository
+   * @description Lists all labels for a repository.
+   */
   "issues/list-labels-for-repo": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -97068,7 +97305,10 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Create a label */
+  /**
+   * Create a label
+   * @description Creates a label for the specified repository with the given name and color. The name and color parameters are required. The color must be a valid [hexadecimal color code](http://www.color-hex.com/).
+   */
   "issues/create-label": {
     parameters: {
       path: {
@@ -97103,7 +97343,10 @@ export interface operations {
       422: components["responses"]["validation_failed"];
     };
   };
-  /** Get a label */
+  /**
+   * Get a label
+   * @description Gets a label using the given name.
+   */
   "issues/get-label": {
     parameters: {
       path: {
@@ -97122,7 +97365,10 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Delete a label */
+  /**
+   * Delete a label
+   * @description Deletes a label using the given label name.
+   */
   "issues/delete-label": {
     parameters: {
       path: {
@@ -97136,7 +97382,10 @@ export interface operations {
       204: never;
     };
   };
-  /** Update a label */
+  /**
+   * Update a label
+   * @description Updates a label using the given label name.
+   */
   "issues/update-label": {
     parameters: {
       path: {
@@ -97316,10 +97565,13 @@ export interface operations {
       422: components["responses"]["validation_failed"];
     };
   };
-  /** List milestones */
+  /**
+   * List milestones
+   * @description Lists milestones for a repository.
+   */
   "issues/list-milestones": {
     parameters: {
-      query: {
+      query?: {
         /** @description The state of the milestone. Either `open`, `closed`, or `all`. */
         state?: "open" | "closed" | "all";
         /** @description What to sort results by. Either `due_on` or `completeness`. */
@@ -97347,7 +97599,10 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Create a milestone */
+  /**
+   * Create a milestone
+   * @description Creates a milestone.
+   */
   "issues/create-milestone": {
     parameters: {
       path: {
@@ -97391,7 +97646,10 @@ export interface operations {
       422: components["responses"]["validation_failed"];
     };
   };
-  /** Get a milestone */
+  /**
+   * Get a milestone
+   * @description Gets a milestone using the given milestone number.
+   */
   "issues/get-milestone": {
     parameters: {
       path: {
@@ -97410,7 +97668,10 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Delete a milestone */
+  /**
+   * Delete a milestone
+   * @description Deletes a milestone using the given milestone number.
+   */
   "issues/delete-milestone": {
     parameters: {
       path: {
@@ -97464,10 +97725,13 @@ export interface operations {
       };
     };
   };
-  /** List labels for issues in a milestone */
+  /**
+   * List labels for issues in a milestone
+   * @description Lists labels for issues in a milestone.
+   */
   "issues/list-labels-for-milestone": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -97495,7 +97759,7 @@ export interface operations {
    */
   "activity/list-repo-notifications-for-authenticated-user": {
     parameters: {
-      query: {
+      query?: {
         all?: components["parameters"]["all"];
         participating?: components["parameters"]["participating"];
         since?: components["parameters"]["since"];
@@ -97701,7 +97965,7 @@ export interface operations {
    */
   "repos/list-pages-builds": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -97840,7 +98104,7 @@ export interface operations {
    */
   "enterprise-admin/list-pre-receive-hooks-for-repo": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
         direction?: components["parameters"]["direction"];
@@ -97939,7 +98203,7 @@ export interface operations {
    */
   "projects/list-for-repo": {
     parameters: {
-      query: {
+      query?: {
         /** @description Indicates the state of the projects to return. */
         state?: "open" | "closed" | "all";
         per_page?: components["parameters"]["per-page"];
@@ -98008,7 +98272,7 @@ export interface operations {
    */
   "pulls/list": {
     parameters: {
-      query: {
+      query?: {
         /** @description Either `open`, `closed`, or `all` to filter by state. */
         state?: "open" | "closed" | "all";
         /** @description Filter pulls by head user or head organization and branch name in the format of `user:ref-name` or `organization:ref-name`. For example: `github:new-script-format` or `octocat:test-branch`. */
@@ -98107,7 +98371,7 @@ export interface operations {
    */
   "pulls/list-review-comments-for-repo": {
     parameters: {
-      query: {
+      query?: {
         sort?: "created" | "updated" | "created_at";
         /** @description The direction to sort results. Ignored without `sort` parameter. */
         direction?: "asc" | "desc";
@@ -98207,7 +98471,7 @@ export interface operations {
    */
   "reactions/list-for-pull-request-review-comment": {
     parameters: {
-      query: {
+      query?: {
         /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.8/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a pull request review comment. */
         content?:
           | "+1"
@@ -98396,7 +98660,7 @@ export interface operations {
    */
   "pulls/list-review-comments": {
     parameters: {
-      query: {
+      query?: {
         sort?: components["parameters"]["sort"];
         /** @description The direction to sort results. Ignored without `sort` parameter. */
         direction?: "asc" | "desc";
@@ -98460,8 +98724,8 @@ export interface operations {
            * @enum {string}
            */
           side?: "LEFT" | "RIGHT";
-          /** @description The line of the blob in the pull request diff that the comment applies to. For a multi-line comment, the last line of the range that your comment applies to. */
-          line: number;
+          /** @description **Required unless using `subject_type:file`**. The line of the blob in the pull request diff that the comment applies to. For a multi-line comment, the last line of the range that your comment applies to. */
+          line?: number;
           /** @description **Required when using multi-line comments unless using `in_reply_to`**. The `start_line` is the first line in the pull request diff that your multi-line comment applies to. To learn more about multi-line comments, see "[Commenting on a pull request](https://docs.github.com/enterprise-server@3.8/articles/commenting-on-a-pull-request#adding-line-comments-to-a-pull-request)" in the GitHub Help documentation. */
           start_line?: number;
           /**
@@ -98535,7 +98799,7 @@ export interface operations {
    */
   "pulls/list-commits": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -98563,7 +98827,7 @@ export interface operations {
    */
   "pulls/list-files": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -98763,7 +99027,7 @@ export interface operations {
    */
   "pulls/list-reviews": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -98930,7 +99194,7 @@ export interface operations {
    */
   "pulls/list-comments-for-review": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -99071,7 +99335,7 @@ export interface operations {
    */
   "repos/get-readme": {
     parameters: {
-      query: {
+      query?: {
         /** @description The name of the commit/branch/tag. Default: the repository’s default branch. */
         ref?: string;
       };
@@ -99099,7 +99363,7 @@ export interface operations {
    */
   "repos/get-readme-in-directory": {
     parameters: {
-      query: {
+      query?: {
         /** @description The name of the commit/branch/tag. Default: the repository’s default branch. */
         ref?: string;
       };
@@ -99129,7 +99393,7 @@ export interface operations {
    */
   "repos/list-releases": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -99450,7 +99714,7 @@ export interface operations {
   /** List release assets */
   "repos/list-release-assets": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -99528,7 +99792,7 @@ export interface operations {
    */
   "reactions/list-for-release": {
     parameters: {
-      query: {
+      query?: {
         /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.8/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a release. */
         content?: "+1" | "laugh" | "heart" | "hooray" | "rocket" | "eyes";
         per_page?: components["parameters"]["per-page"];
@@ -99618,7 +99882,7 @@ export interface operations {
    */
   "repos/list-cache-info": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -99660,7 +99924,7 @@ export interface operations {
    */
   "secret-scanning/list-alerts-for-repo": {
     parameters: {
-      query: {
+      query?: {
         state?: components["parameters"]["secret-scanning-alert-state"];
         secret_type?: components["parameters"]["secret-scanning-alert-secret-type"];
         resolution?: components["parameters"]["secret-scanning-alert-resolution"];
@@ -99768,7 +100032,7 @@ export interface operations {
    */
   "secret-scanning/list-locations-for-alert": {
     parameters: {
-      query: {
+      query?: {
         page?: components["parameters"]["page"];
         per_page?: components["parameters"]["per-page"];
       };
@@ -99801,7 +100065,7 @@ export interface operations {
    */
   "activity/list-stargazers-for-repo": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -99902,6 +100166,8 @@ export interface operations {
    * @description Returns the total commit counts for the `owner` and total commit counts in `all`. `all` is everyone combined, including the `owner` in the last 52 weeks. If you'd like to get the commit counts for non-owners, you can subtract `owner` from `all`.
    *
    * The array order is oldest week (index 0) to most recent week.
+   *
+   * The most recent week is seven days ago at UTC midnight to today at UTC midnight.
    */
   "repos/get-participation-stats": {
     parameters: {
@@ -100004,7 +100270,7 @@ export interface operations {
    */
   "activity/list-watchers-for-repo": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -100094,7 +100360,7 @@ export interface operations {
   /** List repository tags */
   "repos/list-tags": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -100210,10 +100476,21 @@ export interface operations {
       302: never;
     };
   };
-  /** List repository teams */
+  /**
+   * List repository teams
+   * @description Lists the teams that have access to the specified repository and that are also visible to the authenticated user.
+   *
+   * For a public repository, a team is listed only if that team added the public repository explicitly.
+   *
+   * Personal access tokens require the following scopes:
+   * * `public_repo` to call this endpoint on a public repository
+   * * `repo` to call this endpoint on a private repository (this scope also includes public repositories)
+   *
+   * This endpoint is not compatible with fine-grained personal access tokens.
+   */
   "repos/list-teams": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -100232,12 +100509,13 @@ export interface operations {
           "application/json": components["schemas"]["team"][];
         };
       };
+      404: components["responses"]["not_found"];
     };
   };
   /** Get all repository topics */
   "repos/get-all-topics": {
     parameters: {
-      query: {
+      query?: {
         page?: components["parameters"]["page"];
         per_page?: components["parameters"]["per-page"];
       };
@@ -100399,7 +100677,7 @@ export interface operations {
    */
   "repos/list-public": {
     parameters: {
-      query: {
+      query?: {
         since?: components["parameters"]["since-repo"];
         /** @description Specifies the types of repositories to return. This endpoint will only list repositories available to all users on the enterprise. */
         visibility?: "all" | "public";
@@ -100426,7 +100704,7 @@ export interface operations {
    */
   "actions/list-environment-secrets": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -100498,7 +100776,7 @@ export interface operations {
    * token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use
    * this endpoint.
    *
-   * #### Example encrypting a secret using Node.js
+   * **Example encrypting a secret using Node.js**
    *
    * Encrypt your secret using the [libsodium-wrappers](https://www.npmjs.com/package/libsodium-wrappers) library.
    *
@@ -100523,7 +100801,7 @@ export interface operations {
    * });
    * ```
    *
-   * #### Example encrypting a secret using Python
+   * **Example encrypting a secret using Python**
    *
    * Encrypt your secret using [pynacl](https://pynacl.readthedocs.io/en/latest/public/#nacl-public-sealedbox) with Python 3.
    *
@@ -100539,7 +100817,7 @@ export interface operations {
    *   return b64encode(encrypted).decode("utf-8")
    * ```
    *
-   * #### Example encrypting a secret using C#
+   * **Example encrypting a secret using C#**
    *
    * Encrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/) package.
    *
@@ -100552,7 +100830,7 @@ export interface operations {
    * Console.WriteLine(Convert.ToBase64String(sealedPublicKeyBox));
    * ```
    *
-   * #### Example encrypting a secret using Ruby
+   * **Example encrypting a secret using Ruby**
    *
    * Encrypt your secret using the [rbnacl](https://github.com/RubyCrypto/rbnacl) gem.
    *
@@ -100622,7 +100900,7 @@ export interface operations {
    */
   "actions/list-environment-variables": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["variables-per-page"];
         page?: components["parameters"]["page"];
       };
@@ -100757,7 +101035,7 @@ export interface operations {
    */
   "enterprise-admin/list-provisioned-groups-enterprise": {
     parameters: {
-      query: {
+      query?: {
         /** @description If specified, only results that match the specified filter will be returned. Multiple filters are not supported. Possible filters are `externalId`, `id`, and `displayName`. For example, `?filter="externalId eq '9138790-10932-109120392-12321'"`. */
         filter?: string;
         excludedAttributes?: components["parameters"]["excluded-attributes"];
@@ -100816,7 +101094,7 @@ export interface operations {
    */
   "enterprise-admin/get-provisioning-information-for-enterprise-group": {
     parameters: {
-      query: {
+      query?: {
         excludedAttributes?: components["parameters"]["excluded-attributes"];
       };
       path: {
@@ -100947,7 +101225,7 @@ export interface operations {
    */
   "enterprise-admin/list-provisioned-identities-enterprise": {
     parameters: {
-      query: {
+      query?: {
         /** @description If specified, only results that match the specified filter will be returned. Multiple filters are not supported. Possible filters are `userName`, `externalId`, `id`, and `displayName`. For example, `?filter="externalId eq '9138790-10932-109120392-12321'"`. */
         filter?: string;
         excludedAttributes?: components["parameters"]["excluded-attributes"];
@@ -101772,7 +102050,7 @@ export interface operations {
    */
   "teams/list-discussions-legacy": {
     parameters: {
-      query: {
+      query?: {
         direction?: components["parameters"]["direction"];
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
@@ -101916,7 +102194,7 @@ export interface operations {
    */
   "teams/list-discussion-comments-legacy": {
     parameters: {
-      query: {
+      query?: {
         direction?: components["parameters"]["direction"];
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
@@ -102056,7 +102334,7 @@ export interface operations {
    */
   "reactions/list-for-team-discussion-comment-legacy": {
     parameters: {
-      query: {
+      query?: {
         /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.8/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a team discussion comment. */
         content?:
           | "+1"
@@ -102140,7 +102418,7 @@ export interface operations {
    */
   "reactions/list-for-team-discussion-legacy": {
     parameters: {
-      query: {
+      query?: {
         /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.8/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a team discussion. */
         content?:
           | "+1"
@@ -102222,7 +102500,7 @@ export interface operations {
    */
   "teams/list-members-legacy": {
     parameters: {
-      query: {
+      query?: {
         /** @description Filters members returned by their role in the team. */
         role?: "member" | "maintainer" | "all";
         per_page?: components["parameters"]["per-page"];
@@ -102440,7 +102718,7 @@ export interface operations {
    */
   "teams/list-projects-legacy": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -102555,7 +102833,7 @@ export interface operations {
    */
   "teams/list-repos-legacy": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -102668,7 +102946,7 @@ export interface operations {
    */
   "teams/list-child-legacy": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -102693,7 +102971,7 @@ export interface operations {
   };
   /**
    * Get the authenticated user
-   * @description If the authenticated user is authenticated through basic authentication or OAuth with the `user` scope, then the response lists public and private profile information.
+   * @description If the authenticated user is authenticated with an OAuth token with the `user` scope, then the response lists public and private profile information.
    *
    * If the authenticated user is authenticated through OAuth without the `user` scope, then the response lists only public profile information.
    */
@@ -102777,7 +103055,7 @@ export interface operations {
    */
   "users/list-emails-for-authenticated-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -102857,7 +103135,7 @@ export interface operations {
    */
   "users/list-followers-for-authenticated-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -102883,7 +103161,7 @@ export interface operations {
    */
   "users/list-followed-by-authenticated-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -102970,7 +103248,7 @@ export interface operations {
    */
   "users/list-gpg-keys-for-authenticated-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -103075,7 +103353,7 @@ export interface operations {
    */
   "apps/list-installations-for-authenticated-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -103110,7 +103388,7 @@ export interface operations {
    */
   "apps/list-installation-repos-for-authenticated-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -103190,7 +103468,7 @@ export interface operations {
    */
   "issues/list-for-authenticated-user": {
     parameters: {
-      query: {
+      query?: {
         /** @description Indicates which sorts of issues to return. `assigned` means issues assigned to you. `created` means issues created by you. `mentioned` means issues mentioning you. `subscribed` means issues you're subscribed to updates for. `all` or `repos` means all issues you can see, regardless of participation or creation. */
         filter?:
           | "assigned"
@@ -103230,7 +103508,7 @@ export interface operations {
    */
   "users/list-public-ssh-keys-for-authenticated-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -103325,10 +103603,13 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** List organization memberships for the authenticated user */
+  /**
+   * List organization memberships for the authenticated user
+   * @description Lists all of the authenticated user's organization memberships.
+   */
   "orgs/list-memberships-for-authenticated-user": {
     parameters: {
-      query: {
+      query?: {
         /** @description Indicates the state of the memberships to return. If not specified, the API returns both active and pending memberships. */
         state?: "active" | "pending";
         per_page?: components["parameters"]["per-page"];
@@ -103351,7 +103632,10 @@ export interface operations {
       422: components["responses"]["validation_failed"];
     };
   };
-  /** Get an organization membership for the authenticated user */
+  /**
+   * Get an organization membership for the authenticated user
+   * @description If the authenticated user is an active or pending member of the organization, this endpoint will return the user's membership. If the authenticated user is not affiliated with the organization, a `404` is returned. This endpoint will return a `403` if the request is made by a GitHub App that is blocked by the organization.
+   */
   "orgs/get-membership-for-authenticated-user": {
     parameters: {
       path: {
@@ -103369,7 +103653,10 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Update an organization membership for the authenticated user */
+  /**
+   * Update an organization membership for the authenticated user
+   * @description Converts the authenticated user to an active member of the organization, if that user has a pending invitation from the organization.
+   */
   "orgs/update-membership-for-authenticated-user": {
     parameters: {
       path: {
@@ -103405,7 +103692,7 @@ export interface operations {
    */
   "migrations/list-for-authenticated-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -103537,7 +103824,7 @@ export interface operations {
    */
   "migrations/list-repos-for-authenticated-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -103568,7 +103855,7 @@ export interface operations {
    */
   "orgs/list-for-authenticated-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -103628,7 +103915,7 @@ export interface operations {
    */
   "users/list-public-emails-for-authenticated-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -103657,7 +103944,7 @@ export interface operations {
    */
   "repos/list-for-authenticated-user": {
     parameters: {
-      query: {
+      query?: {
         /** @description Limit results to repositories with the specified visibility. */
         visibility?: "all" | "public" | "private";
         /**
@@ -103866,7 +104153,7 @@ export interface operations {
    */
   "repos/list-invitations-for-authenticated-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -103925,7 +104212,7 @@ export interface operations {
    */
   "users/list-ssh-signing-keys-for-authenticated-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -104028,7 +104315,7 @@ export interface operations {
    */
   "activity/list-repos-starred-by-authenticated-user": {
     parameters: {
-      query: {
+      query?: {
         sort?: components["parameters"]["sort-starred"];
         direction?: components["parameters"]["direction"];
         per_page?: components["parameters"]["per-page"];
@@ -104116,7 +104403,7 @@ export interface operations {
    */
   "activity/list-watched-repos-for-authenticated-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -104142,7 +104429,7 @@ export interface operations {
    */
   "teams/list-for-authenticated-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -104170,7 +104457,7 @@ export interface operations {
    */
   "users/list": {
     parameters: {
-      query: {
+      query?: {
         since?: components["parameters"]["since-user"];
         per_page?: components["parameters"]["per-page"];
       };
@@ -104223,7 +104510,7 @@ export interface operations {
    */
   "activity/list-events-for-authenticated-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -104246,7 +104533,7 @@ export interface operations {
    */
   "activity/list-org-events-for-authenticated-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -104267,7 +104554,7 @@ export interface operations {
   /** List public events for a user */
   "activity/list-public-events-for-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -104290,7 +104577,7 @@ export interface operations {
    */
   "users/list-followers-for-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -104316,7 +104603,7 @@ export interface operations {
    */
   "users/list-following-for-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -104357,7 +104644,7 @@ export interface operations {
    */
   "gists/list-for-user": {
     parameters: {
-      query: {
+      query?: {
         since?: components["parameters"]["since"];
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
@@ -104385,7 +104672,7 @@ export interface operations {
    */
   "users/list-gpg-keys-for-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -104418,7 +104705,7 @@ export interface operations {
    */
   "users/get-context-for-user": {
     parameters: {
-      query: {
+      query?: {
         /** @description Identifies which additional information you'd like to receive about the person's hovercard. Can be `organization`, `repository`, `issue`, `pull_request`. **Required** when using `subject_id`. */
         subject_type?: "organization" | "repository" | "issue" | "pull_request";
         /** @description Uses the ID for the `subject_type` you specified. **Required** when using `subject_type`. */
@@ -104466,7 +104753,7 @@ export interface operations {
    */
   "users/list-public-keys-for-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -104494,7 +104781,7 @@ export interface operations {
    */
   "orgs/list-for-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -104514,10 +104801,13 @@ export interface operations {
       };
     };
   };
-  /** List user projects */
+  /**
+   * List user projects
+   * @description Lists projects for a user.
+   */
   "projects/list-for-user": {
     parameters: {
-      query: {
+      query?: {
         /** @description Indicates the state of the projects to return. */
         state?: "open" | "closed" | "all";
         per_page?: components["parameters"]["per-page"];
@@ -104546,7 +104836,7 @@ export interface operations {
    */
   "activity/list-received-events-for-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -104566,7 +104856,7 @@ export interface operations {
   /** List public events received by a user */
   "activity/list-received-public-events-for-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -104589,7 +104879,7 @@ export interface operations {
    */
   "repos/list-for-user": {
     parameters: {
-      query: {
+      query?: {
         /** @description Limit results to repositories of the specified type. */
         type?: "all" | "owner" | "member";
         /** @description The property to sort the results by. */
@@ -104651,7 +104941,7 @@ export interface operations {
    */
   "users/list-ssh-signing-keys-for-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -104679,7 +104969,7 @@ export interface operations {
    */
   "activity/list-repos-starred-by-user": {
     parameters: {
-      query: {
+      query?: {
         sort?: components["parameters"]["sort-starred"];
         direction?: components["parameters"]["direction"];
         per_page?: components["parameters"]["per-page"];
@@ -104709,7 +104999,7 @@ export interface operations {
    */
   "activity/list-repos-watched-by-user": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -104838,7 +105128,7 @@ export interface operations {
    */
   "repos/compare-commits": {
     parameters: {
-      query: {
+      query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
