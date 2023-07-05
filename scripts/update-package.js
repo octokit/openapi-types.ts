@@ -26,11 +26,11 @@ async function updatePackage() {
           pkgRoot: `packages/${packageName}`,
         },
       ];
-    })
+    }),
   );
 
   await writeFile(
     "package.json",
-    prettier.format(JSON.stringify(pkg), { parser: "json-stringify" })
+    prettier.format(JSON.stringify(pkg), { parser: "json-stringify" }),
   );
 }
