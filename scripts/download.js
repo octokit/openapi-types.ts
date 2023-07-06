@@ -12,7 +12,7 @@ if (!process.env.OCTOKIT_OPENAPI_VERSION) {
 
 run(process.env.OCTOKIT_OPENAPI_VERSION.replace(/^v/, "")).then(
   () => console.log("done"),
-  console.error
+  console.error,
 );
 
 const OctokitWithPlugins = Octokit.plugin(paginateRest);
@@ -39,7 +39,7 @@ async function run(version) {
       owner: "octokit",
       repo: "openapi",
       release_id: releaseId,
-    }
+    },
   );
 
   const currentGHESVersions = await getCurrentVersions();
@@ -51,7 +51,7 @@ async function run(version) {
     if (/^ghes-/.test(asset.name)) {
       if (
         !currentGHESVersions.includes(
-          parseFloat(asset.name.substr("ghes-".length))
+          parseFloat(asset.name.substr("ghes-".length)),
         )
       ) {
         continue;
@@ -76,7 +76,7 @@ async function download(assetId, fileName) {
       headers: {
         Accept: "application/octet-stream",
       },
-    }
+    },
   );
 
   writeFileSync(localPath, Buffer.from(response.data));

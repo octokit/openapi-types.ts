@@ -1,7 +1,7 @@
 import { readdir, mkdir, rm, writeFile, copyFile } from "node:fs/promises";
 import { basename } from "node:path";
 
-import prettier from "prettier";
+import * as prettier from "prettier";
 import openapiTS from "openapi-typescript";
 
 if (!process.env.OCTOKIT_OPENAPI_VERSION) {
@@ -51,8 +51,8 @@ async function run() {
           },
           ...packageDefaults,
         }),
-        { parser: "json-stringify" }
-      )
+        { parser: "json-stringify" },
+      ),
     );
     await writeFile(
       `packages/${packageName}/README.md`,
@@ -64,7 +64,7 @@ async function run() {
           packageName === "openapi-types" ? "" : `for ${name}`
         }
 
-This package is continously updated based on [GitHub's OpenAPI specification](https://github.com/github/rest-api-description/) 
+This package is continously updated based on [GitHub's OpenAPI specification](https://github.com/github/rest-api-description/)
 
 ## Usage
 
@@ -78,8 +78,8 @@ type Repository = components["schemas"]["full-repository"]
 
 [MIT](LICENSE)
 `,
-        { parser: "markdown" }
-      )
+        { parser: "markdown" },
+      ),
     );
 
     await copyFile("LICENSE", `packages/${packageName}/LICENSE`);
@@ -88,7 +88,7 @@ type Repository = components["schemas"]["full-repository"]
       `packages/${packageName}/types.d.ts`,
       prettier.format(await openapiTS(`cache/${name}.json`), {
         parser: "typescript",
-      })
+      }),
     );
     console.log(`packages/${packageName}/types.d.ts written`);
   }

@@ -10012,7 +10012,7 @@ export interface components {
             description?: string | null;
             color?: string | null;
             default?: boolean;
-          }
+          },
         ]
       >[];
       assignee: components["schemas"]["nullable-simple-user"];
@@ -13961,7 +13961,7 @@ export interface components {
           {
             [key: string]: unknown;
           },
-          string
+          string,
         ]
       >;
       /** @example staging */
@@ -16404,7 +16404,7 @@ export interface components {
             description?: string | null;
             color?: string | null;
             default?: boolean;
-          }
+          },
         ]
       >[];
       assignee: components["schemas"]["nullable-simple-user"];
@@ -28815,7 +28815,7 @@ export interface operations {
                * @example PullRequest
                */
               content_type: string;
-            }
+            },
           ]
         >;
       };
@@ -32216,7 +32216,7 @@ export interface operations {
               /** @enum {unknown} */
               status?: "queued" | "in_progress";
               [key: string]: unknown;
-            }
+            },
           ]
         >;
       };
@@ -34480,7 +34480,7 @@ export interface operations {
               {
                 [key: string]: unknown;
               },
-              string
+              string,
             ]
           >;
           /**
@@ -36189,7 +36189,7 @@ export interface operations {
                 name?: string;
                 description?: string | null;
                 color?: string | null;
-              }
+              },
             ]
           >[];
           /** @description Logins for Users to assign to this issue. _NOTE: Only users with push access can set assignees for new issues. Assignees are silently dropped otherwise._ */
@@ -36555,7 +36555,7 @@ export interface operations {
                 name?: string;
                 description?: string | null;
                 color?: string | null;
-              }
+              },
             ]
           >[];
           /** @description Usernames to assign to this issue. Pass one or more user logins to _replace_ the set of assignees on this issue. Send an empty array (`[]`) to clear all assignees from the issue. Only users with push access can set assignees for new issues. Without push access to the repository, assignee changes are silently dropped. */
@@ -36825,7 +36825,7 @@ export interface operations {
               labels?: {
                 name: string;
               }[];
-            }
+            },
           ]
         >;
       };
@@ -36867,7 +36867,7 @@ export interface operations {
               labels?: {
                 name: string;
               }[];
-            }
+            },
           ]
         >;
       };
