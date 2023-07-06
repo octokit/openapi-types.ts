@@ -1,5 +1,5 @@
 import { writeFile, readdir, readFile } from "node:fs/promises";
-import prettier from "prettier";
+import * as prettier from "prettier";
 
 if (!process.env.OCTOKIT_OPENAPI_VERSION) {
   throw new Error("OCTOKIT_OPENAPI_VERSION is not set");
