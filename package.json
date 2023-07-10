@@ -17,7 +17,7 @@
     "lint:fix": "prettier --write '*.{md,json}' 'scripts/*.js' 'packages/**/*.{ts,md,json,d.ts}'"
   },
   "devDependencies": {
-    "@octokit/core": "^4.0.0",
+    "@octokit/core": "^5.0.0",
     "@octokit/plugin-paginate-rest": "^7.0.0",
     "github-enterprise-server-versions": "^1.1.1",
     "openapi-typescript": "^6.2.1",
