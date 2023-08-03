@@ -21,7 +21,7 @@
     "@octokit/plugin-paginate-rest": "^8.0.0",
     "github-enterprise-server-versions": "^1.1.1",
     "openapi-typescript": "^6.2.1",
-    "prettier": "3.0.0"
+    "prettier": "3.0.1"
   },
   "prettier": {},
   "release": {
