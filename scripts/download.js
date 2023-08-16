@@ -49,11 +49,7 @@ async function run(version) {
     if (/diff/.test(asset.name)) continue;
 
     if (/^ghes-/.test(asset.name)) {
-      if (
-        !currentGHESVersions.includes(
-          asset.name.substr("ghes-".length),
-        )
-      ) {
+      if (!currentGHESVersions.includes(asset.name.substr("ghes-".length))) {
         continue;
       }
     }
