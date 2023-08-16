@@ -51,7 +51,7 @@ async function run(version) {
     if (/^ghes-/.test(asset.name)) {
       if (
         !currentGHESVersions.includes(
-          asset.name.substr("ghes-".length)),
+          asset.name.substr("ghes-".length),
         )
       ) {
         continue;
