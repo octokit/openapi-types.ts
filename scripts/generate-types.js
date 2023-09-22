@@ -40,7 +40,7 @@ async function run() {
     await mkdir(`packages/${packageName}`);
     await writeFile(
       `packages/${packageName}/package.json`,
-      prettier.format(
+      await prettier.format(
         JSON.stringify({
           name: `@octokit/${packageName}`,
           description: `Generated TypeScript definitions based on GitHub's OpenAPI spec for ${name}`,
@@ -56,7 +56,7 @@ async function run() {
     );
     await writeFile(
       `packages/${packageName}/README.md`,
-      prettier.format(
+      await prettier.format(
         `
 # @octokit/${packageName}
 
@@ -86,7 +86,7 @@ type Repository = components["schemas"]["full-repository"]
 
     await writeFile(
       `packages/${packageName}/types.d.ts`,
-      prettier.format(await openapiTS(`cache/${name}.json`), {
+      await prettier.format(await openapiTS(`cache/${name}.json`), {
         parser: "typescript",
       }),
     );
