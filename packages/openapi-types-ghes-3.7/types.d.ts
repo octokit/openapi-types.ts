@@ -57,7 +57,7 @@ export interface paths {
   "/admin/ldap/teams/{team_id}/mapping": {
     /**
      * Update LDAP mapping for a team
-     * @description Updates the [distinguished name](https://www.ldap.com/ldap-dns-and-rdns) (DN) of the LDAP entry to map to a team. [LDAP synchronization](https://docs.github.com/enterprise-server@3.7/admin/identity-and-access-management/using-ldap-for-enterprise-iam/using-ldap#enabling-ldap-sync) must be enabled to map LDAP entries to a team. Use the [Create a team](https://docs.github.com/enterprise-server@3.7/rest/reference/teams/#create-a-team) endpoint to create a team with LDAP mapping.
+     * @description Updates the [distinguished name](https://www.ldap.com/ldap-dns-and-rdns) (DN) of the LDAP entry to map to a team. [LDAP synchronization](https://docs.github.com/enterprise-server@3.7/admin/identity-and-access-management/using-ldap-for-enterprise-iam/using-ldap#enabling-ldap-sync) must be enabled to map LDAP entries to a team. Use the [Create a team](https://docs.github.com/enterprise-server@3.7/rest/teams/teams/#create-a-team) endpoint to create a team with LDAP mapping.
      */
     patch: operations["enterprise-admin/update-ldap-mapping-for-team"];
   };
@@ -165,7 +165,7 @@ export interface paths {
   "/admin/users": {
     /**
      * Create a user
-     * @description If an external authentication mechanism is used, the login name should match the login name in the external system. If you are using LDAP authentication, you should also [update the LDAP mapping](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#update-ldap-mapping-for-a-user) for the user.
+     * @description If an external authentication mechanism is used, the login name should match the login name in the external system. If you are using LDAP authentication, you should also [update the LDAP mapping](https://docs.github.com/enterprise-server@3.7/rest/enterprise-admin/ldap#update-ldap-mapping-for-a-user) for the user.
      *
      * The login name will be normalized to only contain alphanumeric characters or single hyphens. For example, if you send `"octo_cat"` as the login, a user named `"octo-cat"` will be created.
      *
@@ -176,7 +176,7 @@ export interface paths {
   "/admin/users/{username}": {
     /**
      * Delete a user
-     * @description Deleting a user will delete all their repositories, gists, applications, and personal settings. [Suspending a user](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#suspend-a-user) is often a better option.
+     * @description Deleting a user will delete all their repositories, gists, applications, and personal settings. [Suspending a user](https://docs.github.com/enterprise-server@3.7/rest/enterprise-admin/users#suspend-a-user) is often a better option.
      *
      * You can delete any user account except your own.
      */
@@ -193,7 +193,7 @@ export interface paths {
   "/app": {
     /**
      * Get the authenticated app
-     * @description Returns the GitHub App associated with the authentication credentials used. To see how many app installations are associated with this GitHub App, see the `installations_count` in the response. For more details about your app's installations, see the "[List installations for the authenticated app](https://docs.github.com/enterprise-server@3.7/rest/reference/apps#list-installations-for-the-authenticated-app)" endpoint.
+     * @description Returns the GitHub App associated with the authentication credentials used. To see how many app installations are associated with this GitHub App, see the `installations_count` in the response. For more details about your app's installations, see the "[List installations for the authenticated app](https://docs.github.com/enterprise-server@3.7/rest/apps/apps#list-installations-for-the-authenticated-app)" endpoint.
      *
      * You must use a [JWT](https://docs.github.com/enterprise-server@3.7/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
      */
@@ -259,7 +259,7 @@ export interface paths {
   "/app/installations": {
     /**
      * List installations for the authenticated app
-     * @description You must use a [JWT](https://docs.github.com/enterprise-server@3.7/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+     * @description You must use a [JWT](https://docs.github.com/enterprise-server@3.9/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
      *
      * The permissions the installation has are included under the `permissions` key.
      */
@@ -275,7 +275,7 @@ export interface paths {
     get: operations["apps/get-installation"];
     /**
      * Delete an installation for the authenticated app
-     * @description Uninstalls a GitHub App on a user, organization, or business account. If you prefer to temporarily suspend an app's access to your account's resources, then we recommend the "[Suspend an app installation](https://docs.github.com/enterprise-server@3.7/rest/reference/apps/#suspend-an-app-installation)" endpoint.
+     * @description Uninstalls a GitHub App on a user, organization, or business account. If you prefer to temporarily suspend an app's access to your account's resources, then we recommend the "[Suspend an app installation](https://docs.github.com/enterprise-server@3.7/rest/apps/apps#suspend-an-app-installation)" endpoint.
      *
      * You must use a [JWT](https://docs.github.com/enterprise-server@3.7/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
      */
@@ -310,9 +310,9 @@ export interface paths {
     /**
      * List your grants
      * @deprecated
-     * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+     * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
      *
-     * You can use this API to list the set of OAuth applications that have been granted access to your account. Unlike the [list your authorizations](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations#list-your-authorizations) API, this API does not manage individual tokens. This API will return one entry for each OAuth application that has been granted access to your account, regardless of the number of tokens an application has generated for your user. The list of OAuth applications returned matches what is shown on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized). The `scopes` returned are the union of scopes authorized for the application. For example, if an application has one token with `repo` scope and another token with `user` scope, the grant will return `["repo", "user"]`.
+     * You can use this API to list the set of OAuth applications that have been granted access to your account. Unlike the [list your authorizations](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations#list-your-authorizations) API, this API does not manage individual tokens. This API will return one entry for each OAuth application that has been granted access to your account, regardless of the number of tokens an application has generated for your user. The list of OAuth applications returned matches what is shown on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized). The `scopes` returned are the union of scopes authorized for the application. For example, if an application has one token with `repo` scope and another token with `user` scope, the grant will return `["repo", "user"]`.
      */
     get: operations["oauth-authorizations/list-grants"];
   };
@@ -320,13 +320,13 @@ export interface paths {
     /**
      * Get a single grant
      * @deprecated
-     * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+     * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
      */
     get: operations["oauth-authorizations/get-grant"];
     /**
      * Delete a grant
      * @deprecated
-     * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations/) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+     * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations/) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
      *
      * Deleting an OAuth application's grant will also delete all OAuth tokens associated with the application for your user. Once deleted, the application has no access to your account and is no longer listed on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized).
      */
@@ -360,7 +360,7 @@ export interface paths {
   "/applications/{client_id}/token/scoped": {
     /**
      * Create a scoped access token
-     * @description Use a non-scoped user-to-server access token to create a repository scoped and/or permission scoped user-to-server access token. You can specify which repositories the token can access and which permissions are granted to the token. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.7/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the `client_id` and `client_secret` of the GitHub App as the username and password. Invalid tokens will return `404 NOT FOUND`.
+     * @description Use a non-scoped user access token to create a repository scoped and/or permission scoped user access token. You can specify which repositories the token can access and which permissions are granted to the token. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.7/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the `client_id` and `client_secret` of the GitHub App as the username and password. Invalid tokens will return `404 NOT FOUND`.
      */
     post: operations["apps/scope-token"];
   };
@@ -377,13 +377,13 @@ export interface paths {
     /**
      * List your authorizations
      * @deprecated
-     * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+     * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
      */
     get: operations["oauth-authorizations/list-authorizations"];
     /**
      * Create a new authorization
      * @deprecated
-     * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+     * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
      *
      * **Warning:** Apps must use the [web application flow](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub Enterprise Server SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub Enterprise Server SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).
      *
@@ -401,7 +401,7 @@ export interface paths {
     /**
      * Get-or-create an authorization for a specific app
      * @deprecated
-     * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+     * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
      *
      * **Warning:** Apps must use the [web application flow](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub Enterprise Server SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub Enterprise Server SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).
      *
@@ -409,7 +409,7 @@ export interface paths {
      *
      * If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see "[Working with two-factor authentication](https://docs.github.com/enterprise-server@3.7/rest/overview/other-authentication-methods#working-with-two-factor-authentication)."
      *
-     * **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+     * **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
      */
     put: operations["oauth-authorizations/get-or-create-authorization-for-app"];
   };
@@ -417,7 +417,7 @@ export interface paths {
     /**
      * Get-or-create an authorization for a specific app and fingerprint
      * @deprecated
-     * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+     * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
      *
      * **Warning:** Apps must use the [web application flow](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub Enterprise Server SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub Enterprise Server SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).
      *
@@ -431,19 +431,19 @@ export interface paths {
     /**
      * Get a single authorization
      * @deprecated
-     * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+     * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
      */
     get: operations["oauth-authorizations/get-authorization"];
     /**
      * Delete an authorization
      * @deprecated
-     * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+     * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
      */
     delete: operations["oauth-authorizations/delete-authorization"];
     /**
      * Update an existing authorization
      * @deprecated
-     * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+     * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
      *
      * If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see "[Working with two-factor authentication](https://docs.github.com/enterprise-server@3.7/rest/overview/other-authentication-methods#working-with-two-factor-authentication)."
      *
@@ -452,11 +452,17 @@ export interface paths {
     patch: operations["oauth-authorizations/update-authorization"];
   };
   "/codes_of_conduct": {
-    /** Get all codes of conduct */
+    /**
+     * Get all codes of conduct
+     * @description Returns array of all GitHub's codes of conduct.
+     */
     get: operations["codes-of-conduct/get-all-codes-of-conduct"];
   };
   "/codes_of_conduct/{key}": {
-    /** Get a code of conduct */
+    /**
+     * Get a code of conduct
+     * @description Returns information about the specified GitHub code of conduct.
+     */
     get: operations["codes-of-conduct/get-conduct-code"];
   };
   "/emojis": {
@@ -767,7 +773,7 @@ export interface paths {
      *
      * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      *
-     * #### Example using registration token
+     * Example using registration token:
      *
      * Configure your self-hosted runner, replacing `TOKEN` with the registration token provided by this endpoint.
      *
@@ -784,7 +790,7 @@ export interface paths {
      *
      * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
      *
-     * #### Example using remove token
+     * Example using remove token:
      *
      * To remove your self-hosted runner from an enterprise, replace `TOKEN` with the remove token provided by this
      * endpoint.
@@ -999,7 +1005,7 @@ export interface paths {
   "/gitignore/templates": {
     /**
      * Get all gitignore templates
-     * @description List all templates available to pass as an option when [creating a repository](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#create-a-repository-for-the-authenticated-user).
+     * @description List all templates available to pass as an option when [creating a repository](https://docs.github.com/enterprise-server@3.7/rest/repos/repos#create-a-repository-for-the-authenticated-user).
      */
     get: operations["gitignore/get-all-templates"];
   };
@@ -1025,7 +1031,7 @@ export interface paths {
      * Revoke an installation access token
      * @description Revokes the installation token you're using to authenticate as an installation and access this endpoint.
      *
-     * Once an installation token is revoked, the token is invalidated and cannot be used. Other endpoints that require the revoked installation token must have a new installation token to work. You can create a new token using the "[Create an installation access token for an app](https://docs.github.com/enterprise-server@3.7/rest/reference/apps#create-an-installation-access-token-for-an-app)" endpoint.
+     * Once an installation token is revoked, the token is invalidated and cannot be used. Other endpoints that require the revoked installation token must have a new installation token to work. You can create a new token using the "[Create an installation access token for an app](https://docs.github.com/enterprise-server@3.7/rest/apps/apps#create-an-installation-access-token-for-an-app)" endpoint.
      *
      * You must use an [installation access token](https://docs.github.com/enterprise-server@3.7/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
      */
@@ -1042,16 +1048,22 @@ export interface paths {
      * **Note**: GitHub's REST API considers every pull request an issue, but not every issue is a pull request. For this
      * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
      * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
-     * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#list-pull-requests)" endpoint.
+     * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@3.7/rest/pulls/pulls#list-pull-requests)" endpoint.
      */
     get: operations["issues/list"];
   };
   "/licenses": {
-    /** Get all commonly used licenses */
+    /**
+     * Get all commonly used licenses
+     * @description Lists the most commonly used licenses on GitHub. For more information, see "[Licensing a repository ](https://docs.github.com/enterprise-server@3.7/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository)."
+     */
     get: operations["licenses/get-all-commonly-used"];
   };
   "/licenses/{license}": {
-    /** Get a license */
+    /**
+     * Get a license
+     * @description Gets information about a specific license. For more information, see "[Licensing a repository ](https://docs.github.com/enterprise-server@3.7/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository)."
+     */
     get: operations["licenses/get"];
   };
   "/markdown": {
@@ -1081,7 +1093,7 @@ export interface paths {
     get: operations["activity/list-notifications-for-authenticated-user"];
     /**
      * Mark notifications as read
-     * @description Marks all notifications as "read" for the current user. If the number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub Enterprise Server will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain, you can use the [List notifications for the authenticated user](https://docs.github.com/enterprise-server@3.7/rest/reference/activity#list-notifications-for-the-authenticated-user) endpoint and pass the query parameter `all=false`.
+     * @description Marks all notifications as "read" for the current user. If the number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub Enterprise Server will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain, you can use the [List notifications for the authenticated user](https://docs.github.com/enterprise-server@3.7/rest/activity/notifications#list-notifications-for-the-authenticated-user) endpoint and pass the query parameter `all=false`.
      */
     put: operations["activity/mark-notifications-as-read"];
   };
@@ -1100,7 +1112,7 @@ export interface paths {
   "/notifications/threads/{thread_id}/subscription": {
     /**
      * Get a thread subscription for the authenticated user
-     * @description This checks to see if the current user is subscribed to a thread. You can also [get a repository subscription](https://docs.github.com/enterprise-server@3.7/rest/reference/activity#get-a-repository-subscription).
+     * @description This checks to see if the current user is subscribed to a thread. You can also [get a repository subscription](https://docs.github.com/enterprise-server@3.7/rest/activity/watching#get-a-repository-subscription).
      *
      * Note that subscriptions are only generated if a user is participating in a conversation--for example, they've replied to the thread, were **@mentioned**, or manually subscribe to a thread.
      */
@@ -1111,12 +1123,12 @@ export interface paths {
      *
      * You can also use this endpoint to subscribe to threads that you are currently not receiving notifications for or to subscribed to threads that you have previously ignored.
      *
-     * Unsubscribing from a conversation in a repository that you are not watching is functionally equivalent to the [Delete a thread subscription](https://docs.github.com/enterprise-server@3.7/rest/reference/activity#delete-a-thread-subscription) endpoint.
+     * Unsubscribing from a conversation in a repository that you are not watching is functionally equivalent to the [Delete a thread subscription](https://docs.github.com/enterprise-server@3.7/rest/activity/notifications#delete-a-thread-subscription) endpoint.
      */
     put: operations["activity/set-thread-subscription"];
     /**
      * Delete a thread subscription
-     * @description Mutes all future notifications for a conversation until you comment on the thread or get an **@mention**. If you are watching the repository of the thread, you will still receive notifications. To ignore future notifications for a repository you are watching, use the [Set a thread subscription](https://docs.github.com/enterprise-server@3.7/rest/reference/activity#set-a-thread-subscription) endpoint and set `ignore` to `true`.
+     * @description Mutes all future notifications for a conversation until you comment on the thread or get an **@mention**. If you are watching the repository of the thread, you will still receive notifications. To ignore future notifications for a repository you are watching, use the [Set a thread subscription](https://docs.github.com/enterprise-server@3.7/rest/activity/notifications#set-a-thread-subscription) endpoint and set `ignore` to `true`.
      */
     delete: operations["activity/delete-thread-subscription"];
   };
@@ -1401,6 +1413,9 @@ export interface paths {
      * @description Lists all self-hosted runners configured in an organization.
      *
      * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+     * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
      */
     get: operations["actions/list-self-hosted-runners-for-org"];
   };
@@ -1410,6 +1425,9 @@ export interface paths {
      * @description Lists binaries for the runner application that you can download and run.
      *
      * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+     * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
      */
     get: operations["actions/list-runner-applications-for-org"];
   };
@@ -1419,8 +1437,11 @@ export interface paths {
      * @description Returns a token that you can pass to the `config` script. The token expires after one hour.
      *
      * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+     * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
      *
-     * #### Example using registration token
+     * Example using registration token:
      *
      * Configure your self-hosted runner, replacing `TOKEN` with the registration token provided by this endpoint.
      *
@@ -1436,8 +1457,11 @@ export interface paths {
      * @description Returns a token that you can pass to the `config` script to remove a self-hosted runner from an organization. The token expires after one hour.
      *
      * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+     * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
      *
-     * #### Example using remove token
+     * Example using remove token:
      *
      * To remove your self-hosted runner from an organization, replace `TOKEN` with the remove token provided by this
      * endpoint.
@@ -1454,6 +1478,9 @@ export interface paths {
      * @description Gets a specific self-hosted runner configured in an organization.
      *
      * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+     * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
      */
     get: operations["actions/get-self-hosted-runner-for-org"];
     /**
@@ -1461,6 +1488,9 @@ export interface paths {
      * @description Forces the removal of a self-hosted runner from an organization. You can use this endpoint to completely remove the runner when the machine you were using no longer exists.
      *
      * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+     * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
      */
     delete: operations["actions/delete-self-hosted-runner-from-org"];
   };
@@ -1470,6 +1500,9 @@ export interface paths {
      * @description Lists all labels for a self-hosted runner configured in an organization.
      *
      * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+     * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
      */
     get: operations["actions/list-labels-for-self-hosted-runner-for-org"];
     /**
@@ -1478,6 +1511,9 @@ export interface paths {
      * self-hosted runner configured in an organization.
      *
      * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+     * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
      */
     put: operations["actions/set-custom-labels-for-self-hosted-runner-for-org"];
     /**
@@ -1485,6 +1521,9 @@ export interface paths {
      * @description Add custom labels to a self-hosted runner configured in an organization.
      *
      * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+     * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
      */
     post: operations["actions/add-custom-labels-to-self-hosted-runner-for-org"];
     /**
@@ -1493,6 +1532,9 @@ export interface paths {
      * organization. Returns the remaining read-only labels from the runner.
      *
      * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+     * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
      */
     delete: operations["actions/remove-all-custom-labels-from-self-hosted-runner-for-org"];
   };
@@ -1506,27 +1548,47 @@ export interface paths {
      * present on the runner.
      *
      * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+     * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
      */
     delete: operations["actions/remove-custom-label-from-self-hosted-runner-for-org"];
   };
   "/orgs/{org}/actions/secrets": {
     /**
      * List organization secrets
-     * @description Lists all secrets available in an organization without revealing their encrypted values. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+     * @description Lists all secrets available in an organization without revealing their
+     * encrypted values.
+     *
+     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `secrets` organization permission to use this endpoint.
+     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
      */
     get: operations["actions/list-org-secrets"];
   };
   "/orgs/{org}/actions/secrets/public-key": {
     /**
      * Get an organization public key
-     * @description Gets your public key, which you need to encrypt secrets. You need to encrypt a secret before you can create or update secrets. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+     * @description Gets your public key, which you need to encrypt secrets. You need to
+     * encrypt a secret before you can create or update secrets.
+     *
+     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `secrets` organization permission to use this endpoint.
+     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
      */
     get: operations["actions/get-org-public-key"];
   };
   "/orgs/{org}/actions/secrets/{secret_name}": {
     /**
      * Get an organization secret
-     * @description Gets a single organization secret without revealing its encrypted value. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+     * @description Gets a single organization secret without revealing its encrypted value.
+     *
+     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `secrets` organization permission to use this endpoint.
+     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
      */
     get: operations["actions/get-org-secret"];
     /**
@@ -1610,31 +1672,63 @@ export interface paths {
     put: operations["actions/create-or-update-org-secret"];
     /**
      * Delete an organization secret
-     * @description Deletes a secret in an organization using the secret name. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+     * @description Deletes a secret in an organization using the secret name.
+     *
+     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `secrets` organization permission to use this endpoint.
+     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
      */
     delete: operations["actions/delete-org-secret"];
   };
   "/orgs/{org}/actions/secrets/{secret_name}/repositories": {
     /**
      * List selected repositories for an organization secret
-     * @description Lists all repositories that have been selected when the `visibility` for repository access to a secret is set to `selected`. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+     * @description Lists all repositories that have been selected when the `visibility`
+     * for repository access to a secret is set to `selected`.
+     *
+     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `secrets` organization permission to use this endpoint.
+     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
      */
     get: operations["actions/list-selected-repos-for-org-secret"];
     /**
      * Set selected repositories for an organization secret
-     * @description Replaces all repositories for an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-server@3.7/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+     * @description Replaces all repositories for an organization secret when the `visibility`
+     * for repository access is set to `selected`. The visibility is set when you [Create
+     * or update an organization secret](https://docs.github.com/enterprise-server@3.7/rest/actions/secrets#create-or-update-an-organization-secret).
+     *
+     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `secrets` organization permission to use this endpoint.
+     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
      */
     put: operations["actions/set-selected-repos-for-org-secret"];
   };
   "/orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id}": {
     /**
      * Add selected repository to an organization secret
-     * @description Adds a repository to an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-server@3.7/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+     * @description Adds a repository to an organization secret when the `visibility` for
+     * repository access is set to `selected`. The visibility is set when you [Create or
+     * update an organization secret](https://docs.github.com/enterprise-server@3.7/rest/actions/secrets#create-or-update-an-organization-secret).
+     *
+     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `secrets` organization permission to use this endpoint.
+     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
      */
     put: operations["actions/add-selected-repo-to-org-secret"];
     /**
      * Remove selected repository from an organization secret
-     * @description Removes a repository from an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-server@3.7/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+     * @description Removes a repository from an organization secret when the `visibility`
+     * for repository access is set to `selected`. The visibility is set when you [Create
+     * or update an organization secret](https://docs.github.com/enterprise-server@3.7/rest/actions/secrets#create-or-update-an-organization-secret).
+     *
+     * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `secrets` organization permission to use this endpoint.
+     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
      */
     delete: operations["actions/remove-selected-repo-from-org-secret"];
   };
@@ -1777,19 +1871,19 @@ export interface paths {
     get: operations["dependabot/list-selected-repos-for-org-secret"];
     /**
      * Set selected repositories for an organization secret
-     * @description Replaces all repositories for an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-server@3.7/rest/reference/dependabot#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` organization permission to use this endpoint.
+     * @description Replaces all repositories for an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-server@3.7/rest/dependabot/secrets#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` organization permission to use this endpoint.
      */
     put: operations["dependabot/set-selected-repos-for-org-secret"];
   };
   "/orgs/{org}/dependabot/secrets/{secret_name}/repositories/{repository_id}": {
     /**
      * Add selected repository to an organization secret
-     * @description Adds a repository to an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-server@3.7/rest/reference/dependabot#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` organization permission to use this endpoint.
+     * @description Adds a repository to an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-server@3.7/rest/dependabot/secrets#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` organization permission to use this endpoint.
      */
     put: operations["dependabot/add-selected-repo-to-org-secret"];
     /**
      * Remove selected repository from an organization secret
-     * @description Removes a repository from an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-server@3.7/rest/reference/dependabot#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` organization permission to use this endpoint.
+     * @description Removes a repository from an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-server@3.7/rest/dependabot/secrets#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` organization permission to use this endpoint.
      */
     delete: operations["dependabot/remove-selected-repo-from-org-secret"];
   };
@@ -1827,28 +1921,28 @@ export interface paths {
   "/orgs/{org}/hooks/{hook_id}": {
     /**
      * Get an organization webhook
-     * @description Returns a webhook configured in an organization. To get only the webhook `config` properties, see "[Get a webhook configuration for an organization](/rest/reference/orgs#get-a-webhook-configuration-for-an-organization)."
+     * @description Returns a webhook configured in an organization. To get only the webhook `config` properties, see "[Get a webhook configuration for an organization](/rest/orgs/webhooks#get-a-webhook-configuration-for-an-organization)."
      */
     get: operations["orgs/get-webhook"];
     /** Delete an organization webhook */
     delete: operations["orgs/delete-webhook"];
     /**
      * Update an organization webhook
-     * @description Updates a webhook configured in an organization. When you update a webhook, the `secret` will be overwritten. If you previously had a `secret` set, you must provide the same `secret` or set a new `secret` or the secret will be removed. If you are only updating individual webhook `config` properties, use "[Update a webhook configuration for an organization](/rest/reference/orgs#update-a-webhook-configuration-for-an-organization)."
+     * @description Updates a webhook configured in an organization. When you update a webhook, the `secret` will be overwritten. If you previously had a `secret` set, you must provide the same `secret` or set a new `secret` or the secret will be removed. If you are only updating individual webhook `config` properties, use "[Update a webhook configuration for an organization](/rest/orgs/webhooks#update-a-webhook-configuration-for-an-organization)."
      */
     patch: operations["orgs/update-webhook"];
   };
   "/orgs/{org}/hooks/{hook_id}/config": {
     /**
      * Get a webhook configuration for an organization
-     * @description Returns the webhook configuration for an organization. To get more information about the webhook, including the `active` state and `events`, use "[Get an organization webhook ](/rest/reference/orgs#get-an-organization-webhook)."
+     * @description Returns the webhook configuration for an organization. To get more information about the webhook, including the `active` state and `events`, use "[Get an organization webhook ](/rest/orgs/webhooks#get-an-organization-webhook)."
      *
      * Access tokens must have the `admin:org_hook` scope, and GitHub Apps must have the `organization_hooks:read` permission.
      */
     get: operations["orgs/get-webhook-config-for-org"];
     /**
      * Update a webhook configuration for an organization
-     * @description Updates the webhook configuration for an organization. To update more information about the webhook, including the `active` state and `events`, use "[Update an organization webhook ](/rest/reference/orgs#update-an-organization-webhook)."
+     * @description Updates the webhook configuration for an organization. To update more information about the webhook, including the `active` state and `events`, use "[Update an organization webhook ](/rest/orgs/webhooks#update-an-organization-webhook)."
      *
      * Access tokens must have the `admin:org_hook` scope, and GitHub Apps must have the `organization_hooks:write` permission.
      */
@@ -1906,7 +2000,7 @@ export interface paths {
      * **Note**: GitHub's REST API considers every pull request an issue, but not every issue is a pull request. For this
      * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
      * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
-     * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#list-pull-requests)" endpoint.
+     * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@3.7/rest/pulls/pulls#list-pull-requests)" endpoint.
      */
     get: operations["issues/list-for-org"];
   };
@@ -1939,7 +2033,7 @@ export interface paths {
      * Set organization membership for a user
      * @description Only authenticated organization owners can add a member to the organization or update the member's role.
      *
-     * *   If the authenticated user is _adding_ a member to the organization, the invited user will receive an email inviting them to the organization. The user's [membership status](https://docs.github.com/enterprise-server@3.7/rest/reference/orgs#get-organization-membership-for-a-user) will be `pending` until they accept the invitation.
+     * *   If the authenticated user is _adding_ a member to the organization, the invited user will receive an email inviting them to the organization. The user's [membership status](https://docs.github.com/enterprise-server@3.7/rest/orgs/members#get-organization-membership-for-a-user) will be `pending` until they accept the invitation.
      *
      * *   Authenticated users can _update_ a user's membership by passing the `role` parameter. If the authenticated user changes a member's role to `admin`, the affected user will receive an email notifying them that they've been made an organization owner. If the authenticated user changes an owner's role to `member`, no email will be sent.
      *
@@ -2092,8 +2186,6 @@ export interface paths {
     /**
      * List organization repositories
      * @description Lists repositories for the specified organization.
-     *
-     * **Note:** In order to see the `security_and_analysis` block for a repository you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/enterprise-server@3.7/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
      */
     get: operations["repos/list-for-org"];
     /**
@@ -2288,14 +2380,14 @@ export interface paths {
   "/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions": {
     /**
      * List reactions for a team discussion comment
-     * @description List the reactions to a [team discussion comment](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#discussion-comments/). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * @description List the reactions to a [team discussion comment](https://docs.github.com/enterprise-server@3.7/rest/teams/discussion-comments#get-a-discussion-comment). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions`.
      */
     get: operations["reactions/list-for-team-discussion-comment-in-org"];
     /**
      * Create reaction for a team discussion comment
-     * @description Create a reaction to a [team discussion comment](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#discussion-comments). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
+     * @description Create a reaction to a [team discussion comment](https://docs.github.com/enterprise-server@3.7/rest/teams/discussion-comments#get-a-discussion-comment). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions`.
      */
@@ -2306,21 +2398,21 @@ export interface paths {
      * Delete team discussion comment reaction
      * @description **Note:** You can also specify a team or organization with `team_id` and `org_id` using the route `DELETE /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions/:reaction_id`.
      *
-     * Delete a reaction to a [team discussion comment](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#discussion-comments). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * Delete a reaction to a [team discussion comment](https://docs.github.com/enterprise-server@3.7/rest/teams/discussion-comments#get-a-discussion-comment). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
     delete: operations["reactions/delete-for-team-discussion-comment"];
   };
   "/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions": {
     /**
      * List reactions for a team discussion
-     * @description List the reactions to a [team discussion](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#discussions). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * @description List the reactions to a [team discussion](https://docs.github.com/enterprise-server@3.7/rest/teams/discussions#get-a-discussion). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions`.
      */
     get: operations["reactions/list-for-team-discussion-in-org"];
     /**
      * Create reaction for a team discussion
-     * @description Create a reaction to a [team discussion](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion.
+     * @description Create a reaction to a [team discussion](https://docs.github.com/enterprise-server@3.7/rest/teams/discussions#get-a-discussion). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion.
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions`.
      */
@@ -2331,7 +2423,7 @@ export interface paths {
      * Delete team discussion reaction
      * @description **Note:** You can also specify a team or organization with `team_id` and `org_id` using the route `DELETE /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions/:reaction_id`.
      *
-     * Delete a reaction to a [team discussion](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * Delete a reaction to a [team discussion](https://docs.github.com/enterprise-server@3.7/rest/teams/discussions#get-a-discussion). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
     delete: operations["reactions/delete-for-team-discussion"];
   };
@@ -2379,7 +2471,7 @@ export interface paths {
      * **Note:**
      * The response contains the `state` of the membership and the member's `role`.
      *
-     * The `role` for organization owners is set to `maintainer`. For more information about `maintainer` roles, see see [Create a team](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#create-a-team).
+     * The `role` for organization owners is set to `maintainer`. For more information about `maintainer` roles, see [Create a team](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#create-a-team).
      */
     get: operations["teams/get-membership-for-user-in-org"];
     /**
@@ -2607,6 +2699,17 @@ export interface paths {
      * Get rate limit status for the authenticated user
      * @description **Note:** Accessing this endpoint does not count against your REST API rate limit.
      *
+     * Some categories of endpoints have custom rate limits that are separate from the rate limit governing the other REST API endpoints. For this reason, the API response categorizes your rate limit. Under `resources`, you'll see objects relating to different categories:
+     * * The `core` object provides your rate limit status for all non-search-related resources in the REST API.
+     * * The `search` object provides your rate limit status for the REST API for searching (excluding code searches). For more information, see "[Search](https://docs.github.com/enterprise-server@3.7/rest/search)."
+     * * The `code_search` object provides your rate limit status for the REST API for searching code. For more information, see "[Search code](https://docs.github.com/enterprise-server@3.7/rest/search/search#search-code)."
+     * * The `graphql` object provides your rate limit status for the GraphQL API. For more information, see "[Resource limitations](https://docs.github.com/enterprise-server@3.7/graphql/overview/resource-limitations#rate-limit)."
+     * * The `integration_manifest` object provides your rate limit status for the `POST /app-manifests/{code}/conversions` operation. For more information, see "[Creating a GitHub App from a manifest](https://docs.github.com/enterprise-server@3.7/apps/creating-github-apps/setting-up-a-github-app/creating-a-github-app-from-a-manifest#3-you-exchange-the-temporary-code-to-retrieve-the-app-configuration)."
+     * * The `dependency_snapshots` object provides your rate limit status for submitting snapshots to the dependency graph. For more information, see "[Dependency graph](https://docs.github.com/enterprise-server@3.7/rest/dependency-graph)."
+     * * The `code_scanning_upload` object provides your rate limit status for uploading SARIF results to code scanning. For more information, see "[Uploading a SARIF file to GitHub](https://docs.github.com/enterprise-server@3.7/code-security/code-scanning/integrating-with-code-scanning/uploading-a-sarif-file-to-github)."
+     * * The `actions_runner_registration` object provides your rate limit status for registering self-hosted runners in GitHub Actions. For more information, see "[Self-hosted runners](https://docs.github.com/enterprise-server@3.7/rest/actions/self-hosted-runners)."
+     * * The `source_import` object is no longer in use for any API endpoints, and it will be removed in the next API version. For more information about API versions, see "[API Versions](https://docs.github.com/enterprise-server@3.7/rest/overview/api-versions)."
+     *
      * **Note:** The `rate` object is deprecated. If you're writing new API client code or updating existing code, you should use the `core` object instead of the `rate` object. The `core` object contains the same information that is present in the `rate` object.
      */
     get: operations["rate-limit/get"];
@@ -2629,7 +2732,7 @@ export interface paths {
     delete: operations["repos/delete"];
     /**
      * Update a repository
-     * @description **Note**: To edit a repository's topics, use the [Replace all repository topics](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#replace-all-repository-topics) endpoint.
+     * @description **Note**: To edit a repository's topics, use the [Replace all repository topics](https://docs.github.com/enterprise-server@3.7/rest/repos/repos#replace-all-repository-topics) endpoint.
      */
     patch: operations["repos/update"];
   };
@@ -2656,8 +2759,9 @@ export interface paths {
     /**
      * Download an artifact
      * @description Gets a redirect URL to download an archive for a repository. This URL expires after 1 minute. Look for `Location:` in
-     * the response header to find the URL for the download. The `:archive_format` must be `zip`. Anyone with read access to
-     * the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope.
+     * the response header to find the URL for the download. The `:archive_format` must be `zip`.
+     *
+     * You must authenticate using an access token with the `repo` scope to use this endpoint.
      * GitHub Apps must have the `actions:read` permission to use this endpoint.
      */
     get: operations["actions/download-artifact"];
@@ -2736,7 +2840,11 @@ export interface paths {
   "/repos/{owner}/{repo}/actions/jobs/{job_id}/rerun": {
     /**
      * Re-run a job from a workflow run
-     * @description Re-run a job and its dependent jobs in a workflow run. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+     * @description Re-run a job and its dependent jobs in a workflow run.
+     *
+     * You must authenticate using an access token with the `repo` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `actions:write` permission to use this endpoint.
      */
     post: operations["actions/re-run-job-for-workflow-run"];
   };
@@ -2839,7 +2947,12 @@ export interface paths {
   "/repos/{owner}/{repo}/actions/runners": {
     /**
      * List self-hosted runners for a repository
-     * @description Lists all self-hosted runners configured in a repository. You must authenticate using an access token with the `repo` scope to use this endpoint.
+     * @description Lists all self-hosted runners configured in a repository.
+     *
+     * You must authenticate using an access token with the `repo` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+     * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
      */
     get: operations["actions/list-self-hosted-runners-for-repo"];
   };
@@ -2849,38 +2962,49 @@ export interface paths {
      * @description Lists binaries for the runner application that you can download and run.
      *
      * You must authenticate using an access token with the `repo` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+     * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
      */
     get: operations["actions/list-runner-applications-for-repo"];
   };
   "/repos/{owner}/{repo}/actions/runners/registration-token": {
     /**
      * Create a registration token for a repository
-     * @description Returns a token that you can pass to the `config` script. The token expires after one hour. You must authenticate
-     * using an access token with the `repo` scope to use this endpoint.
+     * @description Returns a token that you can pass to the `config` script. The token
+     * expires after one hour.
      *
-     * #### Example using registration token
+     * You must authenticate using an access token with the `repo` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+     * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
      *
-     * Configure your self-hosted runner, replacing `TOKEN` with the registration token provided by this endpoint.
+     * Example using registration token:
      *
-     * ```
-     * ./config.sh --url https://github.com/octo-org/octo-repo-artifacts --token TOKEN
-     * ```
+     * Configure your self-hosted runner, replacing `TOKEN` with the registration token provided
+     * by this endpoint.
+     *
+     * ```config.sh --url https://github.com/octo-org/octo-repo-artifacts --token TOKEN```
      */
     post: operations["actions/create-registration-token-for-repo"];
   };
   "/repos/{owner}/{repo}/actions/runners/remove-token": {
     /**
      * Create a remove token for a repository
-     * @description Returns a token that you can pass to remove a self-hosted runner from a repository. The token expires after one hour.
+     * @description Returns a token that you can pass to remove a self-hosted runner from
+     * a repository. The token expires after one hour.
+     *
      * You must authenticate using an access token with the `repo` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+     * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
      *
-     * #### Example using remove token
+     * Example using remove token:
      *
-     * To remove your self-hosted runner from a repository, replace TOKEN with the remove token provided by this endpoint.
+     * To remove your self-hosted runner from a repository, replace TOKEN with
+     * the remove token provided by this endpoint.
      *
-     * ```
-     * ./config.sh remove --token TOKEN
-     * ```
+     * ```config.sh remove --token TOKEN```
      */
     post: operations["actions/create-remove-token-for-repo"];
   };
@@ -2889,16 +3013,20 @@ export interface paths {
      * Get a self-hosted runner for a repository
      * @description Gets a specific self-hosted runner configured in a repository.
      *
-     * You must authenticate using an access token with the `repo` scope to use this
-     * endpoint.
+     * You must authenticate using an access token with the `repo` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+     * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
      */
     get: operations["actions/get-self-hosted-runner-for-repo"];
     /**
      * Delete a self-hosted runner from a repository
      * @description Forces the removal of a self-hosted runner from a repository. You can use this endpoint to completely remove the runner when the machine you were using no longer exists.
      *
-     * You must authenticate using an access token with the `repo`
-     * scope to use this endpoint.
+     * You must authenticate using an access token with the `repo` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+     * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
      */
     delete: operations["actions/delete-self-hosted-runner-from-repo"];
   };
@@ -2907,8 +3035,10 @@ export interface paths {
      * List labels for a self-hosted runner for a repository
      * @description Lists all labels for a self-hosted runner configured in a repository.
      *
-     * You must authenticate using an access token with the `repo` scope to use this
-     * endpoint.
+     * You must authenticate using an access token with the `repo` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+     * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
      */
     get: operations["actions/list-labels-for-self-hosted-runner-for-repo"];
     /**
@@ -2916,16 +3046,20 @@ export interface paths {
      * @description Remove all previous custom labels and set the new custom labels for a specific
      * self-hosted runner configured in a repository.
      *
-     * You must authenticate using an access token with the `repo` scope to use this
-     * endpoint.
+     * You must authenticate using an access token with the `repo` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+     * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
      */
     put: operations["actions/set-custom-labels-for-self-hosted-runner-for-repo"];
     /**
      * Add custom labels to a self-hosted runner for a repository
      * @description Add custom labels to a self-hosted runner configured in a repository.
      *
-     * You must authenticate using an access token with the `repo` scope to use this
-     * endpoint.
+     * You must authenticate using an access token with the `repo` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+     * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
      */
     post: operations["actions/add-custom-labels-to-self-hosted-runner-for-repo"];
     /**
@@ -2933,8 +3067,10 @@ export interface paths {
      * @description Remove all custom labels from a self-hosted runner configured in a
      * repository. Returns the remaining read-only labels from the runner.
      *
-     * You must authenticate using an access token with the `repo` scope to use this
-     * endpoint.
+     * You must authenticate using an access token with the `repo` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+     * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
      */
     delete: operations["actions/remove-all-custom-labels-from-self-hosted-runner-for-repo"];
   };
@@ -2947,8 +3083,10 @@ export interface paths {
      * This endpoint returns a `404 Not Found` status if the custom label is not
      * present on the runner.
      *
-     * You must authenticate using an access token with the `repo` scope to use this
-     * endpoint.
+     * You must authenticate using an access token with the `repo` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+     * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
      */
     delete: operations["actions/remove-custom-label-from-self-hosted-runner-for-repo"];
   };
@@ -3019,7 +3157,11 @@ export interface paths {
   "/repos/{owner}/{repo}/actions/runs/{run_id}/cancel": {
     /**
      * Cancel a workflow run
-     * @description Cancels a workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+     * @description Cancels a workflow run using its `id`.
+     *
+     * You must authenticate using an access token with the `repo` scope to use this endpoint.
+     * If the repository is private, you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `actions:write` permission to use this endpoint.
      */
     post: operations["actions/cancel-workflow-run"];
   };
@@ -3078,106 +3220,55 @@ export interface paths {
   "/repos/{owner}/{repo}/actions/secrets": {
     /**
      * List repository secrets
-     * @description Lists all secrets available in a repository without revealing their encrypted values. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+     * @description Lists all secrets available in a repository without revealing their encrypted
+     * values.
+     *
+     * You must authenticate using an access token with the `repo` scope to use this endpoint.
+     * GitHub Apps must have the `secrets` repository permission to use this endpoint.
+     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
      */
     get: operations["actions/list-repo-secrets"];
   };
   "/repos/{owner}/{repo}/actions/secrets/public-key": {
     /**
      * Get a repository public key
-     * @description Gets your public key, which you need to encrypt secrets. You need to encrypt a secret before you can create or update secrets. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+     * @description Gets your public key, which you need to encrypt secrets. You need to
+     * encrypt a secret before you can create or update secrets.
+     *
+     * Anyone with read access to the repository can use this endpoint.
+     * If the repository is private you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `secrets` repository permission to use this endpoint.
+     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
      */
     get: operations["actions/get-repo-public-key"];
   };
   "/repos/{owner}/{repo}/actions/secrets/{secret_name}": {
     /**
      * Get a repository secret
-     * @description Gets a single repository secret without revealing its encrypted value. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+     * @description Gets a single repository secret without revealing its encrypted value.
+     *
+     * You must authenticate using an access token with the `repo` scope to use this endpoint.
+     * GitHub Apps must have the `secrets` repository permission to use this endpoint.
+     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
      */
     get: operations["actions/get-repo-secret"];
     /**
      * Create or update a repository secret
      * @description Creates or updates a repository secret with an encrypted value. Encrypt your secret using
-     * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an access
-     * token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use
-     * this endpoint.
+     * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting secrets for the REST API](https://docs.github.com/enterprise-server@3.7/rest/guides/encrypting-secrets-for-the-rest-api)."
      *
-     * **Example encrypting a secret using Node.js**
-     *
-     * Encrypt your secret using the [libsodium-wrappers](https://www.npmjs.com/package/libsodium-wrappers) library.
-     *
-     * ```
-     * const sodium = require('libsodium-wrappers')
-     * const secret = 'plain-text-secret' // replace with the secret you want to encrypt
-     * const key = 'base64-encoded-public-key' // replace with the Base64 encoded public key
-     *
-     * //Check if libsodium is ready and then proceed.
-     * sodium.ready.then(() => {
-     *   // Convert Secret & Base64 key to Uint8Array.
-     *   let binkey = sodium.from_base64(key, sodium.base64_variants.ORIGINAL)
-     *   let binsec = sodium.from_string(secret)
-     *
-     *   //Encrypt the secret using LibSodium
-     *   let encBytes = sodium.crypto_box_seal(binsec, binkey)
-     *
-     *   // Convert encrypted Uint8Array to Base64
-     *   let output = sodium.to_base64(encBytes, sodium.base64_variants.ORIGINAL)
-     *
-     *   console.log(output)
-     * });
-     * ```
-     *
-     * **Example encrypting a secret using Python**
-     *
-     * Encrypt your secret using [pynacl](https://pynacl.readthedocs.io/en/latest/public/#nacl-public-sealedbox) with Python 3.
-     *
-     * ```
-     * from base64 import b64encode
-     * from nacl import encoding, public
-     *
-     * def encrypt(public_key: str, secret_value: str) -> str:
-     *   """Encrypt a Unicode string using the public key."""
-     *   public_key = public.PublicKey(public_key.encode("utf-8"), encoding.Base64Encoder())
-     *   sealed_box = public.SealedBox(public_key)
-     *   encrypted = sealed_box.encrypt(secret_value.encode("utf-8"))
-     *   return b64encode(encrypted).decode("utf-8")
-     * ```
-     *
-     * **Example encrypting a secret using C#**
-     *
-     * Encrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/) package.
-     *
-     * ```
-     * var secretValue = System.Text.Encoding.UTF8.GetBytes("mySecret");
-     * var publicKey = Convert.FromBase64String("2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvvcCU=");
-     *
-     * var sealedPublicKeyBox = Sodium.SealedPublicKeyBox.Create(secretValue, publicKey);
-     *
-     * Console.WriteLine(Convert.ToBase64String(sealedPublicKeyBox));
-     * ```
-     *
-     * **Example encrypting a secret using Ruby**
-     *
-     * Encrypt your secret using the [rbnacl](https://github.com/RubyCrypto/rbnacl) gem.
-     *
-     * ```ruby
-     * require "rbnacl"
-     * require "base64"
-     *
-     * key = Base64.decode64("+ZYvJDZMHUfBkJdyq5Zm9SKqeuBQ4sj+6sfjlH4CgG0=")
-     * public_key = RbNaCl::PublicKey.new(key)
-     *
-     * box = RbNaCl::Boxes::Sealed.from_public_key(public_key)
-     * encrypted_secret = box.encrypt("my_secret")
-     *
-     * # Print the base64 encoded secret
-     * puts Base64.strict_encode64(encrypted_secret)
-     * ```
+     * You must authenticate using an access token with the `repo` scope to use this endpoint.
+     * GitHub Apps must have the `secrets` repository permission to use this endpoint.
+     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
      */
     put: operations["actions/create-or-update-repo-secret"];
     /**
      * Delete a repository secret
-     * @description Deletes a secret in a repository using the secret name. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+     * @description Deletes a secret in a repository using the secret name.
+     *
+     * You must authenticate using an access token with the `repo` scope to use this endpoint.
+     * GitHub Apps must have the `secrets` repository permission to use this endpoint.
+     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
      */
     delete: operations["actions/delete-repo-secret"];
   };
@@ -3577,7 +3668,7 @@ export interface paths {
      * Get a check run
      * @description **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
      *
-     * Gets a single check run using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth Apps and authenticated users must have the `repo` scope to get check runs in a private repository.
+     * Gets a single check run using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth apps and authenticated users must have the `repo` scope to get check runs in a private repository.
      */
     get: operations["checks/get"];
     /**
@@ -3591,7 +3682,7 @@ export interface paths {
   "/repos/{owner}/{repo}/check-runs/{check_run_id}/annotations": {
     /**
      * List check run annotations
-     * @description Lists annotations for a check run using the annotation `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get annotations for a check run. OAuth Apps and authenticated users must have the `repo` scope to get annotations for a check run in a private repository.
+     * @description Lists annotations for a check run using the annotation `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get annotations for a check run. OAuth apps and authenticated users must have the `repo` scope to get annotations for a check run in a private repository.
      */
     get: operations["checks/list-annotations"];
   };
@@ -3601,6 +3692,8 @@ export interface paths {
      * @description Triggers GitHub to rerequest an existing check run, without pushing new code to a repository. This endpoint will trigger the [`check_run` webhook](https://docs.github.com/enterprise-server@3.7/webhooks/event-payloads/#check_run) event with the action `rerequested`. When a check run is `rerequested`, its `status` is reset to `queued` and the `conclusion` is cleared.
      *
      * To rerequest a check run, your GitHub App must have the `checks:read` permission on a private repository or pull access to a public repository.
+     *
+     * For more information about how to re-run GitHub Actions jobs, see "[Re-run a job from a workflow run](https://docs.github.com/enterprise-server@3.7/rest/actions/workflow-runs#re-run-a-job-from-a-workflow-run)".
      */
     post: operations["checks/rerequest-run"];
   };
@@ -3609,14 +3702,14 @@ export interface paths {
      * Create a check suite
      * @description **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
      *
-     * By default, check suites are automatically created when you create a [check run](https://docs.github.com/enterprise-server@3.7/rest/reference/checks#check-runs). You only need to use this endpoint for manually creating check suites when you've disabled automatic creation using "[Update repository preferences for check suites](https://docs.github.com/enterprise-server@3.7/rest/reference/checks#update-repository-preferences-for-check-suites)". Your GitHub App must have the `checks:write` permission to create check suites.
+     * By default, check suites are automatically created when you create a [check run](https://docs.github.com/enterprise-server@3.7/rest/checks/runs). You only need to use this endpoint for manually creating check suites when you've disabled automatic creation using "[Update repository preferences for check suites](https://docs.github.com/enterprise-server@3.7/rest/checks/suites#update-repository-preferences-for-check-suites)". Your GitHub App must have the `checks:write` permission to create check suites.
      */
     post: operations["checks/create-suite"];
   };
   "/repos/{owner}/{repo}/check-suites/preferences": {
     /**
      * Update repository preferences for check suites
-     * @description Changes the default automatic flow when creating check suites. By default, a check suite is automatically created each time code is pushed to a repository. When you disable the automatic creation of check suites, you can manually [Create a check suite](https://docs.github.com/enterprise-server@3.7/rest/reference/checks#create-a-check-suite). You must have admin permissions in the repository to set preferences for check suites.
+     * @description Changes the default automatic flow when creating check suites. By default, a check suite is automatically created each time code is pushed to a repository. When you disable the automatic creation of check suites, you can manually [Create a check suite](https://docs.github.com/enterprise-server@3.7/rest/checks/suites#create-a-check-suite). You must have admin permissions in the repository to set preferences for check suites.
      */
     patch: operations["checks/set-suites-preferences"];
   };
@@ -3625,7 +3718,7 @@ export interface paths {
      * Get a check suite
      * @description **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
      *
-     * Gets a single check suite using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check suites. OAuth Apps and authenticated users must have the `repo` scope to get check suites in a private repository.
+     * Gets a single check suite using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check suites. OAuth apps and authenticated users must have the `repo` scope to get check suites in a private repository.
      */
     get: operations["checks/get-suite"];
   };
@@ -3634,7 +3727,7 @@ export interface paths {
      * List check runs in a check suite
      * @description **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
      *
-     * Lists check runs for a check suite using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth Apps and authenticated users must have the `repo` scope to get check runs in a private repository.
+     * Lists check runs for a check suite using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth apps and authenticated users must have the `repo` scope to get check runs in a private repository.
      */
     get: operations["checks/list-for-suite"];
   };
@@ -3643,7 +3736,7 @@ export interface paths {
      * Rerequest a check suite
      * @description Triggers GitHub to rerequest an existing check suite, without pushing new code to a repository. This endpoint will trigger the [`check_suite` webhook](https://docs.github.com/enterprise-server@3.7/webhooks/event-payloads/#check_suite) event with the action `rerequested`. When a check suite is `rerequested`, its `status` is reset to `queued` and the `conclusion` is cleared.
      *
-     * To rerequest a check suite, your GitHub App must have the `checks:read` permission on a private repository or pull access to a public repository.
+     * To rerequest a check suite, your GitHub App must have the `checks:write` permission on a private repository or pull access to a public repository.
      */
     post: operations["checks/rerequest-suite"];
   };
@@ -3834,14 +3927,14 @@ export interface paths {
      *
      * The `202 Accepted` response includes an `id` value.
      * You can use this ID to check the status of the upload by using it in the `/sarifs/{sarif_id}` endpoint.
-     * For more information, see "[Get information about a SARIF upload](/rest/reference/code-scanning#get-information-about-a-sarif-upload)."
+     * For more information, see "[Get information about a SARIF upload](/rest/code-scanning/code-scanning#get-information-about-a-sarif-upload)."
      */
     post: operations["code-scanning/upload-sarif"];
   };
   "/repos/{owner}/{repo}/code-scanning/sarifs/{sarif_id}": {
     /**
      * Get information about a SARIF upload
-     * @description Gets information about a SARIF upload, including the status and the URL of the analysis that was uploaded so that you can retrieve details of the analysis. For more information, see "[Get a code scanning analysis for a repository](/rest/reference/code-scanning#get-a-code-scanning-analysis-for-a-repository)." You must use an access token with the `security_events` scope to use this endpoint with private repos, the `public_repo` scope also grants permission to read security events on public repos only. GitHub Apps must have the `security_events` read permission to use this endpoint.
+     * @description Gets information about a SARIF upload, including the status and the URL of the analysis that was uploaded so that you can retrieve details of the analysis. For more information, see "[Get a code scanning analysis for a repository](/rest/code-scanning/code-scanning#get-a-code-scanning-analysis-for-a-repository)." You must use an access token with the `security_events` scope to use this endpoint with private repos, the `public_repo` scope also grants permission to read security events on public repos only. GitHub Apps must have the `security_events` read permission to use this endpoint.
      */
     get: operations["code-scanning/get-sarif"];
   };
@@ -3896,15 +3989,9 @@ export interface paths {
      *
      * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#http-verbs)."
      *
-     * The invitee will receive a notification that they have been invited to the repository, which they must accept or decline. They may do this via the notifications page, the email they receive, or by using the [repository invitations API endpoints](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#invitations).
-     *
      * **Updating an existing collaborator's permission level**
      *
      * The endpoint can also be used to change the permissions of an existing collaborator without first removing and re-adding the collaborator. To change the permissions, use the same endpoint and pass a different `permission` parameter. The response will be a `204`, with no other indication that the permission level changed.
-     *
-     * **Rate limits**
-     *
-     * You are limited to sending 50 invitations to a repository per 24 hour period. Note there is no limit if you are inviting organization members to an organization repository.
      */
     put: operations["repos/add-collaborator"];
     /**
@@ -3936,14 +4023,20 @@ export interface paths {
   "/repos/{owner}/{repo}/collaborators/{username}/permission": {
     /**
      * Get repository permissions for a user
-     * @description Checks the repository permission of a collaborator. The possible repository permissions are `admin`, `write`, `read`, and `none`.
+     * @description Checks the repository permission of a collaborator. The possible repository
+     * permissions are `admin`, `write`, `read`, and `none`.
+     *
+     * *Note*: The `permission` attribute provides the legacy base roles of `admin`, `write`, `read`, and `none`, where the
+     * `maintain` role is mapped to `write` and the `triage` role is mapped to `read`. To determine the role assigned to the
+     * collaborator, see the `role_name` attribute, which will provide the full role name, including custom roles. The
+     * `permissions` hash can also be used to determine which base level of access the collaborator has to the repository.
      */
     get: operations["repos/get-collaborator-permission-level"];
   };
   "/repos/{owner}/{repo}/comments": {
     /**
      * List commit comments for a repository
-     * @description Commit Comments use [these custom media types](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#custom-media-types). You can read more about the use of media types in the API [here](https://docs.github.com/enterprise-server@3.7/rest/overview/media-types/).
+     * @description Commit Comments use [these custom media types](https://docs.github.com/enterprise-server@3.7/rest/overview/media-types). You can read more about the use of media types in the API [here](https://docs.github.com/enterprise-server@3.7/rest/overview/media-types/).
      *
      * Comments are ordered by ascending ID.
      */
@@ -3960,12 +4053,12 @@ export interface paths {
   "/repos/{owner}/{repo}/comments/{comment_id}/reactions": {
     /**
      * List reactions for a commit comment
-     * @description List the reactions to a [commit comment](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#comments).
+     * @description List the reactions to a [commit comment](https://docs.github.com/enterprise-server@3.7/rest/commits/comments#get-a-commit-comment).
      */
     get: operations["reactions/list-for-commit-comment"];
     /**
      * Create reaction for a commit comment
-     * @description Create a reaction to a [commit comment](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#comments). A response with an HTTP `200` status means that you already added the reaction type to this commit comment.
+     * @description Create a reaction to a [commit comment](https://docs.github.com/enterprise-server@3.7/rest/commits/comments#get-a-commit-comment). A response with an HTTP `200` status means that you already added the reaction type to this commit comment.
      */
     post: operations["reactions/create-for-commit-comment"];
   };
@@ -3974,7 +4067,7 @@ export interface paths {
      * Delete a commit comment reaction
      * @description **Note:** You can also specify a repository by `repository_id` using the route `DELETE /repositories/:repository_id/comments/:comment_id/reactions/:reaction_id`.
      *
-     * Delete a reaction to a [commit comment](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#comments).
+     * Delete a reaction to a [commit comment](https://docs.github.com/enterprise-server@3.7/rest/commits/comments#get-a-commit-comment).
      */
     delete: operations["reactions/delete-for-commit-comment"];
   };
@@ -4039,6 +4132,8 @@ export interface paths {
     /**
      * List pull requests associated with a commit
      * @description Lists the merged pull request that introduced the commit to the repository. If the commit is not present in the default branch, will only return open pull requests associated with the commit.
+     *
+     * To list the open or merged pull requests associated with a branch, you can set the `commit_sha` parameter to the branch name.
      */
     get: operations["repos/list-pull-requests-associated-with-commit"];
   };
@@ -4089,7 +4184,7 @@ export interface paths {
      * List check runs for a Git reference
      * @description **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
      *
-     * Lists check runs for a commit ref. The `ref` can be a SHA, branch name, or a tag name. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth Apps and authenticated users must have the `repo` scope to get check runs in a private repository.
+     * Lists check runs for a commit ref. The `ref` can be a SHA, branch name, or a tag name. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth apps and authenticated users must have the `repo` scope to get check runs in a private repository.
      */
     get: operations["checks/list-for-ref"];
   };
@@ -4098,7 +4193,7 @@ export interface paths {
      * List check suites for a Git reference
      * @description **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
      *
-     * Lists check suites for a commit `ref`. The `ref` can be a SHA, branch name, or a tag name. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to list check suites. OAuth Apps and authenticated users must have the `repo` scope to get check suites in a private repository.
+     * Lists check suites for a commit `ref`. The `ref` can be a SHA, branch name, or a tag name. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to list check suites. OAuth apps and authenticated users must have the `repo` scope to get check suites in a private repository.
      */
     get: operations["checks/list-suites-for-ref"];
   };
@@ -4182,34 +4277,34 @@ export interface paths {
      * @description Gets the contents of a file or directory in a repository. Specify the file path or directory in `:path`. If you omit
      * `:path`, you will receive the contents of the repository's root directory. See the description below regarding what the API response includes for directories.
      *
-     * Files and symlinks support [a custom media type](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#custom-media-types) for
+     * Files and symlinks support [a custom media type](https://docs.github.com/enterprise-server@3.7/rest/overview/media-types) for
      * retrieving the raw content or rendered HTML (when supported). All content types support [a custom media
-     * type](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#custom-media-types) to ensure the content is returned in a consistent
+     * type](https://docs.github.com/enterprise-server@3.7/rest/overview/media-types) to ensure the content is returned in a consistent
      * object format.
      *
      * **Notes**:
-     * *   To get a repository's contents recursively, you can [recursively get the tree](https://docs.github.com/enterprise-server@3.7/rest/reference/git#trees).
+     * *   To get a repository's contents recursively, you can [recursively get the tree](https://docs.github.com/enterprise-server@3.7/rest/git/trees#get-a-tree).
      * *   This API has an upper limit of 1,000 files for a directory. If you need to retrieve more files, use the [Git Trees
-     * API](https://docs.github.com/enterprise-server@3.7/rest/reference/git#get-a-tree).
+     * API](https://docs.github.com/enterprise-server@3.7/rest/git/trees#get-a-tree).
      *  *  Download URLs expire and are meant to be used just once. To ensure the download URL does not expire, please use the contents API to obtain a fresh download URL for each download.
-     * #### Size limits
+     *  Size limits:
      * If the requested file's size is:
      * * 1 MB or smaller: All features of this endpoint are supported.
      * * Between 1-100 MB: Only the `raw` or `object` [custom media types](https://docs.github.com/enterprise-server@3.7/rest/repos/contents#custom-media-types-for-repository-contents) are supported. Both will work as normal, except that when using the `object` media type, the `content` field will be an empty string and the `encoding` field will be `"none"`. To get the contents of these larger files, use the `raw` media type.
      *  * Greater than 100 MB: This endpoint is not supported.
      *
-     * #### If the content is a directory
+     *  If the content is a directory:
      * The response will be an array of objects, one object for each item in the directory.
      * When listing the contents of a directory, submodules have their "type" specified as "file". Logically, the value
      * _should_ be "submodule". This behavior exists in API v3 [for backwards compatibility purposes](https://git.io/v1YCW).
      * In the next major version of the API, the type will be returned as "submodule".
      *
-     * #### If the content is a symlink
+     *  If the content is a symlink:
      * If the requested `:path` points to a symlink, and the symlink's target is a normal file in the repository, then the
      * API responds with the content of the file (in the format shown in the example. Otherwise, the API responds with an object
      * describing the symlink itself.
      *
-     * #### If the content is a submodule
+     *  If the content is a submodule:
      * The `submodule_git_url` identifies the location of the submodule repository, and the `sha` identifies a specific
      * commit within the submodule repository. Git uses the given URL when cloning the submodule repository, and checks out
      * the submodule at that specific commit.
@@ -4220,9 +4315,9 @@ export interface paths {
     get: operations["repos/get-content"];
     /**
      * Create or update file contents
-     * @description Creates a new file or replaces an existing file in a repository. You must authenticate using an access token with the `workflow` scope to use this endpoint.
+     * @description Creates a new file or replaces an existing file in a repository. You must authenticate using an access token with the `repo` scope to use this endpoint. If you want to modify files in the `.github/workflows` directory, you must authenticate using an access token with the `workflow` scope.
      *
-     * **Note:** If you use this endpoint and the "[Delete a file](https://docs.github.com/enterprise-server@3.7/rest/reference/repos/#delete-file)" endpoint in parallel, the concurrent requests will conflict and you will receive errors. You must use these endpoints serially instead.
+     * **Note:** If you use this endpoint and the "[Delete a file](https://docs.github.com/enterprise-server@3.7/rest/repos/contents/#delete-a-file)" endpoint in parallel, the concurrent requests will conflict and you will receive errors. You must use these endpoints serially instead.
      */
     put: operations["repos/create-or-update-file-contents"];
     /**
@@ -4235,7 +4330,7 @@ export interface paths {
      *
      * You must provide values for both `name` and `email`, whether you choose to use `author` or `committer`. Otherwise, you'll receive a `422` status code.
      *
-     * **Note:** If you use this endpoint and the "[Create or update file contents](https://docs.github.com/enterprise-server@3.7/rest/reference/repos/#create-or-update-file-contents)" endpoint in parallel, the concurrent requests will conflict and you will receive errors. You must use these endpoints serially instead.
+     * **Note:** If you use this endpoint and the "[Create or update file contents](https://docs.github.com/enterprise-server@3.7/rest/repos/contents/#create-or-update-file-contents)" endpoint in parallel, the concurrent requests will conflict and you will receive errors. You must use these endpoints serially instead.
      */
     delete: operations["repos/delete-file"];
   };
@@ -4271,81 +4366,11 @@ export interface paths {
     /**
      * Create or update a repository secret
      * @description Creates or updates a repository secret with an encrypted value. Encrypt your secret using
-     * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an access
+     * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting secrets for the REST API](https://docs.github.com/enterprise-server@3.7/rest/guides/encrypting-secrets-for-the-rest-api)."
+     *
+     * You must authenticate using an access
      * token with the `repo` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` repository
      * permission to use this endpoint.
-     *
-     * **Example encrypting a secret using Node.js**
-     *
-     * Encrypt your secret using the [libsodium-wrappers](https://www.npmjs.com/package/libsodium-wrappers) library.
-     *
-     * ```
-     * const sodium = require('libsodium-wrappers')
-     * const secret = 'plain-text-secret' // replace with the secret you want to encrypt
-     * const key = 'base64-encoded-public-key' // replace with the Base64 encoded public key
-     *
-     * //Check if libsodium is ready and then proceed.
-     * sodium.ready.then(() => {
-     *   // Convert Secret & Base64 key to Uint8Array.
-     *   let binkey = sodium.from_base64(key, sodium.base64_variants.ORIGINAL)
-     *   let binsec = sodium.from_string(secret)
-     *
-     *   //Encrypt the secret using LibSodium
-     *   let encBytes = sodium.crypto_box_seal(binsec, binkey)
-     *
-     *   // Convert encrypted Uint8Array to Base64
-     *   let output = sodium.to_base64(encBytes, sodium.base64_variants.ORIGINAL)
-     *
-     *   console.log(output)
-     * });
-     * ```
-     *
-     * **Example encrypting a secret using Python**
-     *
-     * Encrypt your secret using [pynacl](https://pynacl.readthedocs.io/en/latest/public/#nacl-public-sealedbox) with Python 3.
-     *
-     * ```
-     * from base64 import b64encode
-     * from nacl import encoding, public
-     *
-     * def encrypt(public_key: str, secret_value: str) -> str:
-     *   """Encrypt a Unicode string using the public key."""
-     *   public_key = public.PublicKey(public_key.encode("utf-8"), encoding.Base64Encoder())
-     *   sealed_box = public.SealedBox(public_key)
-     *   encrypted = sealed_box.encrypt(secret_value.encode("utf-8"))
-     *   return b64encode(encrypted).decode("utf-8")
-     * ```
-     *
-     * **Example encrypting a secret using C#**
-     *
-     * Encrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/) package.
-     *
-     * ```
-     * var secretValue = System.Text.Encoding.UTF8.GetBytes("mySecret");
-     * var publicKey = Convert.FromBase64String("2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvvcCU=");
-     *
-     * var sealedPublicKeyBox = Sodium.SealedPublicKeyBox.Create(secretValue, publicKey);
-     *
-     * Console.WriteLine(Convert.ToBase64String(sealedPublicKeyBox));
-     * ```
-     *
-     * **Example encrypting a secret using Ruby**
-     *
-     * Encrypt your secret using the [rbnacl](https://github.com/RubyCrypto/rbnacl) gem.
-     *
-     * ```ruby
-     * require "rbnacl"
-     * require "base64"
-     *
-     * key = Base64.decode64("+ZYvJDZMHUfBkJdyq5Zm9SKqeuBQ4sj+6sfjlH4CgG0=")
-     * public_key = RbNaCl::PublicKey.new(key)
-     *
-     * box = RbNaCl::Boxes::Sealed.from_public_key(public_key)
-     * encrypted_secret = box.encrypt("my_secret")
-     *
-     * # Print the base64 encoded secret
-     * puts Base64.strict_encode64(encrypted_secret)
-     * ```
      */
     put: operations["dependabot/create-or-update-repo-secret"];
     /**
@@ -4404,7 +4429,8 @@ export interface paths {
      *
      * Users with `repo` or `repo_deployment` scopes can create a deployment for a given ref.
      *
-     * #### Merged branch response
+     * Merged branch response:
+     *
      * You will see this response when GitHub automatically merges the base branch into the topic branch instead of creating
      * a deployment. This auto-merge happens when:
      * *   Auto-merge option is enabled in the repository
@@ -4414,11 +4440,13 @@ export interface paths {
      * If there are no new commits in the base branch, a new request to create a deployment should give a successful
      * response.
      *
-     * #### Merge conflict response
+     * Merge conflict response:
+     *
      * This error happens when the `auto_merge` option is enabled and when the default branch (in this case `master`), can't
      * be merged into the branch that's being deployed (in this case `topic-branch`), due to merge conflicts.
      *
-     * #### Failed commit status checks
+     * Failed commit status checks:
+     *
      * This error happens when the `required_contexts` parameter indicates that one or more contexts need to have a `success`
      * status for the commit to be deployed, but one or more of the required contexts do not have a state of `success`.
      */
@@ -4436,7 +4464,7 @@ export interface paths {
      * *   Create a new deployment that is active so that the system has a record of the current state, then delete the previously active deployment.
      * *   Mark the active deployment as inactive by adding any non-successful deployment status.
      *
-     * For more information, see "[Create a deployment](https://docs.github.com/enterprise-server@3.7/rest/deployments/deployments/#create-a-deployment)" and "[Create a deployment status](https://docs.github.com/enterprise-server@3.7/rest/deployments/deployment-statuses#create-a-deployment-status)."
+     * For more information, see "[Create a deployment](https://docs.github.com/enterprise-server@3.7/rest/deployments/deployments/#create-a-deployment)" and "[Create a deployment status](https://docs.github.com/enterprise-server@3.7/rest/deployments/statuses#create-a-deployment-status)."
      */
     delete: operations["repos/delete-deployment"];
   };
@@ -4450,7 +4478,7 @@ export interface paths {
      * Create a deployment status
      * @description Users with `push` access can create deployment statuses for a given deployment.
      *
-     * GitHub Apps require `read & write` access to "Deployments" and `read-only` access to "Repo contents" (for private repos). OAuth Apps require the `repo_deployment` scope.
+     * GitHub Apps require `read & write` access to "Deployments" and `read-only` access to "Repo contents" (for private repos). OAuth apps require the `repo_deployment` scope.
      */
     post: operations["repos/create-deployment-status"];
   };
@@ -4502,7 +4530,7 @@ export interface paths {
      *
      * **Note:** To create or update name patterns that branches must match in order to deploy to this environment, see "[Deployment branch policies](/rest/deployments/branch-policies)."
      *
-     * **Note:** To create or update secrets for an environment, see "[Secrets](/rest/reference/actions#secrets)."
+     * **Note:** To create or update secrets for an environment, see "[GitHub Actions secrets](/rest/actions/secrets)."
      *
      * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration:write` permission for the repository to use this endpoint.
      */
@@ -4588,7 +4616,7 @@ export interface paths {
   "/repos/{owner}/{repo}/git/commits": {
     /**
      * Create a commit
-     * @description Creates a new Git [commit object](https://git-scm.com/book/en/v1/Git-Internals-Git-Objects#Commit-Objects).
+     * @description Creates a new Git [commit object](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects).
      *
      * **Signature verification object**
      *
@@ -4623,8 +4651,10 @@ export interface paths {
   };
   "/repos/{owner}/{repo}/git/commits/{commit_sha}": {
     /**
-     * Get a commit
-     * @description Gets a Git [commit object](https://git-scm.com/book/en/v1/Git-Internals-Git-Objects#Commit-Objects).
+     * Get a commit object
+     * @description Gets a Git [commit object](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects).
+     *
+     * To get the contents of a commit, see "[Get a commit](/rest/commits/commits#get-a-commit)."
      *
      * **Signature verification object**
      *
@@ -4664,7 +4694,7 @@ export interface paths {
      *
      * When you use this endpoint without providing a `:ref`, it will return an array of all the references from your Git database, including notes and stashes if they exist on the server. Anything in the namespace is returned, not just `heads` and `tags`.
      *
-     * **Note:** You need to explicitly [request a pull request](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#get-a-pull-request) to trigger a test merge commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/enterprise-server@3.7/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
+     * **Note:** You need to explicitly [request a pull request](https://docs.github.com/enterprise-server@3.7/rest/pulls/pulls#get-a-pull-request) to trigger a test merge commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/enterprise-server@3.7/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
      *
      * If you request matching references for a branch named `feature` but the branch `feature` doesn't exist, the response can still include other matching head refs that start with the word `feature`, such as `featureA` and `featureB`.
      */
@@ -4675,7 +4705,7 @@ export interface paths {
      * Get a reference
      * @description Returns a single reference from your Git database. The `:ref` in the URL must be formatted as `heads/<branch name>` for branches and `tags/<tag name>` for tags. If the `:ref` doesn't match an existing ref, a `404` is returned.
      *
-     * **Note:** You need to explicitly [request a pull request](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#get-a-pull-request) to trigger a test merge commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/enterprise-server@3.7/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
+     * **Note:** You need to explicitly [request a pull request](https://docs.github.com/enterprise-server@3.7/rest/pulls/pulls#get-a-pull-request) to trigger a test merge commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/enterprise-server@3.7/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
      */
     get: operations["git/get-ref"];
   };
@@ -4695,7 +4725,7 @@ export interface paths {
   "/repos/{owner}/{repo}/git/tags": {
     /**
      * Create a tag object
-     * @description Note that creating a tag object does not create the reference that makes a tag in Git. If you want to create an annotated tag in Git, you have to do this call to create the tag object, and then [create](https://docs.github.com/enterprise-server@3.7/rest/reference/git#create-a-reference) the `refs/tags/[tag]` reference. If you want to create a lightweight tag, you only have to [create](https://docs.github.com/enterprise-server@3.7/rest/reference/git#create-a-reference) the tag reference - this call would be unnecessary.
+     * @description Note that creating a tag object does not create the reference that makes a tag in Git. If you want to create an annotated tag in Git, you have to do this call to create the tag object, and then [create](https://docs.github.com/enterprise-server@3.7/rest/git/refs#create-a-reference) the `refs/tags/[tag]` reference. If you want to create a lightweight tag, you only have to [create](https://docs.github.com/enterprise-server@3.7/rest/git/refs#create-a-reference) the tag reference - this call would be unnecessary.
      *
      * **Signature verification object**
      *
@@ -4767,7 +4797,7 @@ export interface paths {
      * Create a tree
      * @description The tree creation API accepts nested entries. If you specify both a tree and a nested path modifying that tree, this endpoint will overwrite the contents of the tree with the new path contents, and create a new tree structure.
      *
-     * If you use this endpoint to add, delete, or modify the file contents in a tree, you will need to commit the tree and then update a branch to point to the commit. For more information see "[Create a commit](https://docs.github.com/enterprise-server@3.7/rest/reference/git#create-a-commit)" and "[Update a reference](https://docs.github.com/enterprise-server@3.7/rest/reference/git#update-a-reference)."
+     * If you use this endpoint to add, delete, or modify the file contents in a tree, you will need to commit the tree and then update a branch to point to the commit. For more information see "[Create a commit](https://docs.github.com/enterprise-server@3.7/rest/git/commits#create-a-commit)" and "[Update a reference](https://docs.github.com/enterprise-server@3.7/rest/git/refs#update-a-reference)."
      *
      * Returns an error if you try to delete a file that does not exist.
      */
@@ -4776,7 +4806,7 @@ export interface paths {
   "/repos/{owner}/{repo}/git/trees/{tree_sha}": {
     /**
      * Get a tree
-     * @description Returns a single tree using the SHA1 value for that tree.
+     * @description Returns a single tree using the SHA1 value or ref name for that tree.
      *
      * If `truncated` is `true` in the response then the number of items in the `tree` array exceeded our maximum limit. If you need to fetch more items, use the non-recursive method of fetching trees, and fetch one sub-tree at a time.
      *
@@ -4801,28 +4831,28 @@ export interface paths {
   "/repos/{owner}/{repo}/hooks/{hook_id}": {
     /**
      * Get a repository webhook
-     * @description Returns a webhook configured in a repository. To get only the webhook `config` properties, see "[Get a webhook configuration for a repository](/rest/reference/repos#get-a-webhook-configuration-for-a-repository)."
+     * @description Returns a webhook configured in a repository. To get only the webhook `config` properties, see "[Get a webhook configuration for a repository](/rest/webhooks/repo-config#get-a-webhook-configuration-for-a-repository)."
      */
     get: operations["repos/get-webhook"];
     /** Delete a repository webhook */
     delete: operations["repos/delete-webhook"];
     /**
      * Update a repository webhook
-     * @description Updates a webhook configured in a repository. If you previously had a `secret` set, you must provide the same `secret` or set a new `secret` or the secret will be removed. If you are only updating individual webhook `config` properties, use "[Update a webhook configuration for a repository](/rest/reference/repos#update-a-webhook-configuration-for-a-repository)."
+     * @description Updates a webhook configured in a repository. If you previously had a `secret` set, you must provide the same `secret` or set a new `secret` or the secret will be removed. If you are only updating individual webhook `config` properties, use "[Update a webhook configuration for a repository](/rest/webhooks/repo-config#update-a-webhook-configuration-for-a-repository)."
      */
     patch: operations["repos/update-webhook"];
   };
   "/repos/{owner}/{repo}/hooks/{hook_id}/config": {
     /**
      * Get a webhook configuration for a repository
-     * @description Returns the webhook configuration for a repository. To get more information about the webhook, including the `active` state and `events`, use "[Get a repository webhook](/rest/reference/orgs#get-a-repository-webhook)."
+     * @description Returns the webhook configuration for a repository. To get more information about the webhook, including the `active` state and `events`, use "[Get a repository webhook](/rest/webhooks/repos#get-a-repository-webhook)."
      *
      * Access tokens must have the `read:repo_hook` or `repo` scope, and GitHub Apps must have the `repository_hooks:read` permission.
      */
     get: operations["repos/get-webhook-config-for-repo"];
     /**
      * Update a webhook configuration for a repository
-     * @description Updates the webhook configuration for a repository. To update more information about the webhook, including the `active` state and `events`, use "[Update a repository webhook](/rest/reference/orgs#update-a-repository-webhook)."
+     * @description Updates the webhook configuration for a repository. To update more information about the webhook, including the `active` state and `events`, use "[Update a repository webhook](/rest/webhooks/repos#update-a-repository-webhook)."
      *
      * Access tokens must have the `write:repo_hook` or `repo` scope, and GitHub Apps must have the `repository_hooks:write` permission.
      */
@@ -4895,7 +4925,7 @@ export interface paths {
      * **Note**: GitHub's REST API considers every pull request an issue, but not every issue is a pull request. For this
      * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
      * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
-     * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#list-pull-requests)" endpoint.
+     * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@3.7/rest/pulls/pulls#list-pull-requests)" endpoint.
      */
     get: operations["issues/list-for-repo"];
     /**
@@ -4935,12 +4965,12 @@ export interface paths {
   "/repos/{owner}/{repo}/issues/comments/{comment_id}/reactions": {
     /**
      * List reactions for an issue comment
-     * @description List the reactions to an [issue comment](https://docs.github.com/enterprise-server@3.7/rest/reference/issues#comments).
+     * @description List the reactions to an [issue comment](https://docs.github.com/enterprise-server@3.7/rest/issues/comments#get-an-issue-comment).
      */
     get: operations["reactions/list-for-issue-comment"];
     /**
      * Create reaction for an issue comment
-     * @description Create a reaction to an [issue comment](https://docs.github.com/enterprise-server@3.7/rest/reference/issues#comments). A response with an HTTP `200` status means that you already added the reaction type to this issue comment.
+     * @description Create a reaction to an [issue comment](https://docs.github.com/enterprise-server@3.7/rest/issues/comments#get-an-issue-comment). A response with an HTTP `200` status means that you already added the reaction type to this issue comment.
      */
     post: operations["reactions/create-for-issue-comment"];
   };
@@ -4949,7 +4979,7 @@ export interface paths {
      * Delete an issue comment reaction
      * @description **Note:** You can also specify a repository by `repository_id` using the route `DELETE delete /repositories/:repository_id/issues/comments/:comment_id/reactions/:reaction_id`.
      *
-     * Delete a reaction to an [issue comment](https://docs.github.com/enterprise-server@3.7/rest/reference/issues#comments).
+     * Delete a reaction to an [issue comment](https://docs.github.com/enterprise-server@3.7/rest/issues/comments#get-an-issue-comment).
      */
     delete: operations["reactions/delete-for-issue-comment"];
   };
@@ -4980,7 +5010,7 @@ export interface paths {
      * **Note**: GitHub's REST API considers every pull request an issue, but not every issue is a pull request. For this
      * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
      * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
-     * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#list-pull-requests)" endpoint.
+     * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@3.7/rest/pulls/pulls#list-pull-requests)" endpoint.
      */
     get: operations["issues/get"];
     /**
@@ -5086,12 +5116,12 @@ export interface paths {
   "/repos/{owner}/{repo}/issues/{issue_number}/reactions": {
     /**
      * List reactions for an issue
-     * @description List the reactions to an [issue](https://docs.github.com/enterprise-server@3.7/rest/reference/issues).
+     * @description List the reactions to an [issue](https://docs.github.com/enterprise-server@3.7/rest/issues/issues#get-an-issue).
      */
     get: operations["reactions/list-for-issue"];
     /**
      * Create reaction for an issue
-     * @description Create a reaction to an [issue](https://docs.github.com/enterprise-server@3.7/rest/reference/issues/). A response with an HTTP `200` status means that you already added the reaction type to this issue.
+     * @description Create a reaction to an [issue](https://docs.github.com/enterprise-server@3.7/rest/issues/issues#get-an-issue). A response with an HTTP `200` status means that you already added the reaction type to this issue.
      */
     post: operations["reactions/create-for-issue"];
   };
@@ -5100,7 +5130,7 @@ export interface paths {
      * Delete an issue reaction
      * @description **Note:** You can also specify a repository by `repository_id` using the route `DELETE /repositories/:repository_id/issues/:issue_number/reactions/:reaction_id`.
      *
-     * Delete a reaction to an [issue](https://docs.github.com/enterprise-server@3.7/rest/reference/issues/).
+     * Delete a reaction to an [issue](https://docs.github.com/enterprise-server@3.7/rest/issues/issues#get-an-issue).
      */
     delete: operations["reactions/delete-for-issue"];
   };
@@ -5182,7 +5212,7 @@ export interface paths {
      * Get the license for a repository
      * @description This method returns the contents of the repository's license file, if one is detected.
      *
-     * Similar to [Get repository content](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#get-repository-content), this method also supports [custom media types](https://docs.github.com/enterprise-server@3.7/rest/overview/media-types) for retrieving the raw license content or rendered license HTML.
+     * Similar to [Get repository content](https://docs.github.com/enterprise-server@3.7/rest/repos/contents#get-repository-content), this method also supports [custom media types](https://docs.github.com/enterprise-server@3.7/rest/overview/media-types) for retrieving the raw license content or rendered license HTML.
      */
     get: operations["licenses/get-for-repo"];
   };
@@ -5238,7 +5268,7 @@ export interface paths {
     get: operations["activity/list-repo-notifications-for-authenticated-user"];
     /**
      * Mark repository notifications as read
-     * @description Marks all notifications in a repository as "read" for the current user. If the number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub Enterprise Server will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain, you can use the [List repository notifications for the authenticated user](https://docs.github.com/enterprise-server@3.7/rest/reference/activity#list-repository-notifications-for-the-authenticated-user) endpoint and pass the query parameter `all=false`.
+     * @description Marks all notifications in a repository as "read" for the current user. If the number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub Enterprise Server will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain, you can use the [List repository notifications for the authenticated user](https://docs.github.com/enterprise-server@3.7/rest/activity/notifications#list-repository-notifications-for-the-authenticated-user) endpoint and pass the query parameter `all=false`.
      */
     put: operations["activity/mark-repo-notifications-as-read"];
   };
@@ -5393,12 +5423,12 @@ export interface paths {
   "/repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions": {
     /**
      * List reactions for a pull request review comment
-     * @description List the reactions to a [pull request review comment](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#review-comments).
+     * @description List the reactions to a [pull request review comment](https://docs.github.com/enterprise-server@3.7/pulls/comments#get-a-review-comment-for-a-pull-request).
      */
     get: operations["reactions/list-for-pull-request-review-comment"];
     /**
      * Create reaction for a pull request review comment
-     * @description Create a reaction to a [pull request review comment](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#comments). A response with an HTTP `200` status means that you already added the reaction type to this pull request review comment.
+     * @description Create a reaction to a [pull request review comment](https://docs.github.com/enterprise-server@3.7/rest/pulls/comments#get-a-review-comment-for-a-pull-request). A response with an HTTP `200` status means that you already added the reaction type to this pull request review comment.
      */
     post: operations["reactions/create-for-pull-request-review-comment"];
   };
@@ -5407,7 +5437,7 @@ export interface paths {
      * Delete a pull request comment reaction
      * @description **Note:** You can also specify a repository by `repository_id` using the route `DELETE /repositories/:repository_id/pulls/comments/:comment_id/reactions/:reaction_id.`
      *
-     * Delete a reaction to a [pull request review comment](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#review-comments).
+     * Delete a reaction to a [pull request review comment](https://docs.github.com/enterprise-server@3.7/rest/pulls/comments#get-a-review-comment-for-a-pull-request).
      */
     delete: operations["reactions/delete-for-pull-request-comment"];
   };
@@ -5418,7 +5448,7 @@ export interface paths {
      *
      * Lists details of a pull request by providing its number.
      *
-     * When you get, [create](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls/#create-a-pull-request), or [edit](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#update-a-pull-request) a pull request, GitHub Enterprise Server creates a merge commit to test whether the pull request can be automatically merged into the base branch. This test commit is not added to the base branch or the head branch. You can review the status of the test commit using the `mergeable` key. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/enterprise-server@3.7/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
+     * When you get, [create](https://docs.github.com/enterprise-server@3.7/rest/pulls/pulls/#create-a-pull-request), or [edit](https://docs.github.com/enterprise-server@3.7/rest/pulls/pulls#update-a-pull-request) a pull request, GitHub Enterprise Server creates a merge commit to test whether the pull request can be automatically merged into the base branch. This test commit is not added to the base branch or the head branch. You can review the status of the test commit using the `mergeable` key. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/enterprise-server@3.7/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
      *
      * The value of the `mergeable` attribute can be `true`, `false`, or `null`. If the value is `null`, then GitHub Enterprise Server has started a background job to compute the mergeability. After giving the job time to complete, resubmit the request. When the job finishes, you will see a non-`null` value for the `mergeable` attribute in the response. If `mergeable` is `true`, then `merge_commit_sha` will be the SHA of the _test_ merge commit.
      *
@@ -5448,7 +5478,7 @@ export interface paths {
     /**
      * Create a review comment for a pull request
      * @description
-     * Creates a review comment in the pull request diff. To add a regular comment to a pull request timeline, see "[Create an issue comment](https://docs.github.com/enterprise-server@3.7/rest/reference/issues#create-an-issue-comment)." We recommend creating a review comment using `line`, `side`, and optionally `start_line` and `start_side` if your comment applies to more than one line in the pull request diff.
+     * Creates a review comment in the pull request diff. To add a regular comment to a pull request timeline, see "[Create an issue comment](https://docs.github.com/enterprise-server@3.7/rest/issues/comments#create-an-issue-comment)." We recommend creating a review comment using `line`, `side`, and optionally `start_line` and `start_side` if your comment applies to more than one line in the pull request diff.
      *
      * The `position` parameter is deprecated. If you use `position`, the `line`, `side`, `start_line`, and `start_side` parameters are not required.
      *
@@ -5470,7 +5500,7 @@ export interface paths {
   "/repos/{owner}/{repo}/pulls/{pull_number}/commits": {
     /**
      * List commits on a pull request
-     * @description Lists a maximum of 250 commits for a pull request. To receive a complete commit list for pull requests with more than 250 commits, use the [List commits](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#list-commits) endpoint.
+     * @description Lists a maximum of 250 commits for a pull request. To receive a complete commit list for pull requests with more than 250 commits, use the [List commits](https://docs.github.com/enterprise-server@3.7/rest/commits/commits#list-commits) endpoint.
      */
     get: operations["pulls/list-commits"];
   };
@@ -5521,9 +5551,9 @@ export interface paths {
      * Create a review for a pull request
      * @description This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.7/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.7/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
      *
-     * Pull request reviews created in the `PENDING` state are not submitted and therefore do not include the `submitted_at` property in the response. To create a pending review for a pull request, leave the `event` parameter blank. For more information about submitting a `PENDING` review, see "[Submit a review for a pull request](https://docs.github.com/enterprise-server@3.7/rest/pulls#submit-a-review-for-a-pull-request)."
+     * Pull request reviews created in the `PENDING` state are not submitted and therefore do not include the `submitted_at` property in the response. To create a pending review for a pull request, leave the `event` parameter blank. For more information about submitting a `PENDING` review, see "[Submit a review for a pull request](https://docs.github.com/enterprise-server@3.7/rest/pulls/reviews#submit-a-review-for-a-pull-request)."
      *
-     * **Note:** To comment on a specific line in a file, you need to first determine the _position_ of that line in the diff. The GitHub REST API offers the `application/vnd.github.v3.diff` [media type](https://docs.github.com/enterprise-server@3.7/rest/overview/media-types#commits-commit-comparison-and-pull-requests). To see a pull request diff, add this media type to the `Accept` header of a call to the [single pull request](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#get-a-pull-request) endpoint.
+     * **Note:** To comment on a specific line in a file, you need to first determine the _position_ of that line in the diff. The GitHub REST API offers the `application/vnd.github.v3.diff` [media type](https://docs.github.com/enterprise-server@3.7/rest/overview/media-types#commits-commit-comparison-and-pull-requests). To see a pull request diff, add this media type to the `Accept` header of a call to the [single pull request](https://docs.github.com/enterprise-server@3.7/rest/pulls/pulls#get-a-pull-request) endpoint.
      *
      * The `position` value equals the number of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.
      */
@@ -5556,14 +5586,14 @@ export interface paths {
   "/repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/dismissals": {
     /**
      * Dismiss a review for a pull request
-     * @description **Note:** To dismiss a pull request review on a [protected branch](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#branches), you must be a repository administrator or be included in the list of people or teams who can dismiss pull request reviews.
+     * @description **Note:** To dismiss a pull request review on a [protected branch](https://docs.github.com/enterprise-server@3.7/rest/branches/branch-protection), you must be a repository administrator or be included in the list of people or teams who can dismiss pull request reviews.
      */
     put: operations["pulls/dismiss-review"];
   };
   "/repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/events": {
     /**
      * Submit a review for a pull request
-     * @description Submits a pending review for a pull request. For more information about creating a pending review for a pull request, see "[Create a review for a pull request](https://docs.github.com/enterprise-server@3.7/rest/pulls#create-a-review-for-a-pull-request)."
+     * @description Submits a pending review for a pull request. For more information about creating a pending review for a pull request, see "[Create a review for a pull request](https://docs.github.com/enterprise-server@3.7/rest/pulls/reviews#create-a-review-for-a-pull-request)."
      */
     post: operations["pulls/submit-review"];
   };
@@ -5579,7 +5609,7 @@ export interface paths {
      * Get a repository README
      * @description Gets the preferred README for a repository.
      *
-     * READMEs support [custom media types](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#custom-media-types) for retrieving the raw content or rendered HTML.
+     * READMEs support [custom media types](https://docs.github.com/enterprise-server@3.7/rest/overview/media-types) for retrieving the raw content or rendered HTML.
      */
     get: operations["repos/get-readme"];
   };
@@ -5588,14 +5618,14 @@ export interface paths {
      * Get a repository README for a directory
      * @description Gets the README from a repository directory.
      *
-     * READMEs support [custom media types](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#custom-media-types) for retrieving the raw content or rendered HTML.
+     * READMEs support [custom media types](https://docs.github.com/enterprise-server@3.7/rest/overview/media-types) for retrieving the raw content or rendered HTML.
      */
     get: operations["repos/get-readme-in-directory"];
   };
   "/repos/{owner}/{repo}/releases": {
     /**
      * List releases
-     * @description This returns a list of releases, which does not include regular Git tags that have not been associated with a release. To get a list of Git tags, use the [Repository Tags API](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#list-repository-tags).
+     * @description This returns a list of releases, which does not include regular Git tags that have not been associated with a release. To get a list of Git tags, use the [Repository Tags API](https://docs.github.com/enterprise-server@3.7/rest/repos/repos#list-repository-tags).
      *
      * Information about published releases are available to everyone. Only users with push access will receive listings for draft releases.
      */
@@ -5625,7 +5655,7 @@ export interface paths {
   "/repos/{owner}/{repo}/releases/generate-notes": {
     /**
      * Generate release notes content for a release
-     * @description Generate a name and body describing a [release](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#releases). The body content will be markdown formatted and contain information like the changes since last release and users who contributed. The generated release notes are not saved anywhere. They are intended to be generated and used when creating a new release.
+     * @description Generate a name and body describing a [release](https://docs.github.com/enterprise-server@3.7/rest/releases/releases#get-a-release). The body content will be markdown formatted and contain information like the changes since last release and users who contributed. The generated release notes are not saved anywhere. They are intended to be generated and used when creating a new release.
      */
     post: operations["repos/generate-release-notes"];
   };
@@ -5682,7 +5712,7 @@ export interface paths {
      * When an upstream failure occurs, you will receive a `502 Bad Gateway` status. This may leave an empty asset with a state of `starter`. It can be safely deleted.
      *
      * **Notes:**
-     * *   GitHub Enterprise Server renames asset filenames that have special characters, non-alphanumeric characters, and leading or trailing periods. The "[List assets for a release](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#list-assets-for-a-release)"
+     * *   GitHub Enterprise Server renames asset filenames that have special characters, non-alphanumeric characters, and leading or trailing periods. The "[List release assets](https://docs.github.com/enterprise-server@3.7/rest/releases/assets#list-release-assets)"
      * endpoint lists the renamed filenames. For more information and help, contact [GitHub Enterprise Server Support](https://support.github.com/contact?tags=dotcom-rest-api).
      * *   To find the `release_id` query the [`GET /repos/{owner}/{repo}/releases/latest` endpoint](https://docs.github.com/enterprise-server@3.7/rest/releases/releases#get-the-latest-release).
      * *   If you upload an asset with the same filename as another uploaded asset, you'll receive an error and must delete the old file before you can re-upload the new asset.
@@ -5692,12 +5722,12 @@ export interface paths {
   "/repos/{owner}/{repo}/releases/{release_id}/reactions": {
     /**
      * List reactions for a release
-     * @description List the reactions to a [release](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#releases).
+     * @description List the reactions to a [release](https://docs.github.com/enterprise-server@3.7/rest/releases/releases#get-a-release).
      */
     get: operations["reactions/list-for-release"];
     /**
      * Create reaction for a release
-     * @description Create a reaction to a [release](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#releases). A response with a `Status: 200 OK` means that you already added the reaction type to this release.
+     * @description Create a reaction to a [release](https://docs.github.com/enterprise-server@3.7/rest/releases/releases#get-a-release). A response with a `Status: 200 OK` means that you already added the reaction type to this release.
      */
     post: operations["reactions/create-for-release"];
   };
@@ -5706,7 +5736,7 @@ export interface paths {
      * Delete a release reaction
      * @description **Note:** You can also specify a repository by `repository_id` using the route `DELETE delete /repositories/:repository_id/releases/:release_id/reactions/:reaction_id`.
      *
-     * Delete a reaction to a [release](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#releases).
+     * Delete a reaction to a [release](https://docs.github.com/enterprise-server@3.7/rest/releases/releases#get-a-release).
      */
     delete: operations["reactions/delete-for-release"];
   };
@@ -5836,16 +5866,19 @@ export interface paths {
     get: operations["activity/list-watchers-for-repo"];
   };
   "/repos/{owner}/{repo}/subscription": {
-    /** Get a repository subscription */
+    /**
+     * Get a repository subscription
+     * @description Gets information about whether the authenticated user is subscribed to the repository.
+     */
     get: operations["activity/get-repo-subscription"];
     /**
      * Set a repository subscription
-     * @description If you would like to watch a repository, set `subscribed` to `true`. If you would like to ignore notifications made within a repository, set `ignored` to `true`. If you would like to stop watching a repository, [delete the repository's subscription](https://docs.github.com/enterprise-server@3.7/rest/reference/activity#delete-a-repository-subscription) completely.
+     * @description If you would like to watch a repository, set `subscribed` to `true`. If you would like to ignore notifications made within a repository, set `ignored` to `true`. If you would like to stop watching a repository, [delete the repository's subscription](https://docs.github.com/enterprise-server@3.7/rest/activity/watching#delete-a-repository-subscription) completely.
      */
     put: operations["activity/set-repo-subscription"];
     /**
      * Delete a repository subscription
-     * @description This endpoint should only be used to stop watching a repository. To control whether or not you wish to receive notifications from a repository, [set the repository's subscription manually](https://docs.github.com/enterprise-server@3.7/rest/reference/activity#set-a-repository-subscription).
+     * @description This endpoint should only be used to stop watching a repository. To control whether or not you wish to receive notifications from a repository, [set the repository's subscription manually](https://docs.github.com/enterprise-server@3.7/rest/activity/watching#set-a-repository-subscription).
      */
     delete: operations["activity/delete-repo-subscription"];
   };
@@ -5911,6 +5944,7 @@ export interface paths {
     /**
      * Transfer a repository
      * @description A transfer request will need to be accepted by the new owner when transferring a personal repository to another user. The response will contain the original `owner`, and the transfer will continue asynchronously. For more details on the requirements to transfer personal and organization-owned repositories, see [about repository transfers](https://docs.github.com/enterprise-server@3.7/articles/about-repository-transfers/).
+     * You must use a personal access token or an OAuth token for this endpoint. An installation access token cannot be used because it is only granted access to a single account.
      */
     post: operations["repos/transfer"];
   };
@@ -5928,7 +5962,7 @@ export interface paths {
   "/repos/{template_owner}/{template_repo}/generate": {
     /**
      * Create a repository using a template
-     * @description Creates a new repository using a repository template. Use the `template_owner` and `template_repo` route parameters to specify the repository to use as the template. If the repository is not public, the authenticated user must own or be a member of an organization that owns the repository. To check if a repository is available to use as a template, get the repository's information using the [Get a repository](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#get-a-repository) endpoint and check that the `is_template` key is `true`.
+     * @description Creates a new repository using a repository template. Use the `template_owner` and `template_repo` route parameters to specify the repository to use as the template. If the repository is not public, the authenticated user must own or be a member of an organization that owns the repository. To check if a repository is available to use as a template, get the repository's information using the [Get a repository](https://docs.github.com/enterprise-server@3.7/rest/repos/repos#get-a-repository) endpoint and check that the `is_template` key is `true`.
      *
      * **OAuth scope requirements**
      *
@@ -5953,106 +5987,55 @@ export interface paths {
   "/repositories/{repository_id}/environments/{environment_name}/secrets": {
     /**
      * List environment secrets
-     * @description Lists all secrets available in an environment without revealing their encrypted values. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+     * @description Lists all secrets available in an environment without revealing their
+     * encrypted values.
+     *
+     * You must authenticate using an access token with the `repo` scope to use this endpoint.
+     * GitHub Apps must have the `secrets` repository permission to use this endpoint.
+     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
      */
     get: operations["actions/list-environment-secrets"];
   };
   "/repositories/{repository_id}/environments/{environment_name}/secrets/public-key": {
     /**
      * Get an environment public key
-     * @description Get the public key for an environment, which you need to encrypt environment secrets. You need to encrypt a secret before you can create or update secrets. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+     * @description Get the public key for an environment, which you need to encrypt environment
+     * secrets. You need to encrypt a secret before you can create or update secrets.
+     *
+     * Anyone with read access to the repository can use this endpoint.
+     * If the repository is private you must use an access token with the `repo` scope.
+     * GitHub Apps must have the `secrets` repository permission to use this endpoint.
+     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
      */
     get: operations["actions/get-environment-public-key"];
   };
   "/repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}": {
     /**
      * Get an environment secret
-     * @description Gets a single environment secret without revealing its encrypted value. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+     * @description Gets a single environment secret without revealing its encrypted value.
+     *
+     * You must authenticate using an access token with the `repo` scope to use this endpoint.
+     * GitHub Apps must have the `secrets` repository permission to use this endpoint.
+     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
      */
     get: operations["actions/get-environment-secret"];
     /**
      * Create or update an environment secret
      * @description Creates or updates an environment secret with an encrypted value. Encrypt your secret using
-     * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an access
-     * token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use
-     * this endpoint.
+     * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting secrets for the REST API](https://docs.github.com/enterprise-server@3.7/rest/guides/encrypting-secrets-for-the-rest-api)."
      *
-     * **Example encrypting a secret using Node.js**
-     *
-     * Encrypt your secret using the [libsodium-wrappers](https://www.npmjs.com/package/libsodium-wrappers) library.
-     *
-     * ```
-     * const sodium = require('libsodium-wrappers')
-     * const secret = 'plain-text-secret' // replace with the secret you want to encrypt
-     * const key = 'base64-encoded-public-key' // replace with the Base64 encoded public key
-     *
-     * //Check if libsodium is ready and then proceed.
-     * sodium.ready.then(() => {
-     *   // Convert Secret & Base64 key to Uint8Array.
-     *   let binkey = sodium.from_base64(key, sodium.base64_variants.ORIGINAL)
-     *   let binsec = sodium.from_string(secret)
-     *
-     *   //Encrypt the secret using LibSodium
-     *   let encBytes = sodium.crypto_box_seal(binsec, binkey)
-     *
-     *   // Convert encrypted Uint8Array to Base64
-     *   let output = sodium.to_base64(encBytes, sodium.base64_variants.ORIGINAL)
-     *
-     *   console.log(output)
-     * });
-     * ```
-     *
-     * **Example encrypting a secret using Python**
-     *
-     * Encrypt your secret using [pynacl](https://pynacl.readthedocs.io/en/latest/public/#nacl-public-sealedbox) with Python 3.
-     *
-     * ```
-     * from base64 import b64encode
-     * from nacl import encoding, public
-     *
-     * def encrypt(public_key: str, secret_value: str) -> str:
-     *   """Encrypt a Unicode string using the public key."""
-     *   public_key = public.PublicKey(public_key.encode("utf-8"), encoding.Base64Encoder())
-     *   sealed_box = public.SealedBox(public_key)
-     *   encrypted = sealed_box.encrypt(secret_value.encode("utf-8"))
-     *   return b64encode(encrypted).decode("utf-8")
-     * ```
-     *
-     * **Example encrypting a secret using C#**
-     *
-     * Encrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/) package.
-     *
-     * ```
-     * var secretValue = System.Text.Encoding.UTF8.GetBytes("mySecret");
-     * var publicKey = Convert.FromBase64String("2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvvcCU=");
-     *
-     * var sealedPublicKeyBox = Sodium.SealedPublicKeyBox.Create(secretValue, publicKey);
-     *
-     * Console.WriteLine(Convert.ToBase64String(sealedPublicKeyBox));
-     * ```
-     *
-     * **Example encrypting a secret using Ruby**
-     *
-     * Encrypt your secret using the [rbnacl](https://github.com/RubyCrypto/rbnacl) gem.
-     *
-     * ```ruby
-     * require "rbnacl"
-     * require "base64"
-     *
-     * key = Base64.decode64("+ZYvJDZMHUfBkJdyq5Zm9SKqeuBQ4sj+6sfjlH4CgG0=")
-     * public_key = RbNaCl::PublicKey.new(key)
-     *
-     * box = RbNaCl::Boxes::Sealed.from_public_key(public_key)
-     * encrypted_secret = box.encrypt("my_secret")
-     *
-     * # Print the base64 encoded secret
-     * puts Base64.strict_encode64(encrypted_secret)
-     * ```
+     * You must authenticate using an access token with the `repo` scope to use this endpoint.
+     * GitHub Apps must have the `secrets` repository permission to use this endpoint.
+     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
      */
     put: operations["actions/create-or-update-environment-secret"];
     /**
      * Delete an environment secret
-     * @description Deletes a secret in an environment using the secret name. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+     * @description Deletes a secret in an environment using the secret name.
+     *
+     * You must authenticate using an access token with the `repo` scope to use this endpoint.
+     * GitHub Apps must have the `secrets` repository permission to use this endpoint.
+     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
      */
     delete: operations["actions/delete-environment-secret"];
   };
@@ -6120,8 +6103,6 @@ export interface paths {
      * Lists provisioned SCIM enterprise members.
      *
      * When a user with a SCIM-provisioned external identity is removed from an enterprise through a `patch` with `active` flag set to `false`, the account's metadata is preserved to allow the user to re-join the enterprise in the future. However, the user's account will be suspended and the user will not be able to sign-in. In order to permanently suspend the users account with no ability to re-join the enterprise in the future, use the `delete` request. Users that were not permanently deleted will be visible in the returned results.
-     *
-     * You can improve query search time by using the `excludedAttributes` query parameter with a value of `groups` to exclude groups from the response.
      */
     get: operations["enterprise-admin/list-provisioned-identities-enterprise"];
     /**
@@ -6191,7 +6172,7 @@ export interface paths {
      * Search code
      * @description Searches for query terms inside of a file. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#pagination).
      *
-     * When searching for code, you can get text match metadata for the file **content** and file **path** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/reference/search#text-match-metadata).
+     * When searching for code, you can get text match metadata for the file **content** and file **path** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/search/search#text-match-metadata).
      *
      * For example, if you want to find the definition of the `addClass` function inside [jQuery](https://github.com/jquery/jquery) repository, your query would look something like this:
      *
@@ -6199,7 +6180,7 @@ export interface paths {
      *
      * This query searches for the keyword `addClass` within a file's contents. The query limits the search to files where the language is JavaScript in the `jquery/jquery` repository.
      *
-     * #### Considerations for code search
+     * Considerations for code search:
      *
      * Due to the complexity of searching code, there are a few restrictions on how searches are performed:
      *
@@ -6216,7 +6197,7 @@ export interface paths {
      * @description Find commits via various criteria on the default branch (usually `main`). This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#pagination).
      *
      * When searching for commits, you can get text match metadata for the **message** field when you provide the `text-match` media type. For more details about how to receive highlighted search results, see [Text match
-     * metadata](https://docs.github.com/enterprise-server@3.7/rest/reference/search#text-match-metadata).
+     * metadata](https://docs.github.com/enterprise-server@3.7/rest/search/search#text-match-metadata).
      *
      * For example, if you want to find commits related to CSS in the [octocat/Spoon-Knife](https://github.com/octocat/Spoon-Knife) repository. Your query would look something like this:
      *
@@ -6230,7 +6211,7 @@ export interface paths {
      * @description Find issues by state and keyword. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#pagination).
      *
      * When searching for issues, you can get text match metadata for the issue **title**, issue **body**, and issue **comment body** fields when you pass the `text-match` media type. For more details about how to receive highlighted
-     * search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/reference/search#text-match-metadata).
+     * search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/search/search#text-match-metadata).
      *
      * For example, if you want to find the oldest unresolved Python bugs on Windows. Your query might look something like this.
      *
@@ -6238,7 +6219,7 @@ export interface paths {
      *
      * This query searches for the keyword `windows`, within any open issue that is labeled as `bug`. The search runs across repositories whose primary language is Python. The results are sorted by creation date in ascending order, which means the oldest issues appear first in the search results.
      *
-     * **Note:** For [user-to-server](https://docs.github.com/enterprise-server@3.7/developers/apps/identifying-and-authorizing-users-for-github-apps#user-to-server-requests) GitHub App requests, you can't retrieve a combination of issues and pull requests in a single query. Requests that don't include the `is:issue` or `is:pull-request` qualifier will receive an HTTP `422 Unprocessable Entity` response. To get results for both issues and pull requests, you must send separate queries for issues and pull requests. For more information about the `is` qualifier, see "[Searching only issues or pull requests](https://docs.github.com/enterprise-server@3.7/github/searching-for-information-on-github/searching-issues-and-pull-requests#search-only-issues-or-pull-requests)."
+     * **Note:** For requests made by GitHub Apps with a user access token, you can't retrieve a combination of issues and pull requests in a single query. Requests that don't include the `is:issue` or `is:pull-request` qualifier will receive an HTTP `422 Unprocessable Entity` response. To get results for both issues and pull requests, you must send separate queries for issues and pull requests. For more information about the `is` qualifier, see "[Searching only issues or pull requests](https://docs.github.com/enterprise-server@3.7/github/searching-for-information-on-github/searching-issues-and-pull-requests#search-only-issues-or-pull-requests)."
      */
     get: operations["search/issues-and-pull-requests"];
   };
@@ -6247,7 +6228,7 @@ export interface paths {
      * Search labels
      * @description Find labels in a repository with names or descriptions that match search keywords. Returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#pagination).
      *
-     * When searching for labels, you can get text match metadata for the label **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/reference/search#text-match-metadata).
+     * When searching for labels, you can get text match metadata for the label **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/search/search#text-match-metadata).
      *
      * For example, if you want to find labels in the `linguist` repository that match `bug`, `defect`, or `enhancement`. Your query might look like this:
      *
@@ -6262,7 +6243,7 @@ export interface paths {
      * Search repositories
      * @description Find repositories via various criteria. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#pagination).
      *
-     * When searching for repositories, you can get text match metadata for the **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/reference/search#text-match-metadata).
+     * When searching for repositories, you can get text match metadata for the **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/search/search#text-match-metadata).
      *
      * For example, if you want to search for popular Tetris repositories written in assembly code, your query might look like this:
      *
@@ -6277,7 +6258,7 @@ export interface paths {
      * Search topics
      * @description Find topics via various criteria. Results are sorted by best match. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#pagination). See "[Searching topics](https://docs.github.com/enterprise-server@3.7/articles/searching-topics/)" for a detailed list of qualifiers.
      *
-     * When searching for topics, you can get text match metadata for the topic's **short\_description**, **description**, **name**, or **display\_name** field when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/reference/search#text-match-metadata).
+     * When searching for topics, you can get text match metadata for the topic's **short\_description**, **description**, **name**, or **display\_name** field when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/search/search#text-match-metadata).
      *
      * For example, if you want to search for topics related to Ruby that are featured on https://github.com/topics. Your query might look like this:
      *
@@ -6292,13 +6273,15 @@ export interface paths {
      * Search users
      * @description Find users via various criteria. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#pagination).
      *
-     * When searching for users, you can get text match metadata for the issue **login**, public **email**, and **name** fields when you pass the `text-match` media type. For more details about highlighting search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/reference/search#text-match-metadata). For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/reference/search#text-match-metadata).
+     * When searching for users, you can get text match metadata for the issue **login**, public **email**, and **name** fields when you pass the `text-match` media type. For more details about highlighting search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/search/search#text-match-metadata). For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/search/search#text-match-metadata).
      *
      * For example, if you're looking for a list of popular users, you might try this query:
      *
      * `q=tom+repos:%3E42+followers:%3E1000`
      *
      * This query searches for users with the name `tom`. The results are restricted to users with more than 42 repositories and over 1,000 followers.
+     *
+     * This endpoint does not accept authentication and will only include publicly visible users. As an alternative, you can use the GraphQL API. The GraphQL API requires authentication and will return private users, including Enterprise Managed Users (EMUs), that you are authorized to view. For more information, see "[GraphQL Queries](https://docs.github.com/enterprise-server@3.7/graphql/reference/queries#search)."
      */
     get: operations["search/users"];
   };
@@ -6342,14 +6325,14 @@ export interface paths {
   "/setup/api/settings": {
     /**
      * Get settings
-     * @description Gets the settings for your instance. To change settings, see the [Set settings endpoint](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#set-settings).
+     * @description Gets the settings for your instance. To change settings, see the [Set settings endpoint](https://docs.github.com/enterprise-server@3.7/rest/enterprise-admin/management-console#set-settings).
      *
      * **Note:** You cannot retrieve the management console password with the Enterprise administration API.
      */
     get: operations["enterprise-admin/get-settings"];
     /**
      * Set settings
-     * @description Applies settings on your instance. For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-settings).
+     * @description Applies settings on your instance. For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@3.7/rest/enterprise-admin/management-console#get-settings).
      *
      * **Notes:**
      *
@@ -6377,7 +6360,7 @@ export interface paths {
      * Create a GitHub license
      * @description When you boot a GitHub instance for the first time, you can use the following endpoint to upload a license.
      *
-     * Note that you need to `POST` to [`/setup/api/configure`](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#start-a-configuration-process) to start the actual configuration process.
+     * Note that you need to `POST` to [`/setup/api/configure`](https://docs.github.com/enterprise-server@3.7/rest/enterprise-admin/management-console#start-a-configuration-process) to start the actual configuration process.
      *
      * When using this endpoint, your GitHub instance must have a password set. This can be accomplished two ways:
      *
@@ -6401,13 +6384,13 @@ export interface paths {
     /**
      * Get a team (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the [Get a team by name](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#get-a-team-by-name) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the [Get a team by name](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#get-a-team-by-name) endpoint.
      */
     get: operations["teams/get-legacy"];
     /**
      * Delete a team (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a team](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#delete-a-team) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a team](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#delete-a-team) endpoint.
      *
      * To delete a team, the authenticated user must be an organization owner or team maintainer.
      *
@@ -6417,7 +6400,7 @@ export interface paths {
     /**
      * Update a team (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a team](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#update-a-team) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a team](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#update-a-team) endpoint.
      *
      * To edit a team, the authenticated user must either be an organization owner or a team maintainer.
      *
@@ -6429,7 +6412,7 @@ export interface paths {
     /**
      * List discussions (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List discussions`](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#list-discussions) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List discussions`](https://docs.github.com/enterprise-server@3.7/rest/teams/discussions#list-discussions) endpoint.
      *
      * List all discussions on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
@@ -6437,7 +6420,7 @@ export interface paths {
     /**
      * Create a discussion (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create a discussion`](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#create-a-discussion) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create a discussion`](https://docs.github.com/enterprise-server@3.7/rest/teams/discussions#create-a-discussion) endpoint.
      *
      * Creates a new discussion post on a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      *
@@ -6449,7 +6432,7 @@ export interface paths {
     /**
      * Get a discussion (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#get-a-discussion) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion](https://docs.github.com/enterprise-server@3.7/rest/teams/discussions#get-a-discussion) endpoint.
      *
      * Get a specific discussion on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
@@ -6457,7 +6440,7 @@ export interface paths {
     /**
      * Delete a discussion (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Delete a discussion`](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#delete-a-discussion) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Delete a discussion`](https://docs.github.com/enterprise-server@3.7/rest/teams/discussions#delete-a-discussion) endpoint.
      *
      * Delete a discussion from a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
@@ -6465,7 +6448,7 @@ export interface paths {
     /**
      * Update a discussion (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#update-a-discussion) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion](https://docs.github.com/enterprise-server@3.7/rest/teams/discussions#update-a-discussion) endpoint.
      *
      * Edits the title and body text of a discussion post. Only the parameters you provide are updated. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
@@ -6475,7 +6458,7 @@ export interface paths {
     /**
      * List discussion comments (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [List discussion comments](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#list-discussion-comments) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [List discussion comments](https://docs.github.com/enterprise-server@3.7/rest/teams/discussion-comments#list-discussion-comments) endpoint.
      *
      * List all comments on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
@@ -6483,7 +6466,7 @@ export interface paths {
     /**
      * Create a discussion comment (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Create a discussion comment](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#create-a-discussion-comment) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Create a discussion comment](https://docs.github.com/enterprise-server@3.7/rest/teams/discussion-comments#create-a-discussion-comment) endpoint.
      *
      * Creates a new comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      *
@@ -6495,7 +6478,7 @@ export interface paths {
     /**
      * Get a discussion comment (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion comment](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#get-a-discussion-comment) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion comment](https://docs.github.com/enterprise-server@3.7/rest/teams/discussion-comments#get-a-discussion-comment) endpoint.
      *
      * Get a specific comment on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
@@ -6503,7 +6486,7 @@ export interface paths {
     /**
      * Delete a discussion comment (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a discussion comment](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#delete-a-discussion-comment) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a discussion comment](https://docs.github.com/enterprise-server@3.7/rest/teams/discussion-comments#delete-a-discussion-comment) endpoint.
      *
      * Deletes a comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
@@ -6511,7 +6494,7 @@ export interface paths {
     /**
      * Update a discussion comment (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion comment](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#update-a-discussion-comment) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion comment](https://docs.github.com/enterprise-server@3.7/rest/teams/discussion-comments#update-a-discussion-comment) endpoint.
      *
      * Edits the body text of a discussion comment. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
@@ -6521,17 +6504,17 @@ export interface paths {
     /**
      * List reactions for a team discussion comment (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion comment`](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#list-reactions-for-a-team-discussion-comment) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion comment`](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#list-reactions-for-a-team-discussion-comment) endpoint.
      *
-     * List the reactions to a [team discussion comment](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#discussion-comments). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * List the reactions to a [team discussion comment](https://docs.github.com/enterprise-server@3.7/rest/teams/discussion-comments#get-a-discussion-comment). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
     get: operations["reactions/list-for-team-discussion-comment-legacy"];
     /**
      * Create reaction for a team discussion comment (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new "[Create reaction for a team discussion comment](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#create-reaction-for-a-team-discussion-comment)" endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new "[Create reaction for a team discussion comment](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#create-reaction-for-a-team-discussion-comment)" endpoint.
      *
-     * Create a reaction to a [team discussion comment](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#discussion-comments). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
+     * Create a reaction to a [team discussion comment](https://docs.github.com/enterprise-server@3.7/rest/teams/discussion-comments#get-a-discussion-comment). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
      */
     post: operations["reactions/create-for-team-discussion-comment-legacy"];
   };
@@ -6539,17 +6522,17 @@ export interface paths {
     /**
      * List reactions for a team discussion (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion`](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#list-reactions-for-a-team-discussion) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion`](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#list-reactions-for-a-team-discussion) endpoint.
      *
-     * List the reactions to a [team discussion](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#discussions). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+     * List the reactions to a [team discussion](https://docs.github.com/enterprise-server@3.7/rest/teams/discussions#get-a-discussion). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      */
     get: operations["reactions/list-for-team-discussion-legacy"];
     /**
      * Create reaction for a team discussion (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create reaction for a team discussion`](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#create-reaction-for-a-team-discussion) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create reaction for a team discussion`](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#create-reaction-for-a-team-discussion) endpoint.
      *
-     * Create a reaction to a [team discussion](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion.
+     * Create a reaction to a [team discussion](https://docs.github.com/enterprise-server@3.7/rest/teams/discussions#get-a-discussion). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion.
      */
     post: operations["reactions/create-for-team-discussion-legacy"];
   };
@@ -6557,7 +6540,7 @@ export interface paths {
     /**
      * List team members (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List team members`](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#list-team-members) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List team members`](https://docs.github.com/enterprise-server@3.7/rest/teams/members#list-team-members) endpoint.
      *
      * Team members will include the members of child teams.
      */
@@ -6569,7 +6552,7 @@ export interface paths {
      * @deprecated
      * @description The "Get team member" endpoint (described below) is deprecated.
      *
-     * We recommend using the [Get team membership for a user](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#get-team-membership-for-a-user) endpoint instead. It allows you to get both active and pending memberships.
+     * We recommend using the [Get team membership for a user](https://docs.github.com/enterprise-server@3.7/rest/teams/members#get-team-membership-for-a-user) endpoint instead. It allows you to get both active and pending memberships.
      *
      * To list members in a team, the team must be visible to the authenticated user.
      */
@@ -6579,7 +6562,7 @@ export interface paths {
      * @deprecated
      * @description The "Add team member" endpoint (described below) is deprecated.
      *
-     * We recommend using the [Add or update team membership for a user](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#add-or-update-team-membership-for-a-user) endpoint instead. It allows you to invite new organization members to your teams.
+     * We recommend using the [Add or update team membership for a user](https://docs.github.com/enterprise-server@3.7/rest/teams/members#add-or-update-team-membership-for-a-user) endpoint instead. It allows you to invite new organization members to your teams.
      *
      * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/enterprise-server@3.7/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
      *
@@ -6595,7 +6578,7 @@ export interface paths {
      * @deprecated
      * @description The "Remove team member" endpoint (described below) is deprecated.
      *
-     * We recommend using the [Remove team membership for a user](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#remove-team-membership-for-a-user) endpoint instead. It allows you to remove both active and pending memberships.
+     * We recommend using the [Remove team membership for a user](https://docs.github.com/enterprise-server@3.7/rest/teams/members#remove-team-membership-for-a-user) endpoint instead. It allows you to remove both active and pending memberships.
      *
      * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/enterprise-server@3.7/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
      *
@@ -6609,7 +6592,7 @@ export interface paths {
     /**
      * Get team membership for a user (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get team membership for a user](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#get-team-membership-for-a-user) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get team membership for a user](https://docs.github.com/enterprise-server@3.7/rest/teams/members#get-team-membership-for-a-user) endpoint.
      *
      * Team members will include the members of child teams.
      *
@@ -6618,13 +6601,13 @@ export interface paths {
      * **Note:**
      * The response contains the `state` of the membership and the member's `role`.
      *
-     * The `role` for organization owners is set to `maintainer`. For more information about `maintainer` roles, see [Create a team](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#create-a-team).
+     * The `role` for organization owners is set to `maintainer`. For more information about `maintainer` roles, see [Create a team](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#create-a-team).
      */
     get: operations["teams/get-membership-for-user-legacy"];
     /**
      * Add or update team membership for a user (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Add or update team membership for a user](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#add-or-update-team-membership-for-a-user) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Add or update team membership for a user](https://docs.github.com/enterprise-server@3.7/rest/teams/members#add-or-update-team-membership-for-a-user) endpoint.
      *
      * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/enterprise-server@3.7/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
      *
@@ -6640,7 +6623,7 @@ export interface paths {
     /**
      * Remove team membership for a user (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove team membership for a user](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#remove-team-membership-for-a-user) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove team membership for a user](https://docs.github.com/enterprise-server@3.7/rest/teams/members#remove-team-membership-for-a-user) endpoint.
      *
      * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/enterprise-server@3.7/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
      *
@@ -6654,7 +6637,7 @@ export interface paths {
     /**
      * List team projects (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List team projects`](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#list-team-projects) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List team projects`](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#list-team-projects) endpoint.
      *
      * Lists the organization projects for a team.
      */
@@ -6664,7 +6647,7 @@ export interface paths {
     /**
      * Check team permissions for a project (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Check team permissions for a project](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#check-team-permissions-for-a-project) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Check team permissions for a project](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#check-team-permissions-for-a-project) endpoint.
      *
      * Checks whether a team has `read`, `write`, or `admin` permissions for an organization project. The response includes projects inherited from a parent team.
      */
@@ -6672,7 +6655,7 @@ export interface paths {
     /**
      * Add or update team project permissions (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Add or update team project permissions](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#add-or-update-team-project-permissions) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Add or update team project permissions](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#add-or-update-team-project-permissions) endpoint.
      *
      * Adds an organization project to a team. To add a project to a team or update the team's permission on a project, the authenticated user must have `admin` permissions for the project. The project and team must be part of the same organization.
      */
@@ -6680,7 +6663,7 @@ export interface paths {
     /**
      * Remove a project from a team (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove a project from a team](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#remove-a-project-from-a-team) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove a project from a team](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#remove-a-project-from-a-team) endpoint.
      *
      * Removes an organization project from a team. An organization owner or a team maintainer can remove any project from the team. To remove a project from a team as an organization member, the authenticated user must have `read` access to both the team and project, or `admin` access to the team or project. **Note:** This endpoint removes the project from the team, but does not delete it.
      */
@@ -6690,7 +6673,7 @@ export interface paths {
     /**
      * List team repositories (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [List team repositories](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#list-team-repositories) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [List team repositories](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#list-team-repositories) endpoint.
      */
     get: operations["teams/list-repos-legacy"];
   };
@@ -6700,7 +6683,7 @@ export interface paths {
      * @deprecated
      * @description **Note**: Repositories inherited through a parent team will also be checked.
      *
-     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Check team permissions for a repository](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#check-team-permissions-for-a-repository) endpoint.
+     * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Check team permissions for a repository](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#check-team-permissions-for-a-repository) endpoint.
      *
      * You can also get information about the specified repository, including what permissions the team grants on it, by passing the following custom [media type](https://docs.github.com/enterprise-server@3.7/rest/overview/media-types/) via the `Accept` header:
      */
@@ -6708,7 +6691,7 @@ export interface paths {
     /**
      * Add or update team repository permissions (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new "[Add or update team repository permissions](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#add-or-update-team-repository-permissions)" endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new "[Add or update team repository permissions](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#add-or-update-team-repository-permissions)" endpoint.
      *
      * To add a repository to a team or update the team's permission on a repository, the authenticated user must have admin access to the repository, and must be able to see the team. The repository must be owned by the organization, or a direct fork of a repository owned by the organization. You will get a `422 Unprocessable Entity` status if you attempt to add a repository to a team that is not owned by the organization.
      *
@@ -6718,7 +6701,7 @@ export interface paths {
     /**
      * Remove a repository from a team (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove a repository from a team](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#remove-a-repository-from-a-team) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove a repository from a team](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#remove-a-repository-from-a-team) endpoint.
      *
      * If the authenticated user is an organization owner or a team maintainer, they can remove any repositories from the team. To remove a repository from a team as an organization member, the authenticated user must have admin access to the repository and must be able to see the team. NOTE: This does not delete the repository, it just removes it from the team.
      */
@@ -6728,7 +6711,7 @@ export interface paths {
     /**
      * List child teams (Legacy)
      * @deprecated
-     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List child teams`](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#list-child-teams) endpoint.
+     * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List child teams`](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#list-child-teams) endpoint.
      */
     get: operations["teams/list-child-legacy"];
   };
@@ -6822,7 +6805,7 @@ export interface paths {
      * List app installations accessible to the user access token
      * @description Lists installations of your GitHub App that the authenticated user has explicit permission (`:read`, `:write`, or `:admin`) to access.
      *
-     * You must use a [user-to-server OAuth access token](https://docs.github.com/enterprise-server@3.7/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint.
+     * You must use a [user access token](https://docs.github.com/enterprise-server@3.7/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-user-access-token-for-a-github-app), created for a user who has authorized your GitHub App, to access this endpoint.
      *
      * The authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator, and repositories that they can access through an organization membership.
      *
@@ -6837,7 +6820,7 @@ export interface paths {
      *
      * The authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator, and repositories that they can access through an organization membership.
      *
-     * You must use a [user-to-server OAuth access token](https://docs.github.com/enterprise-server@3.7/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint.
+     * You must use a [user access token](https://docs.github.com/enterprise-server@3.7/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-user-access-token-for-a-github-app), created for a user who has authorized your GitHub App, to access this endpoint.
      *
      * The access the user has to each repository is included in the hash under the `permissions` key.
      */
@@ -6867,7 +6850,7 @@ export interface paths {
      * **Note**: GitHub's REST API considers every pull request an issue, but not every issue is a pull request. For this
      * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
      * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
-     * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#list-pull-requests)" endpoint.
+     * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@3.7/rest/pulls/pulls#list-pull-requests)" endpoint.
      */
     get: operations["issues/list-for-authenticated-user"];
   };
@@ -6981,7 +6964,7 @@ export interface paths {
   "/user/public_emails": {
     /**
      * List public email addresses for the authenticated user
-     * @description Lists your publicly visible email address, which you can set with the [Set primary email visibility for the authenticated user](https://docs.github.com/enterprise-server@3.7/rest/reference/users#set-primary-email-visibility-for-the-authenticated-user) endpoint. This endpoint is accessible with the `user:email` scope.
+     * @description Lists your publicly visible email address, which you can set with the [Set primary email visibility for the authenticated user](https://docs.github.com/enterprise-server@3.7/rest/users/emails#set-primary-email-visibility-for-the-authenticated-user) endpoint. This endpoint is accessible with the `user:email` scope.
      */
     get: operations["users/list-public-emails-for-authenticated-user"];
   };
@@ -7053,14 +7036,20 @@ export interface paths {
     get: operations["activity/list-repos-starred-by-authenticated-user"];
   };
   "/user/starred/{owner}/{repo}": {
-    /** Check if a repository is starred by the authenticated user */
+    /**
+     * Check if a repository is starred by the authenticated user
+     * @description Whether the authenticated user has starred the repository.
+     */
     get: operations["activity/check-repo-is-starred-by-authenticated-user"];
     /**
      * Star a repository for the authenticated user
      * @description Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#http-verbs)."
      */
     put: operations["activity/star-repo-for-authenticated-user"];
-    /** Unstar a repository for the authenticated user */
+    /**
+     * Unstar a repository for the authenticated user
+     * @description Unstar a repository that the authenticated user has previously starred.
+     */
     delete: operations["activity/unstar-repo-for-authenticated-user"];
   };
   "/user/subscriptions": {
@@ -7095,7 +7084,7 @@ export interface paths {
      *
      * The `email` key in the following response is the publicly visible email address from your GitHub Enterprise Server [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be “public” which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub Enterprise Server. For more information, see [Authentication](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#authentication).
      *
-     * The Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see "[Emails API](https://docs.github.com/enterprise-server@3.7/rest/reference/users#emails)".
+     * The Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see "[Emails API](https://docs.github.com/enterprise-server@3.7/rest/users/emails)".
      */
     get: operations["users/get-by-username"];
   };
@@ -7184,7 +7173,7 @@ export interface paths {
      * List organizations for a user
      * @description List [public organization memberships](https://docs.github.com/enterprise-server@3.7/articles/publicizing-or-concealing-organization-membership) for the specified user.
      *
-     * This method only lists _public_ memberships, regardless of authentication. If you need to fetch all of the organization memberships (public and private) for the authenticated user, use the [List organizations for the authenticated user](https://docs.github.com/enterprise-server@3.7/rest/reference/orgs#list-organizations-for-the-authenticated-user) API instead.
+     * This method only lists _public_ memberships, regardless of authentication. If you need to fetch all of the organization memberships (public and private) for the authenticated user, use the [List organizations for the authenticated user](https://docs.github.com/enterprise-server@3.7/rest/orgs/orgs#list-organizations-for-the-authenticated-user) API instead.
      */
     get: operations["orgs/list-for-user"];
   };
@@ -7316,260 +7305,6 @@ export interface paths {
      * | `valid` | None of the above errors applied, so the signature is considered to be verified. |
      */
     get: operations["repos/compare-commits"];
-  };
-  "/enterprises/{enterprise}/code_security_and_analysis": {
-    /**
-     * Get code security and analysis features for an enterprise
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    get: operations["secret-scanning/get-security-analysis-settings-for-enterprise"];
-    /**
-     * Update code security and analysis features for an enterprise
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    patch: operations["secret-scanning/patch-security-analysis-settings-for-enterprise"];
-  };
-  "/enterprises/{enterprise}/dependabot/alerts": {
-    /**
-     * List Dependabot alerts for an enterprise
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    get: operations["dependabot/list-alerts-for-enterprise"];
-  };
-  "/enterprises/{enterprise}/{security_product}/{enablement}": {
-    /**
-     * Enable or disable a security feature
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    post: operations["secret-scanning/post-security-product-enablement-for-enterprise"];
-  };
-  "/orgs/{org}/actions/required_workflows": {
-    /**
-     * List required workflows
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    get: operations["actions/list-required-workflows"];
-    /**
-     * Create a required workflow
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    post: operations["actions/create-required-workflow"];
-  };
-  "/orgs/{org}/actions/required_workflows/{required_workflow_id}": {
-    /**
-     * Get a required workflow
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    get: operations["actions/get-required-workflow"];
-    /**
-     * Delete a required workflow
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    delete: operations["actions/delete-required-workflow"];
-    /**
-     * Update a required workflow
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    patch: operations["actions/update-required-workflow"];
-  };
-  "/orgs/{org}/actions/required_workflows/{required_workflow_id}/repositories": {
-    /**
-     * List selected repositories for a required workflow
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    get: operations["actions/list-selected-repositories-required-workflow"];
-    /**
-     * Sets repositories for a required workflow
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    put: operations["actions/set-selected-repos-to-required-workflow"];
-  };
-  "/orgs/{org}/actions/required_workflows/{required_workflow_id}/repositories/{repository_id}": {
-    /**
-     * Add a repository to a required workflow
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    put: operations["actions/add-selected-repo-to-required-workflow"];
-    /**
-     * Remove a selected repository from required workflow
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    delete: operations["actions/remove-selected-repo-from-required-workflow"];
-  };
-  "/orgs/{org}/actions/variables": {
-    /**
-     * List organization variables
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    get: operations["actions/list-org-variables"];
-    /**
-     * Create an organization variable
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    post: operations["actions/create-org-variable"];
-  };
-  "/orgs/{org}/actions/variables/{name}": {
-    /**
-     * Get an organization variable
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    get: operations["actions/get-org-variable"];
-    /**
-     * Delete an organization variable
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    delete: operations["actions/delete-org-variable"];
-    /**
-     * Update an organization variable
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    patch: operations["actions/update-org-variable"];
-  };
-  "/orgs/{org}/actions/variables/{name}/repositories": {
-    /**
-     * List selected repositories for an organization variable
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    get: operations["actions/list-selected-repos-for-org-variable"];
-    /**
-     * Set selected repositories for an organization variable
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    put: operations["actions/set-selected-repos-for-org-variable"];
-  };
-  "/orgs/{org}/actions/variables/{name}/repositories/{repository_id}": {
-    /**
-     * Add selected repository to an organization variable
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    put: operations["actions/add-selected-repo-to-org-variable"];
-    /**
-     * Remove selected repository from an organization variable
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    delete: operations["actions/remove-selected-repo-from-org-variable"];
-  };
-  "/orgs/{org}/announcement": {
-    /**
-     * Get announcement banner for organization
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    get: operations["announcement-banners/get-announcement-banner-for-org"];
-    /**
-     * Remove announcement banner from organization
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    delete: operations["announcement-banners/remove-announcement-banner-for-org"];
-    /**
-     * Set announcement banner for organization
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    patch: operations["announcement-banners/set-announcement-banner-for-org"];
-  };
-  "/orgs/{org}/dependabot/alerts": {
-    /**
-     * List Dependabot alerts for an organization
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    get: operations["dependabot/list-alerts-for-org"];
-  };
-  "/repos/{org}/{repo}/actions/required_workflows": {
-    /**
-     * List repository required workflows
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    get: operations["actions/list-repo-required-workflows"];
-  };
-  "/repos/{org}/{repo}/actions/required_workflows/{required_workflow_id_for_repo}": {
-    /**
-     * Get a required workflow entity for a repository
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    get: operations["actions/get-repo-required-workflow"];
-  };
-  "/repos/{owner}/{repo}/actions/required_workflows/{required_workflow_id_for_repo}/runs": {
-    /**
-     * List workflow runs for a required workflow
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    get: operations["actions/list-required-workflow-runs"];
-  };
-  "/repos/{owner}/{repo}/actions/variables": {
-    /**
-     * List repository variables
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    get: operations["actions/list-repo-variables"];
-    /**
-     * Create a repository variable
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    post: operations["actions/create-repo-variable"];
-  };
-  "/repos/{owner}/{repo}/actions/variables/{name}": {
-    /**
-     * Get a repository variable
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    get: operations["actions/get-repo-variable"];
-    /**
-     * Delete a repository variable
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    delete: operations["actions/delete-repo-variable"];
-    /**
-     * Update a repository variable
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    patch: operations["actions/update-repo-variable"];
-  };
-  "/repos/{owner}/{repo}/dependabot/alerts": {
-    /**
-     * List Dependabot alerts for a repository
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    get: operations["dependabot/list-alerts-for-repo"];
-  };
-  "/repos/{owner}/{repo}/dependabot/alerts/{alert_number}": {
-    /**
-     * Get a Dependabot alert
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    get: operations["dependabot/get-alert"];
-    /**
-     * Update a Dependabot alert
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    patch: operations["dependabot/update-alert"];
-  };
-  "/repositories/{repository_id}/environments/{environment_name}/variables": {
-    /**
-     * List environment variables
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    get: operations["actions/list-environment-variables"];
-    /**
-     * Create an environment variable
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    post: operations["actions/create-environment-variable"];
-  };
-  "/repositories/{repository_id}/environments/{environment_name}/variables/{name}": {
-    /**
-     * Get an environment variable
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    get: operations["actions/get-environment-variable"];
-    /**
-     * Delete an environment variable
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    delete: operations["actions/delete-environment-variable"];
-    /**
-     * Update an environment variable
-     * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-     */
-    patch: operations["actions/update-environment-variable"];
   };
 }
 
@@ -7992,7 +7727,7 @@ export interface components {
     } | null;
     /**
      * App Permissions
-     * @description The permissions granted to the user-to-server access token.
+     * @description The permissions granted to the user access token.
      * @example {
      *   "contents": "read",
      *   "issues": "read",
@@ -8684,7 +8419,7 @@ export interface components {
       repository_selection: "all" | "selected";
       /**
        * Format: uri
-       * @example https://api.github.com/installations/1/access_tokens
+       * @example https://api.github.com/app/installations/1/access_tokens
        */
       access_tokens_url: string;
       /**
@@ -8975,6 +8710,7 @@ export interface components {
       has_wiki: boolean;
       has_pages: boolean;
       /**
+       * @deprecated
        * @description Whether downloads are enabled.
        * @default true
        * @example true
@@ -9728,7 +9464,11 @@ export interface components {
      * @description State of a code scanning alert.
      * @enum {string}
      */
-    "code-scanning-alert-state": "open" | "closed" | "dismissed" | "fixed";
+    "code-scanning-alert-state-query":
+      | "open"
+      | "closed"
+      | "dismissed"
+      | "fixed";
     /** @description The security alert number. */
     readonly "alert-number": number;
     /**
@@ -9757,6 +9497,11 @@ export interface components {
      */
     readonly "alert-instances-url": string;
     /**
+     * @description State of a code scanning alert.
+     * @enum {string}
+     */
+    "code-scanning-alert-state": "open" | "dismissed" | "fixed";
+    /**
      * Format: date-time
      * @description The time that the alert was no longer detected and was considered fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
      */
@@ -9771,11 +9516,10 @@ export interface components {
      * @enum {string|null}
      */
     "code-scanning-alert-dismissed-reason":
-      | ""
+      | null
       | "false positive"
       | "won't fix"
-      | "used in tests"
-      | null;
+      | "used in tests";
     /** @description The dismissal comment associated with the dismissal of the alert. */
     "code-scanning-alert-dismissed-comment": string | null;
     "code-scanning-alert-rule": {
@@ -10648,15 +10392,13 @@ export interface components {
       /** Format: uri */
       html_url: string;
       files: {
-        [key: string]:
-          | {
-              filename?: string;
-              type?: string;
-              language?: string;
-              raw_url?: string;
-              size?: number;
-            }
-          | undefined;
+        [key: string]: {
+          filename?: string;
+          type?: string;
+          language?: string;
+          raw_url?: string;
+          size?: number;
+        };
       };
       public: boolean;
       /** Format: date-time */
@@ -10797,15 +10539,13 @@ export interface components {
         /** Format: uri */
         html_url: string;
         files: {
-          [key: string]:
-            | {
-                filename?: string;
-                type?: string;
-                language?: string;
-                raw_url?: string;
-                size?: number;
-              }
-            | undefined;
+          [key: string]: {
+            filename?: string;
+            type?: string;
+            language?: string;
+            raw_url?: string;
+            size?: number;
+          };
         };
         public: boolean;
         /** Format: date-time */
@@ -10831,17 +10571,15 @@ export interface components {
       git_push_url?: string;
       html_url?: string;
       files?: {
-        [key: string]:
-          | ({
-              filename?: string;
-              type?: string;
-              language?: string;
-              raw_url?: string;
-              size?: number;
-              truncated?: boolean;
-              content?: string;
-            } | null)
-          | undefined;
+        [key: string]: {
+          filename?: string;
+          type?: string;
+          language?: string;
+          raw_url?: string;
+          size?: number;
+          truncated?: boolean;
+          content?: string;
+        } | null;
       };
       public?: boolean;
       created_at?: string;
@@ -11064,20 +10802,6 @@ export interface components {
       /** @example 3.7.0 */
       installed_version?: string;
     };
-    "security-and-analysis": {
-      advanced_security?: {
-        /** @enum {string} */
-        status?: "enabled" | "disabled";
-      };
-      secret_scanning?: {
-        /** @enum {string} */
-        status?: "enabled" | "disabled";
-      };
-      secret_scanning_push_protection?: {
-        /** @enum {string} */
-        status?: "enabled" | "disabled";
-      };
-    } | null;
     /**
      * Minimal Repository
      * @description Minimal Repository
@@ -11287,7 +11011,6 @@ export interface components {
       allow_forking?: boolean;
       /** @example false */
       web_commit_signoff_required?: boolean;
-      security_and_analysis?: components["schemas"]["security-and-analysis"];
     };
     /**
      * Thread
@@ -11425,11 +11148,6 @@ export interface components {
        * @example https://github.com/octocat
        */
       html_url: string;
-      /**
-       * Format: date-time
-       * @example 2008-01-14T04:33:35Z
-       */
-      created_at: string;
       /** @example Organization */
       type: string;
       /** @example 100 */
@@ -11477,8 +11195,6 @@ export interface components {
       members_can_fork_private_repositories?: boolean | null;
       /** @example false */
       web_commit_signoff_required?: boolean;
-      /** Format: date-time */
-      updated_at: string;
       /**
        * @description Whether GitHub Advanced Security is enabled for new repositories and repositories transferred to this organization.
        *
@@ -11526,6 +11242,13 @@ export interface components {
        * @example false
        */
       secret_scanning_push_protection_enabled_for_new_repositories?: boolean;
+      /**
+       * Format: date-time
+       * @example 2008-01-14T04:33:35Z
+       */
+      created_at: string;
+      /** Format: date-time */
+      updated_at: string;
     };
     /**
      * Actions Cache Usage by repository
@@ -12796,6 +12519,7 @@ export interface components {
       has_wiki: boolean;
       has_pages: boolean;
       /**
+       * @deprecated
        * @description Whether downloads are enabled.
        * @default true
        * @example true
@@ -13498,6 +13222,7 @@ export interface components {
         core: components["schemas"]["rate-limit"];
         graphql?: components["schemas"]["rate-limit"];
         search: components["schemas"]["rate-limit"];
+        code_search?: components["schemas"]["rate-limit"];
         source_import?: components["schemas"]["rate-limit"];
         integration_manifest?: components["schemas"]["rate-limit"];
         code_scanning_upload?: components["schemas"]["rate-limit"];
@@ -13526,6 +13251,20 @@ export interface components {
        */
       html_url: string | null;
     };
+    "security-and-analysis": {
+      advanced_security?: {
+        /** @enum {string} */
+        status?: "enabled" | "disabled";
+      };
+      secret_scanning?: {
+        /** @enum {string} */
+        status?: "enabled" | "disabled";
+      };
+      secret_scanning_push_protection?: {
+        /** @enum {string} */
+        status?: "enabled" | "disabled";
+      };
+    } | null;
     /**
      * Full Repository
      * @description Full Repository
@@ -14238,6 +13977,7 @@ export interface components {
       url: string;
       /** @example https://github.com/github/hello-world/suites/4 */
       html_url: string;
+      /** @description Pull requests that are open with a `head_sha` or `head_branch` that matches the workflow run. The returned pull requests do not necessarily indicate pull requests that triggered the run. */
       pull_requests: components["schemas"]["pull-request-minimal"][] | null;
       /** Format: date-time */
       created_at: string;
@@ -15168,6 +14908,7 @@ export interface components {
         id: number;
       } | null;
       app: components["schemas"]["nullable-integration"];
+      /** @description Pull requests that are open with a `head_sha` or `head_branch` that matches the check. The returned pull requests do not necessarily indicate pull requests that triggered the check. */
       pull_requests: components["schemas"]["pull-request-minimal"][];
       deployment?: components["schemas"]["deployment-simple"];
     };
@@ -15283,7 +15024,6 @@ export interface components {
         | "action_required"
         | "startup_failure"
         | "stale"
-        | ""
         | null;
       /** @example https://api.github.com/repos/github/hello-world/check-suites/5 */
       url: string | null;
@@ -15576,41 +15316,6 @@ export interface components {
       };
       /** @example admin */
       role_name?: string;
-    };
-    /**
-     * Repository Invitation
-     * @description Repository invitations let you manage who you collaborate with.
-     */
-    "repository-invitation": {
-      /**
-       * @description Unique identifier of the repository invitation.
-       * @example 42
-       */
-      id: number;
-      repository: components["schemas"]["minimal-repository"];
-      invitee: components["schemas"]["nullable-simple-user"];
-      inviter: components["schemas"]["nullable-simple-user"];
-      /**
-       * @description The permission associated with the invitation.
-       * @example read
-       * @enum {string}
-       */
-      permissions: "read" | "write" | "admin" | "triage" | "maintain";
-      /**
-       * Format: date-time
-       * @example 2016-06-13T14:52:50-05:00
-       */
-      created_at: string;
-      /** @description Whether or not the invitation has expired */
-      expired?: boolean;
-      /**
-       * @description URL for the repository invitation
-       * @example https://api.github.com/user/repository-invitations/1
-       */
-      url: string;
-      /** @example https://github.com/octocat/Hello-World/invitations */
-      html_url: string;
-      node_id: string;
     };
     /**
      * Collaborator
@@ -16306,7 +16011,7 @@ export interface components {
      * @description User-defined metadata to store domain-specific information limited to 8 keys with scalar values.
      */
     metadata: {
-      [key: string]: ((string | number | boolean) | null) | undefined;
+      [key: string]: (string | number | boolean) | null;
     };
     dependency: {
       /**
@@ -16349,7 +16054,7 @@ export interface components {
       metadata?: components["schemas"]["metadata"];
       /** @description A collection of resolved package dependencies. */
       resolved?: {
-        [key: string]: components["schemas"]["dependency"] | undefined;
+        [key: string]: components["schemas"]["dependency"];
       };
     };
     /**
@@ -16407,7 +16112,7 @@ export interface components {
       metadata?: components["schemas"]["metadata"];
       /** @description A collection of package manifests, which are a collection of related dependencies declared in a file or representing a logical group of dependencies. */
       manifests?: {
-        [key: string]: components["schemas"]["manifest"] | undefined;
+        [key: string]: components["schemas"]["manifest"];
       };
       /**
        * Format: date-time
@@ -16924,6 +16629,41 @@ export interface components {
        */
       deliveries_url?: string;
       last_response: components["schemas"]["hook-response"];
+    };
+    /**
+     * Repository Invitation
+     * @description Repository invitations let you manage who you collaborate with.
+     */
+    "repository-invitation": {
+      /**
+       * @description Unique identifier of the repository invitation.
+       * @example 42
+       */
+      id: number;
+      repository: components["schemas"]["minimal-repository"];
+      invitee: components["schemas"]["nullable-simple-user"];
+      inviter: components["schemas"]["nullable-simple-user"];
+      /**
+       * @description The permission associated with the invitation.
+       * @example read
+       * @enum {string}
+       */
+      permissions: "read" | "write" | "admin" | "triage" | "maintain";
+      /**
+       * Format: date-time
+       * @example 2016-06-13T14:52:50-05:00
+       */
+      created_at: string;
+      /** @description Whether or not the invitation has expired */
+      expired?: boolean;
+      /**
+       * @description URL for the repository invitation
+       * @example https://api.github.com/user/repository-invitations/1
+       */
+      url: string;
+      /** @example https://github.com/octocat/Hello-World/invitations */
+      html_url: string;
+      node_id: string;
     };
     /**
      * Issue
@@ -17941,7 +17681,7 @@ export interface components {
      * @description Language
      */
     language: {
-      [key: string]: number | undefined;
+      [key: string]: number;
     };
     /**
      * License Content
@@ -19409,17 +19149,13 @@ export interface components {
        * @enum {string}
        */
       value:
-        | "User"
         | "user"
         | "27d9891d-2c17-4f45-a262-781a0e55c80a"
-        | "Restricted User"
-        | "restricted_user"
+        | "guest_collaborator"
         | "1ebc4a02-e56c-43a6-92a5-02ee09b90824"
-        | "Enterprise Owner"
         | "enterprise_owner"
         | "981df190-8801-4618-a08a-d91f6206c954"
         | "ba4987ab-a1c3-412a-b58c-360fc407cb10"
-        | "Billing Manager"
         | "billing_manager"
         | "0e338b8c-cc7f-498a-928d-ea3470d7e7e3"
         | "e6be2762-e4ad-4108-b72d-1bbe884a0f91";
@@ -20393,8 +20129,59 @@ export interface components {
       key: string;
     };
     /**
+     * Enterprise
+     * @description An enterprise on GitHub. Webhook payloads contain the `enterprise` property when the webhook is configured
+     * on an enterprise account or an organization that's part of an enterprise account. For more information,
+     * see "[About enterprise accounts](https://docs.github.com/enterprise-server@3.7/admin/overview/about-enterprise-accounts)."
+     */
+    "enterprise-webhooks": {
+      /** @description A short description of the enterprise. */
+      description?: string | null;
+      /**
+       * Format: uri
+       * @example https://github.com/enterprises/octo-business
+       */
+      html_url: string;
+      /**
+       * Format: uri
+       * @description The enterprise's website URL.
+       */
+      website_url?: string | null;
+      /**
+       * @description Unique identifier of the enterprise
+       * @example 42
+       */
+      id: number;
+      /** @example MDEwOlJlcG9zaXRvcnkxMjk2MjY5 */
+      node_id: string;
+      /**
+       * @description The name of the enterprise.
+       * @example Octo Business
+       */
+      name: string;
+      /**
+       * @description The slug url identifier for the enterprise.
+       * @example octo-business
+       */
+      slug: string;
+      /**
+       * Format: date-time
+       * @example 2019-01-26T19:01:12Z
+       */
+      created_at: string | null;
+      /**
+       * Format: date-time
+       * @example 2019-01-26T19:14:43Z
+       */
+      updated_at: string | null;
+      /** Format: uri */
+      avatar_url: string;
+    };
+    /**
      * Simple Installation
-     * @description The GitHub App installation. This property is included when the event is configured for and sent to a GitHub App.
+     * @description The GitHub App installation. Webhook payloads contain the `installation` property when the event is configured
+     * for and sent to a GitHub App. For more information,
+     * see "[Using webhooks with GitHub Apps](https://docs.github.com/enterprise-server@3.7/apps/creating-github-apps/registering-a-github-app/using-webhooks-with-github-apps)."
      */
     "simple-installation": {
       /**
@@ -20407,6 +20194,618 @@ export interface components {
        * @example MDQ6VXNlcjU4MzIzMQ==
        */
       node_id: string;
+    };
+    /**
+     * Organization Simple
+     * @description A GitHub organization. Webhook payloads contain the `organization` property when the webhook is configured for an
+     * organization, or when the event occurs from activity in a repository owned by an organization.
+     */
+    "organization-simple-webhooks": {
+      /** @example github */
+      login: string;
+      /** @example 1 */
+      id: number;
+      /** @example MDEyOk9yZ2FuaXphdGlvbjE= */
+      node_id: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/orgs/github
+       */
+      url: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/orgs/github/repos
+       */
+      repos_url: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/orgs/github/events
+       */
+      events_url: string;
+      /** @example https://api.github.com/orgs/github/hooks */
+      hooks_url: string;
+      /** @example https://api.github.com/orgs/github/issues */
+      issues_url: string;
+      /** @example https://api.github.com/orgs/github/members{/member} */
+      members_url: string;
+      /** @example https://api.github.com/orgs/github/public_members{/member} */
+      public_members_url: string;
+      /** @example https://github.com/images/error/octocat_happy.gif */
+      avatar_url: string;
+      /** @example A great organization */
+      description: string | null;
+    };
+    /**
+     * Repository
+     * @description The repository on GitHub where the event occurred. Webhook payloads contain the `repository` property
+     * when the event occurs from activity in a repository.
+     */
+    "repository-webhooks": {
+      /**
+       * @description Unique identifier of the repository
+       * @example 42
+       */
+      id: number;
+      /** @example MDEwOlJlcG9zaXRvcnkxMjk2MjY5 */
+      node_id: string;
+      /**
+       * @description The name of the repository.
+       * @example Team Environment
+       */
+      name: string;
+      /** @example octocat/Hello-World */
+      full_name: string;
+      license: components["schemas"]["nullable-license-simple"];
+      organization?: components["schemas"]["nullable-simple-user"];
+      forks: number;
+      permissions?: {
+        admin: boolean;
+        pull: boolean;
+        triage?: boolean;
+        push: boolean;
+        maintain?: boolean;
+      };
+      owner: components["schemas"]["simple-user"];
+      /**
+       * @description Whether the repository is private or public.
+       * @default false
+       */
+      private: boolean;
+      /**
+       * Format: uri
+       * @example https://github.com/octocat/Hello-World
+       */
+      html_url: string;
+      /** @example This your first repo! */
+      description: string | null;
+      fork: boolean;
+      /**
+       * Format: uri
+       * @example https://api.github.com/repos/octocat/Hello-World
+       */
+      url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref} */
+      archive_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/assignees{/user} */
+      assignees_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/blobs{/sha} */
+      blobs_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/branches{/branch} */
+      branches_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator} */
+      collaborators_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/comments{/number} */
+      comments_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/commits{/sha} */
+      commits_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/compare/{base}...{head} */
+      compare_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/contents/{+path} */
+      contents_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/contributors
+       */
+      contributors_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/deployments
+       */
+      deployments_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/downloads
+       */
+      downloads_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/events
+       */
+      events_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/forks
+       */
+      forks_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/commits{/sha} */
+      git_commits_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/refs{/sha} */
+      git_refs_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/tags{/sha} */
+      git_tags_url: string;
+      /** @example git:github.com/octocat/Hello-World.git */
+      git_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/issues/comments{/number} */
+      issue_comment_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/issues/events{/number} */
+      issue_events_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/issues{/number} */
+      issues_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/keys{/key_id} */
+      keys_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/labels{/name} */
+      labels_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/languages
+       */
+      languages_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/merges
+       */
+      merges_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/milestones{/number} */
+      milestones_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating} */
+      notifications_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/pulls{/number} */
+      pulls_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/releases{/id} */
+      releases_url: string;
+      /** @example git@github.com:octocat/Hello-World.git */
+      ssh_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/stargazers
+       */
+      stargazers_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/statuses/{sha} */
+      statuses_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/subscribers
+       */
+      subscribers_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/subscription
+       */
+      subscription_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/tags
+       */
+      tags_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/teams
+       */
+      teams_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/trees{/sha} */
+      trees_url: string;
+      /** @example https://github.com/octocat/Hello-World.git */
+      clone_url: string;
+      /**
+       * Format: uri
+       * @example git:git.example.com/octocat/Hello-World
+       */
+      mirror_url: string | null;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/hooks
+       */
+      hooks_url: string;
+      /**
+       * Format: uri
+       * @example https://svn.github.com/octocat/Hello-World
+       */
+      svn_url: string;
+      /**
+       * Format: uri
+       * @example https://github.com
+       */
+      homepage: string | null;
+      language: string | null;
+      /** @example 9 */
+      forks_count: number;
+      /** @example 80 */
+      stargazers_count: number;
+      /** @example 80 */
+      watchers_count: number;
+      /**
+       * @description The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0.
+       * @example 108
+       */
+      size: number;
+      /**
+       * @description The default branch of the repository.
+       * @example master
+       */
+      default_branch: string;
+      /** @example 0 */
+      open_issues_count: number;
+      /**
+       * @description Whether this repository acts as a template that can be used to generate new repositories.
+       * @default false
+       * @example true
+       */
+      is_template?: boolean;
+      topics?: string[];
+      /**
+       * @description Whether issues are enabled.
+       * @default true
+       * @example true
+       */
+      has_issues: boolean;
+      /**
+       * @description Whether projects are enabled.
+       * @default true
+       * @example true
+       */
+      has_projects: boolean;
+      /**
+       * @description Whether the wiki is enabled.
+       * @default true
+       * @example true
+       */
+      has_wiki: boolean;
+      has_pages: boolean;
+      /**
+       * @description Whether downloads are enabled.
+       * @default true
+       * @example true
+       */
+      has_downloads: boolean;
+      /**
+       * @description Whether discussions are enabled.
+       * @default false
+       * @example true
+       */
+      has_discussions?: boolean;
+      /**
+       * @description Whether the repository is archived.
+       * @default false
+       */
+      archived: boolean;
+      /** @description Returns whether or not this repository disabled. */
+      disabled: boolean;
+      /**
+       * @description The repository visibility: public, private, or internal.
+       * @default public
+       */
+      visibility?: string;
+      /**
+       * Format: date-time
+       * @example 2011-01-26T19:06:43Z
+       */
+      pushed_at: string | null;
+      /**
+       * Format: date-time
+       * @example 2011-01-26T19:01:12Z
+       */
+      created_at: string | null;
+      /**
+       * Format: date-time
+       * @example 2011-01-26T19:14:43Z
+       */
+      updated_at: string | null;
+      /**
+       * @description Whether to allow rebase merges for pull requests.
+       * @default true
+       * @example true
+       */
+      allow_rebase_merge?: boolean;
+      template_repository?: {
+        id?: number;
+        node_id?: string;
+        name?: string;
+        full_name?: string;
+        owner?: {
+          login?: string;
+          id?: number;
+          node_id?: string;
+          avatar_url?: string;
+          gravatar_id?: string;
+          url?: string;
+          html_url?: string;
+          followers_url?: string;
+          following_url?: string;
+          gists_url?: string;
+          starred_url?: string;
+          subscriptions_url?: string;
+          organizations_url?: string;
+          repos_url?: string;
+          events_url?: string;
+          received_events_url?: string;
+          type?: string;
+          site_admin?: boolean;
+        };
+        private?: boolean;
+        html_url?: string;
+        description?: string;
+        fork?: boolean;
+        url?: string;
+        archive_url?: string;
+        assignees_url?: string;
+        blobs_url?: string;
+        branches_url?: string;
+        collaborators_url?: string;
+        comments_url?: string;
+        commits_url?: string;
+        compare_url?: string;
+        contents_url?: string;
+        contributors_url?: string;
+        deployments_url?: string;
+        downloads_url?: string;
+        events_url?: string;
+        forks_url?: string;
+        git_commits_url?: string;
+        git_refs_url?: string;
+        git_tags_url?: string;
+        git_url?: string;
+        issue_comment_url?: string;
+        issue_events_url?: string;
+        issues_url?: string;
+        keys_url?: string;
+        labels_url?: string;
+        languages_url?: string;
+        merges_url?: string;
+        milestones_url?: string;
+        notifications_url?: string;
+        pulls_url?: string;
+        releases_url?: string;
+        ssh_url?: string;
+        stargazers_url?: string;
+        statuses_url?: string;
+        subscribers_url?: string;
+        subscription_url?: string;
+        tags_url?: string;
+        teams_url?: string;
+        trees_url?: string;
+        clone_url?: string;
+        mirror_url?: string;
+        hooks_url?: string;
+        svn_url?: string;
+        homepage?: string;
+        language?: string;
+        forks_count?: number;
+        stargazers_count?: number;
+        watchers_count?: number;
+        size?: number;
+        default_branch?: string;
+        open_issues_count?: number;
+        is_template?: boolean;
+        topics?: string[];
+        has_issues?: boolean;
+        has_projects?: boolean;
+        has_wiki?: boolean;
+        has_pages?: boolean;
+        has_downloads?: boolean;
+        archived?: boolean;
+        disabled?: boolean;
+        visibility?: string;
+        pushed_at?: string;
+        created_at?: string;
+        updated_at?: string;
+        permissions?: {
+          admin?: boolean;
+          maintain?: boolean;
+          push?: boolean;
+          triage?: boolean;
+          pull?: boolean;
+        };
+        allow_rebase_merge?: boolean;
+        temp_clone_token?: string;
+        allow_squash_merge?: boolean;
+        allow_auto_merge?: boolean;
+        delete_branch_on_merge?: boolean;
+        allow_update_branch?: boolean;
+        use_squash_pr_title_as_default?: boolean;
+        /**
+         * @description The default value for a squash merge commit title:
+         *
+         * - `PR_TITLE` - default to the pull request's title.
+         * - `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit).
+         * @enum {string}
+         */
+        squash_merge_commit_title?: "PR_TITLE" | "COMMIT_OR_PR_TITLE";
+        /**
+         * @description The default value for a squash merge commit message:
+         *
+         * - `PR_BODY` - default to the pull request's body.
+         * - `COMMIT_MESSAGES` - default to the branch's commit messages.
+         * - `BLANK` - default to a blank commit message.
+         * @enum {string}
+         */
+        squash_merge_commit_message?: "PR_BODY" | "COMMIT_MESSAGES" | "BLANK";
+        /**
+         * @description The default value for a merge commit title.
+         *
+         * - `PR_TITLE` - default to the pull request's title.
+         * - `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name).
+         * @enum {string}
+         */
+        merge_commit_title?: "PR_TITLE" | "MERGE_MESSAGE";
+        /**
+         * @description The default value for a merge commit message.
+         *
+         * - `PR_TITLE` - default to the pull request's title.
+         * - `PR_BODY` - default to the pull request's body.
+         * - `BLANK` - default to a blank commit message.
+         * @enum {string}
+         */
+        merge_commit_message?: "PR_BODY" | "PR_TITLE" | "BLANK";
+        allow_merge_commit?: boolean;
+        subscribers_count?: number;
+        network_count?: number;
+      } | null;
+      temp_clone_token?: string;
+      /**
+       * @description Whether to allow squash merges for pull requests.
+       * @default true
+       * @example true
+       */
+      allow_squash_merge?: boolean;
+      /**
+       * @description Whether to allow Auto-merge to be used on pull requests.
+       * @default false
+       * @example false
+       */
+      allow_auto_merge?: boolean;
+      /**
+       * @description Whether to delete head branches when pull requests are merged
+       * @default false
+       * @example false
+       */
+      delete_branch_on_merge?: boolean;
+      /**
+       * @description Whether or not a pull request head branch that is behind its base branch can always be updated even if it is not required to be up to date before merging.
+       * @default false
+       * @example false
+       */
+      allow_update_branch?: boolean;
+      /**
+       * @deprecated
+       * @description Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+       * @default false
+       */
+      use_squash_pr_title_as_default?: boolean;
+      /**
+       * @description The default value for a squash merge commit title:
+       *
+       * - `PR_TITLE` - default to the pull request's title.
+       * - `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit).
+       * @enum {string}
+       */
+      squash_merge_commit_title?: "PR_TITLE" | "COMMIT_OR_PR_TITLE";
+      /**
+       * @description The default value for a squash merge commit message:
+       *
+       * - `PR_BODY` - default to the pull request's body.
+       * - `COMMIT_MESSAGES` - default to the branch's commit messages.
+       * - `BLANK` - default to a blank commit message.
+       * @enum {string}
+       */
+      squash_merge_commit_message?: "PR_BODY" | "COMMIT_MESSAGES" | "BLANK";
+      /**
+       * @description The default value for a merge commit title.
+       *
+       * - `PR_TITLE` - default to the pull request's title.
+       * - `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name).
+       * @enum {string}
+       */
+      merge_commit_title?: "PR_TITLE" | "MERGE_MESSAGE";
+      /**
+       * @description The default value for a merge commit message.
+       *
+       * - `PR_TITLE` - default to the pull request's title.
+       * - `PR_BODY` - default to the pull request's body.
+       * - `BLANK` - default to a blank commit message.
+       * @enum {string}
+       */
+      merge_commit_message?: "PR_BODY" | "PR_TITLE" | "BLANK";
+      /**
+       * @description Whether to allow merge commits for pull requests.
+       * @default true
+       * @example true
+       */
+      allow_merge_commit?: boolean;
+      /** @description Whether to allow forking this repo */
+      allow_forking?: boolean;
+      /**
+       * @description Whether to require contributors to sign off on web-based commits
+       * @default false
+       */
+      web_commit_signoff_required?: boolean;
+      subscribers_count?: number;
+      network_count?: number;
+      open_issues: number;
+      watchers: number;
+      master_branch?: string;
+      /** @example "2020-07-09T00:17:42Z" */
+      starred_at?: string;
+      /** @description Whether anonymous git access is enabled for this repository */
+      anonymous_access_enabled?: boolean;
+    };
+    /**
+     * Simple User
+     * @description The GitHub user that triggered the event. This property is included in every webhook payload.
+     */
+    "simple-user-webhooks": {
+      name?: string | null;
+      email?: string | null;
+      /** @example octocat */
+      login: string;
+      /** @example 1 */
+      id: number;
+      /** @example MDQ6VXNlcjE= */
+      node_id: string;
+      /**
+       * Format: uri
+       * @example https://github.com/images/error/octocat_happy.gif
+       */
+      avatar_url: string;
+      /** @example 41d064eb2195891e12d0413f63227ea7 */
+      gravatar_id: string | null;
+      /**
+       * Format: uri
+       * @example https://api.github.com/users/octocat
+       */
+      url: string;
+      /**
+       * Format: uri
+       * @example https://github.com/octocat
+       */
+      html_url: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/users/octocat/followers
+       */
+      followers_url: string;
+      /** @example https://api.github.com/users/octocat/following{/other_user} */
+      following_url: string;
+      /** @example https://api.github.com/users/octocat/gists{/gist_id} */
+      gists_url: string;
+      /** @example https://api.github.com/users/octocat/starred{/owner}{/repo} */
+      starred_url: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/users/octocat/subscriptions
+       */
+      subscriptions_url: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/users/octocat/orgs
+       */
+      organizations_url: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/users/octocat/repos
+       */
+      repos_url: string;
+      /** @example https://api.github.com/users/octocat/events{/privacy} */
+      events_url: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/users/octocat/received_events
+       */
+      received_events_url: string;
+      /** @example User */
+      type: string;
+      site_admin: boolean;
+      /** @example "2020-07-09T00:17:55Z" */
+      starred_at?: string;
     };
     /** @description A suite of checks performed on the code of a given code change */
     "simple-check-suite": {
@@ -20819,6 +21218,509 @@ export interface components {
       } | null;
     };
     /**
+     * Repository
+     * @description The repository on GitHub where the event occurred. Webhook payloads contain the `repository` property
+     * when the event occurs from activity in a repository.
+     */
+    "nullable-repository-webhooks": {
+      /**
+       * @description Unique identifier of the repository
+       * @example 42
+       */
+      id: number;
+      /** @example MDEwOlJlcG9zaXRvcnkxMjk2MjY5 */
+      node_id: string;
+      /**
+       * @description The name of the repository.
+       * @example Team Environment
+       */
+      name: string;
+      /** @example octocat/Hello-World */
+      full_name: string;
+      license: components["schemas"]["nullable-license-simple"];
+      organization?: components["schemas"]["nullable-simple-user"];
+      forks: number;
+      permissions?: {
+        admin: boolean;
+        pull: boolean;
+        triage?: boolean;
+        push: boolean;
+        maintain?: boolean;
+      };
+      owner: components["schemas"]["simple-user"];
+      /**
+       * @description Whether the repository is private or public.
+       * @default false
+       */
+      private: boolean;
+      /**
+       * Format: uri
+       * @example https://github.com/octocat/Hello-World
+       */
+      html_url: string;
+      /** @example This your first repo! */
+      description: string | null;
+      fork: boolean;
+      /**
+       * Format: uri
+       * @example https://api.github.com/repos/octocat/Hello-World
+       */
+      url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref} */
+      archive_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/assignees{/user} */
+      assignees_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/blobs{/sha} */
+      blobs_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/branches{/branch} */
+      branches_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator} */
+      collaborators_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/comments{/number} */
+      comments_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/commits{/sha} */
+      commits_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/compare/{base}...{head} */
+      compare_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/contents/{+path} */
+      contents_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/contributors
+       */
+      contributors_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/deployments
+       */
+      deployments_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/downloads
+       */
+      downloads_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/events
+       */
+      events_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/forks
+       */
+      forks_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/commits{/sha} */
+      git_commits_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/refs{/sha} */
+      git_refs_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/tags{/sha} */
+      git_tags_url: string;
+      /** @example git:github.com/octocat/Hello-World.git */
+      git_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/issues/comments{/number} */
+      issue_comment_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/issues/events{/number} */
+      issue_events_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/issues{/number} */
+      issues_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/keys{/key_id} */
+      keys_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/labels{/name} */
+      labels_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/languages
+       */
+      languages_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/merges
+       */
+      merges_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/milestones{/number} */
+      milestones_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating} */
+      notifications_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/pulls{/number} */
+      pulls_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/releases{/id} */
+      releases_url: string;
+      /** @example git@github.com:octocat/Hello-World.git */
+      ssh_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/stargazers
+       */
+      stargazers_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/statuses/{sha} */
+      statuses_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/subscribers
+       */
+      subscribers_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/subscription
+       */
+      subscription_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/tags
+       */
+      tags_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/teams
+       */
+      teams_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/trees{/sha} */
+      trees_url: string;
+      /** @example https://github.com/octocat/Hello-World.git */
+      clone_url: string;
+      /**
+       * Format: uri
+       * @example git:git.example.com/octocat/Hello-World
+       */
+      mirror_url: string | null;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/hooks
+       */
+      hooks_url: string;
+      /**
+       * Format: uri
+       * @example https://svn.github.com/octocat/Hello-World
+       */
+      svn_url: string;
+      /**
+       * Format: uri
+       * @example https://github.com
+       */
+      homepage: string | null;
+      language: string | null;
+      /** @example 9 */
+      forks_count: number;
+      /** @example 80 */
+      stargazers_count: number;
+      /** @example 80 */
+      watchers_count: number;
+      /**
+       * @description The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0.
+       * @example 108
+       */
+      size: number;
+      /**
+       * @description The default branch of the repository.
+       * @example master
+       */
+      default_branch: string;
+      /** @example 0 */
+      open_issues_count: number;
+      /**
+       * @description Whether this repository acts as a template that can be used to generate new repositories.
+       * @default false
+       * @example true
+       */
+      is_template?: boolean;
+      topics?: string[];
+      /**
+       * @description Whether issues are enabled.
+       * @default true
+       * @example true
+       */
+      has_issues: boolean;
+      /**
+       * @description Whether projects are enabled.
+       * @default true
+       * @example true
+       */
+      has_projects: boolean;
+      /**
+       * @description Whether the wiki is enabled.
+       * @default true
+       * @example true
+       */
+      has_wiki: boolean;
+      has_pages: boolean;
+      /**
+       * @description Whether downloads are enabled.
+       * @default true
+       * @example true
+       */
+      has_downloads: boolean;
+      /**
+       * @description Whether discussions are enabled.
+       * @default false
+       * @example true
+       */
+      has_discussions?: boolean;
+      /**
+       * @description Whether the repository is archived.
+       * @default false
+       */
+      archived: boolean;
+      /** @description Returns whether or not this repository disabled. */
+      disabled: boolean;
+      /**
+       * @description The repository visibility: public, private, or internal.
+       * @default public
+       */
+      visibility?: string;
+      /**
+       * Format: date-time
+       * @example 2011-01-26T19:06:43Z
+       */
+      pushed_at: string | null;
+      /**
+       * Format: date-time
+       * @example 2011-01-26T19:01:12Z
+       */
+      created_at: string | null;
+      /**
+       * Format: date-time
+       * @example 2011-01-26T19:14:43Z
+       */
+      updated_at: string | null;
+      /**
+       * @description Whether to allow rebase merges for pull requests.
+       * @default true
+       * @example true
+       */
+      allow_rebase_merge?: boolean;
+      template_repository?: {
+        id?: number;
+        node_id?: string;
+        name?: string;
+        full_name?: string;
+        owner?: {
+          login?: string;
+          id?: number;
+          node_id?: string;
+          avatar_url?: string;
+          gravatar_id?: string;
+          url?: string;
+          html_url?: string;
+          followers_url?: string;
+          following_url?: string;
+          gists_url?: string;
+          starred_url?: string;
+          subscriptions_url?: string;
+          organizations_url?: string;
+          repos_url?: string;
+          events_url?: string;
+          received_events_url?: string;
+          type?: string;
+          site_admin?: boolean;
+        };
+        private?: boolean;
+        html_url?: string;
+        description?: string;
+        fork?: boolean;
+        url?: string;
+        archive_url?: string;
+        assignees_url?: string;
+        blobs_url?: string;
+        branches_url?: string;
+        collaborators_url?: string;
+        comments_url?: string;
+        commits_url?: string;
+        compare_url?: string;
+        contents_url?: string;
+        contributors_url?: string;
+        deployments_url?: string;
+        downloads_url?: string;
+        events_url?: string;
+        forks_url?: string;
+        git_commits_url?: string;
+        git_refs_url?: string;
+        git_tags_url?: string;
+        git_url?: string;
+        issue_comment_url?: string;
+        issue_events_url?: string;
+        issues_url?: string;
+        keys_url?: string;
+        labels_url?: string;
+        languages_url?: string;
+        merges_url?: string;
+        milestones_url?: string;
+        notifications_url?: string;
+        pulls_url?: string;
+        releases_url?: string;
+        ssh_url?: string;
+        stargazers_url?: string;
+        statuses_url?: string;
+        subscribers_url?: string;
+        subscription_url?: string;
+        tags_url?: string;
+        teams_url?: string;
+        trees_url?: string;
+        clone_url?: string;
+        mirror_url?: string;
+        hooks_url?: string;
+        svn_url?: string;
+        homepage?: string;
+        language?: string;
+        forks_count?: number;
+        stargazers_count?: number;
+        watchers_count?: number;
+        size?: number;
+        default_branch?: string;
+        open_issues_count?: number;
+        is_template?: boolean;
+        topics?: string[];
+        has_issues?: boolean;
+        has_projects?: boolean;
+        has_wiki?: boolean;
+        has_pages?: boolean;
+        has_downloads?: boolean;
+        archived?: boolean;
+        disabled?: boolean;
+        visibility?: string;
+        pushed_at?: string;
+        created_at?: string;
+        updated_at?: string;
+        permissions?: {
+          admin?: boolean;
+          maintain?: boolean;
+          push?: boolean;
+          triage?: boolean;
+          pull?: boolean;
+        };
+        allow_rebase_merge?: boolean;
+        temp_clone_token?: string;
+        allow_squash_merge?: boolean;
+        allow_auto_merge?: boolean;
+        delete_branch_on_merge?: boolean;
+        allow_update_branch?: boolean;
+        use_squash_pr_title_as_default?: boolean;
+        /**
+         * @description The default value for a squash merge commit title:
+         *
+         * - `PR_TITLE` - default to the pull request's title.
+         * - `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit).
+         * @enum {string}
+         */
+        squash_merge_commit_title?: "PR_TITLE" | "COMMIT_OR_PR_TITLE";
+        /**
+         * @description The default value for a squash merge commit message:
+         *
+         * - `PR_BODY` - default to the pull request's body.
+         * - `COMMIT_MESSAGES` - default to the branch's commit messages.
+         * - `BLANK` - default to a blank commit message.
+         * @enum {string}
+         */
+        squash_merge_commit_message?: "PR_BODY" | "COMMIT_MESSAGES" | "BLANK";
+        /**
+         * @description The default value for a merge commit title.
+         *
+         * - `PR_TITLE` - default to the pull request's title.
+         * - `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name).
+         * @enum {string}
+         */
+        merge_commit_title?: "PR_TITLE" | "MERGE_MESSAGE";
+        /**
+         * @description The default value for a merge commit message.
+         *
+         * - `PR_TITLE` - default to the pull request's title.
+         * - `PR_BODY` - default to the pull request's body.
+         * - `BLANK` - default to a blank commit message.
+         * @enum {string}
+         */
+        merge_commit_message?: "PR_BODY" | "PR_TITLE" | "BLANK";
+        allow_merge_commit?: boolean;
+        subscribers_count?: number;
+        network_count?: number;
+      } | null;
+      temp_clone_token?: string;
+      /**
+       * @description Whether to allow squash merges for pull requests.
+       * @default true
+       * @example true
+       */
+      allow_squash_merge?: boolean;
+      /**
+       * @description Whether to allow Auto-merge to be used on pull requests.
+       * @default false
+       * @example false
+       */
+      allow_auto_merge?: boolean;
+      /**
+       * @description Whether to delete head branches when pull requests are merged
+       * @default false
+       * @example false
+       */
+      delete_branch_on_merge?: boolean;
+      /**
+       * @description Whether or not a pull request head branch that is behind its base branch can always be updated even if it is not required to be up to date before merging.
+       * @default false
+       * @example false
+       */
+      allow_update_branch?: boolean;
+      /**
+       * @deprecated
+       * @description Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
+       * @default false
+       */
+      use_squash_pr_title_as_default?: boolean;
+      /**
+       * @description The default value for a squash merge commit title:
+       *
+       * - `PR_TITLE` - default to the pull request's title.
+       * - `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit).
+       * @enum {string}
+       */
+      squash_merge_commit_title?: "PR_TITLE" | "COMMIT_OR_PR_TITLE";
+      /**
+       * @description The default value for a squash merge commit message:
+       *
+       * - `PR_BODY` - default to the pull request's body.
+       * - `COMMIT_MESSAGES` - default to the branch's commit messages.
+       * - `BLANK` - default to a blank commit message.
+       * @enum {string}
+       */
+      squash_merge_commit_message?: "PR_BODY" | "COMMIT_MESSAGES" | "BLANK";
+      /**
+       * @description The default value for a merge commit title.
+       *
+       * - `PR_TITLE` - default to the pull request's title.
+       * - `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name).
+       * @enum {string}
+       */
+      merge_commit_title?: "PR_TITLE" | "MERGE_MESSAGE";
+      /**
+       * @description The default value for a merge commit message.
+       *
+       * - `PR_TITLE` - default to the pull request's title.
+       * - `PR_BODY` - default to the pull request's body.
+       * - `BLANK` - default to a blank commit message.
+       * @enum {string}
+       */
+      merge_commit_message?: "PR_BODY" | "PR_TITLE" | "BLANK";
+      /**
+       * @description Whether to allow merge commits for pull requests.
+       * @default true
+       * @example true
+       */
+      allow_merge_commit?: boolean;
+      /** @description Whether to allow forking this repo */
+      allow_forking?: boolean;
+      /**
+       * @description Whether to require contributors to sign off on web-based commits
+       * @default false
+       */
+      web_commit_signoff_required?: boolean;
+      subscribers_count?: number;
+      network_count?: number;
+      open_issues: number;
+      watchers: number;
+      master_branch?: string;
+      /** @example "2020-07-09T00:17:42Z" */
+      starred_at?: string;
+      /** @description Whether anonymous git access is enabled for this repository */
+      anonymous_access_enabled?: boolean;
+    } | null;
+    /**
      * Projects v2 Item Content Type
      * @description The type of content tracked in a project item
      * @enum {string}
@@ -20851,14 +21753,55 @@ export interface components {
        */
       archived_at: string | null;
     };
+    /**
+     * @description The reason for resolving the alert.
+     * @enum {string|null}
+     */
+    "secret-scanning-alert-resolution-webhook":
+      | "false_positive"
+      | "wont_fix"
+      | "revoked"
+      | "used_in_tests"
+      | "pattern_deleted"
+      | "pattern_edited"
+      | null;
+    "secret-scanning-alert-webhook": {
+      number?: components["schemas"]["alert-number"];
+      created_at?: components["schemas"]["alert-created-at"];
+      updated_at?: components["schemas"]["nullable-alert-updated-at"];
+      url?: components["schemas"]["alert-url"];
+      html_url?: components["schemas"]["alert-html-url"];
+      /**
+       * Format: uri
+       * @description The REST API URL of the code locations for this alert.
+       */
+      locations_url?: string;
+      resolution?: components["schemas"]["secret-scanning-alert-resolution-webhook"];
+      /**
+       * Format: date-time
+       * @description The time that the alert was resolved in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+       */
+      resolved_at?: string | null;
+      resolved_by?: components["schemas"]["nullable-simple-user"];
+      /** @description The type of secret that secret scanning detected. */
+      secret_type?: string;
+      /** @description Whether push protection was bypassed for the detected secret. */
+      push_protection_bypassed?: boolean | null;
+      push_protection_bypassed_by?: components["schemas"]["nullable-simple-user"];
+      /**
+       * Format: date-time
+       * @description The time that push protection was bypassed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+       */
+      push_protection_bypassed_at?: string | null;
+    };
     /** branch protection rule created event */
     "webhook-branch-protection-rule-created": {
       /** @enum {string} */
       action: "created";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
       /**
        * branch protection rule
        * @description The branch protection rule. Includes a `name` and all the [branch protection settings](https://docs.github.com/enterprise-server@3.7/github/administering-a-repository/defining-the-mergeability-of-pull-requests/about-protected-branches#about-branch-protection-settings) applied to branches that match the name. Binary settings are boolean. Multi-level configurations are one of `off`, `non_admins`, or `everyone`. Actor and build lists are arrays of strings.
@@ -20919,16 +21862,16 @@ export interface components {
         /** Format: date-time */
         updated_at: string;
       };
-      sender: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** branch protection rule deleted event */
     "webhook-branch-protection-rule-deleted": {
       /** @enum {string} */
       action: "deleted";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
       /**
        * branch protection rule
        * @description The branch protection rule. Includes a `name` and all the [branch protection settings](https://docs.github.com/enterprise-server@3.7/github/administering-a-repository/defining-the-mergeability-of-pull-requests/about-protected-branches#about-branch-protection-settings) applied to branches that match the name. Binary settings are boolean. Multi-level configurations are one of `off`, `non_admins`, or `everyone`. Actor and build lists are arrays of strings.
@@ -20989,7 +21932,7 @@ export interface components {
         /** Format: date-time */
         updated_at: string;
       };
-      sender: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** branch protection rule edited event */
     "webhook-branch-protection-rule-edited": {
@@ -21021,10 +21964,10 @@ export interface components {
           from: "off" | "non_admins" | "everyone";
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
       /**
        * branch protection rule
        * @description The branch protection rule. Includes a `name` and all the [branch protection settings](https://docs.github.com/enterprise-server@3.7/github/administering-a-repository/defining-the-mergeability-of-pull-requests/about-protected-branches#about-branch-protection-settings) applied to branches that match the name. Binary settings are boolean. Multi-level configurations are one of `off`, `non_admins`, or `everyone`. Actor and build lists are arrays of strings.
@@ -21085,18 +22028,18 @@ export interface components {
         /** Format: date-time */
         updated_at: string;
       };
-      sender: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     "webhook-cache-sync": {
       after: string;
       before: string;
       cache_location: string;
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       ref: string;
-      repository?: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** Check Run Completed Event */
     "webhook-check-run-completed": {
@@ -21104,9 +22047,9 @@ export interface components {
       action?: "completed";
       check_run: components["schemas"]["check-run-with-simple-check-suite"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /**
      * Check Run Completed Event
@@ -21122,9 +22065,9 @@ export interface components {
       action?: "created";
       check_run: components["schemas"]["check-run-with-simple-check-suite"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /**
      * Check Run Created Event
@@ -21140,14 +22083,14 @@ export interface components {
       action: "requested_action";
       check_run: components["schemas"]["check-run-with-simple-check-suite"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
       /** @description The action requested by the user. */
       requested_action?: {
         /** @description The integrator reference of the action requested by the user. */
         identifier?: string;
       };
-      sender: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /**
      * Check Run Requested Action Event
@@ -21163,9 +22106,9 @@ export interface components {
       action?: "rerequested";
       check_run: components["schemas"]["check-run-with-simple-check-suite"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /**
      * Check Run Re-Requested Event
@@ -21179,8 +22122,7 @@ export interface components {
     "webhook-check-suite-completed": {
       /** @enum {string} */
       action: "completed";
-      actions_meta?: Record<string, unknown> | null;
-      /** @description The [check_suite](https://docs.github.com/enterprise-server@3.7/rest/reference/checks#suites). */
+      /** @description The [check_suite](https://docs.github.com/enterprise-server@3.7/rest/checks/suites#get-a-check-suite). */
       check_suite: {
         after: string | null;
         /**
@@ -21385,10 +22327,9 @@ export interface components {
           | "timed_out"
           | "action_required"
           | "stale"
-          | ""
+          | null
           | "skipped"
-          | "startup_failure"
-          | null;
+          | "startup_failure";
         /** Format: date-time */
         created_at: string;
         /** @description The head branch name the changes are on. */
@@ -21471,9 +22412,8 @@ export interface components {
           | "in_progress"
           | "completed"
           | "queued"
-          | ""
-          | "pending"
-          | null;
+          | null
+          | "pending";
         /** Format: date-time */
         updated_at: string;
         /**
@@ -21482,18 +22422,17 @@ export interface components {
          */
         url: string;
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** check_suite requested event */
     "webhook-check-suite-requested": {
       /** @enum {string} */
       action: "requested";
-      actions_meta?: Record<string, unknown> | null;
-      /** @description The [check_suite](https://docs.github.com/enterprise-server@3.7/rest/reference/checks#suites). */
+      /** @description The [check_suite](https://docs.github.com/enterprise-server@3.7/rest/checks/suites#get-a-check-suite). */
       check_suite: {
         after: string | null;
         /**
@@ -21699,9 +22638,8 @@ export interface components {
           | "timed_out"
           | "action_required"
           | "stale"
-          | ""
-          | "skipped"
-          | null;
+          | null
+          | "skipped";
         /** Format: date-time */
         created_at: string;
         /** @description The head branch name the changes are on. */
@@ -21779,13 +22717,7 @@ export interface components {
          * @description The summary status for all check runs that are part of the check suite. Can be `requested`, `in_progress`, or `completed`.
          * @enum {string|null}
          */
-        status:
-          | "requested"
-          | "in_progress"
-          | "completed"
-          | "queued"
-          | ""
-          | null;
+        status: "requested" | "in_progress" | "completed" | "queued" | null;
         /** Format: date-time */
         updated_at: string;
         /**
@@ -21794,23 +22726,17 @@ export interface components {
          */
         url: string;
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** check_suite rerequested event */
     "webhook-check-suite-rerequested": {
       /** @enum {string} */
       action: "rerequested";
-      actions_meta?: {
-        rerun_info?: {
-          plan_id?: string;
-          job_ids?: string[];
-        };
-      } | null;
-      /** @description The [check_suite](https://docs.github.com/enterprise-server@3.7/rest/reference/checks#suites). */
+      /** @description The [check_suite](https://docs.github.com/enterprise-server@3.7/rest/checks/suites#get-a-check-suite). */
       check_suite: {
         after: string | null;
         /**
@@ -22011,7 +22937,6 @@ export interface components {
           | "timed_out"
           | "action_required"
           | "stale"
-          | ""
           | null;
         /** Format: date-time */
         created_at: string;
@@ -22090,13 +23015,7 @@ export interface components {
          * @description The summary status for all check runs that are part of the check suite. Can be `requested`, `in_progress`, or `completed`.
          * @enum {string|null}
          */
-        status:
-          | "requested"
-          | "in_progress"
-          | "completed"
-          | "queued"
-          | ""
-          | null;
+        status: "requested" | "in_progress" | "completed" | "queued" | null;
         /** Format: date-time */
         updated_at: string;
         /**
@@ -22105,11 +23024,11 @@ export interface components {
          */
         url: string;
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** code_scanning_alert appeared_in_branch event */
     "webhook-code-scanning-alert-appeared-in-branch": {
@@ -22172,7 +23091,6 @@ export interface components {
           | "false positive"
           | "won't fix"
           | "used in tests"
-          | ""
           | null;
         /**
          * Format: uri
@@ -22218,7 +23136,7 @@ export interface components {
            * @description The severity of the alert.
            * @enum {string|null}
            */
-          severity: "none" | "note" | "warning" | "error" | "" | null;
+          severity: "none" | "note" | "warning" | "error" | null;
         };
         /**
          * @description State of a code scanning alert.
@@ -22236,13 +23154,13 @@ export interface components {
       };
       /** @description The commit SHA of the code scanning alert. When the action is `reopened_by_user` or `closed_by_user`, the event was triggered by the `sender` and this value will be empty. */
       commit_oid: string;
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** @description The Git reference of the code scanning alert. When the action is `reopened_by_user` or `closed_by_user`, the event was triggered by the `sender` and this value will be empty. */
       ref: string;
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** code_scanning_alert closed_by_user event */
     "webhook-code-scanning-alert-closed-by-user": {
@@ -22305,7 +23223,6 @@ export interface components {
           | "false positive"
           | "won't fix"
           | "used in tests"
-          | ""
           | null;
         /**
          * Format: uri
@@ -22356,7 +23273,7 @@ export interface components {
            * @description The severity of the alert.
            * @enum {string|null}
            */
-          severity: "none" | "note" | "warning" | "error" | "" | null;
+          severity: "none" | "note" | "warning" | "error" | null;
           tags?: string[] | null;
         };
         /**
@@ -22376,13 +23293,13 @@ export interface components {
       };
       /** @description The commit SHA of the code scanning alert. When the action is `reopened_by_user` or `closed_by_user`, the event was triggered by the `sender` and this value will be empty. */
       commit_oid: string;
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** @description The Git reference of the code scanning alert. When the action is `reopened_by_user` or `closed_by_user`, the event was triggered by the `sender` and this value will be empty. */
       ref: string;
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** code_scanning_alert created event */
     "webhook-code-scanning-alert-created": {
@@ -22452,7 +23369,7 @@ export interface components {
            * @description The severity of the alert.
            * @enum {string|null}
            */
-          severity: "none" | "note" | "warning" | "error" | "" | null;
+          severity: "none" | "note" | "warning" | "error" | null;
           tags?: string[] | null;
         };
         /**
@@ -22473,13 +23390,13 @@ export interface components {
       };
       /** @description The commit SHA of the code scanning alert. When the action is `reopened_by_user` or `closed_by_user`, the event was triggered by the `sender` and this value will be empty. */
       commit_oid: string;
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** @description The Git reference of the code scanning alert. When the action is `reopened_by_user` or `closed_by_user`, the event was triggered by the `sender` and this value will be empty. */
       ref: string;
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** code_scanning_alert fixed event */
     "webhook-code-scanning-alert-fixed": {
@@ -22542,7 +23459,6 @@ export interface components {
           | "false positive"
           | "won't fix"
           | "used in tests"
-          | ""
           | null;
         /**
          * Format: uri
@@ -22595,7 +23511,7 @@ export interface components {
            * @description The severity of the alert.
            * @enum {string|null}
            */
-          severity: "none" | "note" | "warning" | "error" | "" | null;
+          severity: "none" | "note" | "warning" | "error" | null;
           tags?: string[] | null;
         };
         /**
@@ -22615,13 +23531,13 @@ export interface components {
       };
       /** @description The commit SHA of the code scanning alert. When the action is `reopened_by_user` or `closed_by_user`, the event was triggered by the `sender` and this value will be empty. */
       commit_oid: string;
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** @description The Git reference of the code scanning alert. When the action is `reopened_by_user` or `closed_by_user`, the event was triggered by the `sender` and this value will be empty. */
       ref: string;
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** code_scanning_alert reopened event */
     "webhook-code-scanning-alert-reopened": {
@@ -22688,7 +23604,7 @@ export interface components {
            * @description The severity of the alert.
            * @enum {string|null}
            */
-          severity: "none" | "note" | "warning" | "error" | "" | null;
+          severity: "none" | "note" | "warning" | "error" | null;
           tags?: string[] | null;
         };
         /**
@@ -22708,13 +23624,13 @@ export interface components {
       } | null;
       /** @description The commit SHA of the code scanning alert. When the action is `reopened_by_user` or `closed_by_user`, the event was triggered by the `sender` and this value will be empty. */
       commit_oid: string | null;
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** @description The Git reference of the code scanning alert. When the action is `reopened_by_user` or `closed_by_user`, the event was triggered by the `sender` and this value will be empty. */
       ref: string | null;
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** code_scanning_alert reopened_by_user event */
     "webhook-code-scanning-alert-reopened-by-user": {
@@ -22776,7 +23692,7 @@ export interface components {
            * @description The severity of the alert.
            * @enum {string|null}
            */
-          severity: "none" | "note" | "warning" | "error" | "" | null;
+          severity: "none" | "note" | "warning" | "error" | null;
         };
         /**
          * @description State of a code scanning alert.
@@ -22794,13 +23710,13 @@ export interface components {
       };
       /** @description The commit SHA of the code scanning alert. When the action is `reopened_by_user` or `closed_by_user`, the event was triggered by the `sender` and this value will be empty. */
       commit_oid: string;
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** @description The Git reference of the code scanning alert. When the action is `reopened_by_user` or `closed_by_user`, the event was triggered by the `sender` and this value will be empty. */
       ref: string;
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** commit_comment created event */
     "webhook-commit-comment-created": {
@@ -22809,7 +23725,7 @@ export interface components {
        * @enum {string}
        */
       action: "created";
-      /** @description The [commit comment](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#get-a-commit-comment) resource. */
+      /** @description The [commit comment](https://docs.github.com/enterprise-server@3.7/rest/commits/comments#get-a-commit-comment) resource. */
       comment: {
         /**
          * AuthorAssociation
@@ -22897,49 +23813,49 @@ export interface components {
           url?: string;
         } | null;
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** create event */
     "webhook-create": {
       /** @description The repository's current description. */
       description: string | null;
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** @description The name of the repository's default branch (usually `main`). */
       master_branch: string;
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** @description The pusher type for the event. Can be either `user` or a deploy key. */
       pusher_type: string;
-      /** @description The [`git ref`](https://docs.github.com/enterprise-server@3.7/rest/reference/git#get-a-reference) resource. */
+      /** @description The [`git ref`](https://docs.github.com/enterprise-server@3.7/rest/git/refs#get-a-reference) resource. */
       ref: string;
       /**
        * @description The type of Git ref object created in the repository.
        * @enum {string}
        */
       ref_type: "tag" | "branch";
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** delete event */
     "webhook-delete": {
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** @description The pusher type for the event. Can be either `user` or a deploy key. */
       pusher_type: string;
-      /** @description The [`git ref`](https://docs.github.com/enterprise-server@3.7/rest/reference/git#get-a-reference) resource. */
+      /** @description The [`git ref`](https://docs.github.com/enterprise-server@3.7/rest/git/refs#get-a-reference) resource. */
       ref: string;
       /**
        * @description The type of Git ref object deleted in the repository.
        * @enum {string}
        */
       ref_type: "tag" | "branch";
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** Dependabot alert created event */
     "webhook-dependabot-alert-created": {
@@ -22947,10 +23863,10 @@ export interface components {
       action: "created";
       alert: components["schemas"]["dependabot-alert"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      enterprise?: components["schemas"]["enterprise"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** Dependabot alert dismissed event */
     "webhook-dependabot-alert-dismissed": {
@@ -22958,10 +23874,10 @@ export interface components {
       action: "dismissed";
       alert: components["schemas"]["dependabot-alert"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      enterprise?: components["schemas"]["enterprise"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** Dependabot alert fixed event */
     "webhook-dependabot-alert-fixed": {
@@ -22969,10 +23885,10 @@ export interface components {
       action: "fixed";
       alert: components["schemas"]["dependabot-alert"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      enterprise?: components["schemas"]["enterprise"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** Dependabot alert reintroduced event */
     "webhook-dependabot-alert-reintroduced": {
@@ -22980,10 +23896,10 @@ export interface components {
       action: "reintroduced";
       alert: components["schemas"]["dependabot-alert"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      enterprise?: components["schemas"]["enterprise"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** Dependabot alert reopened event */
     "webhook-dependabot-alert-reopened": {
@@ -22991,18 +23907,18 @@ export interface components {
       action: "reopened";
       alert: components["schemas"]["dependabot-alert"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      enterprise?: components["schemas"]["enterprise"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** deploy_key created event */
     "webhook-deploy-key-created": {
       /** @enum {string} */
       action: "created";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      /** @description The [`deploy key`](https://docs.github.com/enterprise-server@3.7/rest/reference/deployments#get-a-deploy-key) resource. */
+      /** @description The [`deploy key`](https://docs.github.com/enterprise-server@3.7/rest/deploy-keys/deploy-keys#get-a-deploy-key) resource. */
       key: {
         added_by?: string | null;
         created_at: string;
@@ -23015,17 +23931,17 @@ export interface components {
         url: string;
         verified: boolean;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** deploy_key deleted event */
     "webhook-deploy-key-deleted": {
       /** @enum {string} */
       action: "deleted";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      /** @description The [`deploy key`](https://docs.github.com/enterprise-server@3.7/rest/reference/deployments#get-a-deploy-key) resource. */
+      /** @description The [`deploy key`](https://docs.github.com/enterprise-server@3.7/rest/deploy-keys/deploy-keys#get-a-deploy-key) resource. */
       key: {
         added_by?: string | null;
         created_at: string;
@@ -23038,9 +23954,9 @@ export interface components {
         url: string;
         verified: boolean;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** deployment created event */
     "webhook-deployment-created": {
@@ -23048,7 +23964,7 @@ export interface components {
       action: "created";
       /**
        * Deployment
-       * @description The [deployment](https://docs.github.com/enterprise-server@3.7/rest/reference/deployments#list-deployments).
+       * @description The [deployment](https://docs.github.com/enterprise-server@3.7/rest/deployments/deployments#list-deployments).
        */
       deployment: {
         created_at: string;
@@ -23293,11 +24209,11 @@ export interface components {
         /** Format: uri */
         url: string;
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
       /** Workflow */
       workflow: {
         /** Format: uri */
@@ -23369,7 +24285,6 @@ export interface components {
           | "timed_out"
           | "action_required"
           | "stale"
-          | ""
           | null;
         /** Format: date-time */
         created_at: string;
@@ -23614,6 +24529,1176 @@ export interface components {
         workflow_url?: string;
       } | null;
     };
+    "webhook-deployment-review-approved": {
+      /** @enum {string} */
+      action: "approved";
+      approver?: {
+        avatar_url?: string;
+        events_url?: string;
+        followers_url?: string;
+        following_url?: string;
+        gists_url?: string;
+        gravatar_id?: string;
+        html_url?: string;
+        id?: number;
+        login?: string;
+        node_id?: string;
+        organizations_url?: string;
+        received_events_url?: string;
+        repos_url?: string;
+        site_admin?: boolean;
+        starred_url?: string;
+        subscriptions_url?: string;
+        type?: string;
+        url?: string;
+      };
+      comment?: string;
+      enterprise?: components["schemas"]["enterprise-webhooks"];
+      installation?: components["schemas"]["simple-installation"];
+      organization: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      reviewers?: {
+        /** User */
+        reviewer?: {
+          /** Format: uri */
+          avatar_url?: string;
+          deleted?: boolean;
+          email?: string | null;
+          /** Format: uri-template */
+          events_url?: string;
+          /** Format: uri */
+          followers_url?: string;
+          /** Format: uri-template */
+          following_url?: string;
+          /** Format: uri-template */
+          gists_url?: string;
+          gravatar_id?: string;
+          /** Format: uri */
+          html_url?: string;
+          id: number;
+          login: string;
+          name?: string;
+          node_id?: string;
+          /** Format: uri */
+          organizations_url?: string;
+          /** Format: uri */
+          received_events_url?: string;
+          /** Format: uri */
+          repos_url?: string;
+          site_admin?: boolean;
+          /** Format: uri-template */
+          starred_url?: string;
+          /** Format: uri */
+          subscriptions_url?: string;
+          /** @enum {string} */
+          type?: "Bot" | "User" | "Organization";
+          /** Format: uri */
+          url?: string;
+        } | null;
+        /** @enum {string} */
+        type?: "User";
+      }[];
+      sender: components["schemas"]["simple-user-webhooks"];
+      since: string;
+      workflow_job_run?: {
+        conclusion: Record<string, unknown> | null;
+        created_at: string;
+        environment: string;
+        html_url: string;
+        id: number;
+        name: Record<string, unknown> | null;
+        status: string;
+        updated_at: string;
+      };
+      workflow_job_runs?: {
+        conclusion?: Record<string, unknown> | null;
+        created_at?: string;
+        environment?: string;
+        html_url?: string;
+        id?: number;
+        name?: string | null;
+        status?: string;
+        updated_at?: string;
+      }[];
+      /** Deployment Workflow Run */
+      workflow_run: {
+        /** User */
+        actor: {
+          /** Format: uri */
+          avatar_url?: string;
+          deleted?: boolean;
+          email?: string | null;
+          /** Format: uri-template */
+          events_url?: string;
+          /** Format: uri */
+          followers_url?: string;
+          /** Format: uri-template */
+          following_url?: string;
+          /** Format: uri-template */
+          gists_url?: string;
+          gravatar_id?: string;
+          /** Format: uri */
+          html_url?: string;
+          id: number;
+          login: string;
+          name?: string;
+          node_id?: string;
+          /** Format: uri */
+          organizations_url?: string;
+          /** Format: uri */
+          received_events_url?: string;
+          /** Format: uri */
+          repos_url?: string;
+          site_admin?: boolean;
+          /** Format: uri-template */
+          starred_url?: string;
+          /** Format: uri */
+          subscriptions_url?: string;
+          /** @enum {string} */
+          type?: "Bot" | "User" | "Organization";
+          /** Format: uri */
+          url?: string;
+        } | null;
+        artifacts_url?: string;
+        cancel_url?: string;
+        check_suite_id: number;
+        check_suite_node_id: string;
+        check_suite_url?: string;
+        /** @enum {string|null} */
+        conclusion:
+          | "success"
+          | "failure"
+          | "neutral"
+          | "cancelled"
+          | "timed_out"
+          | "action_required"
+          | "stale"
+          | null;
+        /** Format: date-time */
+        created_at: string;
+        display_title: string;
+        event: string;
+        head_branch: string;
+        head_commit?: Record<string, unknown> | null;
+        head_repository?: {
+          archive_url?: string;
+          assignees_url?: string;
+          blobs_url?: string;
+          branches_url?: string;
+          collaborators_url?: string;
+          comments_url?: string;
+          commits_url?: string;
+          compare_url?: string;
+          contents_url?: string;
+          contributors_url?: string;
+          deployments_url?: string;
+          description?: string | null;
+          downloads_url?: string;
+          events_url?: string;
+          fork?: boolean;
+          forks_url?: string;
+          full_name?: string;
+          git_commits_url?: string;
+          git_refs_url?: string;
+          git_tags_url?: string;
+          hooks_url?: string;
+          html_url?: string;
+          id?: number;
+          issue_comment_url?: string;
+          issue_events_url?: string;
+          issues_url?: string;
+          keys_url?: string;
+          labels_url?: string;
+          languages_url?: string;
+          merges_url?: string;
+          milestones_url?: string;
+          name?: string;
+          node_id?: string;
+          notifications_url?: string;
+          owner?: {
+            avatar_url?: string;
+            events_url?: string;
+            followers_url?: string;
+            following_url?: string;
+            gists_url?: string;
+            gravatar_id?: string;
+            html_url?: string;
+            id?: number;
+            login?: string;
+            node_id?: string;
+            organizations_url?: string;
+            received_events_url?: string;
+            repos_url?: string;
+            site_admin?: boolean;
+            starred_url?: string;
+            subscriptions_url?: string;
+            type?: string;
+            url?: string;
+          };
+          private?: boolean;
+          pulls_url?: string;
+          releases_url?: string;
+          stargazers_url?: string;
+          statuses_url?: string;
+          subscribers_url?: string;
+          subscription_url?: string;
+          tags_url?: string;
+          teams_url?: string;
+          trees_url?: string;
+          url?: string;
+        };
+        head_sha: string;
+        /** Format: uri */
+        html_url: string;
+        id: number;
+        jobs_url?: string;
+        logs_url?: string;
+        name: string;
+        node_id: string;
+        path: string;
+        previous_attempt_url?: string | null;
+        pull_requests: {
+          base: {
+            ref: string;
+            /** Repo Ref */
+            repo: {
+              id: number;
+              name: string;
+              /** Format: uri */
+              url: string;
+            };
+            sha: string;
+          };
+          head: {
+            ref: string;
+            /** Repo Ref */
+            repo: {
+              id: number;
+              name: string;
+              /** Format: uri */
+              url: string;
+            };
+            sha: string;
+          };
+          id: number;
+          number: number;
+          /** Format: uri */
+          url: string;
+        }[];
+        referenced_workflows?:
+          | {
+              path: string;
+              ref?: string;
+              sha: string;
+            }[]
+          | null;
+        repository?: {
+          archive_url?: string;
+          assignees_url?: string;
+          blobs_url?: string;
+          branches_url?: string;
+          collaborators_url?: string;
+          comments_url?: string;
+          commits_url?: string;
+          compare_url?: string;
+          contents_url?: string;
+          contributors_url?: string;
+          deployments_url?: string;
+          description?: string | null;
+          downloads_url?: string;
+          events_url?: string;
+          fork?: boolean;
+          forks_url?: string;
+          full_name?: string;
+          git_commits_url?: string;
+          git_refs_url?: string;
+          git_tags_url?: string;
+          hooks_url?: string;
+          html_url?: string;
+          id?: number;
+          issue_comment_url?: string;
+          issue_events_url?: string;
+          issues_url?: string;
+          keys_url?: string;
+          labels_url?: string;
+          languages_url?: string;
+          merges_url?: string;
+          milestones_url?: string;
+          name?: string;
+          node_id?: string;
+          notifications_url?: string;
+          owner?: {
+            avatar_url?: string;
+            events_url?: string;
+            followers_url?: string;
+            following_url?: string;
+            gists_url?: string;
+            gravatar_id?: string;
+            html_url?: string;
+            id?: number;
+            login?: string;
+            node_id?: string;
+            organizations_url?: string;
+            received_events_url?: string;
+            repos_url?: string;
+            site_admin?: boolean;
+            starred_url?: string;
+            subscriptions_url?: string;
+            type?: string;
+            url?: string;
+          };
+          private?: boolean;
+          pulls_url?: string;
+          releases_url?: string;
+          stargazers_url?: string;
+          statuses_url?: string;
+          subscribers_url?: string;
+          subscription_url?: string;
+          tags_url?: string;
+          teams_url?: string;
+          trees_url?: string;
+          url?: string;
+        };
+        rerun_url?: string;
+        run_attempt: number;
+        run_number: number;
+        /** Format: date-time */
+        run_started_at: string;
+        /** @enum {string} */
+        status:
+          | "requested"
+          | "in_progress"
+          | "completed"
+          | "queued"
+          | "waiting"
+          | "pending";
+        /** User */
+        triggering_actor: {
+          /** Format: uri */
+          avatar_url?: string;
+          deleted?: boolean;
+          email?: string | null;
+          /** Format: uri-template */
+          events_url?: string;
+          /** Format: uri */
+          followers_url?: string;
+          /** Format: uri-template */
+          following_url?: string;
+          /** Format: uri-template */
+          gists_url?: string;
+          gravatar_id?: string;
+          /** Format: uri */
+          html_url?: string;
+          id: number;
+          login: string;
+          name?: string;
+          node_id?: string;
+          /** Format: uri */
+          organizations_url?: string;
+          /** Format: uri */
+          received_events_url?: string;
+          /** Format: uri */
+          repos_url?: string;
+          site_admin?: boolean;
+          /** Format: uri-template */
+          starred_url?: string;
+          /** Format: uri */
+          subscriptions_url?: string;
+          /** @enum {string} */
+          type?: "Bot" | "User" | "Organization";
+          /** Format: uri */
+          url?: string;
+        } | null;
+        /** Format: date-time */
+        updated_at: string;
+        /** Format: uri */
+        url: string;
+        workflow_id: number;
+        workflow_url?: string;
+      } | null;
+    };
+    "webhook-deployment-review-rejected": {
+      /** @enum {string} */
+      action: "rejected";
+      approver?: {
+        avatar_url?: string;
+        events_url?: string;
+        followers_url?: string;
+        following_url?: string;
+        gists_url?: string;
+        gravatar_id?: string;
+        html_url?: string;
+        id?: number;
+        login?: string;
+        node_id?: string;
+        organizations_url?: string;
+        received_events_url?: string;
+        repos_url?: string;
+        site_admin?: boolean;
+        starred_url?: string;
+        subscriptions_url?: string;
+        type?: string;
+        url?: string;
+      };
+      comment?: string;
+      enterprise?: components["schemas"]["enterprise-webhooks"];
+      installation?: components["schemas"]["simple-installation"];
+      organization: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      reviewers?: {
+        /** User */
+        reviewer?: {
+          /** Format: uri */
+          avatar_url?: string;
+          deleted?: boolean;
+          email?: string | null;
+          /** Format: uri-template */
+          events_url?: string;
+          /** Format: uri */
+          followers_url?: string;
+          /** Format: uri-template */
+          following_url?: string;
+          /** Format: uri-template */
+          gists_url?: string;
+          gravatar_id?: string;
+          /** Format: uri */
+          html_url?: string;
+          id: number;
+          login: string;
+          name?: string;
+          node_id?: string;
+          /** Format: uri */
+          organizations_url?: string;
+          /** Format: uri */
+          received_events_url?: string;
+          /** Format: uri */
+          repos_url?: string;
+          site_admin?: boolean;
+          /** Format: uri-template */
+          starred_url?: string;
+          /** Format: uri */
+          subscriptions_url?: string;
+          /** @enum {string} */
+          type?: "Bot" | "User" | "Organization";
+          /** Format: uri */
+          url?: string;
+        } | null;
+        /** @enum {string} */
+        type?: "User";
+      }[];
+      sender: components["schemas"]["simple-user-webhooks"];
+      since: string;
+      workflow_job_run?: {
+        conclusion: Record<string, unknown> | null;
+        created_at: string;
+        environment: string;
+        html_url: string;
+        id: number;
+        name: Record<string, unknown> | null;
+        status: string;
+        updated_at: string;
+      };
+      workflow_job_runs?: {
+        conclusion?: string | null;
+        created_at?: string;
+        environment?: string;
+        html_url?: string;
+        id?: number;
+        name?: string | null;
+        status?: string;
+        updated_at?: string;
+      }[];
+      /** Deployment Workflow Run */
+      workflow_run: {
+        /** User */
+        actor: {
+          /** Format: uri */
+          avatar_url?: string;
+          deleted?: boolean;
+          email?: string | null;
+          /** Format: uri-template */
+          events_url?: string;
+          /** Format: uri */
+          followers_url?: string;
+          /** Format: uri-template */
+          following_url?: string;
+          /** Format: uri-template */
+          gists_url?: string;
+          gravatar_id?: string;
+          /** Format: uri */
+          html_url?: string;
+          id: number;
+          login: string;
+          name?: string;
+          node_id?: string;
+          /** Format: uri */
+          organizations_url?: string;
+          /** Format: uri */
+          received_events_url?: string;
+          /** Format: uri */
+          repos_url?: string;
+          site_admin?: boolean;
+          /** Format: uri-template */
+          starred_url?: string;
+          /** Format: uri */
+          subscriptions_url?: string;
+          /** @enum {string} */
+          type?: "Bot" | "User" | "Organization";
+          /** Format: uri */
+          url?: string;
+        } | null;
+        artifacts_url?: string;
+        cancel_url?: string;
+        check_suite_id: number;
+        check_suite_node_id: string;
+        check_suite_url?: string;
+        /** @enum {string|null} */
+        conclusion:
+          | "success"
+          | "failure"
+          | "neutral"
+          | "cancelled"
+          | "timed_out"
+          | "action_required"
+          | "stale"
+          | null;
+        /** Format: date-time */
+        created_at: string;
+        event: string;
+        head_branch: string;
+        head_commit?: Record<string, unknown> | null;
+        head_repository?: {
+          archive_url?: string;
+          assignees_url?: string;
+          blobs_url?: string;
+          branches_url?: string;
+          collaborators_url?: string;
+          comments_url?: string;
+          commits_url?: string;
+          compare_url?: string;
+          contents_url?: string;
+          contributors_url?: string;
+          deployments_url?: string;
+          description?: string | null;
+          downloads_url?: string;
+          events_url?: string;
+          fork?: boolean;
+          forks_url?: string;
+          full_name?: string;
+          git_commits_url?: string;
+          git_refs_url?: string;
+          git_tags_url?: string;
+          hooks_url?: string;
+          html_url?: string;
+          id?: number;
+          issue_comment_url?: string;
+          issue_events_url?: string;
+          issues_url?: string;
+          keys_url?: string;
+          labels_url?: string;
+          languages_url?: string;
+          merges_url?: string;
+          milestones_url?: string;
+          name?: string;
+          node_id?: string;
+          notifications_url?: string;
+          owner?: {
+            avatar_url?: string;
+            events_url?: string;
+            followers_url?: string;
+            following_url?: string;
+            gists_url?: string;
+            gravatar_id?: string;
+            html_url?: string;
+            id?: number;
+            login?: string;
+            node_id?: string;
+            organizations_url?: string;
+            received_events_url?: string;
+            repos_url?: string;
+            site_admin?: boolean;
+            starred_url?: string;
+            subscriptions_url?: string;
+            type?: string;
+            url?: string;
+          };
+          private?: boolean;
+          pulls_url?: string;
+          releases_url?: string;
+          stargazers_url?: string;
+          statuses_url?: string;
+          subscribers_url?: string;
+          subscription_url?: string;
+          tags_url?: string;
+          teams_url?: string;
+          trees_url?: string;
+          url?: string;
+        };
+        head_sha: string;
+        /** Format: uri */
+        html_url: string;
+        id: number;
+        jobs_url?: string;
+        logs_url?: string;
+        name: string;
+        node_id: string;
+        path: string;
+        previous_attempt_url?: string | null;
+        pull_requests: {
+          base: {
+            ref: string;
+            /** Repo Ref */
+            repo: {
+              id: number;
+              name: string;
+              /** Format: uri */
+              url: string;
+            };
+            sha: string;
+          };
+          head: {
+            ref: string;
+            /** Repo Ref */
+            repo: {
+              id: number;
+              name: string;
+              /** Format: uri */
+              url: string;
+            };
+            sha: string;
+          };
+          id: number;
+          number: number;
+          /** Format: uri */
+          url: string;
+        }[];
+        referenced_workflows?:
+          | {
+              path: string;
+              ref?: string;
+              sha: string;
+            }[]
+          | null;
+        repository?: {
+          archive_url?: string;
+          assignees_url?: string;
+          blobs_url?: string;
+          branches_url?: string;
+          collaborators_url?: string;
+          comments_url?: string;
+          commits_url?: string;
+          compare_url?: string;
+          contents_url?: string;
+          contributors_url?: string;
+          deployments_url?: string;
+          description?: string | null;
+          downloads_url?: string;
+          events_url?: string;
+          fork?: boolean;
+          forks_url?: string;
+          full_name?: string;
+          git_commits_url?: string;
+          git_refs_url?: string;
+          git_tags_url?: string;
+          hooks_url?: string;
+          html_url?: string;
+          id?: number;
+          issue_comment_url?: string;
+          issue_events_url?: string;
+          issues_url?: string;
+          keys_url?: string;
+          labels_url?: string;
+          languages_url?: string;
+          merges_url?: string;
+          milestones_url?: string;
+          name?: string;
+          node_id?: string;
+          notifications_url?: string;
+          owner?: {
+            avatar_url?: string;
+            events_url?: string;
+            followers_url?: string;
+            following_url?: string;
+            gists_url?: string;
+            gravatar_id?: string;
+            html_url?: string;
+            id?: number;
+            login?: string;
+            node_id?: string;
+            organizations_url?: string;
+            received_events_url?: string;
+            repos_url?: string;
+            site_admin?: boolean;
+            starred_url?: string;
+            subscriptions_url?: string;
+            type?: string;
+            url?: string;
+          };
+          private?: boolean;
+          pulls_url?: string;
+          releases_url?: string;
+          stargazers_url?: string;
+          statuses_url?: string;
+          subscribers_url?: string;
+          subscription_url?: string;
+          tags_url?: string;
+          teams_url?: string;
+          trees_url?: string;
+          url?: string;
+        };
+        rerun_url?: string;
+        run_attempt: number;
+        run_number: number;
+        /** Format: date-time */
+        run_started_at: string;
+        /** @enum {string} */
+        status:
+          | "requested"
+          | "in_progress"
+          | "completed"
+          | "queued"
+          | "waiting";
+        /** User */
+        triggering_actor: {
+          /** Format: uri */
+          avatar_url?: string;
+          deleted?: boolean;
+          email?: string | null;
+          /** Format: uri-template */
+          events_url?: string;
+          /** Format: uri */
+          followers_url?: string;
+          /** Format: uri-template */
+          following_url?: string;
+          /** Format: uri-template */
+          gists_url?: string;
+          gravatar_id?: string;
+          /** Format: uri */
+          html_url?: string;
+          id: number;
+          login: string;
+          name?: string;
+          node_id?: string;
+          /** Format: uri */
+          organizations_url?: string;
+          /** Format: uri */
+          received_events_url?: string;
+          /** Format: uri */
+          repos_url?: string;
+          site_admin?: boolean;
+          /** Format: uri-template */
+          starred_url?: string;
+          /** Format: uri */
+          subscriptions_url?: string;
+          /** @enum {string} */
+          type?: "Bot" | "User" | "Organization";
+          /** Format: uri */
+          url?: string;
+        } | null;
+        /** Format: date-time */
+        updated_at: string;
+        /** Format: uri */
+        url: string;
+        workflow_id: number;
+        workflow_url?: string;
+        display_title: string;
+      } | null;
+    };
+    "webhook-deployment-review-requested": {
+      /** @enum {string} */
+      action: "requested";
+      enterprise?: components["schemas"]["enterprise-webhooks"];
+      environment: string;
+      installation?: components["schemas"]["simple-installation"];
+      organization: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      /** User */
+      requestor: {
+        /** Format: uri */
+        avatar_url?: string;
+        deleted?: boolean;
+        email?: string | null;
+        /** Format: uri-template */
+        events_url?: string;
+        /** Format: uri */
+        followers_url?: string;
+        /** Format: uri-template */
+        following_url?: string;
+        /** Format: uri-template */
+        gists_url?: string;
+        gravatar_id?: string;
+        /** Format: uri */
+        html_url?: string;
+        id: number;
+        login: string;
+        name?: string;
+        node_id?: string;
+        /** Format: uri */
+        organizations_url?: string;
+        /** Format: uri */
+        received_events_url?: string;
+        /** Format: uri */
+        repos_url?: string;
+        site_admin?: boolean;
+        /** Format: uri-template */
+        starred_url?: string;
+        /** Format: uri */
+        subscriptions_url?: string;
+        /** @enum {string} */
+        type?: "Bot" | "User" | "Organization";
+        /** Format: uri */
+        url?: string;
+      } | null;
+      reviewers: {
+        /** User */
+        reviewer?: {
+          /** Format: uri */
+          avatar_url?: string;
+          deleted?: boolean;
+          email?: string | null;
+          /** Format: uri-template */
+          events_url?: string;
+          /** Format: uri */
+          followers_url?: string;
+          /** Format: uri-template */
+          following_url?: string;
+          /** Format: uri-template */
+          gists_url?: string;
+          gravatar_id?: string;
+          /** Format: uri */
+          html_url?: string;
+          id: number;
+          login?: string;
+          name?: string;
+          node_id?: string;
+          /** Format: uri */
+          organizations_url?: string;
+          /** Format: uri */
+          received_events_url?: string;
+          /** Format: uri */
+          repos_url?: string;
+          site_admin?: boolean;
+          /** Format: uri-template */
+          starred_url?: string;
+          /** Format: uri */
+          subscriptions_url?: string;
+          /** @enum {string} */
+          type?: "Bot" | "User" | "Organization";
+          /** Format: uri */
+          url?: string;
+        } | null;
+        /** @enum {string} */
+        type?: "User" | "Team";
+      }[];
+      sender: components["schemas"]["simple-user-webhooks"];
+      since: string;
+      workflow_job_run: {
+        conclusion: Record<string, unknown> | null;
+        created_at: string;
+        environment: string;
+        html_url: string;
+        id: number;
+        name: string | null;
+        status: string;
+        updated_at: string;
+      };
+      /** Deployment Workflow Run */
+      workflow_run: {
+        /** User */
+        actor: {
+          /** Format: uri */
+          avatar_url?: string;
+          deleted?: boolean;
+          email?: string | null;
+          /** Format: uri-template */
+          events_url?: string;
+          /** Format: uri */
+          followers_url?: string;
+          /** Format: uri-template */
+          following_url?: string;
+          /** Format: uri-template */
+          gists_url?: string;
+          gravatar_id?: string;
+          /** Format: uri */
+          html_url?: string;
+          id: number;
+          login: string;
+          name?: string;
+          node_id?: string;
+          /** Format: uri */
+          organizations_url?: string;
+          /** Format: uri */
+          received_events_url?: string;
+          /** Format: uri */
+          repos_url?: string;
+          site_admin?: boolean;
+          /** Format: uri-template */
+          starred_url?: string;
+          /** Format: uri */
+          subscriptions_url?: string;
+          /** @enum {string} */
+          type?: "Bot" | "User" | "Organization";
+          /** Format: uri */
+          url?: string;
+        } | null;
+        artifacts_url?: string;
+        cancel_url?: string;
+        check_suite_id: number;
+        check_suite_node_id: string;
+        check_suite_url?: string;
+        /** @enum {string|null} */
+        conclusion:
+          | "success"
+          | "failure"
+          | "neutral"
+          | "cancelled"
+          | "timed_out"
+          | "action_required"
+          | "stale"
+          | null;
+        /** Format: date-time */
+        created_at: string;
+        event: string;
+        head_branch: string;
+        head_commit?: Record<string, unknown> | null;
+        head_repository?: {
+          archive_url?: string;
+          assignees_url?: string;
+          blobs_url?: string;
+          branches_url?: string;
+          collaborators_url?: string;
+          comments_url?: string;
+          commits_url?: string;
+          compare_url?: string;
+          contents_url?: string;
+          contributors_url?: string;
+          deployments_url?: string;
+          description?: string | null;
+          downloads_url?: string;
+          events_url?: string;
+          fork?: boolean;
+          forks_url?: string;
+          full_name?: string;
+          git_commits_url?: string;
+          git_refs_url?: string;
+          git_tags_url?: string;
+          hooks_url?: string;
+          html_url?: string;
+          id?: number;
+          issue_comment_url?: string;
+          issue_events_url?: string;
+          issues_url?: string;
+          keys_url?: string;
+          labels_url?: string;
+          languages_url?: string;
+          merges_url?: string;
+          milestones_url?: string;
+          name?: string;
+          node_id?: string;
+          notifications_url?: string;
+          owner?: {
+            avatar_url?: string;
+            events_url?: string;
+            followers_url?: string;
+            following_url?: string;
+            gists_url?: string;
+            gravatar_id?: string;
+            html_url?: string;
+            id?: number;
+            login?: string;
+            node_id?: string;
+            organizations_url?: string;
+            received_events_url?: string;
+            repos_url?: string;
+            site_admin?: boolean;
+            starred_url?: string;
+            subscriptions_url?: string;
+            type?: string;
+            url?: string;
+          };
+          private?: boolean;
+          pulls_url?: string;
+          releases_url?: string;
+          stargazers_url?: string;
+          statuses_url?: string;
+          subscribers_url?: string;
+          subscription_url?: string;
+          tags_url?: string;
+          teams_url?: string;
+          trees_url?: string;
+          url?: string;
+        };
+        head_sha: string;
+        /** Format: uri */
+        html_url: string;
+        id: number;
+        jobs_url?: string;
+        logs_url?: string;
+        name: string;
+        node_id: string;
+        path: string;
+        previous_attempt_url?: string | null;
+        pull_requests: {
+          base: {
+            ref: string;
+            /** Repo Ref */
+            repo: {
+              id: number;
+              name: string;
+              /** Format: uri */
+              url: string;
+            };
+            sha: string;
+          };
+          head: {
+            ref: string;
+            /** Repo Ref */
+            repo: {
+              id: number;
+              name: string;
+              /** Format: uri */
+              url: string;
+            };
+            sha: string;
+          };
+          id: number;
+          number: number;
+          /** Format: uri */
+          url: string;
+        }[];
+        referenced_workflows?:
+          | {
+              path: string;
+              ref?: string;
+              sha: string;
+            }[]
+          | null;
+        repository?: {
+          archive_url?: string;
+          assignees_url?: string;
+          blobs_url?: string;
+          branches_url?: string;
+          collaborators_url?: string;
+          comments_url?: string;
+          commits_url?: string;
+          compare_url?: string;
+          contents_url?: string;
+          contributors_url?: string;
+          deployments_url?: string;
+          description?: string | null;
+          downloads_url?: string;
+          events_url?: string;
+          fork?: boolean;
+          forks_url?: string;
+          full_name?: string;
+          git_commits_url?: string;
+          git_refs_url?: string;
+          git_tags_url?: string;
+          hooks_url?: string;
+          html_url?: string;
+          id?: number;
+          issue_comment_url?: string;
+          issue_events_url?: string;
+          issues_url?: string;
+          keys_url?: string;
+          labels_url?: string;
+          languages_url?: string;
+          merges_url?: string;
+          milestones_url?: string;
+          name?: string;
+          node_id?: string;
+          notifications_url?: string;
+          owner?: {
+            avatar_url?: string;
+            events_url?: string;
+            followers_url?: string;
+            following_url?: string;
+            gists_url?: string;
+            gravatar_id?: string;
+            html_url?: string;
+            id?: number;
+            login?: string;
+            node_id?: string;
+            organizations_url?: string;
+            received_events_url?: string;
+            repos_url?: string;
+            site_admin?: boolean;
+            starred_url?: string;
+            subscriptions_url?: string;
+            type?: string;
+            url?: string;
+          };
+          private?: boolean;
+          pulls_url?: string;
+          releases_url?: string;
+          stargazers_url?: string;
+          statuses_url?: string;
+          subscribers_url?: string;
+          subscription_url?: string;
+          tags_url?: string;
+          teams_url?: string;
+          trees_url?: string;
+          url?: string;
+        };
+        rerun_url?: string;
+        run_attempt: number;
+        run_number: number;
+        /** Format: date-time */
+        run_started_at: string;
+        /** @enum {string} */
+        status:
+          | "requested"
+          | "in_progress"
+          | "completed"
+          | "queued"
+          | "waiting"
+          | "pending";
+        /** User */
+        triggering_actor: {
+          /** Format: uri */
+          avatar_url?: string;
+          deleted?: boolean;
+          email?: string | null;
+          /** Format: uri-template */
+          events_url?: string;
+          /** Format: uri */
+          followers_url?: string;
+          /** Format: uri-template */
+          following_url?: string;
+          /** Format: uri-template */
+          gists_url?: string;
+          gravatar_id?: string;
+          /** Format: uri */
+          html_url?: string;
+          id: number;
+          login: string;
+          name?: string;
+          node_id?: string;
+          /** Format: uri */
+          organizations_url?: string;
+          /** Format: uri */
+          received_events_url?: string;
+          /** Format: uri */
+          repos_url?: string;
+          site_admin?: boolean;
+          /** Format: uri-template */
+          starred_url?: string;
+          /** Format: uri */
+          subscriptions_url?: string;
+          /** @enum {string} */
+          type?: "Bot" | "User" | "Organization";
+          /** Format: uri */
+          url?: string;
+        } | null;
+        /** Format: date-time */
+        updated_at: string;
+        /** Format: uri */
+        url: string;
+        workflow_id: number;
+        workflow_url?: string;
+        display_title: string;
+      } | null;
+    };
     /** deployment_status created event */
     "webhook-deployment-status-created": {
       /** @enum {string} */
@@ -23634,7 +25719,6 @@ export interface components {
           | "action_required"
           | "stale"
           | "skipped"
-          | ""
           | null;
         /** Format: uri */
         details_url: string;
@@ -23660,7 +25744,7 @@ export interface components {
       } | null;
       /**
        * Deployment
-       * @description The [deployment](https://docs.github.com/enterprise-server@3.7/rest/reference/deployments#list-deployments).
+       * @description The [deployment](https://docs.github.com/enterprise-server@3.7/rest/deployments/deployments#list-deployments).
        */
       deployment: {
         created_at: string;
@@ -23706,7 +25790,7 @@ export interface components {
         id: number;
         node_id: string;
         original_environment: string;
-        payload: string | Record<string, never>;
+        payload: string | Record<string, never> | null;
         /**
          * App
          * @description GitHub apps are a new way to extend GitHub. They can be installed directly on organizations and user accounts and granted access to specific repositories. They come with granular permissions and built-in webhooks. GitHub apps are first class actors within GitHub.
@@ -23905,7 +25989,7 @@ export interface components {
         /** Format: uri */
         url: string;
       };
-      /** @description The [deployment status](https://docs.github.com/enterprise-server@3.7/rest/reference/deployments#list-deployment-statuses). */
+      /** @description The [deployment status](https://docs.github.com/enterprise-server@3.7/rest/deployments/statuses#list-deployment-statuses). */
       deployment_status: {
         created_at: string;
         /** User */
@@ -24151,11 +26235,11 @@ export interface components {
         /** Format: uri */
         url: string;
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
       /** Workflow */
       workflow?: {
         /** Format: uri */
@@ -24227,9 +26311,8 @@ export interface components {
           | "timed_out"
           | "action_required"
           | "stale"
-          | ""
-          | "startup_failure"
-          | null;
+          | null
+          | "startup_failure";
         /** Format: date-time */
         created_at: string;
         display_title: string;
@@ -24557,11 +26640,11 @@ export interface components {
         } | null;
       };
       discussion: components["schemas"]["discussion"];
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** discussion category changed event */
     "webhook-discussion-category-changed": {
@@ -24585,11 +26668,11 @@ export interface components {
         };
       };
       discussion: components["schemas"]["discussion"];
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** discussion_comment created event */
     "webhook-discussion-comment-created": {
@@ -24673,11 +26756,11 @@ export interface components {
         } | null;
       };
       discussion: components["schemas"]["discussion"];
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** discussion_comment deleted event */
     "webhook-discussion-comment-deleted": {
@@ -24761,11 +26844,11 @@ export interface components {
         } | null;
       };
       discussion: components["schemas"]["discussion"];
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** discussion_comment edited event */
     "webhook-discussion-comment-edited": {
@@ -24854,11 +26937,11 @@ export interface components {
         } | null;
       };
       discussion: components["schemas"]["discussion"];
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** discussion created event */
     "webhook-discussion-created": {
@@ -25065,22 +27148,22 @@ export interface components {
           url?: string;
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** discussion deleted event */
     "webhook-discussion-deleted": {
       /** @enum {string} */
       action: "deleted";
       discussion: components["schemas"]["discussion"];
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** discussion edited event */
     "webhook-discussion-edited": {
@@ -25095,18 +27178,18 @@ export interface components {
         };
       };
       discussion: components["schemas"]["discussion"];
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** discussion labeled event */
     "webhook-discussion-labeled": {
       /** @enum {string} */
       action: "labeled";
       discussion: components["schemas"]["discussion"];
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** Label */
       label: {
@@ -25124,31 +27207,31 @@ export interface components {
          */
         url: string;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** discussion locked event */
     "webhook-discussion-locked": {
       /** @enum {string} */
       action: "locked";
       discussion: components["schemas"]["discussion"];
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** discussion pinned event */
     "webhook-discussion-pinned": {
       /** @enum {string} */
       action: "pinned";
       discussion: components["schemas"]["discussion"];
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** discussion transferred event */
     "webhook-discussion-transferred": {
@@ -25156,14 +27239,14 @@ export interface components {
       action: "transferred";
       changes: {
         new_discussion: components["schemas"]["discussion"];
-        new_repository: components["schemas"]["repository"];
+        new_repository: components["schemas"]["repository-webhooks"];
       };
       discussion: components["schemas"]["discussion"];
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** discussion unanswered event */
     "webhook-discussion-unanswered": {
@@ -25249,16 +27332,16 @@ export interface components {
           url?: string;
         } | null;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** discussion unlabeled event */
     "webhook-discussion-unlabeled": {
       /** @enum {string} */
       action: "unlabeled";
       discussion: components["schemas"]["discussion"];
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** Label */
       label: {
@@ -25276,49 +27359,49 @@ export interface components {
          */
         url: string;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** discussion unlocked event */
     "webhook-discussion-unlocked": {
       /** @enum {string} */
       action: "unlocked";
       discussion: components["schemas"]["discussion"];
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** discussion unpinned event */
     "webhook-discussion-unpinned": {
       /** @enum {string} */
       action: "unpinned";
       discussion: components["schemas"]["discussion"];
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     "webhook-enterprise-anonymous-access-disabled": {
       /** @enum {string} */
       action: "anonymous_access_disabled";
-      sender?: components["schemas"]["simple-user"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     "webhook-enterprise-anonymous-access-enabled": {
       /** @enum {string} */
       action: "anonymous_access_enabled";
-      sender?: components["schemas"]["simple-user"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /**
      * fork event
      * @description A user forks a repository.
      */
     "webhook-fork": {
-      enterprise?: components["schemas"]["enterprise"];
-      /** @description The created [`repository`](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#get-a-repository) resource. */
+      enterprise?: components["schemas"]["enterprise-webhooks"];
+      /** @description The created [`repository`](https://docs.github.com/enterprise-server@3.7/rest/repos/repos#get-a-repository) resource. */
       forkee: {
         /**
          * @description Whether to allow auto-merge for pull requests.
@@ -25516,7 +27599,7 @@ export interface components {
         public?: boolean;
         /** Format: uri-template */
         pulls_url: string;
-        pushed_at: number | string;
+        pushed_at: number | string | null;
         /** Format: uri-template */
         releases_url: string;
         role_name?: string | null;
@@ -25652,25 +27735,25 @@ export interface components {
         watchers_count?: number;
       };
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** github_app_authorization revoked event */
     "webhook-github-app-authorization-revoked": {
       /** @enum {string} */
       action: "revoked";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository?: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** gollum event */
     "webhook-gollum": {
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** @description The pages that were updated. */
       pages: {
         /**
@@ -25691,16 +27774,16 @@ export interface components {
         /** @description The current page title. */
         title: string;
       }[];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** installation created event */
     "webhook-installation-created": {
       /** @enum {string} */
       action: "created";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation: components["schemas"]["installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** @description An array of repository objects that the installation can access. */
       repositories?: {
         full_name: string;
@@ -25712,7 +27795,7 @@ export interface components {
         /** @description Whether the repository is private or public. */
         private: boolean;
       }[];
-      repository?: components["schemas"]["repository"];
+      repository?: components["schemas"]["repository-webhooks"];
       /** User */
       requester?: {
         /** Format: uri */
@@ -25750,15 +27833,15 @@ export interface components {
         /** Format: uri */
         url?: string;
       } | null;
-      sender: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** installation deleted event */
     "webhook-installation-deleted": {
       /** @enum {string} */
       action: "deleted";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation: components["schemas"]["installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** @description An array of repository objects that the installation can access. */
       repositories?: {
         full_name: string;
@@ -25770,17 +27853,17 @@ export interface components {
         /** @description Whether the repository is private or public. */
         private: boolean;
       }[];
-      repository?: components["schemas"]["repository"];
+      repository?: components["schemas"]["repository-webhooks"];
       requester?: Record<string, unknown> | null;
-      sender: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** installation new_permissions_accepted event */
     "webhook-installation-new-permissions-accepted": {
       /** @enum {string} */
       action: "new_permissions_accepted";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation: components["schemas"]["installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** @description An array of repository objects that the installation can access. */
       repositories?: {
         full_name: string;
@@ -25792,17 +27875,17 @@ export interface components {
         /** @description Whether the repository is private or public. */
         private: boolean;
       }[];
-      repository?: components["schemas"]["repository"];
+      repository?: components["schemas"]["repository-webhooks"];
       requester?: Record<string, unknown> | null;
-      sender: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** installation_repositories added event */
     "webhook-installation-repositories-added": {
       /** @enum {string} */
       action: "added";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation: components["schemas"]["installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** @description An array of repository objects, which were added to the installation. */
       repositories_added: {
         full_name: string;
@@ -25825,7 +27908,7 @@ export interface components {
         /** @description Whether the repository is private or public. */
         private?: boolean;
       }[];
-      repository?: components["schemas"]["repository"];
+      repository?: components["schemas"]["repository-webhooks"];
       /**
        * @description Describe whether all repositories have been selected or there's a selection involved
        * @enum {string}
@@ -25868,15 +27951,15 @@ export interface components {
         /** Format: uri */
         url?: string;
       } | null;
-      sender: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** installation_repositories removed event */
     "webhook-installation-repositories-removed": {
       /** @enum {string} */
       action: "removed";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation: components["schemas"]["installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** @description An array of repository objects, which were added to the installation. */
       repositories_added: {
         full_name: string;
@@ -25899,7 +27982,7 @@ export interface components {
         /** @description Whether the repository is private or public. */
         private: boolean;
       }[];
-      repository?: components["schemas"]["repository"];
+      repository?: components["schemas"]["repository-webhooks"];
       /**
        * @description Describe whether all repositories have been selected or there's a selection involved
        * @enum {string}
@@ -25942,15 +28025,15 @@ export interface components {
         /** Format: uri */
         url?: string;
       } | null;
-      sender: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** installation suspend event */
     "webhook-installation-suspend": {
       /** @enum {string} */
       action: "suspend";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation: components["schemas"]["installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** @description An array of repository objects that the installation can access. */
       repositories?: {
         full_name: string;
@@ -25962,9 +28045,9 @@ export interface components {
         /** @description Whether the repository is private or public. */
         private: boolean;
       }[];
-      repository?: components["schemas"]["repository"];
+      repository?: components["schemas"]["repository-webhooks"];
       requester?: Record<string, unknown> | null;
-      sender: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     "webhook-installation-target-renamed": {
       account: {
@@ -26004,7 +28087,8 @@ export interface components {
         url?: string;
         website_url?: Record<string, unknown> | null;
       };
-      action: string;
+      /** @enum {string} */
+      action: "renamed";
       changes: {
         login?: {
           from: string;
@@ -26013,20 +28097,20 @@ export interface components {
           from: string;
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository?: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
       target_type: string;
     };
     /** installation unsuspend event */
     "webhook-installation-unsuspend": {
       /** @enum {string} */
       action: "unsuspend";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation: components["schemas"]["installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** @description An array of repository objects that the installation can access. */
       repositories?: {
         full_name: string;
@@ -26038,9 +28122,9 @@ export interface components {
         /** @description Whether the repository is private or public. */
         private: boolean;
       }[];
-      repository?: components["schemas"]["repository"];
+      repository?: components["schemas"]["repository-webhooks"];
       requester?: Record<string, unknown> | null;
-      sender: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** issue_comment created event */
     "webhook-issue-comment-created": {
@@ -26048,7 +28132,7 @@ export interface components {
       action: "created";
       /**
        * issue comment
-       * @description The [comment](https://docs.github.com/enterprise-server@3.7/rest/reference/issues#comments) itself.
+       * @description The [comment](https://docs.github.com/enterprise-server@3.7/rest/issues/comments#get-an-issue-comment) itself.
        */
       comment: {
         /**
@@ -26139,9 +28223,9 @@ export interface components {
           url?: string;
         } | null;
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      /** @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/reference/issues) the comment belongs to. */
+      /** @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/issues/issues#get-an-issue) the comment belongs to. */
       issue: {
         /** @enum {string|null} */
         active_lock_reason:
@@ -26149,7 +28233,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee?: {
@@ -26722,9 +28805,9 @@ export interface components {
           url?: string;
         };
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** issue_comment deleted event */
     "webhook-issue-comment-deleted": {
@@ -26732,7 +28815,7 @@ export interface components {
       action: "deleted";
       /**
        * issue comment
-       * @description The [comment](https://docs.github.com/enterprise-server@3.7/rest/reference/issues#comments) itself.
+       * @description The [comment](https://docs.github.com/enterprise-server@3.7/rest/issues/comments#get-an-issue-comment) itself.
        */
       comment: {
         /**
@@ -26823,9 +28906,9 @@ export interface components {
           url?: string;
         } | null;
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      /** @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/reference/issues) the comment belongs to. */
+      /** @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/issues/issues#get-an-issue) the comment belongs to. */
       issue: {
         /** @enum {string|null} */
         active_lock_reason:
@@ -26833,7 +28916,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee?: {
@@ -27404,9 +29486,9 @@ export interface components {
           url?: string;
         };
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** issue_comment edited event */
     "webhook-issue-comment-edited": {
@@ -27421,7 +29503,7 @@ export interface components {
       };
       /**
        * issue comment
-       * @description The [comment](https://docs.github.com/enterprise-server@3.7/rest/reference/issues#comments) itself.
+       * @description The [comment](https://docs.github.com/enterprise-server@3.7/rest/issues/comments#get-an-issue-comment) itself.
        */
       comment: {
         /**
@@ -27512,9 +29594,9 @@ export interface components {
           url?: string;
         } | null;
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      /** @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/reference/issues) the comment belongs to. */
+      /** @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/issues/issues#get-an-issue) the comment belongs to. */
       issue: {
         /** @enum {string|null} */
         active_lock_reason:
@@ -27522,7 +29604,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee?: {
@@ -28095,9 +30176,9 @@ export interface components {
           url?: string;
         };
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** issues assigned event */
     "webhook-issues-assigned": {
@@ -28143,11 +30224,11 @@ export interface components {
         /** Format: uri */
         url?: string;
       } | null;
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /**
        * Issue
-       * @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/reference/issues) itself.
+       * @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/issues/issues#get-an-issue) itself.
        */
       issue: {
         /** @enum {string|null} */
@@ -28156,7 +30237,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee?: {
@@ -28617,9 +30697,9 @@ export interface components {
           url?: string;
         } | null;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** issues closed event */
     "webhook-issues-closed": {
@@ -28628,9 +30708,9 @@ export interface components {
        * @enum {string}
        */
       action: "closed";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      /** @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/reference/issues) itself. */
+      /** @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/issues/issues#get-an-issue) itself. */
       issue: {
         /** @enum {string|null} */
         active_lock_reason:
@@ -28638,7 +30718,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee?: {
@@ -29159,19 +31238,19 @@ export interface components {
           url?: string;
         };
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** issues deleted event */
     "webhook-issues-deleted": {
       /** @enum {string} */
       action: "deleted";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /**
        * Issue
-       * @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/reference/issues) itself.
+       * @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/issues/issues#get-an-issue) itself.
        */
       issue: {
         /** @enum {string|null} */
@@ -29180,7 +31259,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee?: {
@@ -29640,15 +31718,15 @@ export interface components {
           url?: string;
         } | null;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** issues demilestoned event */
     "webhook-issues-demilestoned": {
       /** @enum {string} */
       action: "demilestoned";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       issue: {
         /** @enum {string|null} */
@@ -29657,7 +31735,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee?: {
@@ -30315,9 +32392,9 @@ export interface components {
         /** Format: uri */
         url: string;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** issues edited event */
     "webhook-issues-edited": {
@@ -30334,11 +32411,11 @@ export interface components {
           from: string;
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /**
        * Issue
-       * @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/reference/issues) itself.
+       * @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/issues/issues#get-an-issue) itself.
        */
       issue: {
         /** @enum {string|null} */
@@ -30347,7 +32424,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee?: {
@@ -30825,19 +32901,19 @@ export interface components {
          */
         url: string;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** issues labeled event */
     "webhook-issues-labeled": {
       /** @enum {string} */
       action: "labeled";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /**
        * Issue
-       * @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/reference/issues) itself.
+       * @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/issues/issues#get-an-issue) itself.
        */
       issue: {
         /** @enum {string|null} */
@@ -30846,7 +32922,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee?: {
@@ -31323,15 +33398,15 @@ export interface components {
          */
         url: string;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** issues locked event */
     "webhook-issues-locked": {
       /** @enum {string} */
       action: "locked";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       issue: {
         /** @enum {string|null} */
@@ -31340,7 +33415,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee?: {
@@ -31807,7 +33881,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         assignee?: Record<string, unknown> | null;
         assignees?: (Record<string, unknown> | null)[];
@@ -31867,15 +33940,15 @@ export interface components {
           url?: string;
         };
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** issues milestoned event */
     "webhook-issues-milestoned": {
       /** @enum {string} */
       action: "milestoned";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       issue: {
         /** @enum {string|null} */
@@ -31884,7 +33957,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee?: {
@@ -32543,9 +34615,9 @@ export interface components {
         /** Format: uri */
         url: string;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** issues opened event */
     "webhook-issues-opened": {
@@ -32554,7 +34626,7 @@ export interface components {
       changes?: {
         /**
          * Issue
-         * @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/reference/issues) itself.
+         * @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/issues/issues#get-an-issue) itself.
          */
         old_issue: {
           /** @enum {string|null} */
@@ -32563,7 +34635,6 @@ export interface components {
             | "off-topic"
             | "too heated"
             | "spam"
-            | ""
             | null;
           /** User */
           assignee?: {
@@ -33223,7 +35294,7 @@ export interface components {
           public?: boolean;
           /** Format: uri-template */
           pulls_url: string;
-          pushed_at: number | string;
+          pushed_at: number | string | null;
           /** Format: uri-template */
           releases_url: string;
           role_name?: string | null;
@@ -33258,11 +35329,11 @@ export interface components {
           watchers_count: number;
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /**
        * Issue
-       * @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/reference/issues) itself.
+       * @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/issues/issues#get-an-issue) itself.
        */
       issue: {
         /** @enum {string|null} */
@@ -33271,7 +35342,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee?: {
@@ -33733,19 +35803,19 @@ export interface components {
           url?: string;
         } | null;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** issues pinned event */
     "webhook-issues-pinned": {
       /** @enum {string} */
       action: "pinned";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /**
        * Issue
-       * @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/reference/issues) itself.
+       * @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/issues/issues#get-an-issue) itself.
        */
       issue: {
         /** @enum {string|null} */
@@ -33754,7 +35824,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee?: {
@@ -34213,15 +36282,15 @@ export interface components {
           url?: string;
         } | null;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** issues reopened event */
     "webhook-issues-reopened": {
       /** @enum {string} */
       action: "reopened";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       issue: {
         /** @enum {string|null} */
@@ -34230,7 +36299,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee?: {
@@ -34750,9 +36818,9 @@ export interface components {
           url?: string;
         };
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** issues transferred event */
     "webhook-issues-transferred": {
@@ -34761,7 +36829,7 @@ export interface components {
       changes: {
         /**
          * Issue
-         * @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/reference/issues) itself.
+         * @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/issues/issues#get-an-issue) itself.
          */
         new_issue: {
           /** @enum {string|null} */
@@ -34770,7 +36838,6 @@ export interface components {
             | "off-topic"
             | "too heated"
             | "spam"
-            | ""
             | null;
           /** User */
           assignee?: {
@@ -35435,7 +37502,7 @@ export interface components {
           public?: boolean;
           /** Format: uri-template */
           pulls_url: string;
-          pushed_at: number | string;
+          pushed_at: number | string | null;
           /** Format: uri-template */
           releases_url: string;
           role_name?: string | null;
@@ -35472,11 +37539,11 @@ export interface components {
           web_commit_signoff_required?: boolean;
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /**
        * Issue
-       * @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/reference/issues) itself.
+       * @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/issues/issues#get-an-issue) itself.
        */
       issue: {
         /** @enum {string|null} */
@@ -35485,7 +37552,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee?: {
@@ -35944,9 +38010,9 @@ export interface components {
           url?: string;
         } | null;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** issues unassigned event */
     "webhook-issues-unassigned": {
@@ -35992,11 +38058,11 @@ export interface components {
         /** Format: uri */
         url?: string;
       } | null;
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /**
        * Issue
-       * @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/reference/issues) itself.
+       * @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/issues/issues#get-an-issue) itself.
        */
       issue: {
         /** @enum {string|null} */
@@ -36005,7 +38071,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee?: {
@@ -36466,19 +38531,19 @@ export interface components {
           url?: string;
         } | null;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** issues unlabeled event */
     "webhook-issues-unlabeled": {
       /** @enum {string} */
       action: "unlabeled";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /**
        * Issue
-       * @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/reference/issues) itself.
+       * @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/issues/issues#get-an-issue) itself.
        */
       issue: {
         /** @enum {string|null} */
@@ -36487,7 +38552,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee?: {
@@ -36964,15 +39028,15 @@ export interface components {
          */
         url: string;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** issues unlocked event */
     "webhook-issues-unlocked": {
       /** @enum {string} */
       action: "unlocked";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       issue: {
         /** @enum {string|null} */
@@ -36981,7 +39045,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee?: {
@@ -37499,19 +39562,19 @@ export interface components {
           url?: string;
         };
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** issues unpinned event */
     "webhook-issues-unpinned": {
       /** @enum {string} */
       action: "unpinned";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /**
        * Issue
-       * @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/reference/issues) itself.
+       * @description The [issue](https://docs.github.com/enterprise-server@3.7/rest/issues/issues#get-an-issue) itself.
        */
       issue: {
         /** @enum {string|null} */
@@ -37520,7 +39583,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee?: {
@@ -37979,15 +40041,15 @@ export interface components {
           url?: string;
         } | null;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** label created event */
     "webhook-label-created": {
       /** @enum {string} */
       action: "created";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** Label */
       label: {
@@ -38005,15 +40067,15 @@ export interface components {
          */
         url: string;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** label deleted event */
     "webhook-label-deleted": {
       /** @enum {string} */
       action: "deleted";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** Label */
       label: {
@@ -38031,9 +40093,9 @@ export interface components {
          */
         url: string;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** label edited event */
     "webhook-label-edited": {
@@ -38054,7 +40116,7 @@ export interface components {
           from: string;
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** Label */
       label: {
@@ -38072,9 +40134,9 @@ export interface components {
          */
         url: string;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** member added event */
     "webhook-member-added": {
@@ -38086,7 +40148,7 @@ export interface components {
           to: "write" | "admin" | "read";
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** User */
       member: {
@@ -38125,9 +40187,9 @@ export interface components {
         /** Format: uri */
         url?: string;
       } | null;
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** member edited event */
     "webhook-member-edited": {
@@ -38144,7 +40206,7 @@ export interface components {
           to?: string | null;
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** User */
       member: {
@@ -38183,15 +40245,15 @@ export interface components {
         /** Format: uri */
         url?: string;
       } | null;
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** member removed event */
     "webhook-member-removed": {
       /** @enum {string} */
       action: "removed";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** User */
       member: {
@@ -38230,15 +40292,15 @@ export interface components {
         /** Format: uri */
         url?: string;
       } | null;
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** membership added event */
     "webhook-membership-added": {
       /** @enum {string} */
       action: "added";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** User */
       member: {
@@ -38277,8 +40339,8 @@ export interface components {
         /** Format: uri */
         url?: string;
       } | null;
-      organization: components["schemas"]["organization-simple"];
-      repository?: components["schemas"]["repository"];
+      organization: components["schemas"]["organization-simple-webhooks"];
+      repository?: components["schemas"]["repository-webhooks"];
       /**
        * @description The scope of the membership. Currently, can only be `team`.
        * @enum {string}
@@ -38381,7 +40443,7 @@ export interface components {
     "webhook-membership-removed": {
       /** @enum {string} */
       action: "removed";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** User */
       member: {
@@ -38420,8 +40482,8 @@ export interface components {
         /** Format: uri */
         url?: string;
       } | null;
-      organization: components["schemas"]["organization-simple"];
-      repository?: components["schemas"]["repository"];
+      organization: components["schemas"]["organization-simple-webhooks"];
+      repository?: components["schemas"]["repository-webhooks"];
       /**
        * @description The scope of the membership. Currently, can only be `team`.
        * @enum {string}
@@ -38524,7 +40586,7 @@ export interface components {
     "webhook-meta-deleted": {
       /** @enum {string} */
       action: "deleted";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       /** @description The modified webhook. This will contain different keys based on the type of webhook it is: repository, organization, business, app, or GitHub Marketplace. */
       hook: {
         active: boolean;
@@ -38599,15 +40661,15 @@ export interface components {
       /** @description The id of the modified webhook. */
       hook_id: number;
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository?: components["schemas"]["nullable-repository"];
-      sender?: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository?: components["schemas"]["nullable-repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** milestone closed event */
     "webhook-milestone-closed": {
       /** @enum {string} */
       action: "closed";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /**
        * Milestone
@@ -38680,15 +40742,15 @@ export interface components {
         /** Format: uri */
         url: string;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** milestone created event */
     "webhook-milestone-created": {
       /** @enum {string} */
       action: "created";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /**
        * Milestone
@@ -38761,15 +40823,15 @@ export interface components {
         /** Format: uri */
         url: string;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** milestone deleted event */
     "webhook-milestone-deleted": {
       /** @enum {string} */
       action: "deleted";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /**
        * Milestone
@@ -38842,9 +40904,9 @@ export interface components {
         /** Format: uri */
         url: string;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** milestone edited event */
     "webhook-milestone-edited": {
@@ -38865,7 +40927,7 @@ export interface components {
           from: string;
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /**
        * Milestone
@@ -38938,15 +41000,15 @@ export interface components {
         /** Format: uri */
         url: string;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** milestone opened event */
     "webhook-milestone-opened": {
       /** @enum {string} */
       action: "opened";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /**
        * Milestone
@@ -39019,15 +41081,15 @@ export interface components {
         /** Format: uri */
         url: string;
       };
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** organization deleted event */
     "webhook-organization-deleted": {
       /** @enum {string} */
       action: "deleted";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /**
        * Membership
@@ -39078,15 +41140,15 @@ export interface components {
           url?: string;
         } | null;
       };
-      organization: components["schemas"]["organization-simple"];
-      repository?: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization: components["schemas"]["organization-simple-webhooks"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** organization member_added event */
     "webhook-organization-member-added": {
       /** @enum {string} */
       action: "member_added";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /**
        * Membership
@@ -39137,15 +41199,15 @@ export interface components {
           url?: string;
         } | null;
       };
-      organization: components["schemas"]["organization-simple"];
-      repository?: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization: components["schemas"]["organization-simple-webhooks"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** organization member_invited event */
     "webhook-organization-member-invited": {
       /** @enum {string} */
       action: "member_invited";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** @description The invitation for the user or email if the action is `member_invited`. */
       invitation: {
@@ -39201,9 +41263,9 @@ export interface components {
         team_count: number;
         invitation_source?: string;
       };
-      organization: components["schemas"]["organization-simple"];
-      repository?: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization: components["schemas"]["organization-simple-webhooks"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
       /** User */
       user?: {
         /** Format: uri */
@@ -39246,7 +41308,7 @@ export interface components {
     "webhook-organization-member-removed": {
       /** @enum {string} */
       action: "member_removed";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /**
        * Membership
@@ -39297,9 +41359,9 @@ export interface components {
           url?: string;
         } | null;
       };
-      organization: components["schemas"]["organization-simple"];
-      repository?: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization: components["schemas"]["organization-simple-webhooks"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** organization renamed event */
     "webhook-organization-renamed": {
@@ -39310,7 +41372,7 @@ export interface components {
           from?: string;
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /**
        * Membership
@@ -39361,9 +41423,9 @@ export interface components {
           url?: string;
         } | null;
       };
-      organization: components["schemas"]["organization-simple"];
-      repository?: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization: components["schemas"]["organization-simple-webhooks"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** Ruby Gems metadata */
     "webhook-rubygems-metadata": {
@@ -39376,11 +41438,11 @@ export interface components {
       };
       platform?: string;
       metadata?: {
-        [key: string]: string | undefined;
+        [key: string]: string;
       };
       repo?: string;
       dependencies?: {
-        [key: string]: string | undefined;
+        [key: string]: string;
       }[];
       commit_oid?: string;
     };
@@ -39388,9 +41450,9 @@ export interface components {
     "webhook-package-published": {
       /** @enum {string} */
       action: "published";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** @description Information about the package. */
       package: {
         created_at: string | null;
@@ -39647,16 +41709,16 @@ export interface components {
         } | null;
         updated_at: string | null;
       };
-      repository?: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** package updated event */
     "webhook-package-updated": {
       /** @enum {string} */
       action: "updated";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** @description Information about the package. */
       package: {
         created_at: string;
@@ -39848,12 +41910,12 @@ export interface components {
         } | null;
         updated_at: string;
       };
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** page_build event */
     "webhook-page-build": {
-      /** @description The [List GitHub Pages builds](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#list-github-pages-builds) itself. */
+      /** @description The [List GitHub Pages builds](https://docs.github.com/enterprise-server@3.7/rest/pages/pages#list-github-pages-builds) itself. */
       build: {
         commit: string | null;
         created_at: string;
@@ -39903,12 +41965,12 @@ export interface components {
         /** Format: uri */
         url: string;
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       id: number;
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     "webhook-ping": {
       /**
@@ -39952,9 +42014,9 @@ export interface components {
       };
       /** @description The ID of the webhook that triggered the ping. */
       hook_id?: number;
-      organization?: components["schemas"]["organization-simple"];
-      repository?: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
       /** @description Random string of GitHub zen. */
       zen?: string;
     };
@@ -39972,9 +42034,9 @@ export interface components {
           from: string;
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Project Card */
       project_card: {
         after_id?: number | null;
@@ -40035,16 +42097,16 @@ export interface components {
         /** Format: uri */
         url: string;
       };
-      repository?: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** project_card created event */
     "webhook-project-card-created": {
       /** @enum {string} */
       action: "created";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Project Card */
       project_card: {
         after_id?: number | null;
@@ -40105,16 +42167,16 @@ export interface components {
         /** Format: uri */
         url: string;
       };
-      repository?: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** project_card deleted event */
     "webhook-project-card-deleted": {
       /** @enum {string} */
       action: "deleted";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Project Card */
       project_card: {
         after_id?: number | null;
@@ -40175,8 +42237,8 @@ export interface components {
         /** Format: uri */
         url: string;
       };
-      repository?: components["schemas"]["nullable-repository"];
-      sender: components["schemas"]["simple-user"];
+      repository?: components["schemas"]["nullable-repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** project_card edited event */
     "webhook-project-card-edited": {
@@ -40187,9 +42249,9 @@ export interface components {
           from: string | null;
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Project Card */
       project_card: {
         after_id?: number | null;
@@ -40250,8 +42312,8 @@ export interface components {
         /** Format: uri */
         url: string;
       };
-      repository?: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** project_card moved event */
     "webhook-project-card-moved": {
@@ -40262,9 +42324,9 @@ export interface components {
           from: number;
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       project_card: {
         after_id?: number | null;
         /** @description Whether or not the card is archived */
@@ -40356,16 +42418,16 @@ export interface components {
         updated_at?: string;
         url?: string;
       };
-      repository?: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** project closed event */
     "webhook-project-closed": {
       /** @enum {string} */
       action: "closed";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Project */
       project: {
         /** @description Body of the project */
@@ -40430,16 +42492,16 @@ export interface components {
         /** Format: uri */
         url: string;
       };
-      repository?: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** project_column created event */
     "webhook-project-column-created": {
       /** @enum {string} */
       action: "created";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Project Column */
       project_column: {
         after_id?: number | null;
@@ -40459,16 +42521,16 @@ export interface components {
         /** Format: uri */
         url: string;
       };
-      repository?: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** project_column deleted event */
     "webhook-project-column-deleted": {
       /** @enum {string} */
       action: "deleted";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Project Column */
       project_column: {
         after_id?: number | null;
@@ -40488,8 +42550,8 @@ export interface components {
         /** Format: uri */
         url: string;
       };
-      repository?: components["schemas"]["nullable-repository"];
-      sender?: components["schemas"]["simple-user"];
+      repository?: components["schemas"]["nullable-repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** project_column edited event */
     "webhook-project-column-edited": {
@@ -40500,9 +42562,9 @@ export interface components {
           from: string;
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Project Column */
       project_column: {
         after_id?: number | null;
@@ -40522,16 +42584,16 @@ export interface components {
         /** Format: uri */
         url: string;
       };
-      repository?: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** project_column moved event */
     "webhook-project-column-moved": {
       /** @enum {string} */
       action: "moved";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Project Column */
       project_column: {
         after_id?: number | null;
@@ -40551,16 +42613,16 @@ export interface components {
         /** Format: uri */
         url: string;
       };
-      repository?: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** project created event */
     "webhook-project-created": {
       /** @enum {string} */
       action: "created";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Project */
       project: {
         /** @description Body of the project */
@@ -40625,16 +42687,16 @@ export interface components {
         /** Format: uri */
         url: string;
       };
-      repository?: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** project deleted event */
     "webhook-project-deleted": {
       /** @enum {string} */
       action: "deleted";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Project */
       project: {
         /** @description Body of the project */
@@ -40699,8 +42761,8 @@ export interface components {
         /** Format: uri */
         url: string;
       };
-      repository?: components["schemas"]["nullable-repository"];
-      sender?: components["schemas"]["simple-user"];
+      repository?: components["schemas"]["nullable-repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** project edited event */
     "webhook-project-edited": {
@@ -40717,9 +42779,9 @@ export interface components {
           from: string;
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Project */
       project: {
         /** @description Body of the project */
@@ -40784,16 +42846,16 @@ export interface components {
         /** Format: uri */
         url: string;
       };
-      repository?: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** project reopened event */
     "webhook-project-reopened": {
       /** @enum {string} */
       action: "reopened";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Project */
       project: {
         /** @description Body of the project */
@@ -40858,8 +42920,8 @@ export interface components {
         /** Format: uri */
         url: string;
       };
-      repository?: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** Projects v2 Item Archived Event */
     "webhook-projects-v2-item-archived": {
@@ -40874,9 +42936,9 @@ export interface components {
         };
       };
       installation?: components["schemas"]["simple-installation"];
-      organization: components["schemas"]["organization-simple"];
+      organization: components["schemas"]["organization-simple-webhooks"];
       projects_v2_item: components["schemas"]["projects-v2-item"];
-      sender: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** Projects v2 Item Converted Event */
     "webhook-projects-v2-item-converted": {
@@ -40889,27 +42951,27 @@ export interface components {
         };
       };
       installation?: components["schemas"]["simple-installation"];
-      organization: components["schemas"]["organization-simple"];
+      organization: components["schemas"]["organization-simple-webhooks"];
       projects_v2_item: components["schemas"]["projects-v2-item"];
-      sender: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** Projects v2 Item Created Event */
     "webhook-projects-v2-item-created": {
       /** @enum {string} */
       action: "created";
       installation?: components["schemas"]["simple-installation"];
-      organization: components["schemas"]["organization-simple"];
+      organization: components["schemas"]["organization-simple-webhooks"];
       projects_v2_item: components["schemas"]["projects-v2-item"];
-      sender: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** Projects v2 Item Deleted Event */
     "webhook-projects-v2-item-deleted": {
       /** @enum {string} */
       action: "deleted";
       installation?: components["schemas"]["simple-installation"];
-      organization: components["schemas"]["organization-simple"];
+      organization: components["schemas"]["organization-simple-webhooks"];
       projects_v2_item: components["schemas"]["projects-v2-item"];
-      sender: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** Projects v2 Item Edited Event */
     "webhook-projects-v2-item-edited": {
@@ -40932,9 +42994,9 @@ export interface components {
         ]
       >;
       installation?: components["schemas"]["simple-installation"];
-      organization: components["schemas"]["organization-simple"];
+      organization: components["schemas"]["organization-simple-webhooks"];
       projects_v2_item: components["schemas"]["projects-v2-item"];
-      sender: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** Projects v2 Item Reordered Event */
     "webhook-projects-v2-item-reordered": {
@@ -40947,9 +43009,9 @@ export interface components {
         };
       };
       installation?: components["schemas"]["simple-installation"];
-      organization: components["schemas"]["organization-simple"];
+      organization: components["schemas"]["organization-simple-webhooks"];
       projects_v2_item: components["schemas"]["projects-v2-item"];
-      sender: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** Projects v2 Item Restored Event */
     "webhook-projects-v2-item-restored": {
@@ -40964,17 +43026,17 @@ export interface components {
         };
       };
       installation?: components["schemas"]["simple-installation"];
-      organization: components["schemas"]["organization-simple"];
+      organization: components["schemas"]["organization-simple-webhooks"];
       projects_v2_item: components["schemas"]["projects-v2-item"];
-      sender: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** public event */
     "webhook-public": {
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** pull_request assigned event */
     "webhook-pull-request-assigned": {
@@ -41017,11 +43079,11 @@ export interface components {
         /** Format: uri */
         url?: string;
       } | null;
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** @description The pull request number. */
       number: number;
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Pull Request */
       pull_request: {
         _links: {
@@ -41072,7 +43134,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         additions?: number;
         /** User */
@@ -41440,7 +43501,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -41783,7 +43844,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -42224,17 +44285,17 @@ export interface components {
           url?: string;
         } | null;
       };
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** pull_request auto_merge_disabled event */
     "webhook-pull-request-auto-merge-disabled": {
       /** @enum {string} */
       action: "auto_merge_disabled";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       number: number;
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Pull Request */
       pull_request: {
         _links: {
@@ -42285,7 +44346,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         additions?: number;
         /** User */
@@ -42653,7 +44713,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -42996,7 +45056,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -43438,17 +45498,17 @@ export interface components {
         } | null;
       };
       reason: string;
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** pull_request auto_merge_enabled event */
     "webhook-pull-request-auto-merge-enabled": {
       /** @enum {string} */
       action: "auto_merge_enabled";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       number: number;
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Pull Request */
       pull_request: {
         _links: {
@@ -43499,7 +45559,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         additions?: number;
         /** User */
@@ -43867,7 +45926,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -44210,7 +46269,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -44652,18 +46711,18 @@ export interface components {
         } | null;
       };
       reason?: string;
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** pull_request closed event */
     "webhook-pull-request-closed": {
       /** @enum {string} */
       action: "closed";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** @description The pull request number. */
       number: number;
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       pull_request: components["schemas"]["pull-request"] & {
         /**
          * @description Whether to allow auto-merge for pull requests.
@@ -44713,18 +46772,18 @@ export interface components {
          */
         use_squash_pr_title_as_default?: boolean;
       };
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** pull_request converted_to_draft event */
     "webhook-pull-request-converted-to-draft": {
       /** @enum {string} */
       action: "converted_to_draft";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** @description The pull request number. */
       number: number;
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       pull_request: components["schemas"]["pull-request"] & {
         /**
          * @description Whether to allow auto-merge for pull requests.
@@ -44774,18 +46833,18 @@ export interface components {
          */
         use_squash_pr_title_as_default?: boolean;
       };
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** pull_request demilestoned event */
     "webhook-pull-request-demilestoned": {
       /** @enum {string} */
       action: "demilestoned";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       milestone?: components["schemas"]["milestone"];
       /** @description The pull request number. */
       number: number;
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Pull Request */
       pull_request: {
         _links: {
@@ -44836,7 +46895,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         additions?: number;
         /** User */
@@ -45204,7 +47262,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -45547,7 +47605,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -45988,8 +48046,8 @@ export interface components {
           url?: string;
         } | null;
       };
-      repository: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** pull_request edited event */
     "webhook-pull-request-edited": {
@@ -46014,11 +48072,11 @@ export interface components {
           from: string;
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** @description The pull request number. */
       number: number;
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       pull_request: components["schemas"]["pull-request"] & {
         /**
          * @description Whether to allow auto-merge for pull requests.
@@ -46068,14 +48126,14 @@ export interface components {
          */
         use_squash_pr_title_as_default?: boolean;
       };
-      repository: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** pull_request labeled event */
     "webhook-pull-request-labeled": {
       /** @enum {string} */
       action: "labeled";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** Label */
       label?: {
@@ -46095,7 +48153,7 @@ export interface components {
       };
       /** @description The pull request number. */
       number: number;
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Pull Request */
       pull_request: {
         _links: {
@@ -46146,7 +48204,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         additions?: number;
         /** User */
@@ -46514,7 +48571,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -46857,7 +48914,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -47298,18 +49355,18 @@ export interface components {
           url?: string;
         } | null;
       };
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** pull_request locked event */
     "webhook-pull-request-locked": {
       /** @enum {string} */
       action: "locked";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** @description The pull request number. */
       number: number;
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Pull Request */
       pull_request: {
         _links: {
@@ -47360,7 +49417,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         additions?: number;
         /** User */
@@ -47728,7 +49784,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -48071,7 +50127,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -48512,18 +50568,18 @@ export interface components {
           url?: string;
         } | null;
       };
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** pull_request milestoned event */
     "webhook-pull-request-milestoned": {
       /** @enum {string} */
       action: "milestoned";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       milestone?: components["schemas"]["milestone"];
       /** @description The pull request number. */
       number: number;
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Pull Request */
       pull_request: {
         _links: {
@@ -48574,7 +50630,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         additions?: number;
         /** User */
@@ -48942,7 +50997,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -49285,7 +51340,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -49726,18 +51781,18 @@ export interface components {
           url?: string;
         } | null;
       };
-      repository: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** pull_request opened event */
     "webhook-pull-request-opened": {
       /** @enum {string} */
       action: "opened";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** @description The pull request number. */
       number: number;
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       pull_request: components["schemas"]["pull-request"] & {
         /**
          * @description Whether to allow auto-merge for pull requests.
@@ -49787,18 +51842,18 @@ export interface components {
          */
         use_squash_pr_title_as_default?: boolean;
       };
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** pull_request ready_for_review event */
     "webhook-pull-request-ready-for-review": {
       /** @enum {string} */
       action: "ready_for_review";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** @description The pull request number. */
       number: number;
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       pull_request: components["schemas"]["pull-request"] & {
         /**
          * @description Whether to allow auto-merge for pull requests.
@@ -49848,18 +51903,18 @@ export interface components {
          */
         use_squash_pr_title_as_default?: boolean;
       };
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** pull_request reopened event */
     "webhook-pull-request-reopened": {
       /** @enum {string} */
       action: "reopened";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** @description The pull request number. */
       number: number;
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       pull_request: components["schemas"]["pull-request"] & {
         /**
          * @description Whether to allow auto-merge for pull requests.
@@ -49909,8 +51964,8 @@ export interface components {
          */
         use_squash_pr_title_as_default?: boolean;
       };
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** pull_request_review_comment created event */
     "webhook-pull-request-review-comment-created": {
@@ -49918,7 +51973,7 @@ export interface components {
       action: "created";
       /**
        * Pull Request Review Comment
-       * @description The [comment](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#comments) itself.
+       * @description The [comment](https://docs.github.com/enterprise-server@3.7/rest/pulls/comments#get-a-review-comment-for-a-pull-request) itself.
        */
       comment: {
         _links: {
@@ -50018,7 +52073,7 @@ export interface components {
          * @default RIGHT
          * @enum {string|null}
          */
-        start_side: "LEFT" | "RIGHT" | "" | null;
+        start_side: "LEFT" | "RIGHT" | null;
         /**
          * @description The level at which the comment is targeted, can be a diff line or a file.
          * @enum {string}
@@ -50069,9 +52124,9 @@ export interface components {
           url?: string;
         } | null;
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       pull_request: {
         _links: {
           /** Link */
@@ -50121,7 +52176,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee: {
@@ -50488,7 +52542,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -50824,7 +52878,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -51214,8 +53268,8 @@ export interface components {
           url?: string;
         } | null;
       };
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** pull_request_review_comment deleted event */
     "webhook-pull-request-review-comment-deleted": {
@@ -51223,7 +53277,7 @@ export interface components {
       action: "deleted";
       /**
        * Pull Request Review Comment
-       * @description The [comment](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#comments) itself.
+       * @description The [comment](https://docs.github.com/enterprise-server@3.7/rest/pulls/comments#get-a-review-comment-for-a-pull-request) itself.
        */
       comment: {
         _links: {
@@ -51323,7 +53377,7 @@ export interface components {
          * @default RIGHT
          * @enum {string|null}
          */
-        start_side: "LEFT" | "RIGHT" | "" | null;
+        start_side: "LEFT" | "RIGHT" | null;
         /**
          * @description The level at which the comment is targeted, can be a diff line or a file.
          * @enum {string}
@@ -51374,9 +53428,9 @@ export interface components {
           url?: string;
         } | null;
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       pull_request: {
         _links: {
           /** Link */
@@ -51426,7 +53480,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee: {
@@ -51793,7 +53846,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -52129,7 +54182,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -52519,8 +54572,8 @@ export interface components {
           url?: string;
         } | null;
       };
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** pull_request_review_comment edited event */
     "webhook-pull-request-review-comment-edited": {
@@ -52535,7 +54588,7 @@ export interface components {
       };
       /**
        * Pull Request Review Comment
-       * @description The [comment](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#comments) itself.
+       * @description The [comment](https://docs.github.com/enterprise-server@3.7/rest/pulls/comments#get-a-review-comment-for-a-pull-request) itself.
        */
       comment: {
         _links: {
@@ -52635,7 +54688,7 @@ export interface components {
          * @default RIGHT
          * @enum {string|null}
          */
-        start_side: "LEFT" | "RIGHT" | "" | null;
+        start_side: "LEFT" | "RIGHT" | null;
         /**
          * @description The level at which the comment is targeted, can be a diff line or a file.
          * @enum {string}
@@ -52686,9 +54739,9 @@ export interface components {
           url?: string;
         } | null;
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       pull_request: {
         _links: {
           /** Link */
@@ -52738,7 +54791,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee: {
@@ -53105,7 +55157,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -53441,7 +55493,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -53831,16 +55883,16 @@ export interface components {
           url?: string;
         } | null;
       };
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** pull_request_review dismissed event */
     "webhook-pull-request-review-dismissed": {
       /** @enum {string} */
       action: "dismissed";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Simple Pull Request */
       pull_request: {
         _links: {
@@ -53891,7 +55943,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee: {
@@ -54258,7 +56309,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -54594,7 +56645,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -54984,7 +57035,7 @@ export interface components {
           url?: string;
         } | null;
       };
-      repository: components["schemas"]["repository"];
+      repository: components["schemas"]["repository-webhooks"];
       /** @description The review that was affected. */
       review: {
         _links: {
@@ -55066,7 +57117,7 @@ export interface components {
           url?: string;
         } | null;
       };
-      sender: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** pull_request_review edited event */
     "webhook-pull-request-review-edited": {
@@ -55078,9 +57129,9 @@ export interface components {
           from: string;
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Simple Pull Request */
       pull_request: {
         _links: {
@@ -55131,7 +57182,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee: {
@@ -55476,7 +57526,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -55763,7 +57813,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -56126,7 +58176,7 @@ export interface components {
           url?: string;
         } | null;
       };
-      repository: components["schemas"]["repository"];
+      repository: components["schemas"]["repository-webhooks"];
       /** @description The review that was affected. */
       review: {
         _links: {
@@ -56207,7 +58257,7 @@ export interface components {
           url?: string;
         } | null;
       };
-      sender: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** pull_request review_request_removed event */
     "webhook-pull-request-review-request-removed": OneOf<
@@ -56215,11 +58265,11 @@ export interface components {
         {
           /** @enum {string} */
           action: "review_request_removed";
-          enterprise?: components["schemas"]["enterprise"];
+          enterprise?: components["schemas"]["enterprise-webhooks"];
           installation?: components["schemas"]["simple-installation"];
           /** @description The pull request number. */
           number: number;
-          organization?: components["schemas"]["organization-simple"];
+          organization?: components["schemas"]["organization-simple-webhooks"];
           /** Pull Request */
           pull_request: {
             _links: {
@@ -56270,7 +58320,6 @@ export interface components {
               | "off-topic"
               | "too heated"
               | "spam"
-              | ""
               | null;
             additions?: number;
             /** User */
@@ -56638,7 +58687,7 @@ export interface components {
                 public?: boolean;
                 /** Format: uri-template */
                 pulls_url: string;
-                pushed_at: number | string;
+                pushed_at: number | string | null;
                 /** Format: uri-template */
                 releases_url: string;
                 role_name?: string | null;
@@ -56974,7 +59023,7 @@ export interface components {
                 public?: boolean;
                 /** Format: uri-template */
                 pulls_url: string;
-                pushed_at: number | string;
+                pushed_at: number | string | null;
                 /** Format: uri-template */
                 releases_url: string;
                 role_name?: string | null;
@@ -57415,7 +59464,7 @@ export interface components {
               url?: string;
             } | null;
           };
-          repository: components["schemas"]["repository"];
+          repository: components["schemas"]["repository-webhooks"];
           /** User */
           requested_reviewer: {
             /** Format: uri */
@@ -57453,16 +59502,16 @@ export interface components {
             /** Format: uri */
             url?: string;
           } | null;
-          sender: components["schemas"]["simple-user"];
+          sender: components["schemas"]["simple-user-webhooks"];
         },
         {
           /** @enum {string} */
           action: "review_request_removed";
-          enterprise?: components["schemas"]["enterprise"];
+          enterprise?: components["schemas"]["enterprise-webhooks"];
           installation?: components["schemas"]["simple-installation"];
           /** @description The pull request number. */
           number: number;
-          organization?: components["schemas"]["organization-simple"];
+          organization?: components["schemas"]["organization-simple-webhooks"];
           /** Pull Request */
           pull_request: {
             _links: {
@@ -57513,7 +59562,6 @@ export interface components {
               | "off-topic"
               | "too heated"
               | "spam"
-              | ""
               | null;
             additions?: number;
             /** User */
@@ -57881,7 +59929,7 @@ export interface components {
                 public?: boolean;
                 /** Format: uri-template */
                 pulls_url: string;
-                pushed_at: number | string;
+                pushed_at: number | string | null;
                 /** Format: uri-template */
                 releases_url: string;
                 role_name?: string | null;
@@ -58224,7 +60272,7 @@ export interface components {
                 public?: boolean;
                 /** Format: uri-template */
                 pulls_url: string;
-                pushed_at: number | string;
+                pushed_at: number | string | null;
                 /** Format: uri-template */
                 releases_url: string;
                 role_name?: string | null;
@@ -58665,7 +60713,7 @@ export interface components {
               url?: string;
             } | null;
           };
-          repository: components["schemas"]["repository"];
+          repository: components["schemas"]["repository-webhooks"];
           /**
            * Team
            * @description Groups of organization members that gives permissions on specified repositories.
@@ -58721,7 +60769,7 @@ export interface components {
              */
             url: string;
           };
-          sender: components["schemas"]["simple-user"];
+          sender: components["schemas"]["simple-user-webhooks"];
         },
       ]
     >;
@@ -58731,11 +60779,11 @@ export interface components {
         {
           /** @enum {string} */
           action: "review_requested";
-          enterprise?: components["schemas"]["enterprise"];
+          enterprise?: components["schemas"]["enterprise-webhooks"];
           installation?: components["schemas"]["simple-installation"];
           /** @description The pull request number. */
           number: number;
-          organization?: components["schemas"]["organization-simple"];
+          organization?: components["schemas"]["organization-simple-webhooks"];
           /** Pull Request */
           pull_request: {
             _links: {
@@ -58786,7 +60834,6 @@ export interface components {
               | "off-topic"
               | "too heated"
               | "spam"
-              | ""
               | null;
             additions?: number;
             /** User */
@@ -59154,7 +61201,7 @@ export interface components {
                 public?: boolean;
                 /** Format: uri-template */
                 pulls_url: string;
-                pushed_at: number | string;
+                pushed_at: number | string | null;
                 /** Format: uri-template */
                 releases_url: string;
                 role_name?: string | null;
@@ -59497,7 +61544,7 @@ export interface components {
                 public?: boolean;
                 /** Format: uri-template */
                 pulls_url: string;
-                pushed_at: number | string;
+                pushed_at: number | string | null;
                 /** Format: uri-template */
                 releases_url: string;
                 role_name?: string | null;
@@ -59938,7 +61985,7 @@ export interface components {
               url?: string;
             } | null;
           };
-          repository: components["schemas"]["repository"];
+          repository: components["schemas"]["repository-webhooks"];
           /** User */
           requested_reviewer: {
             /** Format: uri */
@@ -59976,16 +62023,16 @@ export interface components {
             /** Format: uri */
             url?: string;
           } | null;
-          sender: components["schemas"]["simple-user"];
+          sender: components["schemas"]["simple-user-webhooks"];
         },
         {
           /** @enum {string} */
           action: "review_requested";
-          enterprise?: components["schemas"]["enterprise"];
+          enterprise?: components["schemas"]["enterprise-webhooks"];
           installation?: components["schemas"]["simple-installation"];
           /** @description The pull request number. */
           number: number;
-          organization?: components["schemas"]["organization-simple"];
+          organization?: components["schemas"]["organization-simple-webhooks"];
           /** Pull Request */
           pull_request: {
             _links: {
@@ -60036,7 +62083,6 @@ export interface components {
               | "off-topic"
               | "too heated"
               | "spam"
-              | ""
               | null;
             additions?: number;
             /** User */
@@ -60404,7 +62450,7 @@ export interface components {
                 public?: boolean;
                 /** Format: uri-template */
                 pulls_url: string;
-                pushed_at: number | string;
+                pushed_at: number | string | null;
                 /** Format: uri-template */
                 releases_url: string;
                 role_name?: string | null;
@@ -60747,7 +62793,7 @@ export interface components {
                 public?: boolean;
                 /** Format: uri-template */
                 pulls_url: string;
-                pushed_at: number | string;
+                pushed_at: number | string | null;
                 /** Format: uri-template */
                 releases_url: string;
                 role_name?: string | null;
@@ -61188,7 +63234,7 @@ export interface components {
               url?: string;
             } | null;
           };
-          repository: components["schemas"]["repository"];
+          repository: components["schemas"]["repository-webhooks"];
           /**
            * Team
            * @description Groups of organization members that gives permissions on specified repositories.
@@ -61244,7 +63290,7 @@ export interface components {
              */
             url?: string;
           };
-          sender: components["schemas"]["simple-user"];
+          sender: components["schemas"]["simple-user-webhooks"];
         },
       ]
     >;
@@ -61252,9 +63298,9 @@ export interface components {
     "webhook-pull-request-review-submitted": {
       /** @enum {string} */
       action: "submitted";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Simple Pull Request */
       pull_request: {
         _links: {
@@ -61305,7 +63351,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee: {
@@ -61672,7 +63717,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -62008,7 +64053,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -62398,7 +64443,7 @@ export interface components {
           url?: string;
         } | null;
       };
-      repository: components["schemas"]["repository"];
+      repository: components["schemas"]["repository-webhooks"];
       /** @description The review that was affected. */
       review: {
         _links: {
@@ -62479,15 +64524,15 @@ export interface components {
           url?: string;
         } | null;
       };
-      sender: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** pull_request_review_thread resolved event */
     "webhook-pull-request-review-thread-resolved": {
       /** @enum {string} */
       action: "resolved";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Simple Pull Request */
       pull_request: {
         _links: {
@@ -62538,7 +64583,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee: {
@@ -62888,7 +64932,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -63182,7 +65226,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -63547,8 +65591,8 @@ export interface components {
           url?: string;
         } | null;
       };
-      repository: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
       thread: {
         comments: {
           _links: {
@@ -63648,7 +65692,7 @@ export interface components {
            * @default RIGHT
            * @enum {string|null}
            */
-          start_side: "LEFT" | "RIGHT" | "" | null;
+          start_side: "LEFT" | "RIGHT" | null;
           /**
            * @description The level at which the comment is targeted, can be a diff line or a file.
            * @enum {string}
@@ -63706,9 +65750,9 @@ export interface components {
     "webhook-pull-request-review-thread-unresolved": {
       /** @enum {string} */
       action: "unresolved";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Simple Pull Request */
       pull_request: {
         _links: {
@@ -63759,7 +65803,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         /** User */
         assignee: {
@@ -64109,7 +66152,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -64403,7 +66446,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -64768,8 +66811,8 @@ export interface components {
           url?: string;
         } | null;
       };
-      repository: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
       thread: {
         comments: {
           _links: {
@@ -64869,7 +66912,7 @@ export interface components {
            * @default RIGHT
            * @enum {string|null}
            */
-          start_side: "LEFT" | "RIGHT" | "" | null;
+          start_side: "LEFT" | "RIGHT" | null;
           /**
            * @description The level at which the comment is targeted, can be a diff line or a file.
            * @enum {string}
@@ -64929,11 +66972,11 @@ export interface components {
       action: "synchronize";
       after: string;
       before: string;
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** @description The pull request number. */
       number: number;
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Pull Request */
       pull_request: {
         _links: {
@@ -64984,7 +67027,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         additions?: number;
         /** User */
@@ -65352,7 +67394,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -65688,7 +67730,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -66129,8 +68171,8 @@ export interface components {
           url?: string;
         } | null;
       };
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** pull_request unassigned event */
     "webhook-pull-request-unassigned": {
@@ -66173,11 +68215,11 @@ export interface components {
         /** Format: uri */
         url?: string;
       } | null;
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** @description The pull request number. */
       number: number;
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Pull Request */
       pull_request: {
         _links: {
@@ -66228,7 +68270,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         additions?: number;
         /** User */
@@ -66596,7 +68637,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -66939,7 +68980,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -67380,14 +69421,14 @@ export interface components {
           url?: string;
         } | null;
       };
-      repository: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** pull_request unlabeled event */
     "webhook-pull-request-unlabeled": {
       /** @enum {string} */
       action: "unlabeled";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** Label */
       label?: {
@@ -67407,7 +69448,7 @@ export interface components {
       };
       /** @description The pull request number. */
       number: number;
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Pull Request */
       pull_request: {
         _links: {
@@ -67458,7 +69499,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         additions?: number;
         /** User */
@@ -67826,7 +69866,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -68162,7 +70202,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -68603,18 +70643,18 @@ export interface components {
           url?: string;
         } | null;
       };
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** pull_request unlocked event */
     "webhook-pull-request-unlocked": {
       /** @enum {string} */
       action: "unlocked";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       /** @description The pull request number. */
       number: number;
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /** Pull Request */
       pull_request: {
         _links: {
@@ -68665,7 +70705,6 @@ export interface components {
           | "off-topic"
           | "too heated"
           | "spam"
-          | ""
           | null;
         additions?: number;
         /** User */
@@ -69033,7 +71072,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -69376,7 +71415,7 @@ export interface components {
             public?: boolean;
             /** Format: uri-template */
             pulls_url: string;
-            pushed_at: number | string;
+            pushed_at: number | string | null;
             /** Format: uri-template */
             releases_url: string;
             role_name?: string | null;
@@ -69817,8 +71856,8 @@ export interface components {
           url?: string;
         } | null;
       };
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** push event */
     "webhook-push": {
@@ -69827,7 +71866,7 @@ export interface components {
       base_ref: string | null;
       /** @description The SHA of the most recent commit on `ref` before the push. */
       before: string;
-      /** @description An array of commit objects describing the pushed commits. (Pushed commits are all commits that are included in the `compare` between the `before` commit and the `after` commit.) The array includes a maximum of 20 commits. If necessary, you can use the [Commits API](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#commits) to fetch additional commits. This limit is applied to timeline events only and isn't applied to webhook deliveries. */
+      /** @description An array of commit objects describing the pushed commits. (Pushed commits are all commits that are included in the `compare` between the `before` commit and the `after` commit.) The array includes a maximum of 20 commits. If necessary, you can use the [Commits API](https://docs.github.com/enterprise-server@3.7/rest/commits) to fetch additional commits. This limit is applied to timeline events only and isn't applied to webhook deliveries. */
       commits: {
         /** @description An array of files added in the commit. */
         added?: string[];
@@ -69884,7 +71923,7 @@ export interface components {
       created: boolean;
       /** @description Whether this push deleted the `ref`. */
       deleted: boolean;
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       /** @description Whether this push was a force push of the `ref`. */
       forced: boolean;
       /** Commit */
@@ -69939,7 +71978,7 @@ export interface components {
         url: string;
       } | null;
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /**
        * Committer
        * @description Metaproperties for Git author/committer information.
@@ -70161,7 +72200,7 @@ export interface components {
         public?: boolean;
         /** Format: uri-template */
         pulls_url: string;
-        pushed_at: number | string;
+        pushed_at: number | string | null;
         /** Format: uri-template */
         releases_url: string;
         role_name?: string | null;
@@ -70197,14 +72236,14 @@ export interface components {
         /** @description Whether to require contributors to sign off on web-based commits */
         web_commit_signoff_required?: boolean;
       };
-      sender?: components["schemas"]["simple-user"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     "webhook-registry-package-published": {
       /** @enum {string} */
       action: "published";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       registry_package: {
         created_at: string | null;
         description: string | null;
@@ -70283,19 +72322,19 @@ export interface components {
             name?: string;
             version?: string;
             npm_user?: string;
-            author?: string | Record<string, never>;
-            bugs?: string | Record<string, never>;
+            author?: string | Record<string, never> | null;
+            bugs?: string | Record<string, never> | null;
             dependencies?: Record<string, never>;
             dev_dependencies?: Record<string, never>;
             peer_dependencies?: Record<string, never>;
             optional_dependencies?: Record<string, never>;
             description?: string;
-            dist?: string | Record<string, never>;
+            dist?: string | Record<string, never> | null;
             git_head?: string;
             homepage?: string;
             license?: string;
             main?: string;
-            repository?: string | Record<string, never>;
+            repository?: string | Record<string, never> | null;
             scripts?: Record<string, never>;
             id?: string;
             node_version?: string;
@@ -70308,7 +72347,7 @@ export interface components {
             files?: string[];
             bin?: Record<string, never>;
             man?: Record<string, never>;
-            directories?: string | Record<string, never>;
+            directories?: string | Record<string, never> | null;
             os?: string[];
             cpu?: string[];
             readme?: string;
@@ -70320,7 +72359,7 @@ export interface components {
           } | null;
           nuget_metadata?:
             | {
-                id?: string | Record<string, never> | number;
+                id?: string | Record<string, never> | number | null;
                 name?: string;
                 value?: OneOf<
                   [
@@ -70401,14 +72440,15 @@ export interface components {
         } | null;
         updated_at: string | null;
       };
-      repository?: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     "webhook-registry-package-updated": {
-      action: string;
-      enterprise?: components["schemas"]["enterprise"];
+      /** @enum {string} */
+      action: "updated";
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       registry_package: {
         created_at: string;
         description: Record<string, unknown> | null;
@@ -70533,19 +72573,19 @@ export interface components {
         registry: Record<string, unknown> | null;
         updated_at: string;
       };
-      repository?: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** release created event */
     "webhook-release-created": {
       /** @enum {string} */
       action: "created";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /**
        * Release
-       * @description The [release](https://docs.github.com/enterprise-server@3.7/rest/reference/repos/#get-a-release) object.
+       * @description The [release](https://docs.github.com/enterprise-server@3.7/rest/releases/releases/#get-a-release) object.
        */
       release: {
         assets: {
@@ -70690,19 +72730,19 @@ export interface components {
         /** Format: uri */
         zipball_url: string | null;
       };
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** release deleted event */
     "webhook-release-deleted": {
       /** @enum {string} */
       action: "deleted";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /**
        * Release
-       * @description The [release](https://docs.github.com/enterprise-server@3.7/rest/reference/repos/#get-a-release) object.
+       * @description The [release](https://docs.github.com/enterprise-server@3.7/rest/releases/releases/#get-a-release) object.
        */
       release: {
         assets: {
@@ -70847,8 +72887,8 @@ export interface components {
         /** Format: uri */
         zipball_url: string | null;
       };
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** release edited event */
     "webhook-release-edited": {
@@ -70864,12 +72904,12 @@ export interface components {
           from: string;
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /**
        * Release
-       * @description The [release](https://docs.github.com/enterprise-server@3.7/rest/reference/repos/#get-a-release) object.
+       * @description The [release](https://docs.github.com/enterprise-server@3.7/rest/releases/releases/#get-a-release) object.
        */
       release: {
         assets: {
@@ -71014,16 +73054,16 @@ export interface components {
         /** Format: uri */
         zipball_url: string | null;
       };
-      repository: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** release prereleased event */
     "webhook-release-prereleased": {
       /** @enum {string} */
       action: "prereleased";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       release: {
         assets: {
           /** Format: uri */
@@ -71209,16 +73249,16 @@ export interface components {
         url?: string;
         zipball_url?: string | null;
       };
-      repository: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** release published event */
     "webhook-release-published": {
       /** @enum {string} */
       action: "published";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       release: {
         assets: {
           /** Format: uri */
@@ -71401,19 +73441,19 @@ export interface components {
         url?: string;
         zipball_url?: string | null;
       };
-      repository: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** release released event */
     "webhook-release-released": {
       /** @enum {string} */
       action: "released";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       /**
        * Release
-       * @description The [release](https://docs.github.com/enterprise-server@3.7/rest/reference/repos/#get-a-release) object.
+       * @description The [release](https://docs.github.com/enterprise-server@3.7/rest/releases/releases/#get-a-release) object.
        */
       release: {
         assets: {
@@ -71558,16 +73598,16 @@ export interface components {
         /** Format: uri */
         zipball_url: string | null;
       };
-      repository: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** release unpublished event */
     "webhook-release-unpublished": {
       /** @enum {string} */
       action: "unpublished";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       release: {
         assets: {
           /** Format: uri */
@@ -71749,69 +73789,70 @@ export interface components {
         url?: string;
         zipball_url?: string | null;
       };
-      repository: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     "webhook-repository-anonymous-access-disabled": {
       /** @enum {string} */
       action: "anonymous_access_disabled";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository?: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     "webhook-repository-anonymous-access-enabled": {
       /** @enum {string} */
       action: "anonymous_access_enabled";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository?: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** repository archived event */
     "webhook-repository-archived": {
       /** @enum {string} */
       action: "archived";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** repository created event */
     "webhook-repository-created": {
       /** @enum {string} */
       action: "created";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** repository deleted event */
     "webhook-repository-deleted": {
       /** @enum {string} */
       action: "deleted";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** repository_dispatch event */
     "webhook-repository-dispatch-sample": {
-      action: string;
+      /** @enum {string} */
+      action: "sample.collected";
       branch: string;
       client_payload: {
         [key: string]: unknown;
       } | null;
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** repository edited event */
     "webhook-repository-edited": {
@@ -71831,31 +73872,31 @@ export interface components {
           from?: string[] | null;
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** repository privatized event */
     "webhook-repository-privatized": {
       /** @enum {string} */
       action: "privatized";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** repository publicized event */
     "webhook-repository-publicized": {
       /** @enum {string} */
       action: "publicized";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** repository renamed event */
     "webhook-repository-renamed": {
@@ -71868,11 +73909,11 @@ export interface components {
           };
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** repository transferred event */
     "webhook-repository-transferred": {
@@ -71946,21 +73987,21 @@ export interface components {
           };
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** repository unarchived event */
     "webhook-repository-unarchived": {
       /** @enum {string} */
       action: "unarchived";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** repository_vulnerability_alert create event */
     "webhook-repository-vulnerability-alert-create": {
@@ -72038,11 +74079,11 @@ export interface components {
         /** @enum {string} */
         state: "open";
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** repository_vulnerability_alert dismiss event */
     "webhook-repository-vulnerability-alert-dismiss": {
@@ -72161,11 +74202,11 @@ export interface components {
         /** @enum {string} */
         state: "dismissed";
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** repository_vulnerability_alert reopen event */
     "webhook-repository-vulnerability-alert-reopen": {
@@ -72243,11 +74284,11 @@ export interface components {
         /** @enum {string} */
         state: "open";
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** repository_vulnerability_alert resolve event */
     "webhook-repository-vulnerability-alert-resolve": {
@@ -72328,33 +74369,33 @@ export interface components {
         /** @enum {string} */
         state: "fixed" | "open";
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** secret_scanning_alert created event */
     "webhook-secret-scanning-alert-created": {
       /** @enum {string} */
       action: "created";
-      alert: components["schemas"]["secret-scanning-alert"];
-      enterprise?: components["schemas"]["enterprise"];
+      alert: components["schemas"]["secret-scanning-alert-webhook"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** Secret Scanning Alert Location Created Event */
     "webhook-secret-scanning-alert-location-created": {
       /** @enum {string} */
       action?: "created";
-      alert: components["schemas"]["secret-scanning-alert"];
+      alert: components["schemas"]["secret-scanning-alert-webhook"];
       installation?: components["schemas"]["simple-installation"];
       location: components["schemas"]["secret-scanning-location"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** Secret Scanning Alert Location Created Event */
     "webhook-secret-scanning-alert-location-created-form-encoded": {
@@ -72365,93 +74406,43 @@ export interface components {
     "webhook-secret-scanning-alert-reopened": {
       /** @enum {string} */
       action: "reopened";
-      alert: components["schemas"]["secret-scanning-alert"];
-      enterprise?: components["schemas"]["enterprise"];
+      alert: components["schemas"]["secret-scanning-alert-webhook"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** secret_scanning_alert resolved event */
     "webhook-secret-scanning-alert-resolved": {
       /** @enum {string} */
       action: "resolved";
-      alert: {
-        created_at?: components["schemas"]["alert-created-at"];
-        html_url?: components["schemas"]["alert-html-url"];
-        /**
-         * Format: uri
-         * @description The REST API URL of the code locations for this alert.
-         */
-        locations_url?: string;
-        number?: components["schemas"]["alert-number"];
-        /** @description Whether push protection was bypassed for the detected secret. */
-        push_protection_bypassed?: boolean | null;
-        /**
-         * Format: date-time
-         * @description The time that push protection was bypassed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
-         */
-        push_protection_bypassed_at?: string | null;
-        push_protection_bypassed_by?: components["schemas"]["nullable-simple-user"];
-        /**
-         * @description **Required when the `state` is `resolved`.** The reason for resolving the alert.
-         * @enum {string|null}
-         */
-        resolution?:
-          | ""
-          | "false_positive"
-          | "wont_fix"
-          | "revoked"
-          | "used_in_tests"
-          | "pattern_deleted"
-          | "pattern_edited"
-          | null;
-        /**
-         * Format: date-time
-         * @description The time that the alert was resolved in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
-         */
-        resolved_at?: string | null;
-        resolved_by?: components["schemas"]["nullable-simple-user"];
-        /** @description An optional comment to resolve an alert. */
-        resolution_comment?: string | null;
-        /** @description The secret that was detected. */
-        secret?: string;
-        /** @description The type of secret that secret scanning detected. */
-        secret_type?: string;
-        /**
-         * @description User-friendly name for the detected secret, matching the `secret_type`.
-         * For a list of built-in patterns, see "[Secret scanning patterns](https://docs.github.com/enterprise-server@3.7/code-security/secret-scanning/secret-scanning-patterns#supported-secrets-for-advanced-security)."
-         */
-        secret_type_display_name?: string;
-        state?: components["schemas"]["secret-scanning-alert-state"];
-        updated_at?: components["schemas"]["alert-updated-at"];
-        url?: components["schemas"]["alert-url"];
-      };
-      enterprise?: components["schemas"]["enterprise"];
+      alert: components["schemas"]["secret-scanning-alert-webhook"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** secret_scanning_alert revoked event */
     "webhook-secret-scanning-alert-revoked": {
       /** @enum {string} */
       action: "revoked";
-      alert: components["schemas"]["secret-scanning-alert"];
-      enterprise?: components["schemas"]["enterprise"];
+      alert: components["schemas"]["secret-scanning-alert-webhook"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** security_advisory published event */
     "webhook-security-advisory-published": {
       /** @enum {string} */
       action: "published";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository?: components["schemas"]["repository"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository?: components["schemas"]["repository-webhooks"];
       /** @description The details of the security advisory, including summary, description, and severity. */
       security_advisory: {
         cvss: {
@@ -72489,16 +74480,16 @@ export interface components {
         }[];
         withdrawn_at: string | null;
       };
-      sender?: components["schemas"]["simple-user"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** security_advisory updated event */
     "webhook-security-advisory-updated": {
       /** @enum {string} */
       action: "updated";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository?: components["schemas"]["repository"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository?: components["schemas"]["repository-webhooks"];
       /** @description The details of the security advisory, including summary, description, and severity. */
       security_advisory: {
         cvss: {
@@ -72536,16 +74527,16 @@ export interface components {
         }[];
         withdrawn_at: string | null;
       };
-      sender?: components["schemas"]["simple-user"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** security_advisory withdrawn event */
     "webhook-security-advisory-withdrawn": {
       /** @enum {string} */
       action: "withdrawn";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository?: components["schemas"]["repository"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository?: components["schemas"]["repository-webhooks"];
       /** @description The details of the security advisory, including summary, description, and severity. */
       security_advisory: {
         cvss: {
@@ -72583,7 +74574,7 @@ export interface components {
         }[];
         withdrawn_at: string;
       };
-      sender?: components["schemas"]["simple-user"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** security_and_analysis event */
     "webhook-security-and-analysis": {
@@ -72592,21 +74583,21 @@ export interface components {
           security_and_analysis?: components["schemas"]["security-and-analysis"];
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       repository: components["schemas"]["full-repository"];
-      sender?: components["schemas"]["simple-user"];
+      sender?: components["schemas"]["simple-user-webhooks"];
     };
     /** sponsorship cancelled event */
     "webhook-sponsorship-cancelled": {
       /** @enum {string} */
       action: "cancelled";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository?: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
       sponsorship: {
         created_at: string;
         maintainer?: {
@@ -72726,11 +74717,11 @@ export interface components {
     "webhook-sponsorship-created": {
       /** @enum {string} */
       action: "created";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository?: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
       sponsorship: {
         created_at: string;
         maintainer?: {
@@ -72856,11 +74847,11 @@ export interface components {
           from: string;
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository?: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
       sponsorship: {
         created_at: string;
         maintainer?: {
@@ -72982,11 +74973,11 @@ export interface components {
       action: "pending_cancellation";
       /** @description The `pending_cancellation` and `pending_tier_change` event types will include the date the cancellation or tier change will take effect. */
       effective_date?: string;
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository?: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
       sponsorship: {
         created_at: string;
         maintainer?: {
@@ -73127,11 +75118,11 @@ export interface components {
       };
       /** @description The `pending_cancellation` and `pending_tier_change` event types will include the date the cancellation or tier change will take effect. */
       effective_date?: string;
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository?: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
       sponsorship: {
         created_at: string;
         maintainer?: {
@@ -73270,11 +75261,11 @@ export interface components {
           };
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository?: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
       sponsorship: {
         created_at: string;
         maintainer?: {
@@ -73394,11 +75385,11 @@ export interface components {
     "webhook-star-created": {
       /** @enum {string} */
       action: "created";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
       /** @description The time the star was created. This is a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. Will be `null` for the `deleted` action. */
       starred_at: string | null;
     };
@@ -73406,11 +75397,11 @@ export interface components {
     "webhook-star-deleted": {
       /** @enum {string} */
       action: "deleted";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
       /** @description The time the star was created. This is a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. Will be `null` for the `deleted` action. */
       starred_at: Record<string, unknown> | null;
     };
@@ -73582,14 +75573,14 @@ export interface components {
       created_at: string;
       /** @description The optional human-readable description added to the status. */
       description: string | null;
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       /** @description The unique identifier of the status. */
       id: number;
       installation?: components["schemas"]["simple-installation"];
       name: string;
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
       /** @description The Commit SHA. */
       sha: string;
       /**
@@ -73603,11 +75594,11 @@ export interface components {
     };
     /** team_add event */
     "webhook-team-add": {
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
       /**
        * Team
        * @description Groups of organization members that gives permissions on specified repositories.
@@ -73668,9 +75659,9 @@ export interface components {
     "webhook-team-added-to-repository": {
       /** @enum {string} */
       action: "added_to_repository";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization: components["schemas"]["organization-simple"];
+      organization: components["schemas"]["organization-simple-webhooks"];
       /**
        * Repository
        * @description A git repository
@@ -73872,7 +75863,7 @@ export interface components {
         public?: boolean;
         /** Format: uri-template */
         pulls_url: string;
-        pushed_at: number | string;
+        pushed_at: number | string | null;
         /** Format: uri-template */
         releases_url: string;
         role_name?: string | null;
@@ -73906,7 +75897,7 @@ export interface components {
         watchers: number;
         watchers_count: number;
       };
-      sender?: components["schemas"]["simple-user"];
+      sender?: components["schemas"]["simple-user-webhooks"];
       /**
        * Team
        * @description Groups of organization members that gives permissions on specified repositories.
@@ -73967,9 +75958,9 @@ export interface components {
     "webhook-team-created": {
       /** @enum {string} */
       action: "created";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization: components["schemas"]["organization-simple"];
+      organization: components["schemas"]["organization-simple-webhooks"];
       /**
        * Repository
        * @description A git repository
@@ -74171,7 +76162,7 @@ export interface components {
         public?: boolean;
         /** Format: uri-template */
         pulls_url: string;
-        pushed_at: number | string;
+        pushed_at: number | string | null;
         /** Format: uri-template */
         releases_url: string;
         role_name?: string | null;
@@ -74205,7 +76196,7 @@ export interface components {
         watchers: number;
         watchers_count: number;
       };
-      sender: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user-webhooks"];
       /**
        * Team
        * @description Groups of organization members that gives permissions on specified repositories.
@@ -74266,9 +76257,9 @@ export interface components {
     "webhook-team-deleted": {
       /** @enum {string} */
       action: "deleted";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization: components["schemas"]["organization-simple"];
+      organization: components["schemas"]["organization-simple-webhooks"];
       /**
        * Repository
        * @description A git repository
@@ -74470,7 +76461,7 @@ export interface components {
         public?: boolean;
         /** Format: uri-template */
         pulls_url: string;
-        pushed_at: number | string;
+        pushed_at: number | string | null;
         /** Format: uri-template */
         releases_url: string;
         role_name?: string | null;
@@ -74504,7 +76495,7 @@ export interface components {
         watchers: number;
         watchers_count: number;
       };
-      sender?: components["schemas"]["simple-user"];
+      sender?: components["schemas"]["simple-user-webhooks"];
       /**
        * Team
        * @description Groups of organization members that gives permissions on specified repositories.
@@ -74592,9 +76583,9 @@ export interface components {
           };
         };
       };
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization: components["schemas"]["organization-simple"];
+      organization: components["schemas"]["organization-simple-webhooks"];
       /**
        * Repository
        * @description A git repository
@@ -74796,7 +76787,7 @@ export interface components {
         public?: boolean;
         /** Format: uri-template */
         pulls_url: string;
-        pushed_at: number | string;
+        pushed_at: number | string | null;
         /** Format: uri-template */
         releases_url: string;
         role_name?: string | null;
@@ -74830,7 +76821,7 @@ export interface components {
         watchers: number;
         watchers_count: number;
       };
-      sender: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user-webhooks"];
       /**
        * Team
        * @description Groups of organization members that gives permissions on specified repositories.
@@ -74891,9 +76882,9 @@ export interface components {
     "webhook-team-removed-from-repository": {
       /** @enum {string} */
       action: "removed_from_repository";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization: components["schemas"]["organization-simple"];
+      organization: components["schemas"]["organization-simple-webhooks"];
       /**
        * Repository
        * @description A git repository
@@ -75095,7 +77086,7 @@ export interface components {
         public?: boolean;
         /** Format: uri-template */
         pulls_url: string;
-        pushed_at: number | string;
+        pushed_at: number | string | null;
         /** Format: uri-template */
         releases_url: string;
         role_name?: string | null;
@@ -75129,7 +77120,7 @@ export interface components {
         watchers: number;
         watchers_count: number;
       };
-      sender: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user-webhooks"];
       /**
        * Team
        * @description Groups of organization members that gives permissions on specified repositories.
@@ -75189,11 +77180,11 @@ export interface components {
     "webhook-user-created": {
       /** @enum {string} */
       action: "created";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository?: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
       /** User */
       user?: {
         /** Format: uri */
@@ -75235,11 +77226,11 @@ export interface components {
     "webhook-user-deleted": {
       /** @enum {string} */
       action: "deleted";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository?: components["schemas"]["repository"];
-      sender?: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository?: components["schemas"]["repository-webhooks"];
+      sender?: components["schemas"]["simple-user-webhooks"];
       /** User */
       user?: {
         /** Format: uri */
@@ -75282,34 +77273,34 @@ export interface components {
     "webhook-watch-started": {
       /** @enum {string} */
       action: "started";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
     };
     /** workflow_dispatch event */
     "webhook-workflow-dispatch": {
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       inputs: {
         [key: string]: unknown;
       } | null;
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
       ref: string;
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
       workflow: string;
     };
     /** workflow_job completed event */
     "webhook-workflow-job-completed": {
       /** @enum {string} */
       action: "completed";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
       workflow_job: {
         /** Format: uri */
         check_run_url: string;
@@ -75318,13 +77309,12 @@ export interface components {
         conclusion:
           | "success"
           | "failure"
-          | ""
+          | null
           | "skipped"
           | "cancelled"
           | "action_required"
           | "neutral"
-          | "timed_out"
-          | null;
+          | "timed_out";
         /** @description The time that the job created. */
         created_at: string;
         head_sha: string;
@@ -75360,13 +77350,7 @@ export interface components {
         steps: {
           completed_at: string | null;
           /** @enum {string|null} */
-          conclusion:
-            | "failure"
-            | "skipped"
-            | "success"
-            | "cancelled"
-            | ""
-            | null;
+          conclusion: "failure" | "skipped" | "success" | "cancelled" | null;
           name: string;
           number: number;
           started_at: string | null;
@@ -75416,17 +77400,17 @@ export interface components {
     "webhook-workflow-job-in-progress": {
       /** @enum {string} */
       action: "in_progress";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
       workflow_job: {
         /** Format: uri */
         check_run_url: string;
         completed_at: string | null;
         /** @enum {string|null} */
-        conclusion: "success" | "failure" | "" | "cancelled" | "neutral" | null;
+        conclusion: "success" | "failure" | null | "cancelled" | "neutral";
         /** @description The time that the job created. */
         created_at: string;
         head_sha: string;
@@ -75462,13 +77446,7 @@ export interface components {
         steps: {
           completed_at: string | null;
           /** @enum {string|null} */
-          conclusion:
-            | "failure"
-            | "skipped"
-            | "success"
-            | ""
-            | "cancelled"
-            | null;
+          conclusion: "failure" | "skipped" | "success" | null | "cancelled";
           name: string;
           number: number;
           started_at: string | null;
@@ -75519,11 +77497,11 @@ export interface components {
     "webhook-workflow-job-queued": {
       /** @enum {string} */
       action: "queued";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
       workflow_job: {
         /** Format: uri */
         check_run_url: string;
@@ -75557,13 +77535,7 @@ export interface components {
         steps: {
           completed_at: string | null;
           /** @enum {string|null} */
-          conclusion:
-            | "failure"
-            | "skipped"
-            | "success"
-            | "cancelled"
-            | ""
-            | null;
+          conclusion: "failure" | "skipped" | "success" | "cancelled" | null;
           name: string;
           number: number;
           started_at: string | null;
@@ -75578,11 +77550,11 @@ export interface components {
     "webhook-workflow-run-completed": {
       /** @enum {string} */
       action: "completed";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
       /** Workflow */
       workflow: {
         /** Format: uri */
@@ -75656,9 +77628,8 @@ export interface components {
           | "timed_out"
           | "action_required"
           | "stale"
-          | ""
-          | "skipped"
-          | null;
+          | null
+          | "skipped";
         /** Format: date-time */
         created_at: string;
         event: string;
@@ -76293,11 +78264,11 @@ export interface components {
     "webhook-workflow-run-in-progress": {
       /** @enum {string} */
       action: "in_progress";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
       /** Workflow */
       workflow: {
         /** Format: uri */
@@ -76372,7 +78343,6 @@ export interface components {
           | "action_required"
           | "stale"
           | "skipped"
-          | ""
           | null;
         /** Format: date-time */
         created_at: string;
@@ -77008,11 +78978,11 @@ export interface components {
     "webhook-workflow-run-requested": {
       /** @enum {string} */
       action: "requested";
-      enterprise?: components["schemas"]["enterprise"];
+      enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple"];
-      repository: components["schemas"]["repository"];
-      sender: components["schemas"]["simple-user"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user-webhooks"];
       /** Workflow */
       workflow: {
         /** Format: uri */
@@ -77087,10 +79057,9 @@ export interface components {
           | "timed_out"
           | "action_required"
           | "stale"
-          | ""
+          | null
           | "skipped"
-          | "startup_failure"
-          | null;
+          | "startup_failure";
         /** Format: date-time */
         created_at: string;
         event: string;
@@ -77523,7 +79492,9 @@ export interface components {
       };
     };
     /** @description Not modified */
-    not_modified: never;
+    not_modified: {
+      content: never;
+    };
     /** @description Requires authentication */
     requires_authentication: {
       content: {
@@ -77621,9 +79592,19 @@ export interface components {
       };
     };
     /** @description Found */
-    found: never;
+    found: {
+      content: never;
+    };
+    /** @description Response if GitHub Advanced Security is not enabled for this repository */
+    dependency_review_forbidden: {
+      content: {
+        "application/json": components["schemas"]["basic-error"];
+      };
+    };
     /** @description A header with no content is returned. */
-    no_content: never;
+    no_content: {
+      content: never;
+    };
     /** @description Bad request */
     scim_bad_request: {
       content: {
@@ -77632,9 +79613,13 @@ export interface components {
       };
     };
     /** @description Authorization failure */
-    authorization_failure: never;
+    authorization_failure: {
+      content: never;
+    };
     /** @description Permission denied */
-    permission_denied: never;
+    permission_denied: {
+      content: never;
+    };
     /** @description Too many requests */
     scim_too_many_requests: {
       content: {
@@ -77650,7 +79635,9 @@ export interface components {
       };
     };
     /** @description Duplicate record detected */
-    duplicate_record_detected: never;
+    duplicate_record_detected: {
+      content: never;
+    };
   };
   parameters: {
     /** @description The number of results per page (max 100). */
@@ -77678,7 +79665,7 @@ export interface components {
     /** @description Used for pagination: the starting delivery from which the page of deliveries is fetched. Refer to the `link` header for the next and previous page cursors. */
     cursor?: string;
     "delivery-id": number;
-    /** @description Only show notifications updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
+    /** @description Only show results that were last updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
     since?: string;
     /** @description The unique identifier of the installation. */
     "installation-id": number;
@@ -77761,7 +79748,7 @@ export interface components {
     participating?: boolean;
     /** @description Only show notifications updated before the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
     before?: string;
-    /** @description The unique identifier of the notification thread. This corresponds to the value returned in the `id` field when you retrieve notifications (for example with the [`GET /notifications` operation](https://docs.github.com/enterprise-server@3.7/rest/reference/activity#list-notifications-for-the-authenticated-user)). */
+    /** @description The unique identifier of the notification thread. This corresponds to the value returned in the `id` field when you retrieve notifications (for example with the [`GET /notifications` operation](https://docs.github.com/enterprise-server@3.7/rest/activity/notifications#list-notifications-for-the-authenticated-user)). */
     "thread-id": number;
     /** @description An organization ID. Only return organizations with an ID greater than this ID. */
     "since-org"?: number;
@@ -77861,6 +79848,8 @@ export interface components {
     "workflow-run-head-sha"?: string;
     /** @description The unique identifier of the workflow run. */
     "run-id": number;
+    /** @description The name field of an artifact. When specified, only artifacts with this name will be returned. */
+    "artifact-name"?: string;
     /** @description The attempt number of the workflow run. */
     "attempt-number": number;
     /** @description The ID of the workflow. You can also pass the workflow file name as a string. */
@@ -77883,6 +79872,8 @@ export interface components {
     "alert-number": components["schemas"]["alert-number"];
     /** @description The SHA of the commit. */
     "commit-sha": string;
+    /** @description The commit reference. Can be a commit SHA, branch name (`heads/BRANCH_NAME`), or tag name (`tags/TAG_NAME`). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation. */
+    "commit-ref": string;
     /** @description The full path, relative to the repository root, of the dependency manifest file. */
     "manifest-path"?: string;
     /** @description deployment_id parameter */
@@ -77957,6 +79948,8 @@ export interface components {
   };
   pathItems: never;
 }
+
+export type $defs = Record<string, never>;
 
 export type external = Record<string, never>;
 
@@ -78057,7 +80050,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -78115,7 +80110,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /** List public keys */
@@ -78151,12 +80148,14 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
    * Update LDAP mapping for a team
-   * @description Updates the [distinguished name](https://www.ldap.com/ldap-dns-and-rdns) (DN) of the LDAP entry to map to a team. [LDAP synchronization](https://docs.github.com/enterprise-server@3.7/admin/identity-and-access-management/using-ldap-for-enterprise-iam/using-ldap#enabling-ldap-sync) must be enabled to map LDAP entries to a team. Use the [Create a team](https://docs.github.com/enterprise-server@3.7/rest/reference/teams/#create-a-team) endpoint to create a team with LDAP mapping.
+   * @description Updates the [distinguished name](https://www.ldap.com/ldap-dns-and-rdns) (DN) of the LDAP entry to map to a team. [LDAP synchronization](https://docs.github.com/enterprise-server@3.7/admin/identity-and-access-management/using-ldap-for-enterprise-iam/using-ldap#enabling-ldap-sync) must be enabled to map LDAP entries to a team. Use the [Create a team](https://docs.github.com/enterprise-server@3.7/rest/teams/teams/#create-a-team) endpoint to create a team with LDAP mapping.
    */
   "enterprise-admin/update-ldap-mapping-for-team": {
     parameters: {
@@ -78371,7 +80370,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description Client Errors */
       422: {
         content: {
@@ -78565,7 +80566,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /** Update a pre-receive hook */
@@ -78641,12 +80644,14 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
    * Create a user
-   * @description If an external authentication mechanism is used, the login name should match the login name in the external system. If you are using LDAP authentication, you should also [update the LDAP mapping](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#update-ldap-mapping-for-a-user) for the user.
+   * @description If an external authentication mechanism is used, the login name should match the login name in the external system. If you are using LDAP authentication, you should also [update the LDAP mapping](https://docs.github.com/enterprise-server@3.7/rest/enterprise-admin/ldap#update-ldap-mapping-for-a-user) for the user.
    *
    * The login name will be normalized to only contain alphanumeric characters or single hyphens. For example, if you send `"octo_cat"` as the login, a user named `"octo-cat"` will be created.
    *
@@ -78683,7 +80688,7 @@ export interface operations {
   };
   /**
    * Delete a user
-   * @description Deleting a user will delete all their repositories, gists, applications, and personal settings. [Suspending a user](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#suspend-a-user) is often a better option.
+   * @description Deleting a user will delete all their repositories, gists, applications, and personal settings. [Suspending a user](https://docs.github.com/enterprise-server@3.7/rest/enterprise-admin/users#suspend-a-user) is often a better option.
    *
    * You can delete any user account except your own.
    */
@@ -78695,7 +80700,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /** Update the username for a user */
@@ -78764,12 +80771,14 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
    * Get the authenticated app
-   * @description Returns the GitHub App associated with the authentication credentials used. To see how many app installations are associated with this GitHub App, see the `installations_count` in the response. For more details about your app's installations, see the "[List installations for the authenticated app](https://docs.github.com/enterprise-server@3.7/rest/reference/apps#list-installations-for-the-authenticated-app)" endpoint.
+   * @description Returns the GitHub App associated with the authentication credentials used. To see how many app installations are associated with this GitHub App, see the `installations_count` in the response. For more details about your app's installations, see the "[List installations for the authenticated app](https://docs.github.com/enterprise-server@3.7/rest/apps/apps#list-installations-for-the-authenticated-app)" endpoint.
    *
    * You must use a [JWT](https://docs.github.com/enterprise-server@3.7/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
    */
@@ -78942,7 +80951,7 @@ export interface operations {
   };
   /**
    * List installations for the authenticated app
-   * @description You must use a [JWT](https://docs.github.com/enterprise-server@3.7/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   * @description You must use a [JWT](https://docs.github.com/enterprise-server@3.9/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
    *
    * The permissions the installation has are included under the `permissions` key.
    */
@@ -78962,7 +80971,421 @@ export interface operations {
           Link: components["headers"]["link"];
         };
         content: {
-          "application/json": components["schemas"]["installation"][];
+          "application/json": {
+            /**
+             * @description The ID of the installation.
+             * @example 1
+             */
+            id: number;
+            account:
+              | ({
+                  name?: string | null;
+                  email?: string | null;
+                  /** @example octocat */
+                  login: string;
+                  /** @example 1 */
+                  id: number;
+                  /** @example MDQ6VXNlcjE= */
+                  node_id: string;
+                  /**
+                   * Format: uri
+                   * @example https://github.com/images/error/octocat_happy.gif
+                   */
+                  avatar_url: string;
+                  /** @example 41d064eb2195891e12d0413f63227ea7 */
+                  gravatar_id: string | null;
+                  /**
+                   * Format: uri
+                   * @example https://api.github.com/users/octocat
+                   */
+                  url: string;
+                  /**
+                   * Format: uri
+                   * @example https://github.com/octocat
+                   */
+                  html_url: string;
+                  /**
+                   * Format: uri
+                   * @example https://api.github.com/users/octocat/followers
+                   */
+                  followers_url: string;
+                  /** @example https://api.github.com/users/octocat/following{/other_user} */
+                  following_url: string;
+                  /** @example https://api.github.com/users/octocat/gists{/gist_id} */
+                  gists_url: string;
+                  /** @example https://api.github.com/users/octocat/starred{/owner}{/repo} */
+                  starred_url: string;
+                  /**
+                   * Format: uri
+                   * @example https://api.github.com/users/octocat/subscriptions
+                   */
+                  subscriptions_url: string;
+                  /**
+                   * Format: uri
+                   * @example https://api.github.com/users/octocat/orgs
+                   */
+                  organizations_url: string;
+                  /**
+                   * Format: uri
+                   * @example https://api.github.com/users/octocat/repos
+                   */
+                  repos_url: string;
+                  /** @example https://api.github.com/users/octocat/events{/privacy} */
+                  events_url: string;
+                  /**
+                   * Format: uri
+                   * @example https://api.github.com/users/octocat/received_events
+                   */
+                  received_events_url: string;
+                  /** @example User */
+                  type: string;
+                  site_admin: boolean;
+                  /** @example "2020-07-09T00:17:55Z" */
+                  starred_at?: string;
+                } & {
+                  /** @description A short description of the enterprise. */
+                  description?: string | null;
+                  /**
+                   * Format: uri
+                   * @example https://github.com/enterprises/octo-business
+                   */
+                  html_url: string;
+                  /**
+                   * Format: uri
+                   * @description The enterprise's website URL.
+                   */
+                  website_url?: string | null;
+                  /**
+                   * @description Unique identifier of the enterprise
+                   * @example 42
+                   */
+                  id: number;
+                  /** @example MDEwOlJlcG9zaXRvcnkxMjk2MjY5 */
+                  node_id: string;
+                  /**
+                   * @description The name of the enterprise.
+                   * @example Octo Business
+                   */
+                  name: string;
+                  /**
+                   * @description The slug url identifier for the enterprise.
+                   * @example octo-business
+                   */
+                  slug: string;
+                  /**
+                   * Format: date-time
+                   * @example 2019-01-26T19:01:12Z
+                   */
+                  created_at: string | null;
+                  /**
+                   * Format: date-time
+                   * @example 2019-01-26T19:14:43Z
+                   */
+                  updated_at: string | null;
+                  /** Format: uri */
+                  avatar_url: string;
+                })
+              | null;
+            /**
+             * @description Describe whether all repositories have been selected or there's a selection involved
+             * @enum {string}
+             */
+            repository_selection: "all" | "selected";
+            /**
+             * Format: uri
+             * @example https://api.github.com/installations/1/access_tokens
+             */
+            access_tokens_url: string;
+            /**
+             * Format: uri
+             * @example https://api.github.com/installation/repositories
+             */
+            repositories_url: string;
+            /**
+             * Format: uri
+             * @example https://github.com/organizations/github/settings/installations/1
+             */
+            html_url: string;
+            /** @example 1 */
+            app_id: number;
+            /** @description The ID of the user or organization this token is being scoped to. */
+            target_id: number;
+            /** @example Organization */
+            target_type: string;
+            /**
+             * App Permissions
+             * @description The permissions granted to the user access token.
+             * @example {
+             *   "contents": "read",
+             *   "issues": "read",
+             *   "deployments": "write",
+             *   "single_file": "read"
+             * }
+             */
+            permissions: {
+              /**
+               * @description The level of permission to grant the access token for GitHub Actions workflows, workflow runs, and artifacts.
+               * @enum {string}
+               */
+              actions?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token for repository creation, deletion, settings, teams, and collaborators creation.
+               * @enum {string}
+               */
+              administration?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token for checks on code.
+               * @enum {string}
+               */
+              checks?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token for repository contents, commits, branches, downloads, releases, and merges.
+               * @enum {string}
+               */
+              contents?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token for deployments and deployment statuses.
+               * @enum {string}
+               */
+              deployments?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token for managing repository environments.
+               * @enum {string}
+               */
+              environments?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token for issues and related comments, assignees, labels, and milestones.
+               * @enum {string}
+               */
+              issues?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token to search repositories, list collaborators, and access repository metadata.
+               * @enum {string}
+               */
+              metadata?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token for packages published to GitHub Packages.
+               * @enum {string}
+               */
+              packages?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token to retrieve Pages statuses, configuration, and builds, as well as create new builds.
+               * @enum {string}
+               */
+              pages?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token for pull requests and related comments, assignees, labels, milestones, and merges.
+               * @enum {string}
+               */
+              pull_requests?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token to manage the post-receive hooks for a repository.
+               * @enum {string}
+               */
+              repository_hooks?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token to manage repository projects, columns, and cards.
+               * @enum {string}
+               */
+              repository_projects?: "read" | "write" | "admin";
+              /**
+               * @description The level of permission to grant the access token to view and manage secret scanning alerts.
+               * @enum {string}
+               */
+              secret_scanning_alerts?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token to manage repository secrets.
+               * @enum {string}
+               */
+              secrets?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token to view and manage security events like code scanning alerts.
+               * @enum {string}
+               */
+              security_events?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token to manage just a single file.
+               * @enum {string}
+               */
+              single_file?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token for commit statuses.
+               * @enum {string}
+               */
+              statuses?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token to manage Dependabot alerts.
+               * @enum {string}
+               */
+              vulnerability_alerts?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token to update GitHub Actions workflow files.
+               * @enum {string}
+               */
+              workflows?: "write";
+              /**
+               * @description The level of permission to grant the access token for organization teams and members.
+               * @enum {string}
+               */
+              members?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token to manage access to an organization.
+               * @enum {string}
+               */
+              organization_administration?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token for custom repository roles management. This property is in beta and is subject to change.
+               * @enum {string}
+               */
+              organization_custom_roles?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token to view and manage announcement banners for an organization.
+               * @enum {string}
+               */
+              organization_announcement_banners?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token to manage the post-receive hooks for an organization.
+               * @enum {string}
+               */
+              organization_hooks?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token for viewing and managing fine-grained personal access token requests to an organization.
+               * @enum {string}
+               */
+              organization_personal_access_tokens?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token for viewing and managing fine-grained personal access tokens that have been approved by an organization.
+               * @enum {string}
+               */
+              organization_personal_access_token_requests?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token for viewing an organization's plan.
+               * @enum {string}
+               */
+              organization_plan?: "read";
+              /**
+               * @description The level of permission to grant the access token to manage organization projects and projects beta (where available).
+               * @enum {string}
+               */
+              organization_projects?: "read" | "write" | "admin";
+              /**
+               * @description The level of permission to grant the access token for organization packages published to GitHub Packages.
+               * @enum {string}
+               */
+              organization_packages?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token to manage organization secrets.
+               * @enum {string}
+               */
+              organization_secrets?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token to view and manage GitHub Actions self-hosted runners available to an organization.
+               * @enum {string}
+               */
+              organization_self_hosted_runners?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token to view and manage users blocked by the organization.
+               * @enum {string}
+               */
+              organization_user_blocking?: "read" | "write";
+              /**
+               * @description The level of permission to grant the access token to manage team discussions and related comments.
+               * @enum {string}
+               */
+              team_discussions?: "read" | "write";
+            };
+            events: string[];
+            /** Format: date-time */
+            created_at: string;
+            /** Format: date-time */
+            updated_at: string;
+            /** @example config.yaml */
+            single_file_name: string | null;
+            /** @example true */
+            has_multiple_single_files?: boolean;
+            /**
+             * @example [
+             *   "config.yml",
+             *   ".github/issue_TEMPLATE.md"
+             * ]
+             */
+            single_file_paths?: string[];
+            /** @example github-actions */
+            app_slug: string;
+            /**
+             * Simple User
+             * @description A GitHub user.
+             */
+            suspended_by: {
+              name?: string | null;
+              email?: string | null;
+              /** @example octocat */
+              login: string;
+              /** @example 1 */
+              id: number;
+              /** @example MDQ6VXNlcjE= */
+              node_id: string;
+              /**
+               * Format: uri
+               * @example https://github.com/images/error/octocat_happy.gif
+               */
+              avatar_url: string;
+              /** @example 41d064eb2195891e12d0413f63227ea7 */
+              gravatar_id: string | null;
+              /**
+               * Format: uri
+               * @example https://api.github.com/users/octocat
+               */
+              url: string;
+              /**
+               * Format: uri
+               * @example https://github.com/octocat
+               */
+              html_url: string;
+              /**
+               * Format: uri
+               * @example https://api.github.com/users/octocat/followers
+               */
+              followers_url: string;
+              /** @example https://api.github.com/users/octocat/following{/other_user} */
+              following_url: string;
+              /** @example https://api.github.com/users/octocat/gists{/gist_id} */
+              gists_url: string;
+              /** @example https://api.github.com/users/octocat/starred{/owner}{/repo} */
+              starred_url: string;
+              /**
+               * Format: uri
+               * @example https://api.github.com/users/octocat/subscriptions
+               */
+              subscriptions_url: string;
+              /**
+               * Format: uri
+               * @example https://api.github.com/users/octocat/orgs
+               */
+              organizations_url: string;
+              /**
+               * Format: uri
+               * @example https://api.github.com/users/octocat/repos
+               */
+              repos_url: string;
+              /** @example https://api.github.com/users/octocat/events{/privacy} */
+              events_url: string;
+              /**
+               * Format: uri
+               * @example https://api.github.com/users/octocat/received_events
+               */
+              received_events_url: string;
+              /** @example User */
+              type: string;
+              site_admin: boolean;
+              /** @example "2020-07-09T00:17:55Z" */
+              starred_at?: string;
+            } | null;
+            /** Format: date-time */
+            suspended_at: string | null;
+            /** @example "test_13f1e99741e3e004@d7e1eb0bc0a1ba12.com" */
+            contact_email?: string | null;
+          }[];
         };
       };
     };
@@ -78991,7 +81414,7 @@ export interface operations {
   };
   /**
    * Delete an installation for the authenticated app
-   * @description Uninstalls a GitHub App on a user, organization, or business account. If you prefer to temporarily suspend an app's access to your account's resources, then we recommend the "[Suspend an app installation](https://docs.github.com/enterprise-server@3.7/rest/reference/apps/#suspend-an-app-installation)" endpoint.
+   * @description Uninstalls a GitHub App on a user, organization, or business account. If you prefer to temporarily suspend an app's access to your account's resources, then we recommend the "[Suspend an app installation](https://docs.github.com/enterprise-server@3.7/rest/apps/apps#suspend-an-app-installation)" endpoint.
    *
    * You must use a [JWT](https://docs.github.com/enterprise-server@3.7/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
    */
@@ -79003,7 +81426,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       404: components["responses"]["not_found"];
     };
   };
@@ -79062,7 +81487,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       404: components["responses"]["not_found"];
     };
   };
@@ -79080,16 +81507,18 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       404: components["responses"]["not_found"];
     };
   };
   /**
    * List your grants
    * @deprecated
-   * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+   * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
    *
-   * You can use this API to list the set of OAuth applications that have been granted access to your account. Unlike the [list your authorizations](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations#list-your-authorizations) API, this API does not manage individual tokens. This API will return one entry for each OAuth application that has been granted access to your account, regardless of the number of tokens an application has generated for your user. The list of OAuth applications returned matches what is shown on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized). The `scopes` returned are the union of scopes authorized for the application. For example, if an application has one token with `repo` scope and another token with `user` scope, the grant will return `["repo", "user"]`.
+   * You can use this API to list the set of OAuth applications that have been granted access to your account. Unlike the [list your authorizations](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations#list-your-authorizations) API, this API does not manage individual tokens. This API will return one entry for each OAuth application that has been granted access to your account, regardless of the number of tokens an application has generated for your user. The list of OAuth applications returned matches what is shown on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized). The `scopes` returned are the union of scopes authorized for the application. For example, if an application has one token with `repo` scope and another token with `user` scope, the grant will return `["repo", "user"]`.
    */
   "oauth-authorizations/list-grants": {
     parameters: {
@@ -79119,7 +81548,7 @@ export interface operations {
   /**
    * Get a single grant
    * @deprecated
-   * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+   * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
    */
   "oauth-authorizations/get-grant": {
     parameters: {
@@ -79142,7 +81571,7 @@ export interface operations {
   /**
    * Delete a grant
    * @deprecated
-   * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations/) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+   * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations/) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
    *
    * Deleting an OAuth application's grant will also delete all OAuth tokens associated with the application for your user. Once deleted, the application has no access to your account and is no longer listed on [the application authorizations settings screen within GitHub](https://github.com/settings/applications#authorized).
    */
@@ -79154,7 +81583,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -79181,7 +81612,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       422: components["responses"]["validation_failed"];
     };
   };
@@ -79234,7 +81667,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       422: components["responses"]["validation_failed"];
     };
   };
@@ -79268,7 +81703,7 @@ export interface operations {
   };
   /**
    * Create a scoped access token
-   * @description Use a non-scoped user-to-server access token to create a repository scoped and/or permission scoped user-to-server access token. You can specify which repositories the token can access and which permissions are granted to the token. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.7/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the `client_id` and `client_secret` of the GitHub App as the username and password. Invalid tokens will return `404 NOT FOUND`.
+   * @description Use a non-scoped user access token to create a repository scoped and/or permission scoped user access token. You can specify which repositories the token can access and which permissions are granted to the token. You must use [Basic Authentication](https://docs.github.com/enterprise-server@3.7/rest/overview/other-authentication-methods#basic-authentication) when accessing this endpoint, using the `client_id` and `client_secret` of the GitHub App as the username and password. Invalid tokens will return `404 NOT FOUND`.
    */
   "apps/scope-token": {
     parameters: {
@@ -79285,19 +81720,19 @@ export interface operations {
            */
           access_token: string;
           /**
-           * @description The name of the user or organization to scope the user-to-server access token to. **Required** unless `target_id` is specified.
+           * @description The name of the user or organization to scope the user access token to. **Required** unless `target_id` is specified.
            * @example octocat
            */
           target?: string;
           /**
-           * @description The ID of the user or organization to scope the user-to-server access token to. **Required** unless `target` is specified.
+           * @description The ID of the user or organization to scope the user access token to. **Required** unless `target` is specified.
            * @example 1
            */
           target_id?: number;
-          /** @description The list of repository names to scope the user-to-server access token to. `repositories` may not be specified if `repository_ids` is specified. */
+          /** @description The list of repository names to scope the user access token to. `repositories` may not be specified if `repository_ids` is specified. */
           repositories?: string[];
           /**
-           * @description The list of repository IDs to scope the user-to-server access token to. `repository_ids` may not be specified if `repositories` is specified.
+           * @description The list of repository IDs to scope the user access token to. `repository_ids` may not be specified if `repositories` is specified.
            * @example [
            *   1
            * ]
@@ -79346,7 +81781,7 @@ export interface operations {
   /**
    * List your authorizations
    * @deprecated
-   * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+   * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
    */
   "oauth-authorizations/list-authorizations": {
     parameters: {
@@ -79376,7 +81811,7 @@ export interface operations {
   /**
    * Create a new authorization
    * @deprecated
-   * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+   * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
    *
    * **Warning:** Apps must use the [web application flow](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub Enterprise Server SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub Enterprise Server SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).
    *
@@ -79437,7 +81872,7 @@ export interface operations {
   /**
    * Get-or-create an authorization for a specific app
    * @deprecated
-   * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+   * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
    *
    * **Warning:** Apps must use the [web application flow](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub Enterprise Server SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub Enterprise Server SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).
    *
@@ -79445,7 +81880,7 @@ export interface operations {
    *
    * If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see "[Working with two-factor authentication](https://docs.github.com/enterprise-server@3.7/rest/overview/other-authentication-methods#working-with-two-factor-authentication)."
    *
-   * **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+   * **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
    */
   "oauth-authorizations/get-or-create-authorization-for-app": {
     parameters: {
@@ -79489,7 +81924,7 @@ export interface operations {
           "application/json": components["schemas"]["authorization"];
         };
       };
-      /** @description **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/). */
+      /** @description **Deprecation Notice:** GitHub will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/). */
       201: {
         headers: {
           /** @example https://api.github.com/authorizations/1 */
@@ -79508,7 +81943,7 @@ export interface operations {
   /**
    * Get-or-create an authorization for a specific app and fingerprint
    * @deprecated
-   * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+   * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
    *
    * **Warning:** Apps must use the [web application flow](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow) to obtain OAuth tokens that work with GitHub Enterprise Server SAML organizations. OAuth tokens created using the Authorizations API will be unable to access GitHub Enterprise Server SAML organizations. For more information, see the [blog post](https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api).
    *
@@ -79573,7 +82008,7 @@ export interface operations {
   /**
    * Get a single authorization
    * @deprecated
-   * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+   * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
    */
   "oauth-authorizations/get-authorization": {
     parameters: {
@@ -79596,7 +82031,7 @@ export interface operations {
   /**
    * Delete an authorization
    * @deprecated
-   * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+   * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/authorizing-oauth-apps/#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
    */
   "oauth-authorizations/delete-authorization": {
     parameters: {
@@ -79606,7 +82041,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -79615,7 +82052,7 @@ export interface operations {
   /**
    * Update an existing authorization
    * @deprecated
-   * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/reference/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
+   * @description **Deprecation Notice:** GitHub Enterprise Server will discontinue the [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations/), which is used by integrations to create personal access tokens and OAuth tokens, and you must now create these tokens using our [web application flow](https://docs.github.com/enterprise-server@3.7/developers/apps/authorizing-oauth-apps#web-application-flow). The [OAuth Authorizations API](https://docs.github.com/enterprise-server@3.7/rest/oauth-authorizations/oauth-authorizations) will be removed on November, 13, 2020. For more information, including scheduled brownouts, see the [blog post](https://developer.github.com/changes/2020-02-14-deprecating-oauth-auth-endpoint/).
    *
    * If you have two-factor authentication setup, Basic Authentication for this endpoint requires that you use a one-time password (OTP) and your username and password instead of tokens. For more information, see "[Working with two-factor authentication](https://docs.github.com/enterprise-server@3.7/rest/overview/other-authentication-methods#working-with-two-factor-authentication)."
    *
@@ -79664,7 +82101,10 @@ export interface operations {
       422: components["responses"]["validation_failed"];
     };
   };
-  /** Get all codes of conduct */
+  /**
+   * Get all codes of conduct
+   * @description Returns array of all GitHub's codes of conduct.
+   */
   "codes-of-conduct/get-all-codes-of-conduct": {
     responses: {
       /** @description Response */
@@ -79676,7 +82116,10 @@ export interface operations {
       304: components["responses"]["not_modified"];
     };
   };
-  /** Get a code of conduct */
+  /**
+   * Get a code of conduct
+   * @description Returns information about the specified GitHub code of conduct.
+   */
   "codes-of-conduct/get-conduct-code": {
     parameters: {
       path: {
@@ -79704,7 +82147,7 @@ export interface operations {
       200: {
         content: {
           "application/json": {
-            [key: string]: string | undefined;
+            [key: string]: string;
           };
         };
       };
@@ -79732,7 +82175,9 @@ export interface operations {
   "enterprise-admin/remove-announcement": {
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -79951,7 +82396,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -79997,7 +82444,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -80050,7 +82499,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -80068,7 +82519,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -80086,7 +82539,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -80129,7 +82584,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -80176,7 +82633,9 @@ export interface operations {
     };
     responses: {
       /** @description Success response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -80295,7 +82754,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -80398,7 +82859,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -80417,7 +82880,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -80436,7 +82901,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -80494,7 +82961,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -80514,7 +82983,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -80533,7 +83004,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -80594,7 +83067,7 @@ export interface operations {
    *
    * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    *
-   * #### Example using registration token
+   * Example using registration token:
    *
    * Configure your self-hosted runner, replacing `TOKEN` with the registration token provided by this endpoint.
    *
@@ -80623,7 +83096,7 @@ export interface operations {
    *
    * You must authenticate using an access token with the `manage_runners:enterprise` scope to use this endpoint.
    *
-   * #### Example using remove token
+   * Example using remove token:
    *
    * To remove your self-hosted runner from an enterprise, replace `TOKEN` with the remove token provided by this
    * endpoint.
@@ -80684,7 +83157,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -80850,7 +83325,7 @@ export interface operations {
         per_page?: components["parameters"]["per-page"];
         direction?: components["parameters"]["direction"];
         /** @description If specified, only code scanning alerts with this state will be returned. */
-        state?: components["schemas"]["code-scanning-alert-state"];
+        state?: components["schemas"]["code-scanning-alert-state-query"];
         /** @description The property by which to sort the results. */
         sort?: "created" | "updated";
       };
@@ -81032,12 +83507,10 @@ export interface operations {
            * }
            */
           files: {
-            [key: string]:
-              | {
-                  /** @description Content of the file */
-                  content: string;
-                }
-              | undefined;
+            [key: string]: {
+              /** @description Content of the file */
+              content: string;
+            };
           };
           public?: boolean | ("true" | "false");
         };
@@ -81144,7 +83617,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
@@ -81181,14 +83656,12 @@ export interface operations {
            * }
            */
           files?: {
-            [key: string]:
-              | {
-                  /** @description The new content of the file. */
-                  content?: string;
-                  /** @description The new filename for the file. */
-                  filename?: string | null;
-                }
-              | undefined;
+            [key: string]: {
+              /** @description The new content of the file. */
+              content?: string;
+              /** @description The new filename for the file. */
+              filename?: string | null;
+            };
           };
         } | null;
       };
@@ -81294,7 +83767,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
@@ -81415,7 +83890,9 @@ export interface operations {
     };
     responses: {
       /** @description Response if gist is starred */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       403: components["responses"]["forbidden"];
       /** @description Not Found if gist is not starred */
@@ -81438,7 +83915,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
@@ -81453,7 +83932,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
@@ -81481,7 +83962,7 @@ export interface operations {
   };
   /**
    * Get all gitignore templates
-   * @description List all templates available to pass as an option when [creating a repository](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#create-a-repository-for-the-authenticated-user).
+   * @description List all templates available to pass as an option when [creating a repository](https://docs.github.com/enterprise-server@3.7/rest/repos/repos#create-a-repository-for-the-authenticated-user).
    */
   "gitignore/get-all-templates": {
     responses: {
@@ -81552,14 +84033,16 @@ export interface operations {
    * Revoke an installation access token
    * @description Revokes the installation token you're using to authenticate as an installation and access this endpoint.
    *
-   * Once an installation token is revoked, the token is invalidated and cannot be used. Other endpoints that require the revoked installation token must have a new installation token to work. You can create a new token using the "[Create an installation access token for an app](https://docs.github.com/enterprise-server@3.7/rest/reference/apps#create-an-installation-access-token-for-an-app)" endpoint.
+   * Once an installation token is revoked, the token is invalidated and cannot be used. Other endpoints that require the revoked installation token must have a new installation token to work. You can create a new token using the "[Create an installation access token for an app](https://docs.github.com/enterprise-server@3.7/rest/apps/apps#create-an-installation-access-token-for-an-app)" endpoint.
    *
    * You must use an [installation access token](https://docs.github.com/enterprise-server@3.7/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
    */
   "apps/revoke-installation-access-token": {
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -81572,7 +84055,7 @@ export interface operations {
    * **Note**: GitHub's REST API considers every pull request an issue, but not every issue is a pull request. For this
    * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
    * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
-   * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#list-pull-requests)" endpoint.
+   * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@3.7/rest/pulls/pulls#list-pull-requests)" endpoint.
    */
   "issues/list": {
     parameters: {
@@ -81615,7 +84098,10 @@ export interface operations {
       422: components["responses"]["validation_failed"];
     };
   };
-  /** Get all commonly used licenses */
+  /**
+   * Get all commonly used licenses
+   * @description Lists the most commonly used licenses on GitHub. For more information, see "[Licensing a repository ](https://docs.github.com/enterprise-server@3.7/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository)."
+   */
   "licenses/get-all-commonly-used": {
     parameters: {
       query?: {
@@ -81634,7 +84120,10 @@ export interface operations {
       304: components["responses"]["not_modified"];
     };
   };
-  /** Get a license */
+  /**
+   * Get a license
+   * @description Gets information about a specific license. For more information, see "[Licensing a repository ](https://docs.github.com/enterprise-server@3.7/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository)."
+   */
   "licenses/get": {
     parameters: {
       path: {
@@ -81783,7 +84272,7 @@ export interface operations {
   };
   /**
    * Mark notifications as read
-   * @description Marks all notifications as "read" for the current user. If the number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub Enterprise Server will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain, you can use the [List notifications for the authenticated user](https://docs.github.com/enterprise-server@3.7/rest/reference/activity#list-notifications-for-the-authenticated-user) endpoint and pass the query parameter `all=false`.
+   * @description Marks all notifications as "read" for the current user. If the number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub Enterprise Server will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain, you can use the [List notifications for the authenticated user](https://docs.github.com/enterprise-server@3.7/rest/activity/notifications#list-notifications-for-the-authenticated-user) endpoint and pass the query parameter `all=false`.
    */
   "activity/mark-notifications-as-read": {
     requestBody?: {
@@ -81809,7 +84298,9 @@ export interface operations {
         };
       };
       /** @description Reset Content */
-      205: never;
+      205: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -81849,14 +84340,16 @@ export interface operations {
     };
     responses: {
       /** @description Reset Content */
-      205: never;
+      205: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       403: components["responses"]["forbidden"];
     };
   };
   /**
    * Get a thread subscription for the authenticated user
-   * @description This checks to see if the current user is subscribed to a thread. You can also [get a repository subscription](https://docs.github.com/enterprise-server@3.7/rest/reference/activity#get-a-repository-subscription).
+   * @description This checks to see if the current user is subscribed to a thread. You can also [get a repository subscription](https://docs.github.com/enterprise-server@3.7/rest/activity/watching#get-a-repository-subscription).
    *
    * Note that subscriptions are only generated if a user is participating in a conversation--for example, they've replied to the thread, were **@mentioned**, or manually subscribe to a thread.
    */
@@ -81884,7 +84377,7 @@ export interface operations {
    *
    * You can also use this endpoint to subscribe to threads that you are currently not receiving notifications for or to subscribed to threads that you have previously ignored.
    *
-   * Unsubscribing from a conversation in a repository that you are not watching is functionally equivalent to the [Delete a thread subscription](https://docs.github.com/enterprise-server@3.7/rest/reference/activity#delete-a-thread-subscription) endpoint.
+   * Unsubscribing from a conversation in a repository that you are not watching is functionally equivalent to the [Delete a thread subscription](https://docs.github.com/enterprise-server@3.7/rest/activity/notifications#delete-a-thread-subscription) endpoint.
    */
   "activity/set-thread-subscription": {
     parameters: {
@@ -81917,7 +84410,7 @@ export interface operations {
   };
   /**
    * Delete a thread subscription
-   * @description Mutes all future notifications for a conversation until you comment on the thread or get an **@mention**. If you are watching the repository of the thread, you will still receive notifications. To ignore future notifications for a repository you are watching, use the [Set a thread subscription](https://docs.github.com/enterprise-server@3.7/rest/reference/activity#set-a-thread-subscription) endpoint and set `ignore` to `true`.
+   * @description Mutes all future notifications for a conversation until you comment on the thread or get an **@mention**. If you are watching the repository of the thread, you will still receive notifications. To ignore future notifications for a repository you are watching, use the [Set a thread subscription](https://docs.github.com/enterprise-server@3.7/rest/activity/notifications#set-a-thread-subscription) endpoint and set `ignore` to `true`.
    */
   "activity/delete-thread-subscription": {
     parameters: {
@@ -81927,7 +84420,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -82327,7 +84822,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -82380,7 +84877,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -82398,7 +84897,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -82416,7 +84917,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -82463,7 +84966,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -82510,9 +85015,13 @@ export interface operations {
     };
     responses: {
       /** @description Success response */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description Conflict response when changing a setting is prevented by the owning enterprise */
-      409: never;
+      409: {
+        content: never;
+      };
     };
   };
   /**
@@ -82632,7 +85141,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -82734,7 +85245,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -82754,7 +85267,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -82773,7 +85288,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -82831,7 +85348,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -82851,7 +85370,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -82870,7 +85391,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -82878,6 +85401,9 @@ export interface operations {
    * @description Lists all self-hosted runners configured in an organization.
    *
    * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+   * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
    */
   "actions/list-self-hosted-runners-for-org": {
     parameters: {
@@ -82909,6 +85435,9 @@ export interface operations {
    * @description Lists binaries for the runner application that you can download and run.
    *
    * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+   * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
    */
   "actions/list-runner-applications-for-org": {
     parameters: {
@@ -82930,8 +85459,11 @@ export interface operations {
    * @description Returns a token that you can pass to the `config` script. The token expires after one hour.
    *
    * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+   * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
    *
-   * #### Example using registration token
+   * Example using registration token:
    *
    * Configure your self-hosted runner, replacing `TOKEN` with the registration token provided by this endpoint.
    *
@@ -82959,8 +85491,11 @@ export interface operations {
    * @description Returns a token that you can pass to the `config` script to remove a self-hosted runner from an organization. The token expires after one hour.
    *
    * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+   * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
    *
-   * #### Example using remove token
+   * Example using remove token:
    *
    * To remove your self-hosted runner from an organization, replace `TOKEN` with the remove token provided by this
    * endpoint.
@@ -82989,6 +85524,9 @@ export interface operations {
    * @description Gets a specific self-hosted runner configured in an organization.
    *
    * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+   * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
    */
   "actions/get-self-hosted-runner-for-org": {
     parameters: {
@@ -83011,6 +85549,9 @@ export interface operations {
    * @description Forces the removal of a self-hosted runner from an organization. You can use this endpoint to completely remove the runner when the machine you were using no longer exists.
    *
    * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+   * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
    */
   "actions/delete-self-hosted-runner-from-org": {
     parameters: {
@@ -83021,7 +85562,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -83029,6 +85572,9 @@ export interface operations {
    * @description Lists all labels for a self-hosted runner configured in an organization.
    *
    * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+   * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
    */
   "actions/list-labels-for-self-hosted-runner-for-org": {
     parameters: {
@@ -83048,6 +85594,9 @@ export interface operations {
    * self-hosted runner configured in an organization.
    *
    * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+   * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
    */
   "actions/set-custom-labels-for-self-hosted-runner-for-org": {
     parameters: {
@@ -83075,6 +85624,9 @@ export interface operations {
    * @description Add custom labels to a self-hosted runner configured in an organization.
    *
    * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+   * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
    */
   "actions/add-custom-labels-to-self-hosted-runner-for-org": {
     parameters: {
@@ -83103,6 +85655,9 @@ export interface operations {
    * organization. Returns the remaining read-only labels from the runner.
    *
    * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+   * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
    */
   "actions/remove-all-custom-labels-from-self-hosted-runner-for-org": {
     parameters: {
@@ -83125,6 +85680,9 @@ export interface operations {
    * present on the runner.
    *
    * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+   * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
    */
   "actions/remove-custom-label-from-self-hosted-runner-for-org": {
     parameters: {
@@ -83142,7 +85700,13 @@ export interface operations {
   };
   /**
    * List organization secrets
-   * @description Lists all secrets available in an organization without revealing their encrypted values. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+   * @description Lists all secrets available in an organization without revealing their
+   * encrypted values.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `secrets` organization permission to use this endpoint.
+   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
    */
   "actions/list-org-secrets": {
     parameters: {
@@ -83171,7 +85735,13 @@ export interface operations {
   };
   /**
    * Get an organization public key
-   * @description Gets your public key, which you need to encrypt secrets. You need to encrypt a secret before you can create or update secrets. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+   * @description Gets your public key, which you need to encrypt secrets. You need to
+   * encrypt a secret before you can create or update secrets.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `secrets` organization permission to use this endpoint.
+   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
    */
   "actions/get-org-public-key": {
     parameters: {
@@ -83190,7 +85760,12 @@ export interface operations {
   };
   /**
    * Get an organization secret
-   * @description Gets a single organization secret without revealing its encrypted value. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+   * @description Gets a single organization secret without revealing its encrypted value.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `secrets` organization permission to use this endpoint.
+   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
    */
   "actions/get-org-secret": {
     parameters: {
@@ -83318,12 +85893,19 @@ export interface operations {
         };
       };
       /** @description Response when updating a secret */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
    * Delete an organization secret
-   * @description Deletes a secret in an organization using the secret name. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+   * @description Deletes a secret in an organization using the secret name.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `secrets` organization permission to use this endpoint.
+   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
    */
   "actions/delete-org-secret": {
     parameters: {
@@ -83334,12 +85916,20 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
    * List selected repositories for an organization secret
-   * @description Lists all repositories that have been selected when the `visibility` for repository access to a secret is set to `selected`. You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+   * @description Lists all repositories that have been selected when the `visibility`
+   * for repository access to a secret is set to `selected`.
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `secrets` organization permission to use this endpoint.
+   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
    */
   "actions/list-selected-repos-for-org-secret": {
     parameters: {
@@ -83366,7 +85956,14 @@ export interface operations {
   };
   /**
    * Set selected repositories for an organization secret
-   * @description Replaces all repositories for an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-server@3.7/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+   * @description Replaces all repositories for an organization secret when the `visibility`
+   * for repository access is set to `selected`. The visibility is set when you [Create
+   * or update an organization secret](https://docs.github.com/enterprise-server@3.7/rest/actions/secrets#create-or-update-an-organization-secret).
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `secrets` organization permission to use this endpoint.
+   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
    */
   "actions/set-selected-repos-for-org-secret": {
     parameters: {
@@ -83378,19 +85975,28 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** @description An array of repository ids that can access the organization secret. You can only provide a list of repository ids when the `visibility` is set to `selected`. You can add and remove individual repositories using the [Add selected repository to an organization secret](https://docs.github.com/enterprise-server@3.7/rest/actions/secrets#add-selected-repository-to-an-organization-secret) and [Remove selected repository from an organization secret](https://docs.github.com/enterprise-server@3.7/rest/reference/actions#remove-selected-repository-from-an-organization-secret) endpoints. */
+          /** @description An array of repository ids that can access the organization secret. You can only provide a list of repository ids when the `visibility` is set to `selected`. You can add and remove individual repositories using the [Add selected repository to an organization secret](https://docs.github.com/enterprise-server@3.7/rest/actions/secrets#add-selected-repository-to-an-organization-secret) and [Remove selected repository from an organization secret](https://docs.github.com/enterprise-server@3.7/rest/actions/secrets#remove-selected-repository-from-an-organization-secret) endpoints. */
           selected_repository_ids: number[];
         };
       };
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
    * Add selected repository to an organization secret
-   * @description Adds a repository to an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-server@3.7/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+   * @description Adds a repository to an organization secret when the `visibility` for
+   * repository access is set to `selected`. The visibility is set when you [Create or
+   * update an organization secret](https://docs.github.com/enterprise-server@3.7/rest/actions/secrets#create-or-update-an-organization-secret).
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `secrets` organization permission to use this endpoint.
+   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
    */
   "actions/add-selected-repo-to-org-secret": {
     parameters: {
@@ -83402,14 +86008,25 @@ export interface operations {
     };
     responses: {
       /** @description No Content when repository was added to the selected list */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description Conflict when visibility type is not set to selected */
-      409: never;
+      409: {
+        content: never;
+      };
     };
   };
   /**
    * Remove selected repository from an organization secret
-   * @description Removes a repository from an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-server@3.7/rest/reference/actions#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `secrets` organization permission to use this endpoint.
+   * @description Removes a repository from an organization secret when the `visibility`
+   * for repository access is set to `selected`. The visibility is set when you [Create
+   * or update an organization secret](https://docs.github.com/enterprise-server@3.7/rest/actions/secrets#create-or-update-an-organization-secret).
+   *
+   * You must authenticate using an access token with the `admin:org` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `secrets` organization permission to use this endpoint.
+   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
    */
   "actions/remove-selected-repo-from-org-secret": {
     parameters: {
@@ -83421,9 +86038,13 @@ export interface operations {
     };
     responses: {
       /** @description Response when repository was removed from the selected list */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description Conflict when visibility type not set to selected */
-      409: never;
+      409: {
+        content: never;
+      };
     };
   };
   /**
@@ -83681,7 +86302,9 @@ export interface operations {
         };
       };
       /** @description Response when updating a secret */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -83697,7 +86320,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -83729,7 +86354,7 @@ export interface operations {
   };
   /**
    * Set selected repositories for an organization secret
-   * @description Replaces all repositories for an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-server@3.7/rest/reference/dependabot#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` organization permission to use this endpoint.
+   * @description Replaces all repositories for an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-server@3.7/rest/dependabot/secrets#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` organization permission to use this endpoint.
    */
   "dependabot/set-selected-repos-for-org-secret": {
     parameters: {
@@ -83741,19 +86366,21 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** @description An array of repository ids that can access the organization secret. You can only provide a list of repository ids when the `visibility` is set to `selected`. You can add and remove individual repositories using the [Set selected repositories for an organization secret](https://docs.github.com/enterprise-server@3.7/rest/reference/dependabot#set-selected-repositories-for-an-organization-secret) and [Remove selected repository from an organization secret](https://docs.github.com/enterprise-server@3.7/rest/reference/dependabot#remove-selected-repository-from-an-organization-secret) endpoints. */
+          /** @description An array of repository ids that can access the organization secret. You can only provide a list of repository ids when the `visibility` is set to `selected`. You can add and remove individual repositories using the [Set selected repositories for an organization secret](https://docs.github.com/enterprise-server@3.7/rest/dependabot/secrets#set-selected-repositories-for-an-organization-secret) and [Remove selected repository from an organization secret](https://docs.github.com/enterprise-server@3.7/rest/dependabot/secrets#remove-selected-repository-from-an-organization-secret) endpoints. */
           selected_repository_ids: number[];
         };
       };
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
    * Add selected repository to an organization secret
-   * @description Adds a repository to an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-server@3.7/rest/reference/dependabot#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` organization permission to use this endpoint.
+   * @description Adds a repository to an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-server@3.7/rest/dependabot/secrets#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` organization permission to use this endpoint.
    */
   "dependabot/add-selected-repo-to-org-secret": {
     parameters: {
@@ -83765,14 +86392,18 @@ export interface operations {
     };
     responses: {
       /** @description No Content when repository was added to the selected list */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description Conflict when visibility type is not set to selected */
-      409: never;
+      409: {
+        content: never;
+      };
     };
   };
   /**
    * Remove selected repository from an organization secret
-   * @description Removes a repository from an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-server@3.7/rest/reference/dependabot#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` organization permission to use this endpoint.
+   * @description Removes a repository from an organization secret when the `visibility` for repository access is set to `selected`. The visibility is set when you [Create or update an organization secret](https://docs.github.com/enterprise-server@3.7/rest/dependabot/secrets#create-or-update-an-organization-secret). You must authenticate using an access token with the `admin:org` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` organization permission to use this endpoint.
    */
   "dependabot/remove-selected-repo-from-org-secret": {
     parameters: {
@@ -83784,9 +86415,13 @@ export interface operations {
     };
     responses: {
       /** @description Response when repository was removed from the selected list */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description Conflict when visibility type not set to selected */
-      409: never;
+      409: {
+        content: never;
+      };
     };
   };
   /** List public organization events */
@@ -83902,7 +86537,7 @@ export interface operations {
         "application/json": {
           /** @description Must be passed as "web". */
           name: string;
-          /** @description Key/value pairs to provide settings for this webhook. [These are defined below](https://docs.github.com/enterprise-server@3.7/rest/reference/orgs#create-hook-config-params). */
+          /** @description Key/value pairs to provide settings for this webhook. */
           config: {
             url: components["schemas"]["webhook-config-url"];
             content_type?: components["schemas"]["webhook-config-content-type"];
@@ -83945,7 +86580,7 @@ export interface operations {
   };
   /**
    * Get an organization webhook
-   * @description Returns a webhook configured in an organization. To get only the webhook `config` properties, see "[Get a webhook configuration for an organization](/rest/reference/orgs#get-a-webhook-configuration-for-an-organization)."
+   * @description Returns a webhook configured in an organization. To get only the webhook `config` properties, see "[Get a webhook configuration for an organization](/rest/orgs/webhooks#get-a-webhook-configuration-for-an-organization)."
    */
   "orgs/get-webhook": {
     parameters: {
@@ -83974,13 +86609,15 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       404: components["responses"]["not_found"];
     };
   };
   /**
    * Update an organization webhook
-   * @description Updates a webhook configured in an organization. When you update a webhook, the `secret` will be overwritten. If you previously had a `secret` set, you must provide the same `secret` or set a new `secret` or the secret will be removed. If you are only updating individual webhook `config` properties, use "[Update a webhook configuration for an organization](/rest/reference/orgs#update-a-webhook-configuration-for-an-organization)."
+   * @description Updates a webhook configured in an organization. When you update a webhook, the `secret` will be overwritten. If you previously had a `secret` set, you must provide the same `secret` or set a new `secret` or the secret will be removed. If you are only updating individual webhook `config` properties, use "[Update a webhook configuration for an organization](/rest/orgs/webhooks#update-a-webhook-configuration-for-an-organization)."
    */
   "orgs/update-webhook": {
     parameters: {
@@ -83992,7 +86629,7 @@ export interface operations {
     requestBody?: {
       content: {
         "application/json": {
-          /** @description Key/value pairs to provide settings for this webhook. [These are defined below](https://docs.github.com/enterprise-server@3.7/rest/reference/orgs#update-hook-config-params). */
+          /** @description Key/value pairs to provide settings for this webhook. */
           config?: {
             url: components["schemas"]["webhook-config-url"];
             content_type?: components["schemas"]["webhook-config-content-type"];
@@ -84029,7 +86666,7 @@ export interface operations {
   };
   /**
    * Get a webhook configuration for an organization
-   * @description Returns the webhook configuration for an organization. To get more information about the webhook, including the `active` state and `events`, use "[Get an organization webhook ](/rest/reference/orgs#get-an-organization-webhook)."
+   * @description Returns the webhook configuration for an organization. To get more information about the webhook, including the `active` state and `events`, use "[Get an organization webhook ](/rest/orgs/webhooks#get-an-organization-webhook)."
    *
    * Access tokens must have the `admin:org_hook` scope, and GitHub Apps must have the `organization_hooks:read` permission.
    */
@@ -84051,7 +86688,7 @@ export interface operations {
   };
   /**
    * Update a webhook configuration for an organization
-   * @description Updates the webhook configuration for an organization. To update more information about the webhook, including the `active` state and `events`, use "[Update an organization webhook ](/rest/reference/orgs#update-an-organization-webhook)."
+   * @description Updates the webhook configuration for an organization. To update more information about the webhook, including the `active` state and `events`, use "[Update an organization webhook ](/rest/orgs/webhooks#update-an-organization-webhook)."
    *
    * Access tokens must have the `admin:org_hook` scope, and GitHub Apps must have the `organization_hooks:write` permission.
    */
@@ -84162,7 +86799,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       404: components["responses"]["not_found"];
     };
   };
@@ -84223,7 +86862,7 @@ export interface operations {
    * **Note**: GitHub's REST API considers every pull request an issue, but not every issue is a pull request. For this
    * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
    * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
-   * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#list-pull-requests)" endpoint.
+   * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@3.7/rest/pulls/pulls#list-pull-requests)" endpoint.
    */
   "issues/list-for-org": {
     parameters: {
@@ -84307,11 +86946,21 @@ export interface operations {
     };
     responses: {
       /** @description Response if requester is an organization member and user is a member */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description Response if requester is not an organization member */
-      302: never;
+      302: {
+        headers: {
+          /** @example https://api.github.com/orgs/github/public_members/pezra */
+          Location?: string;
+        };
+        content: never;
+      };
       /** @description Not Found if requester is an organization member and user is not a member */
-      404: never;
+      404: {
+        content: never;
+      };
     };
   };
   /**
@@ -84327,7 +86976,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       403: components["responses"]["forbidden"];
     };
   };
@@ -84357,7 +87008,7 @@ export interface operations {
    * Set organization membership for a user
    * @description Only authenticated organization owners can add a member to the organization or update the member's role.
    *
-   * *   If the authenticated user is _adding_ a member to the organization, the invited user will receive an email inviting them to the organization. The user's [membership status](https://docs.github.com/enterprise-server@3.7/rest/reference/orgs#get-organization-membership-for-a-user) will be `pending` until they accept the invitation.
+   * *   If the authenticated user is _adding_ a member to the organization, the invited user will receive an email inviting them to the organization. The user's [membership status](https://docs.github.com/enterprise-server@3.7/rest/orgs/members#get-organization-membership-for-a-user) will be `pending` until they accept the invitation.
    *
    * *   Authenticated users can _update_ a user's membership by passing the `role` parameter. If the authenticated user changes a member's role to `admin`, the affected user will receive an email notifying them that they've been made an organization owner. If the authenticated user changes an owner's role to `member`, no email will be sent.
    *
@@ -84412,7 +87063,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
     };
@@ -84568,7 +87221,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      302: never;
+      302: {
+        content: never;
+      };
       404: components["responses"]["not_found"];
     };
   };
@@ -84585,7 +87240,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       404: components["responses"]["not_found"];
     };
   };
@@ -84603,7 +87260,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       404: components["responses"]["not_found"];
     };
   };
@@ -84693,9 +87352,13 @@ export interface operations {
         };
       };
       /** @description User was converted */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description Forbidden if user is the last owner of the organization, not a member of the organization, or if the enterprise enforces a policy for inviting outside collaborators. For more information, see "[Enforcing repository management policies in your enterprise](https://docs.github.com/enterprise-server@3.7/admin/policies/enforcing-policies-for-your-enterprise/enforcing-repository-management-policies-in-your-enterprise#enforcing-a-policy-for-inviting-outside-collaborators-to-repositories)." */
-      403: never;
+      403: {
+        content: never;
+      };
       404: components["responses"]["not_found"];
     };
   };
@@ -84712,7 +87375,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description Unprocessable Entity if user is a member of the organization */
       422: {
         content: {
@@ -84919,9 +87584,13 @@ export interface operations {
     };
     responses: {
       /** @description Response if user is a public member */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description Not Found if user is not a public member */
-      404: never;
+      404: {
+        content: never;
+      };
     };
   };
   /**
@@ -84939,7 +87608,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       403: components["responses"]["forbidden"];
     };
   };
@@ -84956,14 +87627,14 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
    * List organization repositories
    * @description Lists repositories for the specified organization.
-   *
-   * **Note:** In order to see the `security_and_analysis` block for a repository you must have admin permissions for the repository or be an owner or security manager for the organization that owns the repository. For more information, see "[Managing security managers in your organization](https://docs.github.com/enterprise-server@3.7/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
    */
   "repos/list-for-org": {
     parameters: {
@@ -85236,9 +87907,13 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description The organization has reached the maximum number of security manager teams. */
-      409: never;
+      409: {
+        content: never;
+      };
     };
   };
   /**
@@ -85258,7 +87933,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -85361,7 +88038,7 @@ export interface operations {
           permission?: "pull" | "push";
           /** @description The ID of a team to set as the parent team. */
           parent_team_id?: number;
-          /** @description The [distinguished name](https://www.ldap.com/ldap-dns-and-rdns) (DN) of the LDAP entry to map to a team. LDAP synchronization must be enabled to map LDAP entries to a team. Use the "[Update LDAP mapping for a team](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#update-ldap-mapping-for-a-team)" endpoint to change the LDAP DN. For more information, see "[Using LDAP](https://docs.github.com/enterprise-server@3.7/admin/identity-and-access-management/authenticating-users-for-your-github-enterprise-server-instance/using-ldap#enabling-ldap-sync)." */
+          /** @description The [distinguished name](https://www.ldap.com/ldap-dns-and-rdns) (DN) of the LDAP entry to map to a team. LDAP synchronization must be enabled to map LDAP entries to a team. Use the "[Update LDAP mapping for a team](https://docs.github.com/enterprise-server@3.7/rest/enterprise-admin/ldap#update-ldap-mapping-for-a-team)" endpoint to change the LDAP DN. For more information, see "[Using LDAP](https://docs.github.com/enterprise-server@3.7/admin/identity-and-access-management/authenticating-users-for-your-github-enterprise-server-instance/using-ldap#enabling-ldap-sync)." */
           ldap_dn?: string;
         };
       };
@@ -85417,7 +88094,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -85589,7 +88268,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -85730,7 +88411,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -85767,14 +88450,14 @@ export interface operations {
   };
   /**
    * List reactions for a team discussion comment
-   * @description List the reactions to a [team discussion comment](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#discussion-comments/). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * @description List the reactions to a [team discussion comment](https://docs.github.com/enterprise-server@3.7/rest/teams/discussion-comments#get-a-discussion-comment). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions`.
    */
   "reactions/list-for-team-discussion-comment-in-org": {
     parameters: {
       query?: {
-        /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a team discussion comment. */
+        /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#about-reactions). Omit this parameter to list all reactions to a team discussion comment. */
         content?:
           | "+1"
           | "-1"
@@ -85808,7 +88491,7 @@ export interface operations {
   };
   /**
    * Create reaction for a team discussion comment
-   * @description Create a reaction to a [team discussion comment](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#discussion-comments). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
+   * @description Create a reaction to a [team discussion comment](https://docs.github.com/enterprise-server@3.7/rest/teams/discussion-comments#get-a-discussion-comment). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions`.
    */
@@ -85825,7 +88508,7 @@ export interface operations {
       content: {
         "application/json": {
           /**
-           * @description The [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#reaction-types) to add to the team discussion comment.
+           * @description The [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#about-reactions) to add to the team discussion comment.
            * @enum {string}
            */
           content:
@@ -85859,7 +88542,7 @@ export interface operations {
    * Delete team discussion comment reaction
    * @description **Note:** You can also specify a team or organization with `team_id` and `org_id` using the route `DELETE /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions/:reaction_id`.
    *
-   * Delete a reaction to a [team discussion comment](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#discussion-comments). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Delete a reaction to a [team discussion comment](https://docs.github.com/enterprise-server@3.7/rest/teams/discussion-comments#get-a-discussion-comment). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    */
   "reactions/delete-for-team-discussion-comment": {
     parameters: {
@@ -85873,19 +88556,21 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
    * List reactions for a team discussion
-   * @description List the reactions to a [team discussion](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#discussions). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * @description List the reactions to a [team discussion](https://docs.github.com/enterprise-server@3.7/rest/teams/discussions#get-a-discussion). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions`.
    */
   "reactions/list-for-team-discussion-in-org": {
     parameters: {
       query?: {
-        /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a team discussion. */
+        /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#about-reactions). Omit this parameter to list all reactions to a team discussion. */
         content?:
           | "+1"
           | "-1"
@@ -85918,7 +88603,7 @@ export interface operations {
   };
   /**
    * Create reaction for a team discussion
-   * @description Create a reaction to a [team discussion](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion.
+   * @description Create a reaction to a [team discussion](https://docs.github.com/enterprise-server@3.7/rest/teams/discussions#get-a-discussion). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion.
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions`.
    */
@@ -85934,7 +88619,7 @@ export interface operations {
       content: {
         "application/json": {
           /**
-           * @description The [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#reaction-types) to add to the team discussion.
+           * @description The [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#about-reactions) to add to the team discussion.
            * @enum {string}
            */
           content:
@@ -85968,7 +88653,7 @@ export interface operations {
    * Delete team discussion reaction
    * @description **Note:** You can also specify a team or organization with `team_id` and `org_id` using the route `DELETE /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions/:reaction_id`.
    *
-   * Delete a reaction to a [team discussion](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * Delete a reaction to a [team discussion](https://docs.github.com/enterprise-server@3.7/rest/teams/discussions#get-a-discussion). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    */
   "reactions/delete-for-team-discussion": {
     parameters: {
@@ -85981,7 +88666,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -86021,7 +88708,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -86099,7 +88788,7 @@ export interface operations {
    * **Note:**
    * The response contains the `state` of the membership and the member's `role`.
    *
-   * The `role` for organization owners is set to `maintainer`. For more information about `maintainer` roles, see see [Create a team](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#create-a-team).
+   * The `role` for organization owners is set to `maintainer`. For more information about `maintainer` roles, see [Create a team](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#create-a-team).
    */
   "teams/get-membership-for-user-in-org": {
     parameters: {
@@ -86117,7 +88806,9 @@ export interface operations {
         };
       };
       /** @description if user has no team membership */
-      404: never;
+      404: {
+        content: never;
+      };
     };
   };
   /**
@@ -86162,9 +88853,13 @@ export interface operations {
         };
       };
       /** @description Forbidden if team synchronization is set up */
-      403: never;
+      403: {
+        content: never;
+      };
       /** @description Unprocessable Entity if you attempt to add an organization to a team */
-      422: never;
+      422: {
+        content: never;
+      };
     };
   };
   /**
@@ -86187,9 +88882,13 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description Forbidden if team synchronization is set up */
-      403: never;
+      403: {
+        content: never;
+      };
     };
   };
   /**
@@ -86243,7 +88942,9 @@ export interface operations {
         };
       };
       /** @description Not Found if project is not managed by this team */
-      404: never;
+      404: {
+        content: never;
+      };
     };
   };
   /**
@@ -86273,7 +88974,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description Forbidden if the project is not owned by the organization */
       403: {
         content: {
@@ -86301,7 +89004,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -86360,9 +89065,13 @@ export interface operations {
         };
       };
       /** @description Response if team has permission for the repository. This is the response when the repository media type hasn't been provded in the Accept header. */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description Not Found if team does not have permission for the repository */
-      404: never;
+      404: {
+        content: never;
+      };
     };
   };
   /**
@@ -86395,7 +89104,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -86415,7 +89126,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -86468,9 +89181,13 @@ export interface operations {
     };
     responses: {
       /** @description Action started */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description The action could not be taken due to an in progress enablement, or a policy is preventing enablement */
-      422: never;
+      422: {
+        content: never;
+      };
     };
   };
   /**
@@ -86508,7 +89225,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       /** @description Forbidden */
@@ -86660,7 +89379,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -86860,7 +89581,9 @@ export interface operations {
     };
     responses: {
       /** @description Delete Success */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       /** @description Forbidden */
@@ -86935,7 +89658,9 @@ export interface operations {
         };
       };
       /** @description Not Found if the authenticated user does not have access to the project */
-      404: never;
+      404: {
+        content: never;
+      };
       410: components["responses"]["gone"];
       422: components["responses"]["validation_failed_simple"];
     };
@@ -86999,7 +89724,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -87020,7 +89747,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -87120,6 +89849,17 @@ export interface operations {
    * Get rate limit status for the authenticated user
    * @description **Note:** Accessing this endpoint does not count against your REST API rate limit.
    *
+   * Some categories of endpoints have custom rate limits that are separate from the rate limit governing the other REST API endpoints. For this reason, the API response categorizes your rate limit. Under `resources`, you'll see objects relating to different categories:
+   * * The `core` object provides your rate limit status for all non-search-related resources in the REST API.
+   * * The `search` object provides your rate limit status for the REST API for searching (excluding code searches). For more information, see "[Search](https://docs.github.com/enterprise-server@3.7/rest/search)."
+   * * The `code_search` object provides your rate limit status for the REST API for searching code. For more information, see "[Search code](https://docs.github.com/enterprise-server@3.7/rest/search/search#search-code)."
+   * * The `graphql` object provides your rate limit status for the GraphQL API. For more information, see "[Resource limitations](https://docs.github.com/enterprise-server@3.7/graphql/overview/resource-limitations#rate-limit)."
+   * * The `integration_manifest` object provides your rate limit status for the `POST /app-manifests/{code}/conversions` operation. For more information, see "[Creating a GitHub App from a manifest](https://docs.github.com/enterprise-server@3.7/apps/creating-github-apps/setting-up-a-github-app/creating-a-github-app-from-a-manifest#3-you-exchange-the-temporary-code-to-retrieve-the-app-configuration)."
+   * * The `dependency_snapshots` object provides your rate limit status for submitting snapshots to the dependency graph. For more information, see "[Dependency graph](https://docs.github.com/enterprise-server@3.7/rest/dependency-graph)."
+   * * The `code_scanning_upload` object provides your rate limit status for uploading SARIF results to code scanning. For more information, see "[Uploading a SARIF file to GitHub](https://docs.github.com/enterprise-server@3.7/code-security/code-scanning/integrating-with-code-scanning/uploading-a-sarif-file-to-github)."
+   * * The `actions_runner_registration` object provides your rate limit status for registering self-hosted runners in GitHub Actions. For more information, see "[Self-hosted runners](https://docs.github.com/enterprise-server@3.7/rest/actions/self-hosted-runners)."
+   * * The `source_import` object is no longer in use for any API endpoints, and it will be removed in the next API version. For more information about API versions, see "[API Versions](https://docs.github.com/enterprise-server@3.7/rest/overview/api-versions)."
+   *
    * **Note:** The `rate` object is deprecated. If you're writing new API client code or updating existing code, you should use the `core` object instead of the `rate` object. The `core` object contains the same information that is present in the `rate` object.
    */
   "rate-limit/get": {
@@ -87180,7 +89920,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       307: components["responses"]["temporary_redirect"];
       /** @description If an organization owner has configured the organization to prevent members from deleting organization-owned repositories, a member will get this response: */
       403: {
@@ -87196,7 +89938,7 @@ export interface operations {
   };
   /**
    * Update a repository
-   * @description **Note**: To edit a repository's topics, use the [Replace all repository topics](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#replace-all-repository-topics) endpoint.
+   * @description **Note**: To edit a repository's topics, use the [Replace all repository topics](https://docs.github.com/enterprise-server@3.7/rest/repos/repos#replace-all-repository-topics) endpoint.
    */
   "repos/update": {
     parameters: {
@@ -87299,20 +90041,6 @@ export interface operations {
            * @default false
            */
           allow_update_branch?: boolean;
-          /**
-           * @deprecated
-           * @description Either `true` to allow squash-merge commits to use pull request title, or `false` to use commit message. **This property has been deprecated. Please use `squash_merge_commit_title` instead.
-           * @default false
-           */
-          use_squash_pr_title_as_default?: boolean;
-          /**
-           * @description The default value for a squash merge commit title:
-           *
-           * - `PR_TITLE` - default to the pull request's title.
-           * - `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit).
-           * @enum {string}
-           */
-          squash_merge_commit_title?: "PR_TITLE" | "COMMIT_OR_PR_TITLE";
           /**
            * @description The default value for a squash merge commit message:
            *
@@ -87435,14 +90163,17 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
    * Download an artifact
    * @description Gets a redirect URL to download an archive for a repository. This URL expires after 1 minute. Look for `Location:` in
-   * the response header to find the URL for the download. The `:archive_format` must be `zip`. Anyone with read access to
-   * the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope.
+   * the response header to find the URL for the download. The `:archive_format` must be `zip`.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
    * GitHub Apps must have the `actions:read` permission to use this endpoint.
    */
   "actions/download-artifact": {
@@ -87456,7 +90187,12 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      302: never;
+      302: {
+        headers: {
+          Location: components["headers"]["location"];
+        };
+        content: never;
+      };
       410: components["responses"]["gone"];
     };
   };
@@ -87524,7 +90260,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -87606,7 +90344,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -87647,12 +90387,22 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      302: never;
+      302: {
+        headers: {
+          /** @example https://pipelines.actions.githubusercontent.com/ab1f3cCFPB34Nd6imvFxpGZH5hNlDp2wijMwl2gDoO0bcrrlJj/_apis/pipelines/1/jobs/19/signedlogcontent?urlExpires=2020-01-22T22%3A44%3A54.1389777Z&urlSigningMethod=HMACV1&urlSignature=2TUDfIg4fm36OJmfPy6km5QD5DLCOkBVzvhWZM8B%2BUY%3D */
+          Location?: string;
+        };
+        content: never;
+      };
     };
   };
   /**
    * Re-run a job from a workflow run
-   * @description Re-run a job and its dependent jobs in a workflow run. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+   * @description Re-run a job and its dependent jobs in a workflow run.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `actions:write` permission to use this endpoint.
    */
   "actions/re-run-job-for-workflow-run": {
     parameters: {
@@ -87787,7 +90537,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -87838,7 +90590,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -87887,7 +90641,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -87936,14 +90692,23 @@ export interface operations {
     };
     responses: {
       /** @description Success response */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description Conflict response when changing a setting is prevented by the owning organization or enterprise */
-      409: never;
+      409: {
+        content: never;
+      };
     };
   };
   /**
    * List self-hosted runners for a repository
-   * @description Lists all self-hosted runners configured in a repository. You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * @description Lists all self-hosted runners configured in a repository.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+   * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
    */
   "actions/list-self-hosted-runners-for-repo": {
     parameters: {
@@ -87976,6 +90741,9 @@ export interface operations {
    * @description Lists binaries for the runner application that you can download and run.
    *
    * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+   * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
    */
   "actions/list-runner-applications-for-repo": {
     parameters: {
@@ -87995,16 +90763,20 @@ export interface operations {
   };
   /**
    * Create a registration token for a repository
-   * @description Returns a token that you can pass to the `config` script. The token expires after one hour. You must authenticate
-   * using an access token with the `repo` scope to use this endpoint.
+   * @description Returns a token that you can pass to the `config` script. The token
+   * expires after one hour.
    *
-   * #### Example using registration token
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+   * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
    *
-   * Configure your self-hosted runner, replacing `TOKEN` with the registration token provided by this endpoint.
+   * Example using registration token:
    *
-   * ```
-   * ./config.sh --url https://github.com/octo-org/octo-repo-artifacts --token TOKEN
-   * ```
+   * Configure your self-hosted runner, replacing `TOKEN` with the registration token provided
+   * by this endpoint.
+   *
+   * ```config.sh --url https://github.com/octo-org/octo-repo-artifacts --token TOKEN```
    */
   "actions/create-registration-token-for-repo": {
     parameters: {
@@ -88024,16 +90796,20 @@ export interface operations {
   };
   /**
    * Create a remove token for a repository
-   * @description Returns a token that you can pass to remove a self-hosted runner from a repository. The token expires after one hour.
+   * @description Returns a token that you can pass to remove a self-hosted runner from
+   * a repository. The token expires after one hour.
+   *
    * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+   * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
    *
-   * #### Example using remove token
+   * Example using remove token:
    *
-   * To remove your self-hosted runner from a repository, replace TOKEN with the remove token provided by this endpoint.
+   * To remove your self-hosted runner from a repository, replace TOKEN with
+   * the remove token provided by this endpoint.
    *
-   * ```
-   * ./config.sh remove --token TOKEN
-   * ```
+   * ```config.sh remove --token TOKEN```
    */
   "actions/create-remove-token-for-repo": {
     parameters: {
@@ -88055,8 +90831,10 @@ export interface operations {
    * Get a self-hosted runner for a repository
    * @description Gets a specific self-hosted runner configured in a repository.
    *
-   * You must authenticate using an access token with the `repo` scope to use this
-   * endpoint.
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+   * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
    */
   "actions/get-self-hosted-runner-for-repo": {
     parameters: {
@@ -88079,8 +90857,10 @@ export interface operations {
    * Delete a self-hosted runner from a repository
    * @description Forces the removal of a self-hosted runner from a repository. You can use this endpoint to completely remove the runner when the machine you were using no longer exists.
    *
-   * You must authenticate using an access token with the `repo`
-   * scope to use this endpoint.
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+   * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
    */
   "actions/delete-self-hosted-runner-from-repo": {
     parameters: {
@@ -88092,15 +90872,19 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
    * List labels for a self-hosted runner for a repository
    * @description Lists all labels for a self-hosted runner configured in a repository.
    *
-   * You must authenticate using an access token with the `repo` scope to use this
-   * endpoint.
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+   * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
    */
   "actions/list-labels-for-self-hosted-runner-for-repo": {
     parameters: {
@@ -88120,8 +90904,10 @@ export interface operations {
    * @description Remove all previous custom labels and set the new custom labels for a specific
    * self-hosted runner configured in a repository.
    *
-   * You must authenticate using an access token with the `repo` scope to use this
-   * endpoint.
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+   * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
    */
   "actions/set-custom-labels-for-self-hosted-runner-for-repo": {
     parameters: {
@@ -88149,8 +90935,10 @@ export interface operations {
    * Add custom labels to a self-hosted runner for a repository
    * @description Add custom labels to a self-hosted runner configured in a repository.
    *
-   * You must authenticate using an access token with the `repo` scope to use this
-   * endpoint.
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+   * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
    */
   "actions/add-custom-labels-to-self-hosted-runner-for-repo": {
     parameters: {
@@ -88179,8 +90967,10 @@ export interface operations {
    * @description Remove all custom labels from a self-hosted runner configured in a
    * repository. Returns the remaining read-only labels from the runner.
    *
-   * You must authenticate using an access token with the `repo` scope to use this
-   * endpoint.
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+   * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
    */
   "actions/remove-all-custom-labels-from-self-hosted-runner-for-repo": {
     parameters: {
@@ -88203,8 +90993,10 @@ export interface operations {
    * This endpoint returns a `404 Not Found` status if the custom label is not
    * present on the runner.
    *
-   * You must authenticate using an access token with the `repo` scope to use this
-   * endpoint.
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `administration` permission for repositories and the `organization_self_hosted_runners` permission for organizations.
+   * Authenticated users must have admin access to repositories or organizations, or the `manage_runners:enterprise` scope for enterprises, to use these endpoints.
    */
   "actions/remove-custom-label-from-self-hosted-runner-for-repo": {
     parameters: {
@@ -88301,7 +91093,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -88334,6 +91128,7 @@ export interface operations {
       query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
+        name?: components["parameters"]["artifact-name"];
       };
       path: {
         owner: components["parameters"]["owner"];
@@ -88435,12 +91230,22 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      302: never;
+      302: {
+        headers: {
+          /** @example https://pipelines.actions.githubusercontent.com/ab1f3cCFPB34Nd6imvFxpGZH5hNlDp2wijMwl2gDoO0bcrrlJj/_apis/pipelines/1/runs/19/signedlogcontent?urlExpires=2020-01-22T22%3A44%3A54.1389777Z&urlSigningMethod=HMACV1&urlSignature=2TUDfIg4fm36OJmfPy6km5QD5DLCOkBVzvhWZM8B%2BUY%3D */
+          Location?: string;
+        };
+        content: never;
+      };
     };
   };
   /**
    * Cancel a workflow run
-   * @description Cancels a workflow run using its `id`. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `actions:write` permission to use this endpoint.
+   * @description Cancels a workflow run using its `id`.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * If the repository is private, you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `actions:write` permission to use this endpoint.
    */
   "actions/cancel-workflow-run": {
     parameters: {
@@ -88510,7 +91315,13 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      302: never;
+      302: {
+        headers: {
+          /** @example https://pipelines.actions.githubusercontent.com/ab1f3cCFPB34Nd6imvFxpGZH5hNlDp2wijMwl2gDoO0bcrrlJj/_apis/pipelines/1/runs/19/signedlogcontent?urlExpires=2020-01-22T22%3A44%3A54.1389777Z&urlSigningMethod=HMACV1&urlSignature=2TUDfIg4fm36OJmfPy6km5QD5DLCOkBVzvhWZM8B%2BUY%3D */
+          Location?: string;
+        };
+        content: never;
+      };
     };
   };
   /**
@@ -88527,7 +91338,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       403: components["responses"]["forbidden"];
       500: components["responses"]["internal_error"];
     };
@@ -88669,7 +91482,12 @@ export interface operations {
   };
   /**
    * List repository secrets
-   * @description Lists all secrets available in a repository without revealing their encrypted values. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * @description Lists all secrets available in a repository without revealing their encrypted
+   * values.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
    */
   "actions/list-repo-secrets": {
     parameters: {
@@ -88699,7 +91517,13 @@ export interface operations {
   };
   /**
    * Get a repository public key
-   * @description Gets your public key, which you need to encrypt secrets. You need to encrypt a secret before you can create or update secrets. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * @description Gets your public key, which you need to encrypt secrets. You need to
+   * encrypt a secret before you can create or update secrets.
+   *
+   * Anyone with read access to the repository can use this endpoint.
+   * If the repository is private you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
    */
   "actions/get-repo-public-key": {
     parameters: {
@@ -88719,7 +91543,11 @@ export interface operations {
   };
   /**
    * Get a repository secret
-   * @description Gets a single repository secret without revealing its encrypted value. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * @description Gets a single repository secret without revealing its encrypted value.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
    */
   "actions/get-repo-secret": {
     parameters: {
@@ -88741,81 +91569,11 @@ export interface operations {
   /**
    * Create or update a repository secret
    * @description Creates or updates a repository secret with an encrypted value. Encrypt your secret using
-   * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an access
-   * token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use
-   * this endpoint.
+   * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting secrets for the REST API](https://docs.github.com/enterprise-server@3.7/rest/guides/encrypting-secrets-for-the-rest-api)."
    *
-   * **Example encrypting a secret using Node.js**
-   *
-   * Encrypt your secret using the [libsodium-wrappers](https://www.npmjs.com/package/libsodium-wrappers) library.
-   *
-   * ```
-   * const sodium = require('libsodium-wrappers')
-   * const secret = 'plain-text-secret' // replace with the secret you want to encrypt
-   * const key = 'base64-encoded-public-key' // replace with the Base64 encoded public key
-   *
-   * //Check if libsodium is ready and then proceed.
-   * sodium.ready.then(() => {
-   *   // Convert Secret & Base64 key to Uint8Array.
-   *   let binkey = sodium.from_base64(key, sodium.base64_variants.ORIGINAL)
-   *   let binsec = sodium.from_string(secret)
-   *
-   *   //Encrypt the secret using LibSodium
-   *   let encBytes = sodium.crypto_box_seal(binsec, binkey)
-   *
-   *   // Convert encrypted Uint8Array to Base64
-   *   let output = sodium.to_base64(encBytes, sodium.base64_variants.ORIGINAL)
-   *
-   *   console.log(output)
-   * });
-   * ```
-   *
-   * **Example encrypting a secret using Python**
-   *
-   * Encrypt your secret using [pynacl](https://pynacl.readthedocs.io/en/latest/public/#nacl-public-sealedbox) with Python 3.
-   *
-   * ```
-   * from base64 import b64encode
-   * from nacl import encoding, public
-   *
-   * def encrypt(public_key: str, secret_value: str) -> str:
-   *   """Encrypt a Unicode string using the public key."""
-   *   public_key = public.PublicKey(public_key.encode("utf-8"), encoding.Base64Encoder())
-   *   sealed_box = public.SealedBox(public_key)
-   *   encrypted = sealed_box.encrypt(secret_value.encode("utf-8"))
-   *   return b64encode(encrypted).decode("utf-8")
-   * ```
-   *
-   * **Example encrypting a secret using C#**
-   *
-   * Encrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/) package.
-   *
-   * ```
-   * var secretValue = System.Text.Encoding.UTF8.GetBytes("mySecret");
-   * var publicKey = Convert.FromBase64String("2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvvcCU=");
-   *
-   * var sealedPublicKeyBox = Sodium.SealedPublicKeyBox.Create(secretValue, publicKey);
-   *
-   * Console.WriteLine(Convert.ToBase64String(sealedPublicKeyBox));
-   * ```
-   *
-   * **Example encrypting a secret using Ruby**
-   *
-   * Encrypt your secret using the [rbnacl](https://github.com/RubyCrypto/rbnacl) gem.
-   *
-   * ```ruby
-   * require "rbnacl"
-   * require "base64"
-   *
-   * key = Base64.decode64("+ZYvJDZMHUfBkJdyq5Zm9SKqeuBQ4sj+6sfjlH4CgG0=")
-   * public_key = RbNaCl::PublicKey.new(key)
-   *
-   * box = RbNaCl::Boxes::Sealed.from_public_key(public_key)
-   * encrypted_secret = box.encrypt("my_secret")
-   *
-   * # Print the base64 encoded secret
-   * puts Base64.strict_encode64(encrypted_secret)
-   * ```
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
    */
   "actions/create-or-update-repo-secret": {
     parameters: {
@@ -88828,7 +91586,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** @description Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get a repository public key](https://docs.github.com/enterprise-server@3.7/rest/reference/actions#get-a-repository-public-key) endpoint. */
+          /** @description Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get a repository public key](https://docs.github.com/enterprise-server@3.7/rest/actions/secrets#get-a-repository-public-key) endpoint. */
           encrypted_value?: string;
           /** @description ID of the key you used to encrypt the secret. */
           key_id?: string;
@@ -88843,12 +91601,18 @@ export interface operations {
         };
       };
       /** @description Response when updating a secret */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
    * Delete a repository secret
-   * @description Deletes a secret in a repository using the secret name. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * @description Deletes a secret in a repository using the secret name.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
    */
   "actions/delete-repo-secret": {
     parameters: {
@@ -88860,7 +91624,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -88930,7 +91696,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -88963,7 +91731,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -88982,7 +91752,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -89072,7 +91844,9 @@ export interface operations {
     };
     responses: {
       /** @description If the `assignee` can be assigned to issues in the repository, a `204` header with no content is returned. */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description Otherwise a `404` status code is returned. */
       404: {
         content: {
@@ -89186,7 +91960,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       404: components["responses"]["not_found"];
     };
   };
@@ -89374,7 +92150,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       403: components["responses"]["forbidden"];
     };
   };
@@ -89438,7 +92216,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       404: components["responses"]["not_found"];
     };
   };
@@ -89477,7 +92257,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       404: components["responses"]["not_found"];
     };
   };
@@ -89603,7 +92385,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       404: components["responses"]["not_found"];
     };
   };
@@ -89643,7 +92427,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -89849,7 +92635,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -90287,20 +93075,97 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": OneOf<
-          [
-            {
-              /** @enum {unknown} */
-              status: "completed";
-              [key: string]: unknown;
-            },
-            {
-              /** @enum {unknown} */
-              status?: "queued" | "in_progress";
-              [key: string]: unknown;
-            },
-          ]
-        >;
+        "application/json": {
+          /** @description The name of the check. For example, "code-coverage". */
+          name: string;
+          /** @description The SHA of the commit. */
+          head_sha: string;
+          /** @description The URL of the integrator's site that has the full details of the check. If the integrator does not provide this, then the homepage of the GitHub app is used. */
+          details_url?: string;
+          /** @description A reference for the run on the integrator's system. */
+          external_id?: string;
+          /**
+           * @description The current status.
+           * @default queued
+           * @enum {string}
+           */
+          status?: "queued" | "in_progress" | "completed";
+          /**
+           * Format: date-time
+           * @description The time that the check run began. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
+           */
+          started_at?: string;
+          /**
+           * @description **Required if you provide `completed_at` or a `status` of `completed`**. The final conclusion of the check.
+           * **Note:** Providing `conclusion` will automatically set the `status` parameter to `completed`. You cannot change a check run conclusion to `stale`, only GitHub can set this.
+           * @enum {string}
+           */
+          conclusion?:
+            | "action_required"
+            | "cancelled"
+            | "failure"
+            | "neutral"
+            | "success"
+            | "skipped"
+            | "stale"
+            | "timed_out";
+          /**
+           * Format: date-time
+           * @description The time the check completed. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
+           */
+          completed_at?: string;
+          /** @description Check runs can accept a variety of data in the `output` object, including a `title` and `summary` and can optionally provide descriptive details about the run. */
+          output?: {
+            /** @description The title of the check run. */
+            title: string;
+            /** @description The summary of the check run. This parameter supports Markdown. **Maximum length**: 65535 characters. */
+            summary: string;
+            /** @description The details of the check run. This parameter supports Markdown. **Maximum length**: 65535 characters. */
+            text?: string;
+            /** @description Adds information from your analysis to specific lines of code. Annotations are visible on GitHub in the **Checks** and **Files changed** tab of the pull request. The Checks API limits the number of annotations to a maximum of 50 per API request. To create more than 50 annotations, you have to make multiple requests to the [Update a check run](https://docs.github.com/rest/reference/checks#update-a-check-run) endpoint. Each time you update the check run, annotations are appended to the list of annotations that already exist for the check run. GitHub Actions are limited to 10 warning annotations and 10 error annotations per step. For details about how you can view annotations on GitHub, see "[About status checks](https://docs.github.com/articles/about-status-checks#checks)". */
+            annotations?: {
+              /** @description The path of the file to add an annotation to. For example, `assets/css/main.css`. */
+              path: string;
+              /** @description The start line of the annotation. Line numbers start at 1. */
+              start_line: number;
+              /** @description The end line of the annotation. */
+              end_line: number;
+              /** @description The start column of the annotation. Annotations only support `start_column` and `end_column` on the same line. Omit this parameter if `start_line` and `end_line` have different values. Column numbers start at 1. */
+              start_column?: number;
+              /** @description The end column of the annotation. Annotations only support `start_column` and `end_column` on the same line. Omit this parameter if `start_line` and `end_line` have different values. */
+              end_column?: number;
+              /**
+               * @description The level of the annotation.
+               * @enum {string}
+               */
+              annotation_level: "notice" | "warning" | "failure";
+              /** @description A short description of the feedback for these lines of code. The maximum size is 64 KB. */
+              message: string;
+              /** @description The title that represents the annotation. The maximum size is 255 characters. */
+              title?: string;
+              /** @description Details about this annotation. The maximum size is 64 KB. */
+              raw_details?: string;
+            }[];
+            /** @description Adds images to the output displayed in the GitHub pull request UI. */
+            images?: {
+              /** @description The alternative text for the image. */
+              alt: string;
+              /** @description The full URL of the image. */
+              image_url: string;
+              /** @description A short image description. */
+              caption?: string;
+            }[];
+          };
+          /** @description Displays a button on GitHub that can be clicked to alert your app to do additional tasks. For example, a code linting app can display a button that automatically fixes detected errors. The button created in this object is displayed after the check run completes. When a user clicks the button, GitHub sends the [`check_run.requested_action` webhook](https://docs.github.com/webhooks/event-payloads/#check_run) to your app. Each action includes a `label`, `identifier` and `description`. A maximum of three actions are accepted. To learn more about check runs and requested actions, see "[Check runs and requested actions](https://docs.github.com/rest/reference/checks#check-runs-and-requested-actions)." */
+          actions?: {
+            /** @description The text to be displayed on a button in the web UI. The maximum size is 20 characters. */
+            label: string;
+            /** @description A short explanation of what this action would do. The maximum size is 40 characters. */
+            description: string;
+            /** @description A reference for the action on the integrator's system. The maximum size is 20 characters. */
+            identifier: string;
+          }[];
+        };
       };
     };
     responses: {
@@ -90316,7 +93181,7 @@ export interface operations {
    * Get a check run
    * @description **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
    *
-   * Gets a single check run using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth Apps and authenticated users must have the `repo` scope to get check runs in a private repository.
+   * Gets a single check run using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth apps and authenticated users must have the `repo` scope to get check runs in a private repository.
    */
   "checks/get": {
     parameters: {
@@ -90395,7 +93260,7 @@ export interface operations {
             summary: string;
             /** @description Can contain Markdown. */
             text?: string;
-            /** @description Adds information from your analysis to specific lines of code. Annotations are visible in GitHub's pull request UI. Annotations are visible in GitHub's pull request UI. The Checks API limits the number of annotations to a maximum of 50 per API request. To create more than 50 annotations, you have to make multiple requests to the [Update a check run](https://docs.github.com/enterprise-server@3.7/rest/reference/checks#update-a-check-run) endpoint. Each time you update the check run, annotations are appended to the list of annotations that already exist for the check run. GitHub Actions are limited to 10 warning annotations and 10 error annotations per step. For details about annotations in the UI, see "[About status checks](https://docs.github.com/enterprise-server@3.7/articles/about-status-checks#checks)". */
+            /** @description Adds information from your analysis to specific lines of code. Annotations are visible in GitHub's pull request UI. Annotations are visible in GitHub's pull request UI. The Checks API limits the number of annotations to a maximum of 50 per API request. To create more than 50 annotations, you have to make multiple requests to the [Update a check run](https://docs.github.com/enterprise-server@3.7/rest/checks/runs#update-a-check-run) endpoint. Each time you update the check run, annotations are appended to the list of annotations that already exist for the check run. GitHub Actions are limited to 10 warning annotations and 10 error annotations per step. For details about annotations in the UI, see "[About status checks](https://docs.github.com/enterprise-server@3.7/articles/about-status-checks#checks)". */
             annotations?: {
               /** @description The path of the file to add an annotation to. For example, `assets/css/main.css`. */
               path: string;
@@ -90429,7 +93294,7 @@ export interface operations {
               caption?: string;
             }[];
           };
-          /** @description Possible further actions the integrator can perform, which a user may trigger. Each action includes a `label`, `identifier` and `description`. A maximum of three actions are accepted. See the [`actions` object](https://docs.github.com/enterprise-server@3.7/rest/reference/checks#actions-object) description. To learn more about check runs and requested actions, see "[Check runs and requested actions](https://docs.github.com/enterprise-server@3.7/rest/reference/checks#check-runs-and-requested-actions)." */
+          /** @description Possible further actions the integrator can perform, which a user may trigger. Each action includes a `label`, `identifier` and `description`. A maximum of three actions are accepted. To learn more about check runs and requested actions, see "[Check runs and requested actions](https://docs.github.com/enterprise-server@3.7/rest/guides/using-the-rest-api-to-interact-with-checks#check-runs-and-requested-actions)." */
           actions?: {
             /** @description The text to be displayed on a button in the web UI. The maximum size is 20 characters. */
             label: string;
@@ -90463,7 +93328,7 @@ export interface operations {
   };
   /**
    * List check run annotations
-   * @description Lists annotations for a check run using the annotation `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get annotations for a check run. OAuth Apps and authenticated users must have the `repo` scope to get annotations for a check run in a private repository.
+   * @description Lists annotations for a check run using the annotation `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get annotations for a check run. OAuth apps and authenticated users must have the `repo` scope to get annotations for a check run in a private repository.
    */
   "checks/list-annotations": {
     parameters: {
@@ -90494,6 +93359,8 @@ export interface operations {
    * @description Triggers GitHub to rerequest an existing check run, without pushing new code to a repository. This endpoint will trigger the [`check_run` webhook](https://docs.github.com/enterprise-server@3.7/webhooks/event-payloads/#check_run) event with the action `rerequested`. When a check run is `rerequested`, its `status` is reset to `queued` and the `conclusion` is cleared.
    *
    * To rerequest a check run, your GitHub App must have the `checks:read` permission on a private repository or pull access to a public repository.
+   *
+   * For more information about how to re-run GitHub Actions jobs, see "[Re-run a job from a workflow run](https://docs.github.com/enterprise-server@3.7/rest/actions/workflow-runs#re-run-a-job-from-a-workflow-run)".
    */
   "checks/rerequest-run": {
     parameters: {
@@ -90529,7 +93396,7 @@ export interface operations {
    * Create a check suite
    * @description **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
    *
-   * By default, check suites are automatically created when you create a [check run](https://docs.github.com/enterprise-server@3.7/rest/reference/checks#check-runs). You only need to use this endpoint for manually creating check suites when you've disabled automatic creation using "[Update repository preferences for check suites](https://docs.github.com/enterprise-server@3.7/rest/reference/checks#update-repository-preferences-for-check-suites)". Your GitHub App must have the `checks:write` permission to create check suites.
+   * By default, check suites are automatically created when you create a [check run](https://docs.github.com/enterprise-server@3.7/rest/checks/runs). You only need to use this endpoint for manually creating check suites when you've disabled automatic creation using "[Update repository preferences for check suites](https://docs.github.com/enterprise-server@3.7/rest/checks/suites#update-repository-preferences-for-check-suites)". Your GitHub App must have the `checks:write` permission to create check suites.
    */
   "checks/create-suite": {
     parameters: {
@@ -90563,7 +93430,7 @@ export interface operations {
   };
   /**
    * Update repository preferences for check suites
-   * @description Changes the default automatic flow when creating check suites. By default, a check suite is automatically created each time code is pushed to a repository. When you disable the automatic creation of check suites, you can manually [Create a check suite](https://docs.github.com/enterprise-server@3.7/rest/reference/checks#create-a-check-suite). You must have admin permissions in the repository to set preferences for check suites.
+   * @description Changes the default automatic flow when creating check suites. By default, a check suite is automatically created each time code is pushed to a repository. When you disable the automatic creation of check suites, you can manually [Create a check suite](https://docs.github.com/enterprise-server@3.7/rest/checks/suites#create-a-check-suite). You must have admin permissions in the repository to set preferences for check suites.
    */
   "checks/set-suites-preferences": {
     parameters: {
@@ -90601,7 +93468,7 @@ export interface operations {
    * Get a check suite
    * @description **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
    *
-   * Gets a single check suite using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check suites. OAuth Apps and authenticated users must have the `repo` scope to get check suites in a private repository.
+   * Gets a single check suite using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check suites. OAuth apps and authenticated users must have the `repo` scope to get check suites in a private repository.
    */
   "checks/get-suite": {
     parameters: {
@@ -90624,7 +93491,7 @@ export interface operations {
    * List check runs in a check suite
    * @description **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
    *
-   * Lists check runs for a check suite using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth Apps and authenticated users must have the `repo` scope to get check runs in a private repository.
+   * Lists check runs for a check suite using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth apps and authenticated users must have the `repo` scope to get check runs in a private repository.
    */
   "checks/list-for-suite": {
     parameters: {
@@ -90661,7 +93528,7 @@ export interface operations {
    * Rerequest a check suite
    * @description Triggers GitHub to rerequest an existing check suite, without pushing new code to a repository. This endpoint will trigger the [`check_suite` webhook](https://docs.github.com/enterprise-server@3.7/webhooks/event-payloads/#check_suite) event with the action `rerequested`. When a check suite is `rerequested`, its `status` is reset to `queued` and the `conclusion` is cleared.
    *
-   * To rerequest a check suite, your GitHub App must have the `checks:read` permission on a private repository or pull access to a public repository.
+   * To rerequest a check suite, your GitHub App must have the `checks:write` permission on a private repository or pull access to a public repository.
    */
   "checks/rerequest-suite": {
     parameters: {
@@ -91038,7 +93905,7 @@ export interface operations {
    *
    * The `202 Accepted` response includes an `id` value.
    * You can use this ID to check the status of the upload by using it in the `/sarifs/{sarif_id}` endpoint.
-   * For more information, see "[Get information about a SARIF upload](/rest/reference/code-scanning#get-information-about-a-sarif-upload)."
+   * For more information, see "[Get information about a SARIF upload](/rest/code-scanning/code-scanning#get-information-about-a-sarif-upload)."
    */
   "code-scanning/upload-sarif": {
     parameters: {
@@ -91078,17 +93945,21 @@ export interface operations {
         };
       };
       /** @description Bad Request if the sarif field is invalid */
-      400: never;
+      400: {
+        content: never;
+      };
       403: components["responses"]["code_scanning_forbidden_write"];
       404: components["responses"]["not_found"];
       /** @description Payload Too Large if the sarif field is too large */
-      413: never;
+      413: {
+        content: never;
+      };
       503: components["responses"]["service_unavailable"];
     };
   };
   /**
    * Get information about a SARIF upload
-   * @description Gets information about a SARIF upload, including the status and the URL of the analysis that was uploaded so that you can retrieve details of the analysis. For more information, see "[Get a code scanning analysis for a repository](/rest/reference/code-scanning#get-a-code-scanning-analysis-for-a-repository)." You must use an access token with the `security_events` scope to use this endpoint with private repos, the `public_repo` scope also grants permission to read security events on public repos only. GitHub Apps must have the `security_events` read permission to use this endpoint.
+   * @description Gets information about a SARIF upload, including the status and the URL of the analysis that was uploaded so that you can retrieve details of the analysis. For more information, see "[Get a code scanning analysis for a repository](/rest/code-scanning/code-scanning#get-a-code-scanning-analysis-for-a-repository)." You must use an access token with the `security_events` scope to use this endpoint with private repos, the `public_repo` scope also grants permission to read security events on public repos only. GitHub Apps must have the `security_events` read permission to use this endpoint.
    */
   "code-scanning/get-sarif": {
     parameters: {
@@ -91108,7 +93979,9 @@ export interface operations {
       };
       403: components["responses"]["code_scanning_forbidden_read"];
       /** @description Not Found if the sarif id does not match any upload */
-      404: never;
+      404: {
+        content: never;
+      };
       503: components["responses"]["service_unavailable"];
     };
   };
@@ -91139,7 +94012,9 @@ export interface operations {
         };
       };
       /** @description Resource not found */
-      404: never;
+      404: {
+        content: never;
+      };
     };
   };
   /**
@@ -91199,9 +94074,13 @@ export interface operations {
     };
     responses: {
       /** @description Response if user is a collaborator */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description Not Found if user is not a collaborator */
-      404: never;
+      404: {
+        content: never;
+      };
     };
   };
   /**
@@ -91218,15 +94097,9 @@ export interface operations {
    *
    * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#http-verbs)."
    *
-   * The invitee will receive a notification that they have been invited to the repository, which they must accept or decline. They may do this via the notifications page, the email they receive, or by using the [repository invitations API endpoints](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#invitations).
-   *
    * **Updating an existing collaborator's permission level**
    *
    * The endpoint can also be used to change the permissions of an existing collaborator without first removing and re-adding the collaborator. To change the permissions, use the same endpoint and pass a different `permission` parameter. The response will be a `204`, with no other indication that the permission level changed.
-   *
-   * **Rate limits**
-   *
-   * You are limited to sending 50 invitations to a repository per 24 hour period. Note there is no limit if you are inviting organization members to an organization repository.
    */
   "repos/add-collaborator": {
     parameters: {
@@ -91248,19 +94121,15 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Response when a new invitation is created */
-      201: {
-        content: {
-          "application/json": components["schemas"]["repository-invitation"];
-        };
-      };
       /**
        * @description Response when:
        * - an existing collaborator is added as a collaborator
        * - an organization member is added as an individual collaborator
        * - an existing team member (whose team is also a repository collaborator) is added as an individual collaborator
        */
-      204: never;
+      204: {
+        content: never;
+      };
       403: components["responses"]["forbidden"];
       422: components["responses"]["validation_failed"];
     };
@@ -91299,14 +94168,22 @@ export interface operations {
     };
     responses: {
       /** @description No Content when collaborator was removed from the repository. */
-      204: never;
+      204: {
+        content: never;
+      };
       403: components["responses"]["forbidden"];
       422: components["responses"]["validation_failed"];
     };
   };
   /**
    * Get repository permissions for a user
-   * @description Checks the repository permission of a collaborator. The possible repository permissions are `admin`, `write`, `read`, and `none`.
+   * @description Checks the repository permission of a collaborator. The possible repository
+   * permissions are `admin`, `write`, `read`, and `none`.
+   *
+   * *Note*: The `permission` attribute provides the legacy base roles of `admin`, `write`, `read`, and `none`, where the
+   * `maintain` role is mapped to `write` and the `triage` role is mapped to `read`. To determine the role assigned to the
+   * collaborator, see the `role_name` attribute, which will provide the full role name, including custom roles. The
+   * `permissions` hash can also be used to determine which base level of access the collaborator has to the repository.
    */
   "repos/get-collaborator-permission-level": {
     parameters: {
@@ -91328,7 +94205,7 @@ export interface operations {
   };
   /**
    * List commit comments for a repository
-   * @description Commit Comments use [these custom media types](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#custom-media-types). You can read more about the use of media types in the API [here](https://docs.github.com/enterprise-server@3.7/rest/overview/media-types/).
+   * @description Commit Comments use [these custom media types](https://docs.github.com/enterprise-server@3.7/rest/overview/media-types). You can read more about the use of media types in the API [here](https://docs.github.com/enterprise-server@3.7/rest/overview/media-types/).
    *
    * Comments are ordered by ascending ID.
    */
@@ -91385,7 +94262,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       404: components["responses"]["not_found"];
     };
   };
@@ -91418,12 +94297,12 @@ export interface operations {
   };
   /**
    * List reactions for a commit comment
-   * @description List the reactions to a [commit comment](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#comments).
+   * @description List the reactions to a [commit comment](https://docs.github.com/enterprise-server@3.7/rest/commits/comments#get-a-commit-comment).
    */
   "reactions/list-for-commit-comment": {
     parameters: {
       query?: {
-        /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a commit comment. */
+        /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#about-reactions). Omit this parameter to list all reactions to a commit comment. */
         content?:
           | "+1"
           | "-1"
@@ -91457,7 +94336,7 @@ export interface operations {
   };
   /**
    * Create reaction for a commit comment
-   * @description Create a reaction to a [commit comment](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#comments). A response with an HTTP `200` status means that you already added the reaction type to this commit comment.
+   * @description Create a reaction to a [commit comment](https://docs.github.com/enterprise-server@3.7/rest/commits/comments#get-a-commit-comment). A response with an HTTP `200` status means that you already added the reaction type to this commit comment.
    */
   "reactions/create-for-commit-comment": {
     parameters: {
@@ -91471,7 +94350,7 @@ export interface operations {
       content: {
         "application/json": {
           /**
-           * @description The [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#reaction-types) to add to the commit comment.
+           * @description The [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#about-reactions) to add to the commit comment.
            * @enum {string}
            */
           content:
@@ -91506,7 +94385,7 @@ export interface operations {
    * Delete a commit comment reaction
    * @description **Note:** You can also specify a repository by `repository_id` using the route `DELETE /repositories/:repository_id/comments/:comment_id/reactions/:reaction_id`.
    *
-   * Delete a reaction to a [commit comment](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#comments).
+   * Delete a reaction to a [commit comment](https://docs.github.com/enterprise-server@3.7/rest/commits/comments#get-a-commit-comment).
    */
   "reactions/delete-for-commit-comment": {
     parameters: {
@@ -91519,7 +94398,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -91689,6 +94570,8 @@ export interface operations {
   /**
    * List pull requests associated with a commit
    * @description Lists the merged pull request that introduced the commit to the repository. If the commit is not present in the default branch, will only return open pull requests associated with the commit.
+   *
+   * To list the open or merged pull requests associated with a branch, you can set the `commit_sha` parameter to the branch name.
    */
   "repos/list-pull-requests-associated-with-commit": {
     parameters: {
@@ -91762,8 +94645,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** @description ref parameter */
-        ref: string;
+        ref: components["parameters"]["commit-ref"];
       };
     };
     responses: {
@@ -91783,7 +94665,7 @@ export interface operations {
    * List check runs for a Git reference
    * @description **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
    *
-   * Lists check runs for a commit ref. The `ref` can be a SHA, branch name, or a tag name. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth Apps and authenticated users must have the `repo` scope to get check runs in a private repository.
+   * Lists check runs for a commit ref. The `ref` can be a SHA, branch name, or a tag name. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth apps and authenticated users must have the `repo` scope to get check runs in a private repository.
    */
   "checks/list-for-ref": {
     parameters: {
@@ -91799,8 +94681,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** @description ref parameter */
-        ref: string;
+        ref: components["parameters"]["commit-ref"];
       };
     };
     responses: {
@@ -91822,7 +94703,7 @@ export interface operations {
    * List check suites for a Git reference
    * @description **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
    *
-   * Lists check suites for a commit `ref`. The `ref` can be a SHA, branch name, or a tag name. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to list check suites. OAuth Apps and authenticated users must have the `repo` scope to get check suites in a private repository.
+   * Lists check suites for a commit `ref`. The `ref` can be a SHA, branch name, or a tag name. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to list check suites. OAuth apps and authenticated users must have the `repo` scope to get check suites in a private repository.
    */
   "checks/list-suites-for-ref": {
     parameters: {
@@ -91839,8 +94720,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** @description ref parameter */
-        ref: string;
+        ref: components["parameters"]["commit-ref"];
       };
     };
     responses: {
@@ -91878,8 +94758,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** @description ref parameter */
-        ref: string;
+        ref: components["parameters"]["commit-ref"];
       };
     };
     responses: {
@@ -91907,8 +94786,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** @description ref parameter */
-        ref: string;
+        ref: components["parameters"]["commit-ref"];
       };
     };
     responses: {
@@ -92002,34 +94880,34 @@ export interface operations {
    * @description Gets the contents of a file or directory in a repository. Specify the file path or directory in `:path`. If you omit
    * `:path`, you will receive the contents of the repository's root directory. See the description below regarding what the API response includes for directories.
    *
-   * Files and symlinks support [a custom media type](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#custom-media-types) for
+   * Files and symlinks support [a custom media type](https://docs.github.com/enterprise-server@3.7/rest/overview/media-types) for
    * retrieving the raw content or rendered HTML (when supported). All content types support [a custom media
-   * type](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#custom-media-types) to ensure the content is returned in a consistent
+   * type](https://docs.github.com/enterprise-server@3.7/rest/overview/media-types) to ensure the content is returned in a consistent
    * object format.
    *
    * **Notes**:
-   * *   To get a repository's contents recursively, you can [recursively get the tree](https://docs.github.com/enterprise-server@3.7/rest/reference/git#trees).
+   * *   To get a repository's contents recursively, you can [recursively get the tree](https://docs.github.com/enterprise-server@3.7/rest/git/trees#get-a-tree).
    * *   This API has an upper limit of 1,000 files for a directory. If you need to retrieve more files, use the [Git Trees
-   * API](https://docs.github.com/enterprise-server@3.7/rest/reference/git#get-a-tree).
+   * API](https://docs.github.com/enterprise-server@3.7/rest/git/trees#get-a-tree).
    *  *  Download URLs expire and are meant to be used just once. To ensure the download URL does not expire, please use the contents API to obtain a fresh download URL for each download.
-   * #### Size limits
+   *  Size limits:
    * If the requested file's size is:
    * * 1 MB or smaller: All features of this endpoint are supported.
    * * Between 1-100 MB: Only the `raw` or `object` [custom media types](https://docs.github.com/enterprise-server@3.7/rest/repos/contents#custom-media-types-for-repository-contents) are supported. Both will work as normal, except that when using the `object` media type, the `content` field will be an empty string and the `encoding` field will be `"none"`. To get the contents of these larger files, use the `raw` media type.
    *  * Greater than 100 MB: This endpoint is not supported.
    *
-   * #### If the content is a directory
+   *  If the content is a directory:
    * The response will be an array of objects, one object for each item in the directory.
    * When listing the contents of a directory, submodules have their "type" specified as "file". Logically, the value
    * _should_ be "submodule". This behavior exists in API v3 [for backwards compatibility purposes](https://git.io/v1YCW).
    * In the next major version of the API, the type will be returned as "submodule".
    *
-   * #### If the content is a symlink
+   *  If the content is a symlink:
    * If the requested `:path` points to a symlink, and the symlink's target is a normal file in the repository, then the
    * API responds with the content of the file (in the format shown in the example. Otherwise, the API responds with an object
    * describing the symlink itself.
    *
-   * #### If the content is a submodule
+   *  If the content is a submodule:
    * The `submodule_git_url` identifies the location of the submodule repository, and the `sha` identifies a specific
    * commit within the submodule repository. Git uses the given URL when cloning the submodule repository, and checks out
    * the submodule at that specific commit.
@@ -92069,9 +94947,9 @@ export interface operations {
   };
   /**
    * Create or update file contents
-   * @description Creates a new file or replaces an existing file in a repository. You must authenticate using an access token with the `workflow` scope to use this endpoint.
+   * @description Creates a new file or replaces an existing file in a repository. You must authenticate using an access token with the `repo` scope to use this endpoint. If you want to modify files in the `.github/workflows` directory, you must authenticate using an access token with the `workflow` scope.
    *
-   * **Note:** If you use this endpoint and the "[Delete a file](https://docs.github.com/enterprise-server@3.7/rest/reference/repos/#delete-file)" endpoint in parallel, the concurrent requests will conflict and you will receive errors. You must use these endpoints serially instead.
+   * **Note:** If you use this endpoint and the "[Delete a file](https://docs.github.com/enterprise-server@3.7/rest/repos/contents/#delete-a-file)" endpoint in parallel, the concurrent requests will conflict and you will receive errors. You must use these endpoints serially instead.
    */
   "repos/create-or-update-file-contents": {
     parameters: {
@@ -92142,7 +95020,7 @@ export interface operations {
    *
    * You must provide values for both `name` and `email`, whether you choose to use `author` or `committer`. Otherwise, you'll receive a `422` status code.
    *
-   * **Note:** If you use this endpoint and the "[Create or update file contents](https://docs.github.com/enterprise-server@3.7/rest/reference/repos/#create-or-update-file-contents)" endpoint in parallel, the concurrent requests will conflict and you will receive errors. You must use these endpoints serially instead.
+   * **Note:** If you use this endpoint and the "[Create or update file contents](https://docs.github.com/enterprise-server@3.7/rest/repos/contents/#create-or-update-file-contents)" endpoint in parallel, the concurrent requests will conflict and you will receive errors. You must use these endpoints serially instead.
    */
   "repos/delete-file": {
     parameters: {
@@ -92212,7 +95090,7 @@ export interface operations {
       };
     };
     responses: {
-      /** @description if repository contains content */
+      /** @description If repository contains content */
       200: {
         headers: {
           Link: components["headers"]["link"];
@@ -92222,7 +95100,9 @@ export interface operations {
         };
       };
       /** @description Response if repository is empty */
-      204: never;
+      204: {
+        content: never;
+      };
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
     };
@@ -92301,81 +95181,11 @@ export interface operations {
   /**
    * Create or update a repository secret
    * @description Creates or updates a repository secret with an encrypted value. Encrypt your secret using
-   * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an access
+   * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting secrets for the REST API](https://docs.github.com/enterprise-server@3.7/rest/guides/encrypting-secrets-for-the-rest-api)."
+   *
+   * You must authenticate using an access
    * token with the `repo` scope to use this endpoint. GitHub Apps must have the `dependabot_secrets` repository
    * permission to use this endpoint.
-   *
-   * **Example encrypting a secret using Node.js**
-   *
-   * Encrypt your secret using the [libsodium-wrappers](https://www.npmjs.com/package/libsodium-wrappers) library.
-   *
-   * ```
-   * const sodium = require('libsodium-wrappers')
-   * const secret = 'plain-text-secret' // replace with the secret you want to encrypt
-   * const key = 'base64-encoded-public-key' // replace with the Base64 encoded public key
-   *
-   * //Check if libsodium is ready and then proceed.
-   * sodium.ready.then(() => {
-   *   // Convert Secret & Base64 key to Uint8Array.
-   *   let binkey = sodium.from_base64(key, sodium.base64_variants.ORIGINAL)
-   *   let binsec = sodium.from_string(secret)
-   *
-   *   //Encrypt the secret using LibSodium
-   *   let encBytes = sodium.crypto_box_seal(binsec, binkey)
-   *
-   *   // Convert encrypted Uint8Array to Base64
-   *   let output = sodium.to_base64(encBytes, sodium.base64_variants.ORIGINAL)
-   *
-   *   console.log(output)
-   * });
-   * ```
-   *
-   * **Example encrypting a secret using Python**
-   *
-   * Encrypt your secret using [pynacl](https://pynacl.readthedocs.io/en/latest/public/#nacl-public-sealedbox) with Python 3.
-   *
-   * ```
-   * from base64 import b64encode
-   * from nacl import encoding, public
-   *
-   * def encrypt(public_key: str, secret_value: str) -> str:
-   *   """Encrypt a Unicode string using the public key."""
-   *   public_key = public.PublicKey(public_key.encode("utf-8"), encoding.Base64Encoder())
-   *   sealed_box = public.SealedBox(public_key)
-   *   encrypted = sealed_box.encrypt(secret_value.encode("utf-8"))
-   *   return b64encode(encrypted).decode("utf-8")
-   * ```
-   *
-   * **Example encrypting a secret using C#**
-   *
-   * Encrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/) package.
-   *
-   * ```
-   * var secretValue = System.Text.Encoding.UTF8.GetBytes("mySecret");
-   * var publicKey = Convert.FromBase64String("2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvvcCU=");
-   *
-   * var sealedPublicKeyBox = Sodium.SealedPublicKeyBox.Create(secretValue, publicKey);
-   *
-   * Console.WriteLine(Convert.ToBase64String(sealedPublicKeyBox));
-   * ```
-   *
-   * **Example encrypting a secret using Ruby**
-   *
-   * Encrypt your secret using the [rbnacl](https://github.com/RubyCrypto/rbnacl) gem.
-   *
-   * ```ruby
-   * require "rbnacl"
-   * require "base64"
-   *
-   * key = Base64.decode64("+ZYvJDZMHUfBkJdyq5Zm9SKqeuBQ4sj+6sfjlH4CgG0=")
-   * public_key = RbNaCl::PublicKey.new(key)
-   *
-   * box = RbNaCl::Boxes::Sealed.from_public_key(public_key)
-   * encrypted_secret = box.encrypt("my_secret")
-   *
-   * # Print the base64 encoded secret
-   * puts Base64.strict_encode64(encrypted_secret)
-   * ```
    */
   "dependabot/create-or-update-repo-secret": {
     parameters: {
@@ -92388,7 +95198,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** @description Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get a repository public key](https://docs.github.com/enterprise-server@3.7/rest/reference/dependabot#get-a-repository-public-key) endpoint. */
+          /** @description Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get a repository public key](https://docs.github.com/enterprise-server@3.7/rest/dependabot/secrets#get-a-repository-public-key) endpoint. */
           encrypted_value?: string;
           /** @description ID of the key you used to encrypt the secret. */
           key_id?: string;
@@ -92403,7 +95213,9 @@ export interface operations {
         };
       };
       /** @description Response when updating a secret */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -92420,7 +95232,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -92449,7 +95263,7 @@ export interface operations {
           "application/json": components["schemas"]["dependency-graph-diff"];
         };
       };
-      403: components["responses"]["forbidden"];
+      403: components["responses"]["dependency_review_forbidden"];
       404: components["responses"]["not_found"];
     };
   };
@@ -92552,7 +95366,8 @@ export interface operations {
    *
    * Users with `repo` or `repo_deployment` scopes can create a deployment for a given ref.
    *
-   * #### Merged branch response
+   * Merged branch response:
+   *
    * You will see this response when GitHub automatically merges the base branch into the topic branch instead of creating
    * a deployment. This auto-merge happens when:
    * *   Auto-merge option is enabled in the repository
@@ -92562,11 +95377,13 @@ export interface operations {
    * If there are no new commits in the base branch, a new request to create a deployment should give a successful
    * response.
    *
-   * #### Merge conflict response
+   * Merge conflict response:
+   *
    * This error happens when the `auto_merge` option is enabled and when the default branch (in this case `master`), can't
    * be merged into the branch that's being deployed (in this case `topic-branch`), due to merge conflicts.
    *
-   * #### Failed commit status checks
+   * Failed commit status checks:
+   *
    * This error happens when the `required_contexts` parameter indicates that one or more contexts need to have a `success`
    * status for the commit to be deployed, but one or more of the required contexts do not have a state of `success`.
    */
@@ -92638,7 +95455,9 @@ export interface operations {
         };
       };
       /** @description Conflict when there is a merge conflict or the commit's status checks failed */
-      409: never;
+      409: {
+        content: never;
+      };
       422: components["responses"]["validation_failed"];
     };
   };
@@ -92670,7 +95489,7 @@ export interface operations {
    * *   Create a new deployment that is active so that the system has a record of the current state, then delete the previously active deployment.
    * *   Mark the active deployment as inactive by adding any non-successful deployment status.
    *
-   * For more information, see "[Create a deployment](https://docs.github.com/enterprise-server@3.7/rest/deployments/deployments/#create-a-deployment)" and "[Create a deployment status](https://docs.github.com/enterprise-server@3.7/rest/deployments/deployment-statuses#create-a-deployment-status)."
+   * For more information, see "[Create a deployment](https://docs.github.com/enterprise-server@3.7/rest/deployments/deployments/#create-a-deployment)" and "[Create a deployment status](https://docs.github.com/enterprise-server@3.7/rest/deployments/statuses#create-a-deployment-status)."
    */
   "repos/delete-deployment": {
     parameters: {
@@ -92682,7 +95501,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       404: components["responses"]["not_found"];
       422: components["responses"]["validation_failed_simple"];
     };
@@ -92720,7 +95541,7 @@ export interface operations {
    * Create a deployment status
    * @description Users with `push` access can create deployment statuses for a given deployment.
    *
-   * GitHub Apps require `read & write` access to "Deployments" and `read-only` access to "Repo contents" (for private repos). OAuth Apps require the `repo_deployment` scope.
+   * GitHub Apps require `read & write` access to "Deployments" and `read-only` access to "Repo contents" (for private repos). OAuth apps require the `repo_deployment` scope.
    */
   "repos/create-deployment-status": {
     parameters: {
@@ -92760,11 +95581,8 @@ export interface operations {
            * @default
            */
           description?: string;
-          /**
-           * @description Name for the target deployment environment, which can be changed when setting a deploy status. For example, `production`, `staging`, or `qa`.
-           * @enum {string}
-           */
-          environment?: "production" | "staging" | "qa";
+          /** @description Name for the target deployment environment, which can be changed when setting a deploy status. For example, `production`, `staging`, or `qa`. If not defined, the environment of the previous status on the deployment will be used, if it exists. Otherwise, the environment of the deployment will be used. */
+          environment?: string;
           /**
            * @description Sets the URL for accessing your environment. Default: `""`
            * @default
@@ -92846,7 +95664,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       422: components["responses"]["validation_failed"];
     };
   };
@@ -92914,7 +95734,7 @@ export interface operations {
    *
    * **Note:** To create or update name patterns that branches must match in order to deploy to this environment, see "[Deployment branch policies](/rest/deployments/branch-policies)."
    *
-   * **Note:** To create or update secrets for an environment, see "[Secrets](/rest/reference/actions#secrets)."
+   * **Note:** To create or update secrets for an environment, see "[GitHub Actions secrets](/rest/actions/secrets)."
    *
    * You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `administration:write` permission for the repository to use this endpoint.
    */
@@ -92974,7 +95794,9 @@ export interface operations {
     };
     responses: {
       /** @description Default response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -93038,9 +95860,13 @@ export interface operations {
         };
       };
       /** @description Response if the same branch name pattern already exists */
-      303: never;
+      303: {
+        content: never;
+      };
       /** @description Not Found or `deployment_branch_policy.custom_branch_policies` property for the environment is set to false */
-      404: never;
+      404: {
+        content: never;
+      };
     };
   };
   /**
@@ -93113,7 +95939,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -93273,7 +96101,7 @@ export interface operations {
   };
   /**
    * Create a commit
-   * @description Creates a new Git [commit object](https://git-scm.com/book/en/v1/Git-Internals-Git-Objects#Commit-Objects).
+   * @description Creates a new Git [commit object](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects).
    *
    * **Signature verification object**
    *
@@ -93365,8 +96193,10 @@ export interface operations {
     };
   };
   /**
-   * Get a commit
-   * @description Gets a Git [commit object](https://git-scm.com/book/en/v1/Git-Internals-Git-Objects#Commit-Objects).
+   * Get a commit object
+   * @description Gets a Git [commit object](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects).
+   *
+   * To get the contents of a commit, see "[Get a commit](/rest/commits/commits#get-a-commit)."
    *
    * **Signature verification object**
    *
@@ -93421,7 +96251,7 @@ export interface operations {
    *
    * When you use this endpoint without providing a `:ref`, it will return an array of all the references from your Git database, including notes and stashes if they exist on the server. Anything in the namespace is returned, not just `heads` and `tags`.
    *
-   * **Note:** You need to explicitly [request a pull request](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#get-a-pull-request) to trigger a test merge commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/enterprise-server@3.7/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
+   * **Note:** You need to explicitly [request a pull request](https://docs.github.com/enterprise-server@3.7/rest/pulls/pulls#get-a-pull-request) to trigger a test merge commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/enterprise-server@3.7/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
    *
    * If you request matching references for a branch named `feature` but the branch `feature` doesn't exist, the response can still include other matching head refs that start with the word `feature`, such as `featureA` and `featureB`.
    */
@@ -93430,8 +96260,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** @description ref parameter */
-        ref: string;
+        ref: components["parameters"]["commit-ref"];
       };
     };
     responses: {
@@ -93450,15 +96279,14 @@ export interface operations {
    * Get a reference
    * @description Returns a single reference from your Git database. The `:ref` in the URL must be formatted as `heads/<branch name>` for branches and `tags/<tag name>` for tags. If the `:ref` doesn't match an existing ref, a `404` is returned.
    *
-   * **Note:** You need to explicitly [request a pull request](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#get-a-pull-request) to trigger a test merge commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/enterprise-server@3.7/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
+   * **Note:** You need to explicitly [request a pull request](https://docs.github.com/enterprise-server@3.7/rest/pulls/pulls#get-a-pull-request) to trigger a test merge commit, which checks the mergeability of pull requests. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/enterprise-server@3.7/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
    */
   "git/get-ref": {
     parameters: {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** @description ref parameter */
-        ref: string;
+        ref: components["parameters"]["commit-ref"];
       };
     };
     responses: {
@@ -93512,13 +96340,14 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /** @description ref parameter */
-        ref: string;
+        ref: components["parameters"]["commit-ref"];
       };
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       422: components["responses"]["validation_failed"];
     };
   };
@@ -93529,8 +96358,8 @@ export interface operations {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
         /**
-         * @description The name of the fully qualified reference to update. For example, `refs/heads/master`. If the value doesn't start with `refs` and have at least two slashes, it will be rejected.
-         * @example refs/head/master
+         * @description The name of the reference to update (for example, `heads/featureA`). Can be a branch name (`heads/BRANCH_NAME`) or tag name (`tags/TAG_NAME`). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation.
+         * @example heads/featureA
          */
         ref: string;
       };
@@ -93560,7 +96389,7 @@ export interface operations {
   };
   /**
    * Create a tag object
-   * @description Note that creating a tag object does not create the reference that makes a tag in Git. If you want to create an annotated tag in Git, you have to do this call to create the tag object, and then [create](https://docs.github.com/enterprise-server@3.7/rest/reference/git#create-a-reference) the `refs/tags/[tag]` reference. If you want to create a lightweight tag, you only have to [create](https://docs.github.com/enterprise-server@3.7/rest/reference/git#create-a-reference) the tag reference - this call would be unnecessary.
+   * @description Note that creating a tag object does not create the reference that makes a tag in Git. If you want to create an annotated tag in Git, you have to do this call to create the tag object, and then [create](https://docs.github.com/enterprise-server@3.7/rest/git/refs#create-a-reference) the `refs/tags/[tag]` reference. If you want to create a lightweight tag, you only have to [create](https://docs.github.com/enterprise-server@3.7/rest/git/refs#create-a-reference) the tag reference - this call would be unnecessary.
    *
    * **Signature verification object**
    *
@@ -93694,7 +96523,7 @@ export interface operations {
    * Create a tree
    * @description The tree creation API accepts nested entries. If you specify both a tree and a nested path modifying that tree, this endpoint will overwrite the contents of the tree with the new path contents, and create a new tree structure.
    *
-   * If you use this endpoint to add, delete, or modify the file contents in a tree, you will need to commit the tree and then update a branch to point to the commit. For more information see "[Create a commit](https://docs.github.com/enterprise-server@3.7/rest/reference/git#create-a-commit)" and "[Update a reference](https://docs.github.com/enterprise-server@3.7/rest/reference/git#update-a-reference)."
+   * If you use this endpoint to add, delete, or modify the file contents in a tree, you will need to commit the tree and then update a branch to point to the commit. For more information see "[Create a commit](https://docs.github.com/enterprise-server@3.7/rest/git/commits#create-a-commit)" and "[Update a reference](https://docs.github.com/enterprise-server@3.7/rest/git/refs#update-a-reference)."
    *
    * Returns an error if you try to delete a file that does not exist.
    */
@@ -93761,7 +96590,7 @@ export interface operations {
   };
   /**
    * Get a tree
-   * @description Returns a single tree using the SHA1 value for that tree.
+   * @description Returns a single tree using the SHA1 value or ref name for that tree.
    *
    * If `truncated` is `true` in the response then the number of items in the `tree` array exceeded our maximum limit. If you need to fetch more items, use the non-recursive method of fetching trees, and fetch one sub-tree at a time.
    *
@@ -93777,6 +96606,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
+        /** @description The SHA1 value or ref (branch or tag) name of the tree. */
         tree_sha: string;
       };
     };
@@ -93836,7 +96666,7 @@ export interface operations {
         "application/json": {
           /** @description Use `web` to create a webhook. Default: `web`. This parameter only accepts the value `web`. */
           name?: string;
-          /** @description Key/value pairs to provide settings for this webhook. [These are defined below](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#create-hook-config-params). */
+          /** @description Key/value pairs to provide settings for this webhook. */
           config?: {
             url?: components["schemas"]["webhook-config-url"];
             content_type?: components["schemas"]["webhook-config-content-type"];
@@ -93880,7 +96710,7 @@ export interface operations {
   };
   /**
    * Get a repository webhook
-   * @description Returns a webhook configured in a repository. To get only the webhook `config` properties, see "[Get a webhook configuration for a repository](/rest/reference/repos#get-a-webhook-configuration-for-a-repository)."
+   * @description Returns a webhook configured in a repository. To get only the webhook `config` properties, see "[Get a webhook configuration for a repository](/rest/webhooks/repo-config#get-a-webhook-configuration-for-a-repository)."
    */
   "repos/get-webhook": {
     parameters: {
@@ -93911,13 +96741,15 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       404: components["responses"]["not_found"];
     };
   };
   /**
    * Update a repository webhook
-   * @description Updates a webhook configured in a repository. If you previously had a `secret` set, you must provide the same `secret` or set a new `secret` or the secret will be removed. If you are only updating individual webhook `config` properties, use "[Update a webhook configuration for a repository](/rest/reference/repos#update-a-webhook-configuration-for-a-repository)."
+   * @description Updates a webhook configured in a repository. If you previously had a `secret` set, you must provide the same `secret` or set a new `secret` or the secret will be removed. If you are only updating individual webhook `config` properties, use "[Update a webhook configuration for a repository](/rest/webhooks/repo-config#update-a-webhook-configuration-for-a-repository)."
    */
   "repos/update-webhook": {
     parameters: {
@@ -93930,7 +96762,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** @description Key/value pairs to provide settings for this webhook. [These are defined below](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#create-hook-config-params). */
+          /** @description Key/value pairs to provide settings for this webhook. */
           config?: {
             url: components["schemas"]["webhook-config-url"];
             content_type?: components["schemas"]["webhook-config-content-type"];
@@ -93973,7 +96805,7 @@ export interface operations {
   };
   /**
    * Get a webhook configuration for a repository
-   * @description Returns the webhook configuration for a repository. To get more information about the webhook, including the `active` state and `events`, use "[Get a repository webhook](/rest/reference/orgs#get-a-repository-webhook)."
+   * @description Returns the webhook configuration for a repository. To get more information about the webhook, including the `active` state and `events`, use "[Get a repository webhook](/rest/webhooks/repos#get-a-repository-webhook)."
    *
    * Access tokens must have the `read:repo_hook` or `repo` scope, and GitHub Apps must have the `repository_hooks:read` permission.
    */
@@ -93996,7 +96828,7 @@ export interface operations {
   };
   /**
    * Update a webhook configuration for a repository
-   * @description Updates the webhook configuration for a repository. To update more information about the webhook, including the `active` state and `events`, use "[Update a repository webhook](/rest/reference/orgs#update-a-repository-webhook)."
+   * @description Updates the webhook configuration for a repository. To update more information about the webhook, including the `active` state and `events`, use "[Update a repository webhook](/rest/webhooks/repos#update-a-repository-webhook)."
    *
    * Access tokens must have the `write:repo_hook` or `repo` scope, and GitHub Apps must have the `repository_hooks:write` permission.
    */
@@ -94112,7 +96944,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       404: components["responses"]["not_found"];
     };
   };
@@ -94132,7 +96966,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       404: components["responses"]["not_found"];
     };
   };
@@ -94198,7 +97034,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /** Update a repository invitation */
@@ -94237,7 +97075,7 @@ export interface operations {
    * **Note**: GitHub's REST API considers every pull request an issue, but not every issue is a pull request. For this
    * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
    * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
-   * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#list-pull-requests)" endpoint.
+   * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@3.7/rest/pulls/pulls#list-pull-requests)" endpoint.
    */
   "issues/list-for-repo": {
     parameters: {
@@ -94302,7 +97140,7 @@ export interface operations {
           body?: string;
           /** @description Login for the user that this issue should be assigned to. _NOTE: Only users with push access can set the assignee for new issues. The assignee is silently dropped otherwise. **This field is deprecated.**_ */
           assignee?: string | null;
-          milestone?: string | number;
+          milestone?: string | number | null;
           /** @description Labels to associate with this issue. _NOTE: Only users with push access can set labels for new issues. Labels are silently dropped otherwise._ */
           labels?: OneOf<
             [
@@ -94410,7 +97248,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -94445,12 +97285,12 @@ export interface operations {
   };
   /**
    * List reactions for an issue comment
-   * @description List the reactions to an [issue comment](https://docs.github.com/enterprise-server@3.7/rest/reference/issues#comments).
+   * @description List the reactions to an [issue comment](https://docs.github.com/enterprise-server@3.7/rest/issues/comments#get-an-issue-comment).
    */
   "reactions/list-for-issue-comment": {
     parameters: {
       query?: {
-        /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to an issue comment. */
+        /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#about-reactions). Omit this parameter to list all reactions to an issue comment. */
         content?:
           | "+1"
           | "-1"
@@ -94484,7 +97324,7 @@ export interface operations {
   };
   /**
    * Create reaction for an issue comment
-   * @description Create a reaction to an [issue comment](https://docs.github.com/enterprise-server@3.7/rest/reference/issues#comments). A response with an HTTP `200` status means that you already added the reaction type to this issue comment.
+   * @description Create a reaction to an [issue comment](https://docs.github.com/enterprise-server@3.7/rest/issues/comments#get-an-issue-comment). A response with an HTTP `200` status means that you already added the reaction type to this issue comment.
    */
   "reactions/create-for-issue-comment": {
     parameters: {
@@ -94498,7 +97338,7 @@ export interface operations {
       content: {
         "application/json": {
           /**
-           * @description The [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#reaction-types) to add to the issue comment.
+           * @description The [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#about-reactions) to add to the issue comment.
            * @enum {string}
            */
           content:
@@ -94533,7 +97373,7 @@ export interface operations {
    * Delete an issue comment reaction
    * @description **Note:** You can also specify a repository by `repository_id` using the route `DELETE delete /repositories/:repository_id/issues/comments/:comment_id/reactions/:reaction_id`.
    *
-   * Delete a reaction to an [issue comment](https://docs.github.com/enterprise-server@3.7/rest/reference/issues#comments).
+   * Delete a reaction to an [issue comment](https://docs.github.com/enterprise-server@3.7/rest/issues/comments#get-an-issue-comment).
    */
   "reactions/delete-for-issue-comment": {
     parameters: {
@@ -94546,7 +97386,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -94613,7 +97455,7 @@ export interface operations {
    * **Note**: GitHub's REST API considers every pull request an issue, but not every issue is a pull request. For this
    * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
    * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
-   * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#list-pull-requests)" endpoint.
+   * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@3.7/rest/pulls/pulls#list-pull-requests)" endpoint.
    */
   "issues/get": {
     parameters: {
@@ -94652,7 +97494,7 @@ export interface operations {
       content: {
         "application/json": {
           /** @description The title of the issue. */
-          title?: string | number;
+          title?: string | number | null;
           /** @description The contents of the issue. */
           body?: string | null;
           /** @description Username to assign to this issue. **This field is deprecated.** */
@@ -94668,7 +97510,7 @@ export interface operations {
            * @enum {string|null}
            */
           state_reason?: "completed" | "not_planned" | "reopened" | null;
-          milestone?: string | number;
+          milestone?: string | number | null;
           /** @description Labels to associate with this issue. Pass one or more labels to _replace_ the set of labels on this issue. Send an empty array (`[]`) to clear all labels from the issue. Only users with push access can set labels for issues. Without push access to the repository, label changes are silently dropped. */
           labels?: OneOf<
             [
@@ -94778,7 +97620,9 @@ export interface operations {
     };
     responses: {
       /** @description Response if `assignee` can be assigned to `issue_number` */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description Response if `assignee` can not be assigned to `issue_number` */
       404: {
         content: {
@@ -94941,7 +97785,7 @@ export interface operations {
         "application/json": OneOf<
           [
             {
-              /** @description The names of the labels to set for the issue. The labels you set replace any existing labels. You can pass an empty array to remove all labels. Alternatively, you can pass a single label as a `string` or an `array` of labels directly, but GitHub recommends passing an object with the `labels` key. You can also add labels to the existing labels for an issue. For more information, see "[Add labels to an issue](https://docs.github.com/enterprise-server@3.7/rest/reference/issues#add-labels-to-an-issue)." */
+              /** @description The names of the labels to set for the issue. The labels you set replace any existing labels. You can pass an empty array to remove all labels. Alternatively, you can pass a single label as a `string` or an `array` of labels directly, but GitHub recommends passing an object with the `labels` key. You can also add labels to the existing labels for an issue. For more information, see "[Add labels to an issue](https://docs.github.com/enterprise-server@3.7/rest/issues/labels#add-labels-to-an-issue)." */
               labels?: string[];
             },
             {
@@ -94983,7 +97827,7 @@ export interface operations {
         "application/json": OneOf<
           [
             {
-              /** @description The names of the labels to add to the issue's existing labels. You can pass an empty array to remove all labels. Alternatively, you can pass a single label as a `string` or an `array` of labels directly, but GitHub recommends passing an object with the `labels` key. You can also replace all of the labels for an issue. For more information, see "[Set labels for an issue](https://docs.github.com/enterprise-server@3.7/rest/reference/issues#set-labels-for-an-issue)." */
+              /** @description The names of the labels to add to the issue's existing labels. You can pass an empty array to remove all labels. Alternatively, you can pass a single label as a `string` or an `array` of labels directly, but GitHub recommends passing an object with the `labels` key. You can also replace all of the labels for an issue. For more information, see "[Set labels for an issue](https://docs.github.com/enterprise-server@3.7/rest/issues/labels#set-labels-for-an-issue)." */
               labels?: string[];
             },
             {
@@ -95022,7 +97866,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       301: components["responses"]["moved_permanently"];
       404: components["responses"]["not_found"];
       410: components["responses"]["gone"];
@@ -95084,7 +97930,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
       410: components["responses"]["gone"];
@@ -95105,19 +97953,21 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
     };
   };
   /**
    * List reactions for an issue
-   * @description List the reactions to an [issue](https://docs.github.com/enterprise-server@3.7/rest/reference/issues).
+   * @description List the reactions to an [issue](https://docs.github.com/enterprise-server@3.7/rest/issues/issues#get-an-issue).
    */
   "reactions/list-for-issue": {
     parameters: {
       query?: {
-        /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to an issue. */
+        /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#about-reactions). Omit this parameter to list all reactions to an issue. */
         content?:
           | "+1"
           | "-1"
@@ -95152,7 +98002,7 @@ export interface operations {
   };
   /**
    * Create reaction for an issue
-   * @description Create a reaction to an [issue](https://docs.github.com/enterprise-server@3.7/rest/reference/issues/). A response with an HTTP `200` status means that you already added the reaction type to this issue.
+   * @description Create a reaction to an [issue](https://docs.github.com/enterprise-server@3.7/rest/issues/issues#get-an-issue). A response with an HTTP `200` status means that you already added the reaction type to this issue.
    */
   "reactions/create-for-issue": {
     parameters: {
@@ -95166,7 +98016,7 @@ export interface operations {
       content: {
         "application/json": {
           /**
-           * @description The [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#reaction-types) to add to the issue.
+           * @description The [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#about-reactions) to add to the issue.
            * @enum {string}
            */
           content:
@@ -95201,7 +98051,7 @@ export interface operations {
    * Delete an issue reaction
    * @description **Note:** You can also specify a repository by `repository_id` using the route `DELETE /repositories/:repository_id/issues/:issue_number/reactions/:reaction_id`.
    *
-   * Delete a reaction to an [issue](https://docs.github.com/enterprise-server@3.7/rest/reference/issues/).
+   * Delete a reaction to an [issue](https://docs.github.com/enterprise-server@3.7/rest/issues/issues#get-an-issue).
    */
   "reactions/delete-for-issue": {
     parameters: {
@@ -95214,7 +98064,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -95345,7 +98197,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -95450,7 +98304,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -95526,7 +98382,9 @@ export interface operations {
        * - Git LFS support not enabled because Git LFS is disabled for the root repository in the network.
        * - Git LFS support not enabled because Git LFS is disabled for <owner>.
        */
-      403: never;
+      403: {
+        content: never;
+      };
     };
   };
   /**
@@ -95542,14 +98400,16 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
    * Get the license for a repository
    * @description This method returns the contents of the repository's license file, if one is detected.
    *
-   * Similar to [Get repository content](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#get-repository-content), this method also supports [custom media types](https://docs.github.com/enterprise-server@3.7/rest/overview/media-types) for retrieving the raw license content or rendered license HTML.
+   * Similar to [Get repository content](https://docs.github.com/enterprise-server@3.7/rest/repos/contents#get-repository-content), this method also supports [custom media types](https://docs.github.com/enterprise-server@3.7/rest/overview/media-types) for retrieving the raw license content or rendered license HTML.
    */
   "licenses/get-for-repo": {
     parameters: {
@@ -95594,9 +98454,13 @@ export interface operations {
         };
       };
       /** @description The branch could not be synced because of a merge conflict */
-      409: never;
+      409: {
+        content: never;
+      };
       /** @description The branch could not be synced for some other reason */
-      422: never;
+      422: {
+        content: never;
+      };
     };
   };
   /** Merge a branch */
@@ -95627,12 +98491,18 @@ export interface operations {
         };
       };
       /** @description Response when already merged */
-      204: never;
+      204: {
+        content: never;
+      };
       403: components["responses"]["forbidden"];
       /** @description Not Found when the base or head does not exist */
-      404: never;
+      404: {
+        content: never;
+      };
       /** @description Conflict when there is a merge conflict */
-      409: never;
+      409: {
+        content: never;
+      };
       422: components["responses"]["validation_failed"];
     };
   };
@@ -95753,7 +98623,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       404: components["responses"]["not_found"];
     };
   };
@@ -95857,7 +98729,7 @@ export interface operations {
   };
   /**
    * Mark repository notifications as read
-   * @description Marks all notifications in a repository as "read" for the current user. If the number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub Enterprise Server will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain, you can use the [List repository notifications for the authenticated user](https://docs.github.com/enterprise-server@3.7/rest/reference/activity#list-repository-notifications-for-the-authenticated-user) endpoint and pass the query parameter `all=false`.
+   * @description Marks all notifications in a repository as "read" for the current user. If the number of notifications is too large to complete in one request, you will receive a `202 Accepted` status and GitHub Enterprise Server will run an asynchronous process to mark notifications as "read." To check whether any "unread" notifications remain, you can use the [List repository notifications for the authenticated user](https://docs.github.com/enterprise-server@3.7/rest/activity/notifications#list-repository-notifications-for-the-authenticated-user) endpoint and pass the query parameter `all=false`.
    */
   "activity/mark-repo-notifications-as-read": {
     parameters: {
@@ -95888,7 +98760,9 @@ export interface operations {
         };
       };
       /** @description Reset Content */
-      205: never;
+      205: {
+        content: never;
+      };
     };
   };
   /**
@@ -95955,7 +98829,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       400: components["responses"]["bad_request"];
       409: components["responses"]["conflict"];
       422: components["responses"]["validation_failed"];
@@ -96022,7 +98898,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       404: components["responses"]["not_found"];
       409: components["responses"]["conflict"];
       422: components["responses"]["validation_failed"];
@@ -96497,7 +99375,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       404: components["responses"]["not_found"];
     };
   };
@@ -96532,12 +99412,12 @@ export interface operations {
   };
   /**
    * List reactions for a pull request review comment
-   * @description List the reactions to a [pull request review comment](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#review-comments).
+   * @description List the reactions to a [pull request review comment](https://docs.github.com/enterprise-server@3.7/pulls/comments#get-a-review-comment-for-a-pull-request).
    */
   "reactions/list-for-pull-request-review-comment": {
     parameters: {
       query?: {
-        /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a pull request review comment. */
+        /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#about-reactions). Omit this parameter to list all reactions to a pull request review comment. */
         content?:
           | "+1"
           | "-1"
@@ -96571,7 +99451,7 @@ export interface operations {
   };
   /**
    * Create reaction for a pull request review comment
-   * @description Create a reaction to a [pull request review comment](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#comments). A response with an HTTP `200` status means that you already added the reaction type to this pull request review comment.
+   * @description Create a reaction to a [pull request review comment](https://docs.github.com/enterprise-server@3.7/rest/pulls/comments#get-a-review-comment-for-a-pull-request). A response with an HTTP `200` status means that you already added the reaction type to this pull request review comment.
    */
   "reactions/create-for-pull-request-review-comment": {
     parameters: {
@@ -96585,7 +99465,7 @@ export interface operations {
       content: {
         "application/json": {
           /**
-           * @description The [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#reaction-types) to add to the pull request review comment.
+           * @description The [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#about-reactions) to add to the pull request review comment.
            * @enum {string}
            */
           content:
@@ -96620,7 +99500,7 @@ export interface operations {
    * Delete a pull request comment reaction
    * @description **Note:** You can also specify a repository by `repository_id` using the route `DELETE /repositories/:repository_id/pulls/comments/:comment_id/reactions/:reaction_id.`
    *
-   * Delete a reaction to a [pull request review comment](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#review-comments).
+   * Delete a reaction to a [pull request review comment](https://docs.github.com/enterprise-server@3.7/rest/pulls/comments#get-a-review-comment-for-a-pull-request).
    */
   "reactions/delete-for-pull-request-comment": {
     parameters: {
@@ -96633,7 +99513,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -96642,7 +99524,7 @@ export interface operations {
    *
    * Lists details of a pull request by providing its number.
    *
-   * When you get, [create](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls/#create-a-pull-request), or [edit](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#update-a-pull-request) a pull request, GitHub Enterprise Server creates a merge commit to test whether the pull request can be automatically merged into the base branch. This test commit is not added to the base branch or the head branch. You can review the status of the test commit using the `mergeable` key. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/enterprise-server@3.7/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
+   * When you get, [create](https://docs.github.com/enterprise-server@3.7/rest/pulls/pulls/#create-a-pull-request), or [edit](https://docs.github.com/enterprise-server@3.7/rest/pulls/pulls#update-a-pull-request) a pull request, GitHub Enterprise Server creates a merge commit to test whether the pull request can be automatically merged into the base branch. This test commit is not added to the base branch or the head branch. You can review the status of the test commit using the `mergeable` key. For more information, see "[Checking mergeability of pull requests](https://docs.github.com/enterprise-server@3.7/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)".
    *
    * The value of the `mergeable` attribute can be `true`, `false`, or `null`. If the value is `null`, then GitHub Enterprise Server has started a background job to compute the mergeability. After giving the job time to complete, resubmit the request. When the job finishes, you will see a non-`null` value for the `mergeable` attribute in the response. If `mergeable` is `true`, then `merge_commit_sha` will be the SHA of the _test_ merge commit.
    *
@@ -96754,7 +99636,7 @@ export interface operations {
   /**
    * Create a review comment for a pull request
    * @description
-   * Creates a review comment in the pull request diff. To add a regular comment to a pull request timeline, see "[Create an issue comment](https://docs.github.com/enterprise-server@3.7/rest/reference/issues#create-an-issue-comment)." We recommend creating a review comment using `line`, `side`, and optionally `start_line` and `start_side` if your comment applies to more than one line in the pull request diff.
+   * Creates a review comment in the pull request diff. To add a regular comment to a pull request timeline, see "[Create an issue comment](https://docs.github.com/enterprise-server@3.7/rest/issues/comments#create-an-issue-comment)." We recommend creating a review comment using `line`, `side`, and optionally `start_line` and `start_side` if your comment applies to more than one line in the pull request diff.
    *
    * The `position` parameter is deprecated. If you use `position`, the `line`, `side`, `start_line`, and `start_side` parameters are not required.
    *
@@ -96860,7 +99742,7 @@ export interface operations {
   };
   /**
    * List commits on a pull request
-   * @description Lists a maximum of 250 commits for a pull request. To receive a complete commit list for pull requests with more than 250 commits, use the [List commits](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#list-commits) endpoint.
+   * @description Lists a maximum of 250 commits for a pull request. To receive a complete commit list for pull requests with more than 250 commits, use the [List commits](https://docs.github.com/enterprise-server@3.7/rest/commits/commits#list-commits) endpoint.
    */
   "pulls/list-commits": {
     parameters: {
@@ -96931,9 +99813,13 @@ export interface operations {
     };
     responses: {
       /** @description Response if pull request has been merged */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description Not Found if pull request has not been merged */
-      404: never;
+      404: {
+        content: never;
+      };
     };
   };
   /**
@@ -97051,7 +99937,9 @@ export interface operations {
       };
       403: components["responses"]["forbidden"];
       /** @description Unprocessable Entity if user is not a collaborator */
-      422: never;
+      422: {
+        content: never;
+      };
     };
   };
   /**
@@ -97118,9 +100006,9 @@ export interface operations {
    * Create a review for a pull request
    * @description This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.7/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/enterprise-server@3.7/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
    *
-   * Pull request reviews created in the `PENDING` state are not submitted and therefore do not include the `submitted_at` property in the response. To create a pending review for a pull request, leave the `event` parameter blank. For more information about submitting a `PENDING` review, see "[Submit a review for a pull request](https://docs.github.com/enterprise-server@3.7/rest/pulls#submit-a-review-for-a-pull-request)."
+   * Pull request reviews created in the `PENDING` state are not submitted and therefore do not include the `submitted_at` property in the response. To create a pending review for a pull request, leave the `event` parameter blank. For more information about submitting a `PENDING` review, see "[Submit a review for a pull request](https://docs.github.com/enterprise-server@3.7/rest/pulls/reviews#submit-a-review-for-a-pull-request)."
    *
-   * **Note:** To comment on a specific line in a file, you need to first determine the _position_ of that line in the diff. The GitHub REST API offers the `application/vnd.github.v3.diff` [media type](https://docs.github.com/enterprise-server@3.7/rest/overview/media-types#commits-commit-comparison-and-pull-requests). To see a pull request diff, add this media type to the `Accept` header of a call to the [single pull request](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#get-a-pull-request) endpoint.
+   * **Note:** To comment on a specific line in a file, you need to first determine the _position_ of that line in the diff. The GitHub REST API offers the `application/vnd.github.v3.diff` [media type](https://docs.github.com/enterprise-server@3.7/rest/overview/media-types#commits-commit-comparison-and-pull-requests). To see a pull request diff, add this media type to the `Accept` header of a call to the [single pull request](https://docs.github.com/enterprise-server@3.7/rest/pulls/pulls#get-a-pull-request) endpoint.
    *
    * The `position` value equals the number of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.
    */
@@ -97140,7 +100028,7 @@ export interface operations {
           /** @description **Required** when using `REQUEST_CHANGES` or `COMMENT` for the `event` parameter. The body text of the pull request review. */
           body?: string;
           /**
-           * @description The review action you want to perform. The review actions include: `APPROVE`, `REQUEST_CHANGES`, or `COMMENT`. By leaving this blank, you set the review action state to `PENDING`, which means you will need to [submit the pull request review](https://docs.github.com/enterprise-server@3.7/rest/pulls#submit-a-review-for-a-pull-request) when you are ready.
+           * @description The review action you want to perform. The review actions include: `APPROVE`, `REQUEST_CHANGES`, or `COMMENT`. By leaving this blank, you set the review action state to `PENDING`, which means you will need to [submit the pull request review](https://docs.github.com/enterprise-server@3.7/rest/pulls/reviews#submit-a-review-for-a-pull-request) when you are ready.
            * @enum {string}
            */
           event?: "APPROVE" | "REQUEST_CHANGES" | "COMMENT";
@@ -97285,7 +100173,7 @@ export interface operations {
   };
   /**
    * Dismiss a review for a pull request
-   * @description **Note:** To dismiss a pull request review on a [protected branch](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#branches), you must be a repository administrator or be included in the list of people or teams who can dismiss pull request reviews.
+   * @description **Note:** To dismiss a pull request review on a [protected branch](https://docs.github.com/enterprise-server@3.7/rest/branches/branch-protection), you must be a repository administrator or be included in the list of people or teams who can dismiss pull request reviews.
    */
   "pulls/dismiss-review": {
     parameters: {
@@ -97322,7 +100210,7 @@ export interface operations {
   };
   /**
    * Submit a review for a pull request
-   * @description Submits a pending review for a pull request. For more information about creating a pending review for a pull request, see "[Create a review for a pull request](https://docs.github.com/enterprise-server@3.7/rest/pulls#create-a-review-for-a-pull-request)."
+   * @description Submits a pending review for a pull request. For more information about creating a pending review for a pull request, see "[Create a review for a pull request](https://docs.github.com/enterprise-server@3.7/rest/pulls/reviews#create-a-review-for-a-pull-request)."
    */
   "pulls/submit-review": {
     parameters: {
@@ -97373,7 +100261,7 @@ export interface operations {
     requestBody?: {
       content: {
         "application/json": {
-          /** @description The expected SHA of the pull request's HEAD ref. This is the most recent commit on the pull request's branch. If the expected SHA does not match the pull request's HEAD, you will receive a `422 Unprocessable Entity` status. You can use the "[List commits](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#list-commits)" endpoint to find the most recent commit SHA. Default: SHA of the pull request's current HEAD ref. */
+          /** @description The expected SHA of the pull request's HEAD ref. This is the most recent commit on the pull request's branch. If the expected SHA does not match the pull request's HEAD, you will receive a `422 Unprocessable Entity` status. You can use the "[List commits](https://docs.github.com/enterprise-server@3.7/rest/commits/commits#list-commits)" endpoint to find the most recent commit SHA. Default: SHA of the pull request's current HEAD ref. */
           expected_head_sha?: string;
         } | null;
       };
@@ -97396,7 +100284,7 @@ export interface operations {
    * Get a repository README
    * @description Gets the preferred README for a repository.
    *
-   * READMEs support [custom media types](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#custom-media-types) for retrieving the raw content or rendered HTML.
+   * READMEs support [custom media types](https://docs.github.com/enterprise-server@3.7/rest/overview/media-types) for retrieving the raw content or rendered HTML.
    */
   "repos/get-readme": {
     parameters: {
@@ -97424,7 +100312,7 @@ export interface operations {
    * Get a repository README for a directory
    * @description Gets the README from a repository directory.
    *
-   * READMEs support [custom media types](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#custom-media-types) for retrieving the raw content or rendered HTML.
+   * READMEs support [custom media types](https://docs.github.com/enterprise-server@3.7/rest/overview/media-types) for retrieving the raw content or rendered HTML.
    */
   "repos/get-readme-in-directory": {
     parameters: {
@@ -97452,7 +100340,7 @@ export interface operations {
   };
   /**
    * List releases
-   * @description This returns a list of releases, which does not include regular Git tags that have not been associated with a release. To get a list of Git tags, use the [Repository Tags API](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#list-repository-tags).
+   * @description This returns a list of releases, which does not include regular Git tags that have not been associated with a release. To get a list of Git tags, use the [Repository Tags API](https://docs.github.com/enterprise-server@3.7/rest/repos/repos#list-repository-tags).
    *
    * Information about published releases are available to everyone. Only users with push access will receive listings for draft releases.
    */
@@ -97570,7 +100458,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -97608,7 +100498,7 @@ export interface operations {
   };
   /**
    * Generate release notes content for a release
-   * @description Generate a name and body describing a [release](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#releases). The body content will be markdown formatted and contain information like the changes since last release and users who contributed. The generated release notes are not saved anywhere. They are intended to be generated and used when creating a new release.
+   * @description Generate a name and body describing a [release](https://docs.github.com/enterprise-server@3.7/rest/releases/releases#get-a-release). The body content will be markdown formatted and contain information like the changes since last release and users who contributed. The generated release notes are not saved anywhere. They are intended to be generated and used when creating a new release.
    */
   "repos/generate-release-notes": {
     parameters: {
@@ -97705,7 +100595,10 @@ export interface operations {
           "application/json": components["schemas"]["release"];
         };
       };
-      404: components["responses"]["not_found"];
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
     };
   };
   /**
@@ -97722,7 +100615,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -97806,7 +100701,7 @@ export interface operations {
    * When an upstream failure occurs, you will receive a `502 Bad Gateway` status. This may leave an empty asset with a state of `starter`. It can be safely deleted.
    *
    * **Notes:**
-   * *   GitHub Enterprise Server renames asset filenames that have special characters, non-alphanumeric characters, and leading or trailing periods. The "[List assets for a release](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#list-assets-for-a-release)"
+   * *   GitHub Enterprise Server renames asset filenames that have special characters, non-alphanumeric characters, and leading or trailing periods. The "[List release assets](https://docs.github.com/enterprise-server@3.7/rest/releases/assets#list-release-assets)"
    * endpoint lists the renamed filenames. For more information and help, contact [GitHub Enterprise Server Support](https://support.github.com/contact?tags=dotcom-rest-api).
    * *   To find the `release_id` query the [`GET /repos/{owner}/{repo}/releases/latest` endpoint](https://docs.github.com/enterprise-server@3.7/rest/releases/releases#get-the-latest-release).
    * *   If you upload an asset with the same filename as another uploaded asset, you'll receive an error and must delete the old file before you can re-upload the new asset.
@@ -97836,17 +100731,19 @@ export interface operations {
         };
       };
       /** @description Response if you upload an asset with the same filename as another uploaded asset */
-      422: never;
+      422: {
+        content: never;
+      };
     };
   };
   /**
    * List reactions for a release
-   * @description List the reactions to a [release](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#releases).
+   * @description List the reactions to a [release](https://docs.github.com/enterprise-server@3.7/rest/releases/releases#get-a-release).
    */
   "reactions/list-for-release": {
     parameters: {
       query?: {
-        /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a release. */
+        /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#about-reactions). Omit this parameter to list all reactions to a release. */
         content?: "+1" | "laugh" | "heart" | "hooray" | "rocket" | "eyes";
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
@@ -97872,7 +100769,7 @@ export interface operations {
   };
   /**
    * Create reaction for a release
-   * @description Create a reaction to a [release](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#releases). A response with a `Status: 200 OK` means that you already added the reaction type to this release.
+   * @description Create a reaction to a [release](https://docs.github.com/enterprise-server@3.7/rest/releases/releases#get-a-release). A response with a `Status: 200 OK` means that you already added the reaction type to this release.
    */
   "reactions/create-for-release": {
     parameters: {
@@ -97886,7 +100783,7 @@ export interface operations {
       content: {
         "application/json": {
           /**
-           * @description The [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#reaction-types) to add to the release.
+           * @description The [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#about-reactions) to add to the release.
            * @enum {string}
            */
           content: "+1" | "laugh" | "heart" | "hooray" | "rocket" | "eyes";
@@ -97913,7 +100810,7 @@ export interface operations {
    * Delete a release reaction
    * @description **Note:** You can also specify a repository by `repository_id` using the route `DELETE delete /repositories/:repository_id/releases/:release_id/reactions/:reaction_id`.
    *
-   * Delete a reaction to a [release](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#releases).
+   * Delete a reaction to a [release](https://docs.github.com/enterprise-server@3.7/rest/releases/releases#get-a-release).
    */
   "reactions/delete-for-release": {
     parameters: {
@@ -97926,7 +100823,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -98001,7 +100900,9 @@ export interface operations {
         };
       };
       /** @description Repository is public or secret scanning is disabled for the repository */
-      404: never;
+      404: {
+        content: never;
+      };
       503: components["responses"]["service_unavailable"];
     };
   };
@@ -98030,7 +100931,9 @@ export interface operations {
       };
       304: components["responses"]["not_modified"];
       /** @description Repository is public, or secret scanning is disabled for the repository, or the resource is not found */
-      404: never;
+      404: {
+        content: never;
+      };
       503: components["responses"]["service_unavailable"];
     };
   };
@@ -98066,9 +100969,13 @@ export interface operations {
         };
       };
       /** @description Repository is public, or secret scanning is disabled for the repository, or the resource is not found */
-      404: never;
+      404: {
+        content: never;
+      };
       /** @description State does not match the resolution */
-      422: never;
+      422: {
+        content: never;
+      };
       503: components["responses"]["service_unavailable"];
     };
   };
@@ -98103,7 +101010,9 @@ export interface operations {
         };
       };
       /** @description Repository is public, or secret scanning is disabled for the repository, or the resource is not found */
-      404: never;
+      404: {
+        content: never;
+      };
       503: components["responses"]["service_unavailable"];
     };
   };
@@ -98341,7 +101250,10 @@ export interface operations {
       };
     };
   };
-  /** Get a repository subscription */
+  /**
+   * Get a repository subscription
+   * @description Gets information about whether the authenticated user is subscribed to the repository.
+   */
   "activity/get-repo-subscription": {
     parameters: {
       path: {
@@ -98358,12 +101270,14 @@ export interface operations {
       };
       403: components["responses"]["forbidden"];
       /** @description Not Found if you don't subscribe to the repository */
-      404: never;
+      404: {
+        content: never;
+      };
     };
   };
   /**
    * Set a repository subscription
-   * @description If you would like to watch a repository, set `subscribed` to `true`. If you would like to ignore notifications made within a repository, set `ignored` to `true`. If you would like to stop watching a repository, [delete the repository's subscription](https://docs.github.com/enterprise-server@3.7/rest/reference/activity#delete-a-repository-subscription) completely.
+   * @description If you would like to watch a repository, set `subscribed` to `true`. If you would like to ignore notifications made within a repository, set `ignored` to `true`. If you would like to stop watching a repository, [delete the repository's subscription](https://docs.github.com/enterprise-server@3.7/rest/activity/watching#delete-a-repository-subscription) completely.
    */
   "activity/set-repo-subscription": {
     parameters: {
@@ -98393,7 +101307,7 @@ export interface operations {
   };
   /**
    * Delete a repository subscription
-   * @description This endpoint should only be used to stop watching a repository. To control whether or not you wish to receive notifications from a repository, [set the repository's subscription manually](https://docs.github.com/enterprise-server@3.7/rest/reference/activity#set-a-repository-subscription).
+   * @description This endpoint should only be used to stop watching a repository. To control whether or not you wish to receive notifications from a repository, [set the repository's subscription manually](https://docs.github.com/enterprise-server@3.7/rest/activity/watching#set-a-repository-subscription).
    */
   "activity/delete-repo-subscription": {
     parameters: {
@@ -98404,7 +101318,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /** List repository tags */
@@ -98501,7 +101417,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
     };
@@ -98523,7 +101441,13 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      302: never;
+      302: {
+        headers: {
+          /** @example https://codeload.github.com/me/myprivate/legacy.zip/master?login=me&token=thistokenexpires */
+          Location?: string;
+        };
+        content: never;
+      };
     };
   };
   /**
@@ -98614,6 +101538,7 @@ export interface operations {
   /**
    * Transfer a repository
    * @description A transfer request will need to be accepted by the new owner when transferring a personal repository to another user. The response will contain the original `owner`, and the transfer will continue asynchronously. For more details on the requirements to transfer personal and organization-owned repositories, see [about repository transfers](https://docs.github.com/enterprise-server@3.7/articles/about-repository-transfers/).
+   * You must use a personal access token or an OAuth token for this endpoint. An installation access token cannot be used because it is only granted access to a single account.
    */
   "repos/transfer": {
     parameters: {
@@ -98661,12 +101586,18 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      302: never;
+      302: {
+        headers: {
+          /** @example https://codeload.github.com/me/myprivate/legacy.zip/master?login=me&token=thistokenexpires */
+          Location?: string;
+        };
+        content: never;
+      };
     };
   };
   /**
    * Create a repository using a template
-   * @description Creates a new repository using a repository template. Use the `template_owner` and `template_repo` route parameters to specify the repository to use as the template. If the repository is not public, the authenticated user must own or be a member of an organization that owns the repository. To check if a repository is available to use as a template, get the repository's information using the [Get a repository](https://docs.github.com/enterprise-server@3.7/rest/reference/repos#get-a-repository) endpoint and check that the `is_template` key is `true`.
+   * @description Creates a new repository using a repository template. Use the `template_owner` and `template_repo` route parameters to specify the repository to use as the template. If the repository is not public, the authenticated user must own or be a member of an organization that owns the repository. To check if a repository is available to use as a template, get the repository's information using the [Get a repository](https://docs.github.com/enterprise-server@3.7/rest/repos/repos#get-a-repository) endpoint and check that the `is_template` key is `true`.
    *
    * **OAuth scope requirements**
    *
@@ -98678,7 +101609,9 @@ export interface operations {
   "repos/create-using-template": {
     parameters: {
       path: {
+        /** @description The account owner of the template repository. The name is not case sensitive. */
         template_owner: string;
+        /** @description The name of the template repository without the `.git` extension. The name is not case sensitive. */
         template_repo: string;
       };
     };
@@ -98750,7 +101683,12 @@ export interface operations {
   };
   /**
    * List environment secrets
-   * @description Lists all secrets available in an environment without revealing their encrypted values. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * @description Lists all secrets available in an environment without revealing their
+   * encrypted values.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
    */
   "actions/list-environment-secrets": {
     parameters: {
@@ -98780,7 +101718,13 @@ export interface operations {
   };
   /**
    * Get an environment public key
-   * @description Get the public key for an environment, which you need to encrypt environment secrets. You need to encrypt a secret before you can create or update secrets. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * @description Get the public key for an environment, which you need to encrypt environment
+   * secrets. You need to encrypt a secret before you can create or update secrets.
+   *
+   * Anyone with read access to the repository can use this endpoint.
+   * If the repository is private you must use an access token with the `repo` scope.
+   * GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
    */
   "actions/get-environment-public-key": {
     parameters: {
@@ -98800,7 +101744,11 @@ export interface operations {
   };
   /**
    * Get an environment secret
-   * @description Gets a single environment secret without revealing its encrypted value. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * @description Gets a single environment secret without revealing its encrypted value.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
    */
   "actions/get-environment-secret": {
     parameters: {
@@ -98822,81 +101770,11 @@ export interface operations {
   /**
    * Create or update an environment secret
    * @description Creates or updates an environment secret with an encrypted value. Encrypt your secret using
-   * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). You must authenticate using an access
-   * token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use
-   * this endpoint.
+   * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting secrets for the REST API](https://docs.github.com/enterprise-server@3.7/rest/guides/encrypting-secrets-for-the-rest-api)."
    *
-   * **Example encrypting a secret using Node.js**
-   *
-   * Encrypt your secret using the [libsodium-wrappers](https://www.npmjs.com/package/libsodium-wrappers) library.
-   *
-   * ```
-   * const sodium = require('libsodium-wrappers')
-   * const secret = 'plain-text-secret' // replace with the secret you want to encrypt
-   * const key = 'base64-encoded-public-key' // replace with the Base64 encoded public key
-   *
-   * //Check if libsodium is ready and then proceed.
-   * sodium.ready.then(() => {
-   *   // Convert Secret & Base64 key to Uint8Array.
-   *   let binkey = sodium.from_base64(key, sodium.base64_variants.ORIGINAL)
-   *   let binsec = sodium.from_string(secret)
-   *
-   *   //Encrypt the secret using LibSodium
-   *   let encBytes = sodium.crypto_box_seal(binsec, binkey)
-   *
-   *   // Convert encrypted Uint8Array to Base64
-   *   let output = sodium.to_base64(encBytes, sodium.base64_variants.ORIGINAL)
-   *
-   *   console.log(output)
-   * });
-   * ```
-   *
-   * **Example encrypting a secret using Python**
-   *
-   * Encrypt your secret using [pynacl](https://pynacl.readthedocs.io/en/latest/public/#nacl-public-sealedbox) with Python 3.
-   *
-   * ```
-   * from base64 import b64encode
-   * from nacl import encoding, public
-   *
-   * def encrypt(public_key: str, secret_value: str) -> str:
-   *   """Encrypt a Unicode string using the public key."""
-   *   public_key = public.PublicKey(public_key.encode("utf-8"), encoding.Base64Encoder())
-   *   sealed_box = public.SealedBox(public_key)
-   *   encrypted = sealed_box.encrypt(secret_value.encode("utf-8"))
-   *   return b64encode(encrypted).decode("utf-8")
-   * ```
-   *
-   * **Example encrypting a secret using C#**
-   *
-   * Encrypt your secret using the [Sodium.Core](https://www.nuget.org/packages/Sodium.Core/) package.
-   *
-   * ```
-   * var secretValue = System.Text.Encoding.UTF8.GetBytes("mySecret");
-   * var publicKey = Convert.FromBase64String("2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvvcCU=");
-   *
-   * var sealedPublicKeyBox = Sodium.SealedPublicKeyBox.Create(secretValue, publicKey);
-   *
-   * Console.WriteLine(Convert.ToBase64String(sealedPublicKeyBox));
-   * ```
-   *
-   * **Example encrypting a secret using Ruby**
-   *
-   * Encrypt your secret using the [rbnacl](https://github.com/RubyCrypto/rbnacl) gem.
-   *
-   * ```ruby
-   * require "rbnacl"
-   * require "base64"
-   *
-   * key = Base64.decode64("+ZYvJDZMHUfBkJdyq5Zm9SKqeuBQ4sj+6sfjlH4CgG0=")
-   * public_key = RbNaCl::PublicKey.new(key)
-   *
-   * box = RbNaCl::Boxes::Sealed.from_public_key(public_key)
-   * encrypted_secret = box.encrypt("my_secret")
-   *
-   * # Print the base64 encoded secret
-   * puts Base64.strict_encode64(encrypted_secret)
-   * ```
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
    */
   "actions/create-or-update-environment-secret": {
     parameters: {
@@ -98909,7 +101787,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** @description Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get an environment public key](https://docs.github.com/enterprise-server@3.7/rest/reference/actions#get-an-environment-public-key) endpoint. */
+          /** @description Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get an environment public key](https://docs.github.com/enterprise-server@3.7/rest/actions/secrets#get-an-environment-public-key) endpoint. */
           encrypted_value: string;
           /** @description ID of the key you used to encrypt the secret. */
           key_id: string;
@@ -98924,12 +101802,18 @@ export interface operations {
         };
       };
       /** @description Response when updating a secret */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
    * Delete an environment secret
-   * @description Deletes a secret in an environment using the secret name. You must authenticate using an access token with the `repo` scope to use this endpoint. GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * @description Deletes a secret in an environment using the secret name.
+   *
+   * You must authenticate using an access token with the `repo` scope to use this endpoint.
+   * GitHub Apps must have the `secrets` repository permission to use this endpoint.
+   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
    */
   "actions/delete-environment-secret": {
     parameters: {
@@ -98941,7 +101825,9 @@ export interface operations {
     };
     responses: {
       /** @description Default response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -99084,7 +101970,9 @@ export interface operations {
     };
     responses: {
       /** @description Group was deleted, no content */
-      204: never;
+      204: {
+        content: never;
+      };
       400: components["responses"]["scim_bad_request"];
       401: components["responses"]["authorization_failure"];
       403: components["responses"]["permission_denied"];
@@ -99122,7 +102010,9 @@ export interface operations {
         };
       };
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       400: components["responses"]["scim_bad_request"];
       401: components["responses"]["authorization_failure"];
       403: components["responses"]["permission_denied"];
@@ -99139,15 +102029,12 @@ export interface operations {
    * Lists provisioned SCIM enterprise members.
    *
    * When a user with a SCIM-provisioned external identity is removed from an enterprise through a `patch` with `active` flag set to `false`, the account's metadata is preserved to allow the user to re-join the enterprise in the future. However, the user's account will be suspended and the user will not be able to sign-in. In order to permanently suspend the users account with no ability to re-join the enterprise in the future, use the `delete` request. Users that were not permanently deleted will be visible in the returned results.
-   *
-   * You can improve query search time by using the `excludedAttributes` query parameter with a value of `groups` to exclude groups from the response.
    */
   "enterprise-admin/list-provisioned-identities-enterprise": {
     parameters: {
       query?: {
         /** @description If specified, only results that match the specified filter will be returned. Multiple filters are not supported. Possible filters are `userName`, `externalId`, `id`, and `displayName`. For example, `?filter="externalId eq '9138790-10932-109120392-12321'"`. */
         filter?: string;
-        excludedAttributes?: components["parameters"]["excluded-attributes"];
         startIndex?: components["parameters"]["start-index"];
         count?: components["parameters"]["count"];
       };
@@ -99275,7 +102162,9 @@ export interface operations {
     };
     responses: {
       /** @description User was deleted, no content */
-      204: never;
+      204: {
+        content: never;
+      };
       400: components["responses"]["scim_bad_request"];
       401: components["responses"]["authorization_failure"];
       403: components["responses"]["permission_denied"];
@@ -99337,7 +102226,7 @@ export interface operations {
    * Search code
    * @description Searches for query terms inside of a file. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#pagination).
    *
-   * When searching for code, you can get text match metadata for the file **content** and file **path** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/reference/search#text-match-metadata).
+   * When searching for code, you can get text match metadata for the file **content** and file **path** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/search/search#text-match-metadata).
    *
    * For example, if you want to find the definition of the `addClass` function inside [jQuery](https://github.com/jquery/jquery) repository, your query would look something like this:
    *
@@ -99345,7 +102234,7 @@ export interface operations {
    *
    * This query searches for the keyword `addClass` within a file's contents. The query limits the search to files where the language is JavaScript in the `jquery/jquery` repository.
    *
-   * #### Considerations for code search
+   * Considerations for code search:
    *
    * Due to the complexity of searching code, there are a few restrictions on how searches are performed:
    *
@@ -99357,9 +102246,9 @@ export interface operations {
   "search/code": {
     parameters: {
       query: {
-        /** @description The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.7/rest/reference/search#constructing-a-search-query). See "[Searching code](https://docs.github.com/enterprise-server@3.7/search-github/searching-on-github/searching-code)" for a detailed list of qualifiers. */
+        /** @description The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.7/rest/search/search#constructing-a-search-query). See "[Searching code](https://docs.github.com/enterprise-server@3.7/search-github/searching-on-github/searching-code)" for a detailed list of qualifiers. */
         q: string;
-        /** @description Sorts the results of your query. Can only be `indexed`, which indicates how recently a file has been indexed by the GitHub Enterprise Server search infrastructure. Default: [best match](https://docs.github.com/enterprise-server@3.7/rest/reference/search#ranking-search-results) */
+        /** @description Sorts the results of your query. Can only be `indexed`, which indicates how recently a file has been indexed by the GitHub Enterprise Server search infrastructure. Default: [best match](https://docs.github.com/enterprise-server@3.7/rest/search/search#ranking-search-results) */
         sort?: "indexed";
         /** @description Determines whether the first search result returned is the highest number of matches (`desc`) or lowest number of matches (`asc`). This parameter is ignored unless you provide `sort`. */
         order?: "desc" | "asc";
@@ -99389,7 +102278,7 @@ export interface operations {
    * @description Find commits via various criteria on the default branch (usually `main`). This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#pagination).
    *
    * When searching for commits, you can get text match metadata for the **message** field when you provide the `text-match` media type. For more details about how to receive highlighted search results, see [Text match
-   * metadata](https://docs.github.com/enterprise-server@3.7/rest/reference/search#text-match-metadata).
+   * metadata](https://docs.github.com/enterprise-server@3.7/rest/search/search#text-match-metadata).
    *
    * For example, if you want to find commits related to CSS in the [octocat/Spoon-Knife](https://github.com/octocat/Spoon-Knife) repository. Your query would look something like this:
    *
@@ -99398,9 +102287,9 @@ export interface operations {
   "search/commits": {
     parameters: {
       query: {
-        /** @description The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.7/rest/reference/search#constructing-a-search-query). See "[Searching commits](https://docs.github.com/enterprise-server@3.7/search-github/searching-on-github/searching-commits)" for a detailed list of qualifiers. */
+        /** @description The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.7/rest/search/search#constructing-a-search-query). See "[Searching commits](https://docs.github.com/enterprise-server@3.7/search-github/searching-on-github/searching-commits)" for a detailed list of qualifiers. */
         q: string;
-        /** @description Sorts the results of your query by `author-date` or `committer-date`. Default: [best match](https://docs.github.com/enterprise-server@3.7/rest/reference/search#ranking-search-results) */
+        /** @description Sorts the results of your query by `author-date` or `committer-date`. Default: [best match](https://docs.github.com/enterprise-server@3.7/rest/search/search#ranking-search-results) */
         sort?: "author-date" | "committer-date";
         order?: components["parameters"]["order"];
         per_page?: components["parameters"]["per-page"];
@@ -99426,7 +102315,7 @@ export interface operations {
    * @description Find issues by state and keyword. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#pagination).
    *
    * When searching for issues, you can get text match metadata for the issue **title**, issue **body**, and issue **comment body** fields when you pass the `text-match` media type. For more details about how to receive highlighted
-   * search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/reference/search#text-match-metadata).
+   * search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/search/search#text-match-metadata).
    *
    * For example, if you want to find the oldest unresolved Python bugs on Windows. Your query might look something like this.
    *
@@ -99434,14 +102323,14 @@ export interface operations {
    *
    * This query searches for the keyword `windows`, within any open issue that is labeled as `bug`. The search runs across repositories whose primary language is Python. The results are sorted by creation date in ascending order, which means the oldest issues appear first in the search results.
    *
-   * **Note:** For [user-to-server](https://docs.github.com/enterprise-server@3.7/developers/apps/identifying-and-authorizing-users-for-github-apps#user-to-server-requests) GitHub App requests, you can't retrieve a combination of issues and pull requests in a single query. Requests that don't include the `is:issue` or `is:pull-request` qualifier will receive an HTTP `422 Unprocessable Entity` response. To get results for both issues and pull requests, you must send separate queries for issues and pull requests. For more information about the `is` qualifier, see "[Searching only issues or pull requests](https://docs.github.com/enterprise-server@3.7/github/searching-for-information-on-github/searching-issues-and-pull-requests#search-only-issues-or-pull-requests)."
+   * **Note:** For requests made by GitHub Apps with a user access token, you can't retrieve a combination of issues and pull requests in a single query. Requests that don't include the `is:issue` or `is:pull-request` qualifier will receive an HTTP `422 Unprocessable Entity` response. To get results for both issues and pull requests, you must send separate queries for issues and pull requests. For more information about the `is` qualifier, see "[Searching only issues or pull requests](https://docs.github.com/enterprise-server@3.7/github/searching-for-information-on-github/searching-issues-and-pull-requests#search-only-issues-or-pull-requests)."
    */
   "search/issues-and-pull-requests": {
     parameters: {
       query: {
-        /** @description The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.7/rest/reference/search#constructing-a-search-query). See "[Searching issues and pull requests](https://docs.github.com/enterprise-server@3.7/search-github/searching-on-github/searching-issues-and-pull-requests)" for a detailed list of qualifiers. */
+        /** @description The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.7/rest/search/search#constructing-a-search-query). See "[Searching issues and pull requests](https://docs.github.com/enterprise-server@3.7/search-github/searching-on-github/searching-issues-and-pull-requests)" for a detailed list of qualifiers. */
         q: string;
-        /** @description Sorts the results of your query by the number of `comments`, `reactions`, `reactions-+1`, `reactions--1`, `reactions-smile`, `reactions-thinking_face`, `reactions-heart`, `reactions-tada`, or `interactions`. You can also sort results by how recently the items were `created` or `updated`, Default: [best match](https://docs.github.com/enterprise-server@3.7/rest/reference/search#ranking-search-results) */
+        /** @description Sorts the results of your query by the number of `comments`, `reactions`, `reactions-+1`, `reactions--1`, `reactions-smile`, `reactions-thinking_face`, `reactions-heart`, `reactions-tada`, or `interactions`. You can also sort results by how recently the items were `created` or `updated`, Default: [best match](https://docs.github.com/enterprise-server@3.7/rest/search/search#ranking-search-results) */
         sort?:
           | "comments"
           | "reactions"
@@ -99480,7 +102369,7 @@ export interface operations {
    * Search labels
    * @description Find labels in a repository with names or descriptions that match search keywords. Returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#pagination).
    *
-   * When searching for labels, you can get text match metadata for the label **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/reference/search#text-match-metadata).
+   * When searching for labels, you can get text match metadata for the label **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/search/search#text-match-metadata).
    *
    * For example, if you want to find labels in the `linguist` repository that match `bug`, `defect`, or `enhancement`. Your query might look like this:
    *
@@ -99493,9 +102382,9 @@ export interface operations {
       query: {
         /** @description The id of the repository. */
         repository_id: number;
-        /** @description The search keywords. This endpoint does not accept qualifiers in the query. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.7/rest/reference/search#constructing-a-search-query). */
+        /** @description The search keywords. This endpoint does not accept qualifiers in the query. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.7/rest/search/search#constructing-a-search-query). */
         q: string;
-        /** @description Sorts the results of your query by when the label was `created` or `updated`. Default: [best match](https://docs.github.com/enterprise-server@3.7/rest/reference/search#ranking-search-results) */
+        /** @description Sorts the results of your query by when the label was `created` or `updated`. Default: [best match](https://docs.github.com/enterprise-server@3.7/rest/search/search#ranking-search-results) */
         sort?: "created" | "updated";
         order?: components["parameters"]["order"];
         per_page?: components["parameters"]["per-page"];
@@ -99523,7 +102412,7 @@ export interface operations {
    * Search repositories
    * @description Find repositories via various criteria. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#pagination).
    *
-   * When searching for repositories, you can get text match metadata for the **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/reference/search#text-match-metadata).
+   * When searching for repositories, you can get text match metadata for the **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/search/search#text-match-metadata).
    *
    * For example, if you want to search for popular Tetris repositories written in assembly code, your query might look like this:
    *
@@ -99534,9 +102423,9 @@ export interface operations {
   "search/repos": {
     parameters: {
       query: {
-        /** @description The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.7/rest/reference/search#constructing-a-search-query). See "[Searching for repositories](https://docs.github.com/enterprise-server@3.7/articles/searching-for-repositories/)" for a detailed list of qualifiers. */
+        /** @description The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.7/rest/search/search#constructing-a-search-query). See "[Searching for repositories](https://docs.github.com/enterprise-server@3.7/articles/searching-for-repositories/)" for a detailed list of qualifiers. */
         q: string;
-        /** @description Sorts the results of your query by number of `stars`, `forks`, or `help-wanted-issues` or how recently the items were `updated`. Default: [best match](https://docs.github.com/enterprise-server@3.7/rest/reference/search#ranking-search-results) */
+        /** @description Sorts the results of your query by number of `stars`, `forks`, or `help-wanted-issues` or how recently the items were `updated`. Default: [best match](https://docs.github.com/enterprise-server@3.7/rest/search/search#ranking-search-results) */
         sort?: "stars" | "forks" | "help-wanted-issues" | "updated";
         order?: components["parameters"]["order"];
         per_page?: components["parameters"]["per-page"];
@@ -99563,7 +102452,7 @@ export interface operations {
    * Search topics
    * @description Find topics via various criteria. Results are sorted by best match. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#pagination). See "[Searching topics](https://docs.github.com/enterprise-server@3.7/articles/searching-topics/)" for a detailed list of qualifiers.
    *
-   * When searching for topics, you can get text match metadata for the topic's **short\_description**, **description**, **name**, or **display\_name** field when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/reference/search#text-match-metadata).
+   * When searching for topics, you can get text match metadata for the topic's **short\_description**, **description**, **name**, or **display\_name** field when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/search/search#text-match-metadata).
    *
    * For example, if you want to search for topics related to Ruby that are featured on https://github.com/topics. Your query might look like this:
    *
@@ -99574,7 +102463,7 @@ export interface operations {
   "search/topics": {
     parameters: {
       query: {
-        /** @description The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.7/rest/reference/search#constructing-a-search-query). */
+        /** @description The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.7/rest/search/search#constructing-a-search-query). */
         q: string;
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
@@ -99598,20 +102487,22 @@ export interface operations {
    * Search users
    * @description Find users via various criteria. This method returns up to 100 results [per page](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#pagination).
    *
-   * When searching for users, you can get text match metadata for the issue **login**, public **email**, and **name** fields when you pass the `text-match` media type. For more details about highlighting search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/reference/search#text-match-metadata). For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/reference/search#text-match-metadata).
+   * When searching for users, you can get text match metadata for the issue **login**, public **email**, and **name** fields when you pass the `text-match` media type. For more details about highlighting search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/search/search#text-match-metadata). For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/enterprise-server@3.7/rest/search/search#text-match-metadata).
    *
    * For example, if you're looking for a list of popular users, you might try this query:
    *
    * `q=tom+repos:%3E42+followers:%3E1000`
    *
    * This query searches for users with the name `tom`. The results are restricted to users with more than 42 repositories and over 1,000 followers.
+   *
+   * This endpoint does not accept authentication and will only include publicly visible users. As an alternative, you can use the GraphQL API. The GraphQL API requires authentication and will return private users, including Enterprise Managed Users (EMUs), that you are authorized to view. For more information, see "[GraphQL Queries](https://docs.github.com/enterprise-server@3.7/graphql/reference/queries#search)."
    */
   "search/users": {
     parameters: {
       query: {
-        /** @description The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.7/rest/reference/search#constructing-a-search-query). See "[Searching users](https://docs.github.com/enterprise-server@3.7/search-github/searching-on-github/searching-users)" for a detailed list of qualifiers. */
+        /** @description The query contains one or more search keywords and qualifiers. Qualifiers allow you to limit your search to specific areas of GitHub Enterprise Server. The REST API supports the same qualifiers as the web interface for GitHub Enterprise Server. To learn more about the format of the query, see [Constructing a search query](https://docs.github.com/enterprise-server@3.7/rest/search/search#constructing-a-search-query). See "[Searching users](https://docs.github.com/enterprise-server@3.7/search-github/searching-on-github/searching-users)" for a detailed list of qualifiers. */
         q: string;
-        /** @description Sorts the results of your query by number of `followers` or `repositories`, or when the person `joined` GitHub Enterprise Server. Default: [best match](https://docs.github.com/enterprise-server@3.7/rest/reference/search#ranking-search-results) */
+        /** @description Sorts the results of your query by number of `followers` or `repositories`, or when the person `joined` GitHub Enterprise Server. Default: [best match](https://docs.github.com/enterprise-server@3.7/rest/search/search#ranking-search-results) */
         sort?: "followers" | "repositories" | "joined";
         order?: components["parameters"]["order"];
         per_page?: components["parameters"]["per-page"];
@@ -99657,6 +102548,10 @@ export interface operations {
           "application/json": components["schemas"]["configuration-status"];
         };
       };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
     };
   };
   /**
@@ -99666,7 +102561,13 @@ export interface operations {
   "enterprise-admin/start-configuration-process": {
     responses: {
       /** @description Response */
-      202: never;
+      202: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
     };
   };
   /**
@@ -99680,6 +102581,10 @@ export interface operations {
         content: {
           "application/json": components["schemas"]["maintenance-status"];
         };
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
       };
     };
   };
@@ -99709,11 +102614,15 @@ export interface operations {
           "application/json": components["schemas"]["maintenance-status"];
         };
       };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
     };
   };
   /**
    * Get settings
-   * @description Gets the settings for your instance. To change settings, see the [Set settings endpoint](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#set-settings).
+   * @description Gets the settings for your instance. To change settings, see the [Set settings endpoint](https://docs.github.com/enterprise-server@3.7/rest/enterprise-admin/management-console#set-settings).
    *
    * **Note:** You cannot retrieve the management console password with the Enterprise administration API.
    */
@@ -99725,11 +102634,15 @@ export interface operations {
           "application/json": components["schemas"]["enterprise-settings"];
         };
       };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
     };
   };
   /**
    * Set settings
-   * @description Applies settings on your instance. For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-settings).
+   * @description Applies settings on your instance. For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@3.7/rest/enterprise-admin/management-console#get-settings).
    *
    * **Notes:**
    *
@@ -99740,14 +102653,20 @@ export interface operations {
     requestBody: {
       content: {
         "application/x-www-form-urlencoded": {
-          /** @description A JSON string with the new settings. Note that you only need to pass the specific settings you want to modify. For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-settings). */
+          /** @description A JSON string with the new settings. Note that you only need to pass the specific settings you want to modify. For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@3.7/rest/enterprise-admin/management-console#get-settings). */
           settings: string;
         };
       };
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
     };
   };
   /** Get all authorized SSH keys */
@@ -99758,6 +102677,10 @@ export interface operations {
         content: {
           "application/json": components["schemas"]["ssh-key"][];
         };
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
       };
     };
   };
@@ -99781,6 +102704,10 @@ export interface operations {
           "application/json": components["schemas"]["ssh-key"][];
         };
       };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
     };
   };
   /**
@@ -99803,13 +102730,17 @@ export interface operations {
           "application/json": components["schemas"]["ssh-key"][];
         };
       };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
     };
   };
   /**
    * Create a GitHub license
    * @description When you boot a GitHub instance for the first time, you can use the following endpoint to upload a license.
    *
-   * Note that you need to `POST` to [`/setup/api/configure`](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#start-a-configuration-process) to start the actual configuration process.
+   * Note that you need to `POST` to [`/setup/api/configure`](https://docs.github.com/enterprise-server@3.7/rest/enterprise-admin/management-console#start-a-configuration-process) to start the actual configuration process.
    *
    * When using this endpoint, your GitHub instance must have a password set. This can be accomplished two ways:
    *
@@ -99826,14 +102757,20 @@ export interface operations {
           license: string;
           /** @description You **must** provide a password _only if_ you are uploading your license for the first time. If you previously set a password through the web interface, you don't need this parameter. */
           password?: string;
-          /** @description An optional JSON string containing the installation settings. For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@3.7/rest/reference/enterprise-admin#get-settings). */
+          /** @description An optional JSON string containing the installation settings. For a list of the available settings, see the [Get settings endpoint](https://docs.github.com/enterprise-server@3.7/rest/enterprise-admin/management-console#get-settings). */
           settings?: string;
         };
       };
     };
     responses: {
       /** @description Response */
-      202: never;
+      202: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
     };
   };
   /**
@@ -99853,13 +102790,19 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      202: never;
+      202: {
+        content: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        content: never;
+      };
     };
   };
   /**
    * Get a team (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the [Get a team by name](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#get-a-team-by-name) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the [Get a team by name](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#get-a-team-by-name) endpoint.
    */
   "teams/get-legacy": {
     parameters: {
@@ -99880,7 +102823,7 @@ export interface operations {
   /**
    * Delete a team (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a team](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#delete-a-team) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a team](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#delete-a-team) endpoint.
    *
    * To delete a team, the authenticated user must be an organization owner or team maintainer.
    *
@@ -99894,7 +102837,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       404: components["responses"]["not_found"];
       422: components["responses"]["validation_failed"];
     };
@@ -99902,7 +102847,7 @@ export interface operations {
   /**
    * Update a team (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a team](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#update-a-team) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a team](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#update-a-team) endpoint.
    *
    * To edit a team, the authenticated user must either be an organization owner or a team maintainer.
    *
@@ -99963,7 +102908,7 @@ export interface operations {
   /**
    * List discussions (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List discussions`](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#list-discussions) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List discussions`](https://docs.github.com/enterprise-server@3.7/rest/teams/discussions#list-discussions) endpoint.
    *
    * List all discussions on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    */
@@ -99993,7 +102938,7 @@ export interface operations {
   /**
    * Create a discussion (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create a discussion`](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#create-a-discussion) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create a discussion`](https://docs.github.com/enterprise-server@3.7/rest/teams/discussions#create-a-discussion) endpoint.
    *
    * Creates a new discussion post on a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
@@ -100032,7 +102977,7 @@ export interface operations {
   /**
    * Get a discussion (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#get-a-discussion) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion](https://docs.github.com/enterprise-server@3.7/rest/teams/discussions#get-a-discussion) endpoint.
    *
    * Get a specific discussion on a team's page. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    */
@@ -100055,7 +103000,7 @@ export interface operations {
   /**
    * Delete a discussion (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Delete a discussion`](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#delete-a-discussion) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Delete a discussion`](https://docs.github.com/enterprise-server@3.7/rest/teams/discussions#delete-a-discussion) endpoint.
    *
    * Delete a discussion from a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    */
@@ -100068,13 +103013,15 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
    * Update a discussion (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#update-a-discussion) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion](https://docs.github.com/enterprise-server@3.7/rest/teams/discussions#update-a-discussion) endpoint.
    *
    * Edits the title and body text of a discussion post. Only the parameters you provide are updated. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    */
@@ -100107,7 +103054,7 @@ export interface operations {
   /**
    * List discussion comments (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [List discussion comments](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#list-discussion-comments) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [List discussion comments](https://docs.github.com/enterprise-server@3.7/rest/teams/discussion-comments#list-discussion-comments) endpoint.
    *
    * List all comments on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    */
@@ -100138,7 +103085,7 @@ export interface operations {
   /**
    * Create a discussion comment (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Create a discussion comment](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#create-a-discussion-comment) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Create a discussion comment](https://docs.github.com/enterprise-server@3.7/rest/teams/discussion-comments#create-a-discussion-comment) endpoint.
    *
    * Creates a new comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
@@ -100171,7 +103118,7 @@ export interface operations {
   /**
    * Get a discussion comment (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion comment](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#get-a-discussion-comment) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion comment](https://docs.github.com/enterprise-server@3.7/rest/teams/discussion-comments#get-a-discussion-comment) endpoint.
    *
    * Get a specific comment on a team discussion. OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    */
@@ -100195,7 +103142,7 @@ export interface operations {
   /**
    * Delete a discussion comment (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a discussion comment](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#delete-a-discussion-comment) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a discussion comment](https://docs.github.com/enterprise-server@3.7/rest/teams/discussion-comments#delete-a-discussion-comment) endpoint.
    *
    * Deletes a comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    */
@@ -100209,13 +103156,15 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
    * Update a discussion comment (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion comment](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#update-a-discussion-comment) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion comment](https://docs.github.com/enterprise-server@3.7/rest/teams/discussion-comments#update-a-discussion-comment) endpoint.
    *
    * Edits the body text of a discussion comment. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    */
@@ -100247,14 +103196,14 @@ export interface operations {
   /**
    * List reactions for a team discussion comment (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion comment`](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#list-reactions-for-a-team-discussion-comment) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion comment`](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#list-reactions-for-a-team-discussion-comment) endpoint.
    *
-   * List the reactions to a [team discussion comment](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#discussion-comments). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * List the reactions to a [team discussion comment](https://docs.github.com/enterprise-server@3.7/rest/teams/discussion-comments#get-a-discussion-comment). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    */
   "reactions/list-for-team-discussion-comment-legacy": {
     parameters: {
       query?: {
-        /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a team discussion comment. */
+        /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#about-reactions). Omit this parameter to list all reactions to a team discussion comment. */
         content?:
           | "+1"
           | "-1"
@@ -100288,9 +103237,9 @@ export interface operations {
   /**
    * Create reaction for a team discussion comment (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new "[Create reaction for a team discussion comment](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#create-reaction-for-a-team-discussion-comment)" endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new "[Create reaction for a team discussion comment](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#create-reaction-for-a-team-discussion-comment)" endpoint.
    *
-   * Create a reaction to a [team discussion comment](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#discussion-comments). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
+   * Create a reaction to a [team discussion comment](https://docs.github.com/enterprise-server@3.7/rest/teams/discussion-comments#get-a-discussion-comment). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
    */
   "reactions/create-for-team-discussion-comment-legacy": {
     parameters: {
@@ -100304,7 +103253,7 @@ export interface operations {
       content: {
         "application/json": {
           /**
-           * @description The [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#reaction-types) to add to the team discussion comment.
+           * @description The [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#about-reactions) to add to the team discussion comment.
            * @enum {string}
            */
           content:
@@ -100331,14 +103280,14 @@ export interface operations {
   /**
    * List reactions for a team discussion (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion`](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#list-reactions-for-a-team-discussion) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion`](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#list-reactions-for-a-team-discussion) endpoint.
    *
-   * List the reactions to a [team discussion](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#discussions). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
+   * List the reactions to a [team discussion](https://docs.github.com/enterprise-server@3.7/rest/teams/discussions#get-a-discussion). OAuth access tokens require the `read:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    */
   "reactions/list-for-team-discussion-legacy": {
     parameters: {
       query?: {
-        /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#reaction-types). Omit this parameter to list all reactions to a team discussion. */
+        /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#about-reactions). Omit this parameter to list all reactions to a team discussion. */
         content?:
           | "+1"
           | "-1"
@@ -100371,9 +103320,9 @@ export interface operations {
   /**
    * Create reaction for a team discussion (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create reaction for a team discussion`](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#create-reaction-for-a-team-discussion) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create reaction for a team discussion`](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#create-reaction-for-a-team-discussion) endpoint.
    *
-   * Create a reaction to a [team discussion](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#discussions). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion.
+   * Create a reaction to a [team discussion](https://docs.github.com/enterprise-server@3.7/rest/teams/discussions#get-a-discussion). OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/enterprise-server@3.7/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/). A response with an HTTP `200` status means that you already added the reaction type to this team discussion.
    */
   "reactions/create-for-team-discussion-legacy": {
     parameters: {
@@ -100386,7 +103335,7 @@ export interface operations {
       content: {
         "application/json": {
           /**
-           * @description The [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reference/reactions#reaction-types) to add to the team discussion.
+           * @description The [reaction type](https://docs.github.com/enterprise-server@3.7/rest/reactions/reactions#about-reactions) to add to the team discussion.
            * @enum {string}
            */
           content:
@@ -100413,7 +103362,7 @@ export interface operations {
   /**
    * List team members (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List team members`](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#list-team-members) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List team members`](https://docs.github.com/enterprise-server@3.7/rest/teams/members#list-team-members) endpoint.
    *
    * Team members will include the members of child teams.
    */
@@ -100447,7 +103396,7 @@ export interface operations {
    * @deprecated
    * @description The "Get team member" endpoint (described below) is deprecated.
    *
-   * We recommend using the [Get team membership for a user](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#get-team-membership-for-a-user) endpoint instead. It allows you to get both active and pending memberships.
+   * We recommend using the [Get team membership for a user](https://docs.github.com/enterprise-server@3.7/rest/teams/members#get-team-membership-for-a-user) endpoint instead. It allows you to get both active and pending memberships.
    *
    * To list members in a team, the team must be visible to the authenticated user.
    */
@@ -100460,9 +103409,13 @@ export interface operations {
     };
     responses: {
       /** @description if user is a member */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description if user is not a member */
-      404: never;
+      404: {
+        content: never;
+      };
     };
   };
   /**
@@ -100470,7 +103423,7 @@ export interface operations {
    * @deprecated
    * @description The "Add team member" endpoint (described below) is deprecated.
    *
-   * We recommend using the [Add or update team membership for a user](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#add-or-update-team-membership-for-a-user) endpoint instead. It allows you to invite new organization members to your teams.
+   * We recommend using the [Add or update team membership for a user](https://docs.github.com/enterprise-server@3.7/rest/teams/members#add-or-update-team-membership-for-a-user) endpoint instead. It allows you to invite new organization members to your teams.
    *
    * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/enterprise-server@3.7/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
    *
@@ -100489,12 +103442,18 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       403: components["responses"]["forbidden"];
       /** @description Not Found if team synchronization is set up */
-      404: never;
+      404: {
+        content: never;
+      };
       /** @description Unprocessable Entity if you attempt to add an organization to a team or you attempt to add a user to a team when they are not a member of at least one other team in the same organization */
-      422: never;
+      422: {
+        content: never;
+      };
     };
   };
   /**
@@ -100502,7 +103461,7 @@ export interface operations {
    * @deprecated
    * @description The "Remove team member" endpoint (described below) is deprecated.
    *
-   * We recommend using the [Remove team membership for a user](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#remove-team-membership-for-a-user) endpoint instead. It allows you to remove both active and pending memberships.
+   * We recommend using the [Remove team membership for a user](https://docs.github.com/enterprise-server@3.7/rest/teams/members#remove-team-membership-for-a-user) endpoint instead. It allows you to remove both active and pending memberships.
    *
    * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/enterprise-server@3.7/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
    *
@@ -100519,15 +103478,19 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description Not Found if team synchronization is setup */
-      404: never;
+      404: {
+        content: never;
+      };
     };
   };
   /**
    * Get team membership for a user (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get team membership for a user](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#get-team-membership-for-a-user) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get team membership for a user](https://docs.github.com/enterprise-server@3.7/rest/teams/members#get-team-membership-for-a-user) endpoint.
    *
    * Team members will include the members of child teams.
    *
@@ -100536,7 +103499,7 @@ export interface operations {
    * **Note:**
    * The response contains the `state` of the membership and the member's `role`.
    *
-   * The `role` for organization owners is set to `maintainer`. For more information about `maintainer` roles, see [Create a team](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#create-a-team).
+   * The `role` for organization owners is set to `maintainer`. For more information about `maintainer` roles, see [Create a team](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#create-a-team).
    */
   "teams/get-membership-for-user-legacy": {
     parameters: {
@@ -100558,7 +103521,7 @@ export interface operations {
   /**
    * Add or update team membership for a user (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Add or update team membership for a user](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#add-or-update-team-membership-for-a-user) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Add or update team membership for a user](https://docs.github.com/enterprise-server@3.7/rest/teams/members#add-or-update-team-membership-for-a-user) endpoint.
    *
    * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/enterprise-server@3.7/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
    *
@@ -100597,16 +103560,20 @@ export interface operations {
         };
       };
       /** @description Forbidden if team synchronization is set up */
-      403: never;
+      403: {
+        content: never;
+      };
       404: components["responses"]["not_found"];
       /** @description Unprocessable Entity if you attempt to add an organization to a team */
-      422: never;
+      422: {
+        content: never;
+      };
     };
   };
   /**
    * Remove team membership for a user (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove team membership for a user](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#remove-team-membership-for-a-user) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove team membership for a user](https://docs.github.com/enterprise-server@3.7/rest/teams/members#remove-team-membership-for-a-user) endpoint.
    *
    * Team synchronization is available for organizations using GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/enterprise-server@3.7/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
    *
@@ -100623,15 +103590,19 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description if team synchronization is set up */
-      403: never;
+      403: {
+        content: never;
+      };
     };
   };
   /**
    * List team projects (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List team projects`](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#list-team-projects) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List team projects`](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#list-team-projects) endpoint.
    *
    * Lists the organization projects for a team.
    */
@@ -100661,7 +103632,7 @@ export interface operations {
   /**
    * Check team permissions for a project (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Check team permissions for a project](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#check-team-permissions-for-a-project) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Check team permissions for a project](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#check-team-permissions-for-a-project) endpoint.
    *
    * Checks whether a team has `read`, `write`, or `admin` permissions for an organization project. The response includes projects inherited from a parent team.
    */
@@ -100680,13 +103651,15 @@ export interface operations {
         };
       };
       /** @description Not Found if project is not managed by this team */
-      404: never;
+      404: {
+        content: never;
+      };
     };
   };
   /**
    * Add or update team project permissions (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Add or update team project permissions](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#add-or-update-team-project-permissions) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Add or update team project permissions](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#add-or-update-team-project-permissions) endpoint.
    *
    * Adds an organization project to a team. To add a project to a team or update the team's permission on a project, the authenticated user must have `admin` permissions for the project. The project and team must be part of the same organization.
    */
@@ -100710,7 +103683,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description Forbidden if the project is not owned by the organization */
       403: {
         content: {
@@ -100727,7 +103702,7 @@ export interface operations {
   /**
    * Remove a project from a team (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove a project from a team](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#remove-a-project-from-a-team) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove a project from a team](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#remove-a-project-from-a-team) endpoint.
    *
    * Removes an organization project from a team. An organization owner or a team maintainer can remove any project from the team. To remove a project from a team as an organization member, the authenticated user must have `read` access to both the team and project, or `admin` access to the team or project. **Note:** This endpoint removes the project from the team, but does not delete it.
    */
@@ -100740,7 +103715,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       404: components["responses"]["not_found"];
       422: components["responses"]["validation_failed"];
     };
@@ -100748,7 +103725,7 @@ export interface operations {
   /**
    * List team repositories (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [List team repositories](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#list-team-repositories) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [List team repositories](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#list-team-repositories) endpoint.
    */
   "teams/list-repos-legacy": {
     parameters: {
@@ -100778,7 +103755,7 @@ export interface operations {
    * @deprecated
    * @description **Note**: Repositories inherited through a parent team will also be checked.
    *
-   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Check team permissions for a repository](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#check-team-permissions-for-a-repository) endpoint.
+   * **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Check team permissions for a repository](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#check-team-permissions-for-a-repository) endpoint.
    *
    * You can also get information about the specified repository, including what permissions the team grants on it, by passing the following custom [media type](https://docs.github.com/enterprise-server@3.7/rest/overview/media-types/) via the `Accept` header:
    */
@@ -100798,15 +103775,19 @@ export interface operations {
         };
       };
       /** @description Response if repository is managed by this team */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description Not Found if repository is not managed by this team */
-      404: never;
+      404: {
+        content: never;
+      };
     };
   };
   /**
    * Add or update team repository permissions (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new "[Add or update team repository permissions](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#add-or-update-team-repository-permissions)" endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new "[Add or update team repository permissions](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#add-or-update-team-repository-permissions)" endpoint.
    *
    * To add a repository to a team or update the team's permission on a repository, the authenticated user must have admin access to the repository, and must be able to see the team. The repository must be owned by the organization, or a direct fork of a repository owned by the organization. You will get a `422 Unprocessable Entity` status if you attempt to add a repository to a team that is not owned by the organization.
    *
@@ -100833,7 +103814,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       403: components["responses"]["forbidden"];
       422: components["responses"]["validation_failed"];
     };
@@ -100841,7 +103824,7 @@ export interface operations {
   /**
    * Remove a repository from a team (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove a repository from a team](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#remove-a-repository-from-a-team) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [Remove a repository from a team](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#remove-a-repository-from-a-team) endpoint.
    *
    * If the authenticated user is an organization owner or a team maintainer, they can remove any repositories from the team. To remove a repository from a team as an organization member, the authenticated user must have admin access to the repository and must be able to see the team. NOTE: This does not delete the repository, it just removes it from the team.
    */
@@ -100855,13 +103838,15 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
    * List child teams (Legacy)
    * @deprecated
-   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List child teams`](https://docs.github.com/enterprise-server@3.7/rest/reference/teams#list-child-teams) endpoint.
+   * @description **Deprecation Notice:** This endpoint route is deprecated and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List child teams`](https://docs.github.com/enterprise-server@3.7/rest/teams/teams#list-child-teams) endpoint.
    */
   "teams/list-child-legacy": {
     parameters: {
@@ -101040,7 +104025,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -101109,7 +104096,9 @@ export interface operations {
     };
     responses: {
       /** @description if the person is followed by the authenticated user */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -101135,7 +104124,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -101154,7 +104145,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -101252,7 +104245,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -101264,7 +104259,7 @@ export interface operations {
    * List app installations accessible to the user access token
    * @description Lists installations of your GitHub App that the authenticated user has explicit permission (`:read`, `:write`, or `:admin`) to access.
    *
-   * You must use a [user-to-server OAuth access token](https://docs.github.com/enterprise-server@3.7/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint.
+   * You must use a [user access token](https://docs.github.com/enterprise-server@3.7/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-user-access-token-for-a-github-app), created for a user who has authorized your GitHub App, to access this endpoint.
    *
    * The authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator, and repositories that they can access through an organization membership.
    *
@@ -101301,7 +104296,7 @@ export interface operations {
    *
    * The authenticated user has explicit permission to access repositories they own, repositories where they are a collaborator, and repositories that they can access through an organization membership.
    *
-   * You must use a [user-to-server OAuth access token](https://docs.github.com/enterprise-server@3.7/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/#identifying-users-on-your-site), created for a user who has authorized your GitHub App, to access this endpoint.
+   * You must use a [user access token](https://docs.github.com/enterprise-server@3.7/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-user-access-token-for-a-github-app), created for a user who has authorized your GitHub App, to access this endpoint.
    *
    * The access the user has to each repository is included in the hash under the `permissions` key.
    */
@@ -101349,7 +104344,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
@@ -101370,7 +104367,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
@@ -101383,7 +104382,7 @@ export interface operations {
    * **Note**: GitHub's REST API considers every pull request an issue, but not every issue is a pull request. For this
    * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
    * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
-   * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@3.7/rest/reference/pulls#list-pull-requests)" endpoint.
+   * request id, use the "[List pull requests](https://docs.github.com/enterprise-server@3.7/rest/pulls/pulls#list-pull-requests)" endpoint.
    */
   "issues/list-for-authenticated-user": {
     parameters: {
@@ -101515,7 +104514,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -101731,7 +104732,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      302: never;
+      302: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -101830,7 +104833,7 @@ export interface operations {
   };
   /**
    * List public email addresses for the authenticated user
-   * @description Lists your publicly visible email address, which you can set with the [Set primary email visibility for the authenticated user](https://docs.github.com/enterprise-server@3.7/rest/reference/users#set-primary-email-visibility-for-the-authenticated-user) endpoint. This endpoint is accessible with the `user:email` scope.
+   * @description Lists your publicly visible email address, which you can set with the [Set primary email visibility for the authenticated user](https://docs.github.com/enterprise-server@3.7/rest/users/emails#set-primary-email-visibility-for-the-authenticated-user) endpoint. This endpoint is accessible with the `user:email` scope.
    */
   "users/list-public-emails-for-authenticated-user": {
     parameters: {
@@ -102102,7 +105105,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
@@ -102118,7 +105123,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
@@ -102219,7 +105226,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -102257,7 +105266,10 @@ export interface operations {
       403: components["responses"]["forbidden"];
     };
   };
-  /** Check if a repository is starred by the authenticated user */
+  /**
+   * Check if a repository is starred by the authenticated user
+   * @description Whether the authenticated user has starred the repository.
+   */
   "activity/check-repo-is-starred-by-authenticated-user": {
     parameters: {
       path: {
@@ -102267,7 +105279,9 @@ export interface operations {
     };
     responses: {
       /** @description Response if this repository is starred by you */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -102292,14 +105306,19 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
     };
   };
-  /** Unstar a repository for the authenticated user */
+  /**
+   * Unstar a repository for the authenticated user
+   * @description Unstar a repository that the authenticated user has previously starred.
+   */
   "activity/unstar-repo-for-authenticated-user": {
     parameters: {
       path: {
@@ -102309,7 +105328,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
@@ -102403,7 +105424,7 @@ export interface operations {
    *
    * The `email` key in the following response is the publicly visible email address from your GitHub Enterprise Server [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be “public” which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub Enterprise Server. For more information, see [Authentication](https://docs.github.com/enterprise-server@3.7/rest/overview/resources-in-the-rest-api#authentication).
    *
-   * The Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see "[Emails API](https://docs.github.com/enterprise-server@3.7/rest/reference/users#emails)".
+   * The Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see "[Emails API](https://docs.github.com/enterprise-server@3.7/rest/users/emails)".
    */
   "users/get-by-username": {
     parameters: {
@@ -102552,9 +105573,13 @@ export interface operations {
     };
     responses: {
       /** @description if the user follows the target user */
-      204: never;
+      204: {
+        content: never;
+      };
       /** @description if the user does not follow the target user */
-      404: never;
+      404: {
+        content: never;
+      };
     };
   };
   /**
@@ -102696,7 +105721,7 @@ export interface operations {
    * List organizations for a user
    * @description List [public organization memberships](https://docs.github.com/enterprise-server@3.7/articles/publicizing-or-concealing-organization-membership) for the specified user.
    *
-   * This method only lists _public_ memberships, regardless of authentication. If you need to fetch all of the organization memberships (public and private) for the authenticated user, use the [List organizations for the authenticated user](https://docs.github.com/enterprise-server@3.7/rest/reference/orgs#list-organizations-for-the-authenticated-user) API instead.
+   * This method only lists _public_ memberships, regardless of authentication. If you need to fetch all of the organization memberships (public and private) for the authenticated user, use the [List organizations for the authenticated user](https://docs.github.com/enterprise-server@3.7/rest/orgs/orgs#list-organizations-for-the-authenticated-user) API instead.
    */
   "orgs/list-for-user": {
     parameters: {
@@ -102836,7 +105861,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -102851,7 +105878,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -102962,7 +105991,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -102985,7 +106016,9 @@ export interface operations {
     };
     responses: {
       /** @description Response */
-      204: never;
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -102997,7 +106030,7 @@ export interface operations {
       /** @description Response */
       200: {
         content: {
-          "text/plain": string;
+          "application/json": string;
         };
       };
     };
@@ -103067,426 +106100,6 @@ export interface operations {
       };
       404: components["responses"]["not_found"];
       500: components["responses"]["internal_error"];
-    };
-  };
-  /**
-   * Get code security and analysis features for an enterprise
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "secret-scanning/get-security-analysis-settings-for-enterprise": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Update code security and analysis features for an enterprise
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "secret-scanning/patch-security-analysis-settings-for-enterprise": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * List Dependabot alerts for an enterprise
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "dependabot/list-alerts-for-enterprise": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Enable or disable a security feature
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "secret-scanning/post-security-product-enablement-for-enterprise": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * List required workflows
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/list-required-workflows": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Create a required workflow
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/create-required-workflow": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Get a required workflow
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/get-required-workflow": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Delete a required workflow
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/delete-required-workflow": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Update a required workflow
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/update-required-workflow": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * List selected repositories for a required workflow
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/list-selected-repositories-required-workflow": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Sets repositories for a required workflow
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/set-selected-repos-to-required-workflow": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Add a repository to a required workflow
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/add-selected-repo-to-required-workflow": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Remove a selected repository from required workflow
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/remove-selected-repo-from-required-workflow": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * List organization variables
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/list-org-variables": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Create an organization variable
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/create-org-variable": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Get an organization variable
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/get-org-variable": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Delete an organization variable
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/delete-org-variable": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Update an organization variable
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/update-org-variable": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * List selected repositories for an organization variable
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/list-selected-repos-for-org-variable": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Set selected repositories for an organization variable
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/set-selected-repos-for-org-variable": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Add selected repository to an organization variable
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/add-selected-repo-to-org-variable": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Remove selected repository from an organization variable
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/remove-selected-repo-from-org-variable": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Get announcement banner for organization
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "announcement-banners/get-announcement-banner-for-org": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Remove announcement banner from organization
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "announcement-banners/remove-announcement-banner-for-org": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Set announcement banner for organization
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "announcement-banners/set-announcement-banner-for-org": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * List Dependabot alerts for an organization
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "dependabot/list-alerts-for-org": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * List repository required workflows
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/list-repo-required-workflows": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Get a required workflow entity for a repository
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/get-repo-required-workflow": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * List workflow runs for a required workflow
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/list-required-workflow-runs": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * List repository variables
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/list-repo-variables": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Create a repository variable
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/create-repo-variable": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Get a repository variable
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/get-repo-variable": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Delete a repository variable
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/delete-repo-variable": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Update a repository variable
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/update-repo-variable": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * List Dependabot alerts for a repository
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "dependabot/list-alerts-for-repo": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Get a Dependabot alert
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "dependabot/get-alert": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Update a Dependabot alert
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "dependabot/update-alert": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * List environment variables
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/list-environment-variables": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Create an environment variable
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/create-environment-variable": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Get an environment variable
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/get-environment-variable": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Delete an environment variable
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/delete-environment-variable": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
-    };
-  };
-  /**
-   * Update an environment variable
-   * @description This endpoint does not exist in GitHub Enterprise Server 3.7. It was added in 3.8
-   */
-  "actions/update-environment-variable": {
-    responses: {
-      /** @description Not Implemented */
-      501: never;
     };
   };
 }
