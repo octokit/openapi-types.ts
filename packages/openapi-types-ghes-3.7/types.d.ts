@@ -13687,7 +13687,7 @@ export interface components {
        * @example queued
        * @enum {string}
        */
-      status: "queued" | "in_progress" | "completed";
+      status: "queued" | "in_progress" | "completed" | "waiting";
       /**
        * @description The outcome of the job.
        * @example success
@@ -98418,6 +98418,7 @@ export interface operations {
           "application/json": components["schemas"]["license-content"];
         };
       };
+      404: components["responses"]["not_found"];
     };
   };
   /**
