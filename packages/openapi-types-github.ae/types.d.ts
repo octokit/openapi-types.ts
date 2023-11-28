@@ -7931,6 +7931,11 @@ export interface components {
       push_protection_bypassed_at?: string | null;
       /** @description The comment that was optionally added when this alert was closed */
       resolution_comment?: string | null;
+      /**
+       * @description The token status as of the latest validity check.
+       * @enum {string}
+       */
+      validity?: "active" | "inactive" | "unknown";
     };
     /**
      * Link With Type
@@ -10325,6 +10330,440 @@ export interface components {
       };
     };
     /**
+     * Team Repository
+     * @description A team's access to a repository.
+     */
+    "team-repository": {
+      /**
+       * @description Unique identifier of the repository
+       * @example 42
+       */
+      id: number;
+      /** @example MDEwOlJlcG9zaXRvcnkxMjk2MjY5 */
+      node_id: string;
+      /**
+       * @description The name of the repository.
+       * @example Team Environment
+       */
+      name: string;
+      /** @example octocat/Hello-World */
+      full_name: string;
+      license: components["schemas"]["nullable-license-simple"];
+      forks: number;
+      permissions?: {
+        admin: boolean;
+        pull: boolean;
+        triage?: boolean;
+        push: boolean;
+        maintain?: boolean;
+      };
+      /** @example admin */
+      role_name?: string;
+      owner: components["schemas"]["nullable-simple-user"];
+      /**
+       * @description Whether the repository is private or public.
+       * @default false
+       */
+      private: boolean;
+      /**
+       * Format: uri
+       * @example https://github.com/octocat/Hello-World
+       */
+      html_url: string;
+      /** @example This your first repo! */
+      description: string | null;
+      fork: boolean;
+      /**
+       * Format: uri
+       * @example https://api.github.com/repos/octocat/Hello-World
+       */
+      url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref} */
+      archive_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/assignees{/user} */
+      assignees_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/blobs{/sha} */
+      blobs_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/branches{/branch} */
+      branches_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator} */
+      collaborators_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/comments{/number} */
+      comments_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/commits{/sha} */
+      commits_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/compare/{base}...{head} */
+      compare_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/contents/{+path} */
+      contents_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/contributors
+       */
+      contributors_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/deployments
+       */
+      deployments_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/downloads
+       */
+      downloads_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/events
+       */
+      events_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/forks
+       */
+      forks_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/commits{/sha} */
+      git_commits_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/refs{/sha} */
+      git_refs_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/tags{/sha} */
+      git_tags_url: string;
+      /** @example git:github.com/octocat/Hello-World.git */
+      git_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/issues/comments{/number} */
+      issue_comment_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/issues/events{/number} */
+      issue_events_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/issues{/number} */
+      issues_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/keys{/key_id} */
+      keys_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/labels{/name} */
+      labels_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/languages
+       */
+      languages_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/merges
+       */
+      merges_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/milestones{/number} */
+      milestones_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating} */
+      notifications_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/pulls{/number} */
+      pulls_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/releases{/id} */
+      releases_url: string;
+      /** @example git@github.com:octocat/Hello-World.git */
+      ssh_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/stargazers
+       */
+      stargazers_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/statuses/{sha} */
+      statuses_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/subscribers
+       */
+      subscribers_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/subscription
+       */
+      subscription_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/tags
+       */
+      tags_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/teams
+       */
+      teams_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/trees{/sha} */
+      trees_url: string;
+      /** @example https://github.com/octocat/Hello-World.git */
+      clone_url: string;
+      /**
+       * Format: uri
+       * @example git:git.example.com/octocat/Hello-World
+       */
+      mirror_url: string | null;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/hooks
+       */
+      hooks_url: string;
+      /**
+       * Format: uri
+       * @example https://svn.github.com/octocat/Hello-World
+       */
+      svn_url: string;
+      /**
+       * Format: uri
+       * @example https://github.com
+       */
+      homepage: string | null;
+      language: string | null;
+      /** @example 9 */
+      forks_count: number;
+      /** @example 80 */
+      stargazers_count: number;
+      /** @example 80 */
+      watchers_count: number;
+      /** @example 108 */
+      size: number;
+      /**
+       * @description The default branch of the repository.
+       * @example master
+       */
+      default_branch: string;
+      /** @example 0 */
+      open_issues_count: number;
+      /**
+       * @description Whether this repository acts as a template that can be used to generate new repositories.
+       * @default false
+       * @example true
+       */
+      is_template?: boolean;
+      topics?: string[];
+      /**
+       * @description Whether issues are enabled.
+       * @default true
+       * @example true
+       */
+      has_issues: boolean;
+      /**
+       * @description Whether projects are enabled.
+       * @default true
+       * @example true
+       */
+      has_projects: boolean;
+      /**
+       * @description Whether the wiki is enabled.
+       * @default true
+       * @example true
+       */
+      has_wiki: boolean;
+      has_pages: boolean;
+      /**
+       * @description Whether downloads are enabled.
+       * @default true
+       * @example true
+       */
+      has_downloads: boolean;
+      /**
+       * @description Whether the repository is archived.
+       * @default false
+       */
+      archived: boolean;
+      /** @description Returns whether or not this repository disabled. */
+      disabled: boolean;
+      /**
+       * @description The repository visibility: public, private, or internal.
+       * @default public
+       */
+      visibility?: string;
+      /**
+       * Format: date-time
+       * @example 2011-01-26T19:06:43Z
+       */
+      pushed_at: string | null;
+      /**
+       * Format: date-time
+       * @example 2011-01-26T19:01:12Z
+       */
+      created_at: string | null;
+      /**
+       * Format: date-time
+       * @example 2011-01-26T19:14:43Z
+       */
+      updated_at: string | null;
+      /**
+       * @description Whether to allow rebase merges for pull requests.
+       * @default true
+       * @example true
+       */
+      allow_rebase_merge?: boolean;
+      temp_clone_token?: string;
+      /**
+       * @description Whether to allow squash merges for pull requests.
+       * @default true
+       * @example true
+       */
+      allow_squash_merge?: boolean;
+      /**
+       * @description Whether to allow Auto-merge to be used on pull requests.
+       * @default false
+       * @example false
+       */
+      allow_auto_merge?: boolean;
+      /**
+       * @description Whether to delete head branches when pull requests are merged
+       * @default false
+       * @example false
+       */
+      delete_branch_on_merge?: boolean;
+      /**
+       * @description Whether to allow merge commits for pull requests.
+       * @default true
+       * @example true
+       */
+      allow_merge_commit?: boolean;
+      /**
+       * @description Whether to allow forking this repo
+       * @default false
+       * @example false
+       */
+      allow_forking?: boolean;
+      /**
+       * @description Whether to require contributors to sign off on web-based commits
+       * @default false
+       * @example false
+       */
+      web_commit_signoff_required?: boolean;
+      subscribers_count?: number;
+      network_count?: number;
+      open_issues: number;
+      watchers: number;
+      master_branch?: string;
+    };
+    /**
+     * Project Card
+     * @description Project cards represent a scope of work.
+     */
+    "project-card": {
+      /**
+       * Format: uri
+       * @example https://api.github.com/projects/columns/cards/1478
+       */
+      url: string;
+      /**
+       * @description The project card's ID
+       * @example 42
+       */
+      id: number;
+      /** @example MDExOlByb2plY3RDYXJkMTQ3OA== */
+      node_id: string;
+      /** @example Add payload for delete Project column */
+      note: string | null;
+      creator: components["schemas"]["nullable-simple-user"];
+      /**
+       * Format: date-time
+       * @example 2016-09-05T14:21:06Z
+       */
+      created_at: string;
+      /**
+       * Format: date-time
+       * @example 2016-09-05T14:20:22Z
+       */
+      updated_at: string;
+      /**
+       * @description Whether or not the card is archived
+       * @example false
+       */
+      archived?: boolean;
+      column_name?: string;
+      project_id?: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/projects/columns/367
+       */
+      column_url: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/repos/api-playground/projects-test/issues/3
+       */
+      content_url?: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/projects/120
+       */
+      project_url: string;
+    };
+    /**
+     * Project Column
+     * @description Project columns contain cards of work.
+     */
+    "project-column": {
+      /**
+       * Format: uri
+       * @example https://api.github.com/projects/columns/367
+       */
+      url: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/projects/120
+       */
+      project_url: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/projects/columns/367/cards
+       */
+      cards_url: string;
+      /**
+       * @description The unique identifier of the project column
+       * @example 42
+       */
+      id: number;
+      /** @example MDEzOlByb2plY3RDb2x1bW4zNjc= */
+      node_id: string;
+      /**
+       * @description Name of the project column
+       * @example Remaining tasks
+       */
+      name: string;
+      /**
+       * Format: date-time
+       * @example 2016-09-05T14:18:44Z
+       */
+      created_at: string;
+      /**
+       * Format: date-time
+       * @example 2016-09-05T14:22:28Z
+       */
+      updated_at: string;
+    };
+    /**
+     * Project Collaborator Permission
+     * @description Project Collaborator Permission
+     */
+    "project-collaborator-permission": {
+      permission: string;
+      user: components["schemas"]["nullable-simple-user"];
+    };
+    /** Rate Limit */
+    "rate-limit": {
+      limit: number;
+      remaining: number;
+      reset: number;
+      used: number;
+    };
+    /**
+     * Rate Limit Overview
+     * @description Rate Limit Overview
+     */
+    "rate-limit-overview": {
+      resources: {
+        core: components["schemas"]["rate-limit"];
+        graphql?: components["schemas"]["rate-limit"];
+        search: components["schemas"]["rate-limit"];
+        code_search?: components["schemas"]["rate-limit"];
+        source_import?: components["schemas"]["rate-limit"];
+        integration_manifest?: components["schemas"]["rate-limit"];
+        code_scanning_upload?: components["schemas"]["rate-limit"];
+        actions_runner_registration?: components["schemas"]["rate-limit"];
+        scim?: components["schemas"]["rate-limit"];
+      };
+      rate: components["schemas"]["rate-limit"];
+    };
+    /**
      * Repository
      * @description A repository on GitHub.
      */
@@ -10746,441 +11185,6 @@ export interface components {
       /** @description Whether anonymous git access is enabled for this repository */
       anonymous_access_enabled?: boolean;
     } | null;
-    /**
-     * Team Repository
-     * @description A team's access to a repository.
-     */
-    "team-repository": {
-      /**
-       * @description Unique identifier of the repository
-       * @example 42
-       */
-      id: number;
-      /** @example MDEwOlJlcG9zaXRvcnkxMjk2MjY5 */
-      node_id: string;
-      /**
-       * @description The name of the repository.
-       * @example Team Environment
-       */
-      name: string;
-      /** @example octocat/Hello-World */
-      full_name: string;
-      license: components["schemas"]["nullable-license-simple"];
-      forks: number;
-      permissions?: {
-        admin: boolean;
-        pull: boolean;
-        triage?: boolean;
-        push: boolean;
-        maintain?: boolean;
-      };
-      /** @example admin */
-      role_name?: string;
-      owner: components["schemas"]["nullable-simple-user"];
-      /**
-       * @description Whether the repository is private or public.
-       * @default false
-       */
-      private: boolean;
-      /**
-       * Format: uri
-       * @example https://github.com/octocat/Hello-World
-       */
-      html_url: string;
-      /** @example This your first repo! */
-      description: string | null;
-      fork: boolean;
-      /**
-       * Format: uri
-       * @example https://api.github.com/repos/octocat/Hello-World
-       */
-      url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref} */
-      archive_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/assignees{/user} */
-      assignees_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/git/blobs{/sha} */
-      blobs_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/branches{/branch} */
-      branches_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator} */
-      collaborators_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/comments{/number} */
-      comments_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/commits{/sha} */
-      commits_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/compare/{base}...{head} */
-      compare_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/contents/{+path} */
-      contents_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/contributors
-       */
-      contributors_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/deployments
-       */
-      deployments_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/downloads
-       */
-      downloads_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/events
-       */
-      events_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/forks
-       */
-      forks_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/git/commits{/sha} */
-      git_commits_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/git/refs{/sha} */
-      git_refs_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/git/tags{/sha} */
-      git_tags_url: string;
-      /** @example git:github.com/octocat/Hello-World.git */
-      git_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/issues/comments{/number} */
-      issue_comment_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/issues/events{/number} */
-      issue_events_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/issues{/number} */
-      issues_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/keys{/key_id} */
-      keys_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/labels{/name} */
-      labels_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/languages
-       */
-      languages_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/merges
-       */
-      merges_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/milestones{/number} */
-      milestones_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating} */
-      notifications_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/pulls{/number} */
-      pulls_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/releases{/id} */
-      releases_url: string;
-      /** @example git@github.com:octocat/Hello-World.git */
-      ssh_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/stargazers
-       */
-      stargazers_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/statuses/{sha} */
-      statuses_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/subscribers
-       */
-      subscribers_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/subscription
-       */
-      subscription_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/tags
-       */
-      tags_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/teams
-       */
-      teams_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/git/trees{/sha} */
-      trees_url: string;
-      /** @example https://github.com/octocat/Hello-World.git */
-      clone_url: string;
-      /**
-       * Format: uri
-       * @example git:git.example.com/octocat/Hello-World
-       */
-      mirror_url: string | null;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/hooks
-       */
-      hooks_url: string;
-      /**
-       * Format: uri
-       * @example https://svn.github.com/octocat/Hello-World
-       */
-      svn_url: string;
-      /**
-       * Format: uri
-       * @example https://github.com
-       */
-      homepage: string | null;
-      language: string | null;
-      /** @example 9 */
-      forks_count: number;
-      /** @example 80 */
-      stargazers_count: number;
-      /** @example 80 */
-      watchers_count: number;
-      /** @example 108 */
-      size: number;
-      /**
-       * @description The default branch of the repository.
-       * @example master
-       */
-      default_branch: string;
-      /** @example 0 */
-      open_issues_count: number;
-      /**
-       * @description Whether this repository acts as a template that can be used to generate new repositories.
-       * @default false
-       * @example true
-       */
-      is_template?: boolean;
-      topics?: string[];
-      /**
-       * @description Whether issues are enabled.
-       * @default true
-       * @example true
-       */
-      has_issues: boolean;
-      /**
-       * @description Whether projects are enabled.
-       * @default true
-       * @example true
-       */
-      has_projects: boolean;
-      /**
-       * @description Whether the wiki is enabled.
-       * @default true
-       * @example true
-       */
-      has_wiki: boolean;
-      has_pages: boolean;
-      /**
-       * @description Whether downloads are enabled.
-       * @default true
-       * @example true
-       */
-      has_downloads: boolean;
-      /**
-       * @description Whether the repository is archived.
-       * @default false
-       */
-      archived: boolean;
-      /** @description Returns whether or not this repository disabled. */
-      disabled: boolean;
-      /**
-       * @description The repository visibility: public, private, or internal.
-       * @default public
-       */
-      visibility?: string;
-      /**
-       * Format: date-time
-       * @example 2011-01-26T19:06:43Z
-       */
-      pushed_at: string | null;
-      /**
-       * Format: date-time
-       * @example 2011-01-26T19:01:12Z
-       */
-      created_at: string | null;
-      /**
-       * Format: date-time
-       * @example 2011-01-26T19:14:43Z
-       */
-      updated_at: string | null;
-      /**
-       * @description Whether to allow rebase merges for pull requests.
-       * @default true
-       * @example true
-       */
-      allow_rebase_merge?: boolean;
-      template_repository?: components["schemas"]["nullable-repository"];
-      temp_clone_token?: string;
-      /**
-       * @description Whether to allow squash merges for pull requests.
-       * @default true
-       * @example true
-       */
-      allow_squash_merge?: boolean;
-      /**
-       * @description Whether to allow Auto-merge to be used on pull requests.
-       * @default false
-       * @example false
-       */
-      allow_auto_merge?: boolean;
-      /**
-       * @description Whether to delete head branches when pull requests are merged
-       * @default false
-       * @example false
-       */
-      delete_branch_on_merge?: boolean;
-      /**
-       * @description Whether to allow merge commits for pull requests.
-       * @default true
-       * @example true
-       */
-      allow_merge_commit?: boolean;
-      /**
-       * @description Whether to allow forking this repo
-       * @default false
-       * @example false
-       */
-      allow_forking?: boolean;
-      /**
-       * @description Whether to require contributors to sign off on web-based commits
-       * @default false
-       * @example false
-       */
-      web_commit_signoff_required?: boolean;
-      subscribers_count?: number;
-      network_count?: number;
-      open_issues: number;
-      watchers: number;
-      master_branch?: string;
-    };
-    /**
-     * Project Card
-     * @description Project cards represent a scope of work.
-     */
-    "project-card": {
-      /**
-       * Format: uri
-       * @example https://api.github.com/projects/columns/cards/1478
-       */
-      url: string;
-      /**
-       * @description The project card's ID
-       * @example 42
-       */
-      id: number;
-      /** @example MDExOlByb2plY3RDYXJkMTQ3OA== */
-      node_id: string;
-      /** @example Add payload for delete Project column */
-      note: string | null;
-      creator: components["schemas"]["nullable-simple-user"];
-      /**
-       * Format: date-time
-       * @example 2016-09-05T14:21:06Z
-       */
-      created_at: string;
-      /**
-       * Format: date-time
-       * @example 2016-09-05T14:20:22Z
-       */
-      updated_at: string;
-      /**
-       * @description Whether or not the card is archived
-       * @example false
-       */
-      archived?: boolean;
-      column_name?: string;
-      project_id?: string;
-      /**
-       * Format: uri
-       * @example https://api.github.com/projects/columns/367
-       */
-      column_url: string;
-      /**
-       * Format: uri
-       * @example https://api.github.com/repos/api-playground/projects-test/issues/3
-       */
-      content_url?: string;
-      /**
-       * Format: uri
-       * @example https://api.github.com/projects/120
-       */
-      project_url: string;
-    };
-    /**
-     * Project Column
-     * @description Project columns contain cards of work.
-     */
-    "project-column": {
-      /**
-       * Format: uri
-       * @example https://api.github.com/projects/columns/367
-       */
-      url: string;
-      /**
-       * Format: uri
-       * @example https://api.github.com/projects/120
-       */
-      project_url: string;
-      /**
-       * Format: uri
-       * @example https://api.github.com/projects/columns/367/cards
-       */
-      cards_url: string;
-      /**
-       * @description The unique identifier of the project column
-       * @example 42
-       */
-      id: number;
-      /** @example MDEzOlByb2plY3RDb2x1bW4zNjc= */
-      node_id: string;
-      /**
-       * @description Name of the project column
-       * @example Remaining tasks
-       */
-      name: string;
-      /**
-       * Format: date-time
-       * @example 2016-09-05T14:18:44Z
-       */
-      created_at: string;
-      /**
-       * Format: date-time
-       * @example 2016-09-05T14:22:28Z
-       */
-      updated_at: string;
-    };
-    /**
-     * Project Collaborator Permission
-     * @description Project Collaborator Permission
-     */
-    "project-collaborator-permission": {
-      permission: string;
-      user: components["schemas"]["nullable-simple-user"];
-    };
-    /** Rate Limit */
-    "rate-limit": {
-      limit: number;
-      remaining: number;
-      reset: number;
-      used: number;
-    };
-    /**
-     * Rate Limit Overview
-     * @description Rate Limit Overview
-     */
-    "rate-limit-overview": {
-      resources: {
-        core: components["schemas"]["rate-limit"];
-        graphql?: components["schemas"]["rate-limit"];
-        search: components["schemas"]["rate-limit"];
-        code_search?: components["schemas"]["rate-limit"];
-        source_import?: components["schemas"]["rate-limit"];
-        integration_manifest?: components["schemas"]["rate-limit"];
-        code_scanning_upload?: components["schemas"]["rate-limit"];
-        actions_runner_registration?: components["schemas"]["rate-limit"];
-        scim?: components["schemas"]["rate-limit"];
-      };
-      rate: components["schemas"]["rate-limit"];
-    };
     /**
      * Code Of Conduct Simple
      * @description Code of Conduct Simple
@@ -16526,6 +16530,11 @@ export interface components {
       secret_type?: string;
       /** @description The secret that was detected. */
       secret?: string;
+      /**
+       * @description The token status as of the latest validity check.
+       * @enum {string}
+       */
+      validity?: "active" | "inactive" | "unknown";
     };
     /** @description An optional comment when closing an alert. Cannot be updated or deleted. Must be `null` when changing `state` to `open`. */
     "secret-scanning-alert-resolution-comment": string | null;
@@ -17673,6 +17682,10 @@ export interface components {
        */
       is_template?: boolean;
       topics?: string[];
+      /** @description The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values. */
+      custom_properties?: {
+        [key: string]: unknown;
+      };
       /**
        * @description Whether issues are enabled.
        * @default true
@@ -18576,6 +18589,10 @@ export interface components {
        */
       is_template?: boolean;
       topics?: string[];
+      /** @description The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values. */
+      custom_properties?: {
+        [key: string]: unknown;
+      };
       /**
        * @description Whether issues are enabled.
        * @default true
@@ -24549,6 +24566,10 @@ export interface components {
         /** Format: uri */
         contributors_url: string;
         created_at: number | string;
+        /** @description The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values. */
+        custom_properties?: {
+          [key: string]: unknown;
+        };
         /** @description The default branch of the repository. */
         default_branch: string;
         /**
@@ -32245,6 +32266,10 @@ export interface components {
           /** Format: uri */
           contributors_url: string;
           created_at: number | string;
+          /** @description The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values. */
+          custom_properties?: {
+            [key: string]: unknown;
+          };
           /** @description The default branch of the repository. */
           default_branch: string;
           /**
@@ -34452,6 +34477,10 @@ export interface components {
           /** Format: uri */
           contributors_url: string;
           created_at: number | string;
+          /** @description The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values. */
+          custom_properties?: {
+            [key: string]: unknown;
+          };
           /** @description The default branch of the repository. */
           default_branch: string;
           /**
@@ -69128,6 +69157,10 @@ export interface components {
         /** Format: uri */
         contributors_url: string;
         created_at: number | string;
+        /** @description The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values. */
+        custom_properties?: {
+          [key: string]: unknown;
+        };
         /** @description The default branch of the repository. */
         default_branch: string;
         /**
@@ -72297,6 +72330,10 @@ export interface components {
         /** Format: uri */
         contributors_url: string;
         created_at: number | string;
+        /** @description The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values. */
+        custom_properties?: {
+          [key: string]: unknown;
+        };
         /** @description The default branch of the repository. */
         default_branch: string;
         /**
@@ -72610,6 +72647,10 @@ export interface components {
         /** Format: uri */
         contributors_url: string;
         created_at: number | string;
+        /** @description The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values. */
+        custom_properties?: {
+          [key: string]: unknown;
+        };
         /** @description The default branch of the repository. */
         default_branch: string;
         /**
@@ -72923,6 +72964,10 @@ export interface components {
         /** Format: uri */
         contributors_url: string;
         created_at: number | string;
+        /** @description The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values. */
+        custom_properties?: {
+          [key: string]: unknown;
+        };
         /** @description The default branch of the repository. */
         default_branch: string;
         /**
@@ -73267,6 +73312,10 @@ export interface components {
         /** Format: uri */
         contributors_url: string;
         created_at: number | string;
+        /** @description The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values. */
+        custom_properties?: {
+          [key: string]: unknown;
+        };
         /** @description The default branch of the repository. */
         default_branch: string;
         /**
@@ -73580,6 +73629,10 @@ export interface components {
         /** Format: uri */
         contributors_url: string;
         created_at: number | string;
+        /** @description The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values. */
+        custom_properties?: {
+          [key: string]: unknown;
+        };
         /** @description The default branch of the repository. */
         default_branch: string;
         /**
@@ -76315,6 +76368,8 @@ export interface components {
     "pagination-before"?: string;
     /** @description A cursor, as given in the [Link header](https://docs.github.com/github-ae@latest/rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for results after this cursor. */
     "pagination-after"?: string;
+    /** @description A comma-separated list of validities that, when present, will return alerts that match the validities in this list. Valid options are `active`, `inactive`, and `unknown`. */
+    "secret-scanning-alert-validity"?: string;
     /** @description The unique identifier of the gist. */
     "gist-id": string;
     /** @description The unique identifier of the comment. */
@@ -78798,6 +78853,7 @@ export interface operations {
         per_page?: components["parameters"]["per-page"];
         before?: components["parameters"]["pagination-before"];
         after?: components["parameters"]["pagination-after"];
+        validity?: components["parameters"]["secret-scanning-alert-validity"];
       };
       path: {
         enterprise: components["parameters"]["enterprise"];
