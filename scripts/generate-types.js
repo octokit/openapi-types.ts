@@ -64,7 +64,7 @@ async function run() {
           packageName === "openapi-types" ? "" : `for ${name}`
         }
 
-This package is continously updated based on [GitHub's OpenAPI specification](https://github.com/github/rest-api-description/)
+This package is continuously updated based on [GitHub's OpenAPI specification](https://github.com/github/rest-api-description/)
 
 ## Usage
 
