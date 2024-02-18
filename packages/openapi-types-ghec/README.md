@@ -2,7 +2,7 @@
 
 > Generated TypeScript definitions based on GitHub's OpenAPI spec for ghec
 
-This package is continously updated based on [GitHub's OpenAPI specification](https://github.com/github/rest-api-description/)
+This package is continuously updated based on [GitHub's OpenAPI specification](https://github.com/github/rest-api-description/)
 
 ## Usage
 
