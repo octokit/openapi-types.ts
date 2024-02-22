@@ -294,7 +294,7 @@ export interface paths {
      * Get an app
      * @description **Note**: The `:app_slug` is just the URL-friendly name of your GitHub App. You can find this on the settings page for your GitHub App (e.g., `https://github.com/settings/apps/:app_slug`).
      *
-     * If the GitHub App you specify is public, you can access this endpoint without authenticating. If the GitHub App you specify is private, you must authenticate with a [personal access token](https://docs.github.com/github-ae@latest/articles/creating-a-personal-access-token-for-the-command-line/) or an [installation access token](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
+     * If the GitHub App you specify is public, you can access this endpoint without authenticating. If the GitHub App you specify is private, you must authenticate with a [personal access token](https://docs.github.com/github-ae@latest/articles/creating-a-personal-access-token-for-the-command-line/) or an [installation access token](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) of the target app to access this endpoint.
      */
     get: operations["apps/get-by-slug"];
   };
@@ -610,7 +610,7 @@ export interface paths {
      * @description GitHub AE provides several timeline resources in [Atom](http://en.wikipedia.org/wiki/Atom_(standard)) format. The Feeds API lists all the feeds available to the authenticated user:
      *
      * *   **Timeline**: The GitHub AE global public timeline
-     * *   **User**: The public timeline for any user, using [URI template](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#hypermedia)
+     * *   **User**: The public timeline for any user, using `uri_template`. For more information, see "[Hypermedia](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#hypermedia)."
      * *   **Current user public**: The public timeline for the authenticated user
      * *   **Current user**: The private timeline for the authenticated user
      * *   **Current user actor**: The private timeline for activity created by the authenticated user
@@ -640,7 +640,7 @@ export interface paths {
      * List public gists
      * @description List public gists sorted by most recently updated to least recently updated.
      *
-     * Note: With [pagination](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination), you can fetch up to 3000 gists. For example, you can fetch 100 pages with 30 gists per page or 30 pages with 100 gists per page.
+     * Note: With [pagination](https://docs.github.com/github-ae@latest/rest/guides/using-pagination-in-the-rest-api), you can fetch up to 3000 gists. For example, you can fetch 100 pages with 30 gists per page or 30 pages with 100 gists per page.
      */
     get: operations["gists/list-public"];
   };
@@ -652,7 +652,15 @@ export interface paths {
     get: operations["gists/list-starred"];
   };
   "/gists/{gist_id}": {
-    /** Get a gist */
+    /**
+     * Get a gist
+     * @description Gets a specified gist.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences.
+     */
     get: operations["gists/get"];
     /** Delete a gist */
     delete: operations["gists/delete"];
@@ -663,17 +671,49 @@ export interface paths {
     patch: operations["gists/update"];
   };
   "/gists/{gist_id}/comments": {
-    /** List gist comments */
+    /**
+     * List gist comments
+     * @description Lists the comments on a gist.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences.
+     */
     get: operations["gists/list-comments"];
-    /** Create a gist comment */
+    /**
+     * Create a gist comment
+     * @description Creates a comment on a gist.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences.
+     */
     post: operations["gists/create-comment"];
   };
   "/gists/{gist_id}/comments/{comment_id}": {
-    /** Get a gist comment */
+    /**
+     * Get a gist comment
+     * @description Gets a comment on a gist.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences.
+     */
     get: operations["gists/get-comment"];
     /** Delete a gist comment */
     delete: operations["gists/delete-comment"];
-    /** Update a gist comment */
+    /**
+     * Update a gist comment
+     * @description Updates a comment on a gist.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences.
+     */
     patch: operations["gists/update-comment"];
   };
   "/gists/{gist_id}/commits": {
@@ -691,14 +731,22 @@ export interface paths {
     get: operations["gists/check-is-starred"];
     /**
      * Star a gist
-     * @description Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
+     * @description Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP method](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#http-method)."
      */
     put: operations["gists/star"];
     /** Unstar a gist */
     delete: operations["gists/unstar"];
   };
   "/gists/{gist_id}/{sha}": {
-    /** Get a gist revision */
+    /**
+     * Get a gist revision
+     * @description Gets a specified gist revision.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences.
+     */
     get: operations["gists/get-revision"];
   };
   "/gitignore/templates": {
@@ -711,8 +759,11 @@ export interface paths {
   "/gitignore/templates/{name}": {
     /**
      * Get a gitignore template
-     * @description The API also allows fetching the source of a single template.
-     * Use the raw [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/) to get the raw contents.
+     * @description Get the content of a gitignore template.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw .gitignore contents.
      */
     get: operations["gitignore/get-template"];
   };
@@ -743,11 +794,17 @@ export interface paths {
      * repositories, and organization repositories. You can use the `filter` query parameter to fetch issues that are not
      * necessarily assigned to you.
      *
-     *
      * **Note**: GitHub's REST API considers every pull request an issue, but not every issue is a pull request. For this
      * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
      * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
      * request id, use the "[List pull requests](https://docs.github.com/github-ae@latest/rest/pulls/pulls#list-pull-requests)" endpoint.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     get: operations["issues/list"];
   };
@@ -807,6 +864,11 @@ export interface paths {
      * @description Gets information about a notification thread.
      */
     get: operations["activity/get-thread"];
+    /**
+     * Mark a thread as done
+     * @description Marks a thread as "done." Marking a thread as "done" is equivalent to marking a notification in your notification inbox on GitHub AE as done: https://github.com/notifications.
+     */
+    delete: operations["activity/mark-thread-as-done"];
     /**
      * Mark a thread as read
      * @description Marks a thread as "read." Marking a thread as "read" is equivalent to clicking a notification in your notification inbox on GitHub AE: https://github.com/notifications.
@@ -1212,7 +1274,7 @@ export interface paths {
      *
      * By default, the response includes up to 30 events from the past three months. Use the `phrase` parameter to filter results and retrieve older events. For example, use the `phrase` parameter with the `created` qualifier to filter events based on when the events occurred. For more information, see "[Reviewing the audit log for your organization](https://docs.github.com/github-ae@latest/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization#searching-the-audit-log)."
      *
-     * Use pagination to retrieve fewer or more than 30 events. For more information, see "[Resources in the REST API](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination)."
+     * Use pagination to retrieve fewer or more than 30 events. For more information, see "[Using pagination in the REST API](https://docs.github.com/github-ae@latest/rest/guides/using-pagination-in-the-rest-api)."
      */
     get: operations["orgs/get-audit-log"];
   };
@@ -1224,8 +1286,6 @@ export interface paths {
      * To use this endpoint, you must be an owner or security manager for the organization, and you must use an access token with the `repo` scope or `security_events` scope.
      *
      * For public repositories, you may instead use the `public_repo` scope.
-     *
-     * GitHub Apps must have the `security_events` read permission to use this endpoint.
      */
     get: operations["code-scanning/list-alerts-for-org"];
   };
@@ -1339,6 +1399,13 @@ export interface paths {
      * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
      * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
      * request id, use the "[List pull requests](https://docs.github.com/github-ae@latest/rest/pulls/pulls#list-pull-requests)" endpoint.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     get: operations["issues/list-for-org"];
   };
@@ -1489,7 +1556,7 @@ export interface paths {
      *
      * When using [OAuth](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
      *
-     * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.
+     * *   `public_repo` scope or `repo` scope to create a public repository
      * *   `repo` scope to create a private repository
      */
     post: operations["repos/create-in-org"];
@@ -1545,7 +1612,7 @@ export interface paths {
      * Create a discussion
      * @description Creates a new discussion post on a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      *
-     * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+     * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/{org_id}/team/{team_id}/discussions`.
      */
@@ -1586,7 +1653,7 @@ export interface paths {
      * Create a discussion comment
      * @description Creates a new comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      *
-     * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+     * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
      */
@@ -1782,12 +1849,14 @@ export interface paths {
      *
      * If a team doesn't have permission for the repository, you will receive a `404 Not Found` response status.
      *
+     * If the repository is private, you must have at least `read` permission for that repository, and your token must have the `repo` or `admin:org` scope. Otherwise, you will receive a `404 Not Found` response status.
+     *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo}`.
      */
     get: operations["teams/check-permissions-for-repo-in-org"];
     /**
      * Add or update team repository permissions
-     * @description To add a repository to a team or update the team's permission on a repository, the authenticated user must have admin access to the repository, and must be able to see the team. The repository must be owned by the organization, or a direct fork of a repository owned by the organization. You will get a `422 Unprocessable Entity` status if you attempt to add a repository to a team that is not owned by the organization. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
+     * @description To add a repository to a team or update the team's permission on a repository, the authenticated user must have admin access to the repository, and must be able to see the team. The repository must be owned by the organization, or a direct fork of a repository owned by the organization. You will get a `422 Unprocessable Entity` status if you attempt to add a repository to a team that is not owned by the organization. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP method](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#http-method)."
      *
      * **Note:** You can also specify a team by `org_id` and `team_id` using the route `PUT /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo}`.
      *
@@ -2134,7 +2203,7 @@ export interface paths {
   "/repos/{owner}/{repo}/actions/runs": {
     /**
      * List workflow runs for a repository
-     * @description Lists all workflow runs for a repository. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#parameters).
+     * @description Lists all workflow runs for a repository. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#parameters).
      *
      * Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
      */
@@ -2174,7 +2243,7 @@ export interface paths {
   "/repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/jobs": {
     /**
      * List jobs for a workflow run attempt
-     * @description Lists jobs for a specific workflow run attempt. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#parameters).
+     * @description Lists jobs for a specific workflow run attempt. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#parameters).
      */
     get: operations["actions/list-jobs-for-workflow-run-attempt"];
   };
@@ -2212,7 +2281,7 @@ export interface paths {
   "/repos/{owner}/{repo}/actions/runs/{run_id}/jobs": {
     /**
      * List jobs for a workflow run
-     * @description Lists jobs for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#parameters).
+     * @description Lists jobs for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#parameters).
      */
     get: operations["actions/list-jobs-for-workflow-run"];
   };
@@ -2348,7 +2417,7 @@ export interface paths {
   "/repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs": {
     /**
      * List workflow runs for a workflow
-     * @description List all workflow runs for a workflow. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#parameters).
+     * @description List all workflow runs for a workflow. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#parameters).
      *
      * Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope.
      */
@@ -2383,8 +2452,8 @@ export interface paths {
   };
   "/repos/{owner}/{repo}/autolinks": {
     /**
-     * List all autolinks of a repository
-     * @description This returns a list of autolinks configured for the given repository.
+     * Get all autolinks of a repository
+     * @description Gets all autolinks that are configured for a repository.
      *
      * Information about autolinks are only available to repository administrators.
      */
@@ -2684,14 +2753,18 @@ export interface paths {
   "/repos/{owner}/{repo}/check-runs/{check_run_id}": {
     /**
      * Get a check run
-     * @description **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
+     * @description Gets a single check run using its `id`.
      *
-     * Gets a single check run using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth apps and authenticated users must have the `repo` scope to get check runs in a private repository.
+     * GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth apps and authenticated users must have the `repo` scope to get check runs in a private repository.
+     *
+     * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
      */
     get: operations["checks/get"];
     /**
      * Update a check run
-     * @description Updates a check run for a specific commit in a repository. Your GitHub App must have the `checks:write` permission to edit check runs.
+     * @description Updates a check run for a specific commit in a repository.
+     *
+     * To update a check run, you must use a GitHub App with the `checks:write` permission. OAuth apps and authenticated users are not able to update a check run.
      *
      * **Note:** The endpoints to manage checks only look for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
      */
@@ -2700,7 +2773,13 @@ export interface paths {
   "/repos/{owner}/{repo}/check-runs/{check_run_id}/annotations": {
     /**
      * List check run annotations
-     * @description Lists annotations for a check run using the annotation `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get annotations for a check run. OAuth apps and authenticated users must have the `repo` scope to get annotations for a check run in a private repository.
+     * @description Lists annotations for a check run using the annotation `id`.
+     *
+     * GitHub Apps
+     * must have the `checks:read` permission on a private repository or pull access to
+     * a public repository to get annotations for a check run. OAuth apps and authenticated
+     * users must have the `repo` scope to get annotations for a check run in a private
+     * repository.
      */
     get: operations["checks/list-annotations"];
   };
@@ -2709,7 +2788,7 @@ export interface paths {
      * Rerequest a check run
      * @description Triggers GitHub to rerequest an existing check run, without pushing new code to a repository. This endpoint will trigger the [`check_run` webhook](https://docs.github.com/github-ae@latest/webhooks/event-payloads/#check_run) event with the action `rerequested`. When a check run is `rerequested`, its `status` is reset to `queued` and the `conclusion` is cleared.
      *
-     * To rerequest a check run, your GitHub App must have the `checks:read` permission on a private repository or pull access to a public repository.
+     * To rerequest a check run, you must use a GitHub App with the `checks:read` permission on a private repository or pull access to a public repository. OAuth apps and authenticated users are not able to rerequest a check run.
      *
      * For more information about how to re-run GitHub Actions jobs, see "[Re-run a job from a workflow run](https://docs.github.com/github-ae@latest/rest/actions/workflow-runs#re-run-a-job-from-a-workflow-run)".
      */
@@ -2718,32 +2797,39 @@ export interface paths {
   "/repos/{owner}/{repo}/check-suites": {
     /**
      * Create a check suite
-     * @description **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
+     * @description Creates a check suite manually. By default, check suites are automatically created when you create a [check run](https://docs.github.com/github-ae@latest/rest/checks/runs). You only need to use this endpoint for manually creating check suites when you've disabled automatic creation using "[Update repository preferences for check suites](https://docs.github.com/github-ae@latest/rest/checks/suites#update-repository-preferences-for-check-suites)".
      *
-     * By default, check suites are automatically created when you create a [check run](https://docs.github.com/github-ae@latest/rest/checks/runs). You only need to use this endpoint for manually creating check suites when you've disabled automatic creation using "[Update repository preferences for check suites](https://docs.github.com/github-ae@latest/rest/checks/suites#update-repository-preferences-for-check-suites)". Your GitHub App must have the `checks:write` permission to create check suites.
+     * To create a check suite, you must use a GitHub App with the `checks:write` permission. OAuth apps and authenticated users are not able to create a check suite.
+     *
+     * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
      */
     post: operations["checks/create-suite"];
   };
   "/repos/{owner}/{repo}/check-suites/preferences": {
     /**
      * Update repository preferences for check suites
-     * @description Changes the default automatic flow when creating check suites. By default, a check suite is automatically created each time code is pushed to a repository. When you disable the automatic creation of check suites, you can manually [Create a check suite](https://docs.github.com/github-ae@latest/rest/checks/suites#create-a-check-suite). You must have admin permissions in the repository to set preferences for check suites.
+     * @description Changes the default automatic flow when creating check suites. By default, a check suite is automatically created each time code is pushed to a repository. When you disable the automatic creation of check suites, you can manually [Create a check suite](https://docs.github.com/github-ae@latest/rest/checks/suites#create-a-check-suite).
+     * You must have admin permissions in the repository to set preferences for check suites.
      */
     patch: operations["checks/set-suites-preferences"];
   };
   "/repos/{owner}/{repo}/check-suites/{check_suite_id}": {
     /**
      * Get a check suite
-     * @description **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
+     * @description Gets a single check suite using its `id`.
      *
-     * Gets a single check suite using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check suites. OAuth apps and authenticated users must have the `repo` scope to get check suites in a private repository.
+     * GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check suites. OAuth apps and authenticated users must have the `repo` scope to get check suites in a private repository.
+     *
+     * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
      */
     get: operations["checks/get-suite"];
   };
   "/repos/{owner}/{repo}/check-suites/{check_suite_id}/check-runs": {
     /**
      * List check runs in a check suite
-     * @description Lists check runs for a check suite using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth apps and authenticated users must have the `repo` scope to get check runs in a private repository.
+     * @description Lists check runs for a check suite using its `id`.
+     *
+     * GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth apps and authenticated users must have the `repo` scope to get check runs in a private repository.
      *
      * **Note:** The endpoints to manage checks only look for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
      */
@@ -2754,7 +2840,7 @@ export interface paths {
      * Rerequest a check suite
      * @description Triggers GitHub to rerequest an existing check suite, without pushing new code to a repository. This endpoint will trigger the [`check_suite` webhook](https://docs.github.com/github-ae@latest/webhooks/event-payloads/#check_suite) event with the action `rerequested`. When a check suite is `rerequested`, its `status` is reset to `queued` and the `conclusion` is cleared.
      *
-     * To rerequest a check suite, your GitHub App must have the `checks:write` permission on a private repository or pull access to a public repository.
+     * To rerequest a check suite, you must use a GitHub App with the `checks:write` permission on a private repository or pull access to a public repository. OAuth apps and authenticated users are not able to rerequest a check suite.
      */
     post: operations["checks/rerequest-suite"];
   };
@@ -2765,9 +2851,6 @@ export interface paths {
      *
      * To use this endpoint, you must use an access token with the `security_events` scope or, for alerts from public repositories only, an access token with the `public_repo` scope.
      *
-     * GitHub Apps must have the `security_events` read
-     * permission to use this endpoint.
-     *
      * The response includes a `most_recent_instance` object.
      * This provides details of the most recent instance of this alert
      * for the default branch (or for the specified Git reference if you used `ref` in the request).
@@ -2777,7 +2860,7 @@ export interface paths {
   "/repos/{owner}/{repo}/code-scanning/alerts/{alert_number}": {
     /**
      * Get a code scanning alert
-     * @description Gets a single code scanning alert. You must use an access token with the `security_events` scope to use this endpoint with private repos, the `public_repo` scope also grants permission to read security events on public repos only. GitHub Apps must have the `security_events` read permission to use this endpoint.
+     * @description Gets a single code scanning alert. You must use an access token with the `security_events` scope to use this endpoint with private repositories, the `public_repo` scope also grants permission to read security events on public repositories only.
      */
     get: operations["code-scanning/get-alert"];
     /**
@@ -2790,9 +2873,8 @@ export interface paths {
     /**
      * List instances of a code scanning alert
      * @description Lists all instances of the specified code scanning alert.
-     * You must use an access token with the `security_events` scope to use this endpoint with private repos,
-     * the `public_repo` scope also grants permission to read security events on public repos only.
-     * GitHub Apps must have the `security_events` read permission to use this endpoint.
+     * You must use an access token with the `security_events` scope to use this endpoint with private repositories,
+     * the `public_repo` scope also grants permission to read security events on public repositories only.
      */
     get: operations["code-scanning/list-alert-instances"];
   };
@@ -2810,9 +2892,8 @@ export interface paths {
      * For very old analyses this data is not available,
      * and `0` is returned in this field.
      *
-     * You must use an access token with the `security_events` scope to use this endpoint with private repos,
-     * the `public_repo` scope also grants permission to read security events on public repos only.
-     * GitHub Apps must have the `security_events` read permission to use this endpoint.
+     * You must use an access token with the `security_events` scope to use this endpoint with private repositories,
+     * the `public_repo` scope also grants permission to read security events on public repositories only.
      *
      * **Deprecation notice**:
      * The `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the `tool` field.
@@ -2823,9 +2904,9 @@ export interface paths {
     /**
      * Get a code scanning analysis for a repository
      * @description Gets a specified code scanning analysis for a repository.
-     * You must use an access token with the `security_events` scope to use this endpoint with private repos,
-     * the `public_repo` scope also grants permission to read security events on public repos only.
-     * GitHub Apps must have the `security_events` read permission to use this endpoint.
+     *
+     * You must use an access token with the `security_events` scope to use this endpoint with private repositories,
+     * the `public_repo` scope also grants permission to read security events on public repositories only.
      *
      * The default JSON response contains fields that describe the analysis.
      * This includes the Git reference and commit SHA to which the analysis relates,
@@ -2837,10 +2918,9 @@ export interface paths {
      * For very old analyses this data is not available,
      * and `0` is returned in this field.
      *
-     * If you use the Accept header `application/sarif+json`,
-     * the response contains the analysis data that was uploaded.
-     * This is formatted as
-     * [SARIF version 2.1.0](https://docs.oasis-open.org/sarif/sarif/v2.1.0/cs01/sarif-v2.1.0-cs01.html).
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/sarif+json`**: Instead of returning a summary of the analysis, this endpoint returns a subset of the analysis data that was uploaded. The data is formatted as [SARIF version 2.1.0](https://docs.oasis-open.org/sarif/sarif/v2.1.0/cs01/sarif-v2.1.0-cs01.html). It also returns additional data such as the `github/alertNumber` and `github/alertUrl` properties.
      */
     get: operations["code-scanning/get-analysis"];
     /**
@@ -2948,7 +3028,7 @@ export interface paths {
   "/repos/{owner}/{repo}/code-scanning/sarifs/{sarif_id}": {
     /**
      * Get information about a SARIF upload
-     * @description Gets information about a SARIF upload, including the status and the URL of the analysis that was uploaded so that you can retrieve details of the analysis. For more information, see "[Get a code scanning analysis for a repository](/rest/code-scanning/code-scanning#get-a-code-scanning-analysis-for-a-repository)." You must use an access token with the `security_events` scope to use this endpoint with private repos, the `public_repo` scope also grants permission to read security events on public repos only. GitHub Apps must have the `security_events` read permission to use this endpoint.
+     * @description Gets information about a SARIF upload, including the status and the URL of the analysis that was uploaded so that you can retrieve details of the analysis. For more information, see "[Get a code scanning analysis for a repository](/rest/code-scanning/code-scanning#get-a-code-scanning-analysis-for-a-repository)." You must use an access token with the `security_events` scope to use this endpoint with private repositories, the `public_repo` scope also grants permission to read security events on public repositories only.
      */
     get: operations["code-scanning/get-sarif"];
   };
@@ -2991,7 +3071,7 @@ export interface paths {
     get: operations["repos/check-collaborator"];
     /**
      * Add a repository collaborator
-     * @description This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+     * @description This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
      *
      * Adding an outside collaborator may be restricted by enterprise administrators. For more information, see "[Enforcing repository management policies in your enterprise](https://docs.github.com/github-ae@latest/admin/policies/enforcing-policies-for-your-enterprise/enforcing-repository-management-policies-in-your-enterprise#enforcing-a-policy-for-inviting-outside-collaborators-to-repositories)."
      *
@@ -3001,7 +3081,7 @@ export interface paths {
      * Cannot assign {member} permission of {role name}
      * ```
      *
-     * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
+     * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP method](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#http-method)."
      *
      * **Updating an existing collaborator's permission level**
      *
@@ -3050,18 +3130,43 @@ export interface paths {
   "/repos/{owner}/{repo}/comments": {
     /**
      * List commit comments for a repository
-     * @description Commit Comments use [these custom media types](https://docs.github.com/github-ae@latest/rest/overview/media-types). You can read more about the use of media types in the API [here](https://docs.github.com/github-ae@latest/rest/overview/media-types/).
+     * @description Lists the commit comments for a specified repository. Comments are ordered by ascending ID.
      *
-     * Comments are ordered by ascending ID.
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     get: operations["repos/list-commit-comments-for-repo"];
   };
   "/repos/{owner}/{repo}/comments/{comment_id}": {
-    /** Get a commit comment */
+    /**
+     * Get a commit comment
+     * @description Gets a specified commit comment.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+     */
     get: operations["repos/get-commit-comment"];
     /** Delete a commit comment */
     delete: operations["repos/delete-commit-comment"];
-    /** Update a commit comment */
+    /**
+     * Update a commit comment
+     * @description Updates the contents of a specified commit comment.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+     */
     patch: operations["repos/update-commit-comment"];
   };
   "/repos/{owner}/{repo}/comments/{comment_id}/reactions": {
@@ -3131,14 +3236,28 @@ export interface paths {
   "/repos/{owner}/{repo}/commits/{commit_sha}/comments": {
     /**
      * List commit comments
-     * @description Use the `:commit_sha` to specify the commit that will have its comments listed.
+     * @description Lists the comments for a specified commit.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     get: operations["repos/list-comments-for-commit"];
     /**
      * Create a commit comment
      * @description Create a comment for a commit using its `:commit_sha`.
      *
-     * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+     * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     post: operations["repos/create-commit-comment"];
   };
@@ -3158,9 +3277,11 @@ export interface paths {
      *
      * **Note:** If there are more than 300 files in the commit diff, the response will include pagination link headers for the remaining files, up to a limit of 3000 files. Each page contains the static commit information, and the only changes are to the file listing.
      *
-     * You can pass the appropriate [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to  fetch `diff` and `patch` formats. Diffs with binary data will have no `patch` property.
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
      *
-     * To return only the SHA-1 hash of the commit reference, you can provide the `sha` custom [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) in the `Accept` header. You can use this endpoint to check if a remote reference's SHA-1 hash is the same as your local reference's SHA-1 hash by providing the local SHA-1 reference as the ETag.
+     * - **`application/vnd.github.diff`**: Returns the diff of the commit.
+     * - **`application/vnd.github.patch`**: Returns the patch of the commit. Diffs with binary data will have no `patch` property.
+     * - **`application/vnd.github.sha`**: Returns the commit's SHA-1 hash. You can use this endpoint to check if a remote reference's SHA-1 hash is the same as your local reference's SHA-1 hash by providing the local SHA-1 reference as the ETag.
      *
      * **Signature verification object**
      *
@@ -3196,7 +3317,9 @@ export interface paths {
   "/repos/{owner}/{repo}/commits/{ref}/check-runs": {
     /**
      * List check runs for a Git reference
-     * @description Lists check runs for a commit ref. The `ref` can be a SHA, branch name, or a tag name. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth apps and authenticated users must have the `repo` scope to get check runs in a private repository.
+     * @description Lists check runs for a commit ref. The `ref` can be a SHA, branch name, or a tag name.
+     *
+     * GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth apps and authenticated users must have the `repo` scope to get check runs in a private repository.
      *
      * **Note:** The endpoints to manage checks only look for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
      *
@@ -3207,7 +3330,9 @@ export interface paths {
   "/repos/{owner}/{repo}/commits/{ref}/check-suites": {
     /**
      * List check suites for a Git reference
-     * @description Lists check suites for a commit `ref`. The `ref` can be a SHA, branch name, or a tag name. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to list check suites. OAuth apps and authenticated users must have the `repo` scope to get check suites in a private repository.
+     * @description Lists check suites for a commit `ref`. The `ref` can be a SHA, branch name, or a tag name.
+     *
+     * GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to list check suites. OAuth apps and authenticated users must have the `repo` scope to get check suites in a private repository.
      *
      * **Note:** The endpoints to manage checks only look for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
      */
@@ -3241,7 +3366,12 @@ export interface paths {
      * Compare two commits
      * @description Compares two commits against one another. You can compare branches in the same repository, or you can compare branches that exist in different repositories within the same repository network, including fork branches. For more information about how to view a repository's network, see "[Understanding connections between repositories](https://docs.github.com/github-ae@latest/repositories/viewing-activity-and-data-for-your-repository/understanding-connections-between-repositories)."
      *
-     * This endpoint is equivalent to running the `git log BASE..HEAD` command, but it returns commits in a different order. The `git log BASE..HEAD` command returns commits in reverse chronological order, whereas the API returns commits in chronological order. You can pass the appropriate [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.
+     * This endpoint is equivalent to running the `git log BASE..HEAD` command, but it returns commits in a different order. The `git log BASE..HEAD` command returns commits in reverse chronological order, whereas the API returns commits in chronological order.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.diff`**: Returns the diff of the commit.
+     * - **`application/vnd.github.patch`**: Returns the patch of the commit. Diffs with binary data will have no `patch` property.
      *
      * The API response includes details about the files that were changed between the two commits. This includes the status of the change (if a file was added, removed, modified, or renamed), and details of the change itself. For example, files with a `renamed` status have a `previous_filename` field showing the previous filename of the file, and files with a `modified` status have a `patch` field showing the changes made to the file.
      *
@@ -3571,7 +3701,12 @@ export interface paths {
      * Get a blob
      * @description The `content` in the response will always be Base64 encoded.
      *
-     * _Note_: This API supports blobs up to 100 megabytes in size.
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw blob data.
+     * - **`application/vnd.github+json`**: Returns a JSON representation of the blob with `content` as a base64 encoded string. This is the default if no media type is specified.
+     *
+     * **Note** This endpoint supports blobs up to 100 megabytes in size.
      */
     get: operations["git/get-blob"];
   };
@@ -3888,13 +4023,28 @@ export interface paths {
      * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
      * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
      * request id, use the "[List pull requests](https://docs.github.com/github-ae@latest/rest/pulls/pulls#list-pull-requests)" endpoint.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     get: operations["issues/list-for-repo"];
     /**
      * Create an issue
      * @description Any user with pull access to a repository can create an issue. If [issues are disabled in the repository](https://docs.github.com/github-ae@latest/articles/disabling-issues/), the API returns a `410 Gone` status.
      *
-     * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+     * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+     * and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     post: operations["issues/create"];
   };
@@ -3904,6 +4054,13 @@ export interface paths {
      * @description You can use the REST API to list comments on issues and pull requests for a repository. Every pull request is an issue, but not every issue is a pull request.
      *
      * By default, issue comments are ordered by ascending ID.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     get: operations["issues/list-comments-for-repo"];
   };
@@ -3911,6 +4068,13 @@ export interface paths {
     /**
      * Get an issue comment
      * @description You can use the REST API to get comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     get: operations["issues/get-comment"];
     /**
@@ -3921,6 +4085,13 @@ export interface paths {
     /**
      * Update an issue comment
      * @description You can use the REST API to update comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     patch: operations["issues/update-comment"];
   };
@@ -3962,7 +4133,7 @@ export interface paths {
   "/repos/{owner}/{repo}/issues/{issue_number}": {
     /**
      * Get an issue
-     * @description The API returns a [`301 Moved Permanently` status](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-redirects-redirects) if the issue was
+     * @description The API returns a [`301 Moved Permanently` status](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api#follow-redirects) if the issue was
      * [transferred](https://docs.github.com/github-ae@latest/articles/transferring-an-issue-to-another-repository/) to another repository. If
      * the issue was transferred to or deleted from a repository where the authenticated user lacks read access, the API
      * returns a `404 Not Found` status. If the issue was deleted from a repository where the authenticated user has read
@@ -3973,11 +4144,25 @@ export interface paths {
      * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
      * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
      * request id, use the "[List pull requests](https://docs.github.com/github-ae@latest/rest/pulls/pulls#list-pull-requests)" endpoint.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     get: operations["issues/get"];
     /**
      * Update an issue
      * @description Issue owners and users with push access can edit an issue.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     patch: operations["issues/update"];
   };
@@ -4010,18 +4195,30 @@ export interface paths {
      * @description You can use the REST API to list comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request.
      *
      * Issue comments are ordered by ascending ID.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     get: operations["issues/list-comments"];
     /**
      * Create an issue comment
-     * @description
-     * You can use the REST API to create comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request.
+     * @description You can use the REST API to create comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request.
      *
      * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications).
      * Creating content too quickly using this endpoint may result in secondary rate limiting.
-     * See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)"
-     * and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)"
-     * for details.
+     * For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+     * and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     post: operations["issues/create-comment"];
   };
@@ -4066,7 +4263,7 @@ export interface paths {
      * Lock an issue
      * @description Users with push access can lock an issue or pull request's conversation.
      *
-     * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
+     * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP method](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#http-method)."
      */
     put: operations["issues/lock"];
     /**
@@ -4174,7 +4371,10 @@ export interface paths {
      * Get the license for a repository
      * @description This method returns the contents of the repository's license file, if one is detected.
      *
-     * Similar to [Get repository content](https://docs.github.com/github-ae@latest/rest/repos/contents#get-repository-content), this method also supports [custom media types](https://docs.github.com/github-ae@latest/rest/overview/media-types) for retrieving the raw license content or rendered license HTML.
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw contents of the license.
+     * - **`application/vnd.github.html+json`**: Returns the license contents in HTML. Markup languages are rendered to HTML using GitHub's open-source [Markup library](https://github.com/github/markup).
      */
     get: operations["licenses/get-for-repo"];
   };
@@ -4313,7 +4513,22 @@ export interface paths {
   "/repos/{owner}/{repo}/pulls": {
     /**
      * List pull requests
-     * @description Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github-ae@latest/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+     * @description Lists pull requests in a specified repository.
+     *
+     * Draft pull requests are available in public repositories with GitHub
+     * Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing
+     * plans, and in public and private repositories with GitHub Team and GitHub Enterprise
+     * Cloud. For more information, see [GitHub's products](https://docs.github.com/github-ae@latest/github/getting-started-with-github/githubs-products)
+     * in the GitHub Help documentation.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+     * - **`application/vnd.github.diff`**: For more information, see "[git-diff](https://git-scm.com/docs/git-diff)" in the Git documentation. If a diff is corrupt, contact us through the [GitHub Support portal](https://support.github.com/). Include the repository name and pull request ID in your message.
+     * - **`application/vnd.github.patch`**: For more information, see "[git-format-patch](https://git-scm.com/docs/git-format-patch)" in the Git documentation.
      */
     get: operations["pulls/list"];
     /**
@@ -4322,21 +4537,44 @@ export interface paths {
      *
      * To open or update a pull request in a public repository, you must have write access to the head or the source branch. For organization-owned repositories, you must be a member of the organization that owns the repository to open or update a pull request.
      *
-     * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+     * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+     * - **`application/vnd.github.diff`**: For more information, see "[git-diff](https://git-scm.com/docs/git-diff)" in the Git documentation. If a diff is corrupt, contact us through the [GitHub Support portal](https://support.github.com/). Include the repository name and pull request ID in your message.
      */
     post: operations["pulls/create"];
   };
   "/repos/{owner}/{repo}/pulls/comments": {
     /**
      * List review comments in a repository
-     * @description Lists review comments for all pull requests in a repository. By default, review comments are in ascending order by ID.
+     * @description Lists review comments for all pull requests in a repository. By default,
+     * review comments are in ascending order by ID.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     get: operations["pulls/list-review-comments-for-repo"];
   };
   "/repos/{owner}/{repo}/pulls/comments/{comment_id}": {
     /**
      * Get a review comment for a pull request
-     * @description Provides details for a review comment.
+     * @description Provides details for a specified review comment.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     get: operations["pulls/get-review-comment"];
     /**
@@ -4346,7 +4584,14 @@ export interface paths {
     delete: operations["pulls/delete-review-comment"];
     /**
      * Update a review comment for a pull request
-     * @description Enables you to edit a review comment.
+     * @description Edits the content of a specified review comment.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     patch: operations["pulls/update-review-comment"];
   };
@@ -4389,6 +4634,14 @@ export interface paths {
      * *   If [rebased](https://docs.github.com/github-ae@latest/articles/about-merge-methods-on-github/#rebasing-and-merging-your-commits), `merge_commit_sha` represents the commit that the base branch was updated to.
      *
      * Pass the appropriate [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+     * - **`application/vnd.github.diff`**: For more information, see "[git-diff](https://git-scm.com/docs/git-diff)" in the Git documentation. If a diff is corrupt, contact us through the [GitHub Support portal](https://support.github.com/). Include the repository name and pull request ID in your message.
      */
     get: operations["pulls/get"];
     /**
@@ -4396,25 +4649,48 @@ export interface paths {
      * @description Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github-ae@latest/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
      *
      * To open or update a pull request in a public repository, you must have write access to the head or the source branch. For organization-owned repositories, you must be a member of the organization that owns the repository to open or update a pull request.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+     * - **`application/vnd.github.diff`**: For more information, see "[git-diff](https://git-scm.com/docs/git-diff)" in the Git documentation. If a diff is corrupt, contact us through the [GitHub Support portal](https://support.github.com/). Include the repository name and pull request ID in your message.
      */
     patch: operations["pulls/update"];
   };
   "/repos/{owner}/{repo}/pulls/{pull_number}/comments": {
     /**
      * List review comments on a pull request
-     * @description Lists all review comments for a pull request. By default, review comments are in ascending order by ID.
+     * @description Lists all review comments for a specified pull request. By default, review comments
+     * are in ascending order by ID.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     get: operations["pulls/list-review-comments"];
     /**
      * Create a review comment for a pull request
-     * @description
-     * Creates a review comment in the pull request diff. To add a regular comment to a pull request timeline, see "[Create an issue comment](https://docs.github.com/github-ae@latest/rest/issues/comments#create-an-issue-comment)." We recommend creating a review comment using `line`, `side`, and optionally `start_line` and `start_side` if your comment applies to more than one line in the pull request diff.
+     * @description Creates a review comment on the diff of a specified pull request. To add a regular comment to a pull request timeline, see "[Create an issue comment](https://docs.github.com/github-ae@latest/rest/issues/comments#create-an-issue-comment)."
+     *
+     * If your comment applies to more than one line in the pull request diff, you should use the parameters `line`, `side`, and optionally `start_line` and `start_side` in your request.
      *
      * The `position` parameter is deprecated. If you use `position`, the `line`, `side`, `start_line`, and `start_side` parameters are not required.
      *
-     * **Note:** The position value equals the number of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.
+     * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+     * and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
      *
-     * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     post: operations["pulls/create-review-comment"];
   };
@@ -4423,21 +4699,50 @@ export interface paths {
      * Create a reply for a review comment
      * @description Creates a reply to a review comment for a pull request. For the `comment_id`, provide the ID of the review comment you are replying to. This must be the ID of a _top-level review comment_, not a reply to that comment. Replies to replies are not supported.
      *
-     * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+     * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+     * and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     post: operations["pulls/create-reply-for-review-comment"];
   };
   "/repos/{owner}/{repo}/pulls/{pull_number}/commits": {
     /**
      * List commits on a pull request
-     * @description Lists a maximum of 250 commits for a pull request. To receive a complete commit list for pull requests with more than 250 commits, use the [List commits](https://docs.github.com/github-ae@latest/rest/commits/commits#list-commits) endpoint.
+     * @description Lists a maximum of 250 commits for a pull request. To receive a complete
+     * commit list for pull requests with more than 250 commits, use the [List commits](https://docs.github.com/github-ae@latest/rest/commits/commits#list-commits)
+     * endpoint.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+     * - **`application/vnd.github.diff`**: For more information, see "[git-diff](https://git-scm.com/docs/git-diff)" in the Git documentation. If a diff is corrupt, contact us through the [GitHub Support portal](https://support.github.com/). Include the repository name and pull request ID in your message.
      */
     get: operations["pulls/list-commits"];
   };
   "/repos/{owner}/{repo}/pulls/{pull_number}/files": {
     /**
      * List pull requests files
-     * @description **Note:** Responses include a maximum of 3000 files. The paginated response returns 30 files per page by default.
+     * @description Lists the files in a specified pull request.
+     *
+     * **Note:** Responses include a maximum of 3000 files. The paginated response
+     * returns 30 files per page by default.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+     * - **`application/vnd.github.diff`**: For more information, see "[git-diff](https://git-scm.com/docs/git-diff)" in the Git documentation. If a diff is corrupt, contact us through the [GitHub Support portal](https://support.github.com/). Include the repository name and pull request ID in your message.
      */
     get: operations["pulls/list-files"];
   };
@@ -4450,7 +4755,7 @@ export interface paths {
     /**
      * Merge a pull request
      * @description Merges a pull request into the base branch.
-     * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+     * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
      */
     put: operations["pulls/merge"];
   };
@@ -4474,18 +4779,34 @@ export interface paths {
   "/repos/{owner}/{repo}/pulls/{pull_number}/reviews": {
     /**
      * List reviews for a pull request
-     * @description The list of reviews returns in chronological order.
+     * @description Lists all reviews for a specified pull request. The list of reviews returns in chronological order.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     get: operations["pulls/list-reviews"];
     /**
      * Create a review for a pull request
-     * @description This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+     * @description Creates a review on a specified pull request.
+     *
+     * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
      *
      * Pull request reviews created in the `PENDING` state are not submitted and therefore do not include the `submitted_at` property in the response. To create a pending review for a pull request, leave the `event` parameter blank. For more information about submitting a `PENDING` review, see "[Submit a review for a pull request](https://docs.github.com/github-ae@latest/rest/pulls/reviews#submit-a-review-for-a-pull-request)."
      *
-     * **Note:** To comment on a specific line in a file, you need to first determine the _position_ of that line in the diff. The GitHub REST API offers the `application/vnd.github.v3.diff` [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types#commits-commit-comparison-and-pull-requests). To see a pull request diff, add this media type to the `Accept` header of a call to the [single pull request](https://docs.github.com/github-ae@latest/rest/pulls/pulls#get-a-pull-request) endpoint.
+     * **Note:** To comment on a specific line in a file, you need to first determine the position of that line in the diff. To see a pull request diff, add the `application/vnd.github.v3.diff` media type to the `Accept` header of a call to the [Get a pull request](https://docs.github.com/github-ae@latest/rest/pulls/pulls#get-a-pull-request) endpoint.
      *
      * The `position` value equals the number of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     post: operations["pulls/create-review"];
   };
@@ -4493,30 +4814,69 @@ export interface paths {
     /**
      * Get a review for a pull request
      * @description Retrieves a pull request review by its ID.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     get: operations["pulls/get-review"];
     /**
      * Update a review for a pull request
-     * @description Update the review summary comment with new text.
+     * @description Updates the contents of a specified review summary comment.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     put: operations["pulls/update-review"];
     /**
      * Delete a pending review for a pull request
      * @description Deletes a pull request review that has not been submitted. Submitted reviews cannot be deleted.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     delete: operations["pulls/delete-pending-review"];
   };
   "/repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/comments": {
     /**
      * List comments for a pull request review
-     * @description List comments for a specific pull request review.
+     * @description Lists comments for a specific pull request review.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     get: operations["pulls/list-comments-for-review"];
   };
   "/repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/dismissals": {
     /**
      * Dismiss a review for a pull request
-     * @description **Note:** To dismiss a pull request review on a [protected branch](https://docs.github.com/github-ae@latest/rest/branches/branch-protection), you must be a repository administrator or be included in the list of people or teams who can dismiss pull request reviews.
+     * @description Dismisses a specified review on a pull request.
+     *
+     * **Note:** To dismiss a pull request review on a [protected branch](https://docs.github.com/github-ae@latest/rest/branches/branch-protection),
+     * you must be a repository administrator or be included in the list of people or teams
+     * who can dismiss pull request reviews.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     put: operations["pulls/dismiss-review"];
   };
@@ -4524,6 +4884,13 @@ export interface paths {
     /**
      * Submit a review for a pull request
      * @description Submits a pending review for a pull request. For more information about creating a pending review for a pull request, see "[Create a review for a pull request](https://docs.github.com/github-ae@latest/rest/pulls/reviews#create-a-review-for-a-pull-request)."
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     post: operations["pulls/submit-review"];
   };
@@ -4539,7 +4906,10 @@ export interface paths {
      * Get a repository README
      * @description Gets the preferred README for a repository.
      *
-     * READMEs support [custom media types](https://docs.github.com/github-ae@latest/rest/overview/media-types) for retrieving the raw content or rendered HTML.
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw file contents. This is the default if you do not specify a media type.
+     * - **`application/vnd.github.html+json`**: Returns the README in HTML. Markup languages are rendered to HTML using GitHub's open-source [Markup library](https://github.com/github/markup).
      */
     get: operations["repos/get-readme"];
   };
@@ -4548,7 +4918,10 @@ export interface paths {
      * Get a repository README for a directory
      * @description Gets the README from a repository directory.
      *
-     * READMEs support [custom media types](https://docs.github.com/github-ae@latest/rest/overview/media-types) for retrieving the raw content or rendered HTML.
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw file contents. This is the default if you do not specify a media type.
+     * - **`application/vnd.github.html+json`**: Returns the README in HTML. Markup languages are rendered to HTML using GitHub's open-source [Markup library](https://github.com/github/markup).
      */
     get: operations["repos/get-readme-in-directory"];
   };
@@ -4564,7 +4937,7 @@ export interface paths {
      * Create a release
      * @description Users with push access to the repository can create a release.
      *
-     * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+     * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
      */
     post: operations["repos/create-release"];
   };
@@ -4601,7 +4974,11 @@ export interface paths {
   "/repos/{owner}/{repo}/releases/{release_id}": {
     /**
      * Get a release
-     * @description **Note:** This returns an `upload_url` key corresponding to the endpoint for uploading release assets. This key is a [hypermedia resource](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#hypermedia).
+     * @description Gets a public release with the specified release ID.
+     *
+     * **Note:** This returns an `upload_url` key corresponding to the endpoint
+     * for uploading release assets. This key is a hypermedia resource. For more information, see
+     * "[Getting started with the REST API](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#hypermedia)."
      */
     get: operations["repos/get-release"];
     /**
@@ -4620,7 +4997,7 @@ export interface paths {
     get: operations["repos/list-release-assets"];
     /**
      * Upload a release asset
-     * @description This endpoint makes use of [a Hypermedia relation](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#hypermedia) to determine which URL to access. The endpoint you call to upload release assets is specific to your release. Use the `upload_url` returned in
+     * @description This endpoint makes use of a [Hypermedia relation](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#hypermedia) to determine which URL to access. The endpoint you call to upload release assets is specific to your release. Use the `upload_url` returned in
      * the response of the [Create a release endpoint](https://docs.github.com/github-ae@latest/rest/releases/releases#create-a-release) to upload a release asset.
      *
      * You need to use an HTTP client which supports [SNI](http://en.wikipedia.org/wiki/Server_Name_Indication) to make calls to this endpoint.
@@ -4702,14 +5079,20 @@ export interface paths {
      * List stargazers
      * @description Lists the people that have starred the repository.
      *
-     * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/) via the `Accept` header: `application/vnd.github.star+json`.
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.star+json`**: Includes a timestamp of when the star was created.
      */
     get: operations["activity/list-stargazers-for-repo"];
   };
   "/repos/{owner}/{repo}/stats/code_frequency": {
     /**
      * Get the weekly commit activity
-     * @description Returns a weekly aggregate of the number of additions and deletions pushed to a repository.
+     * @description
+     * Returns a weekly aggregate of the number of additions and deletions pushed to a repository.
+     *
+     * **Note:** This endpoint can only be used for repositories with fewer than 10,000 commits. If the repository contains
+     * 10,000 or more commits, a 422 status code will be returned.
      */
     get: operations["repos/get-code-frequency-stats"];
   };
@@ -4726,10 +5109,12 @@ export interface paths {
      * @description
      * Returns the `total` number of commits authored by the contributor. In addition, the response includes a Weekly Hash (`weeks` array) with the following information:
      *
-     * *   `w` - Start of the week, given as a [Unix timestamp](http://en.wikipedia.org/wiki/Unix_time).
+     * *   `w` - Start of the week, given as a [Unix timestamp](https://en.wikipedia.org/wiki/Unix_time).
      * *   `a` - Number of additions
      * *   `d` - Number of deletions
      * *   `c` - Number of commits
+     *
+     * **Note:** This endpoint will return `0` values for all addition and deletion counts in repositories with 10,000 or more commits.
      */
     get: operations["repos/get-contributors-stats"];
   };
@@ -4853,7 +5238,7 @@ export interface paths {
      *
      * When using [OAuth](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
      *
-     * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.
+     * *   `public_repo` scope or `repo` scope to create a public repository
      * *   `repo` scope to create a private repository
      */
     post: operations["repos/create-using-template"];
@@ -4861,7 +5246,7 @@ export interface paths {
   "/search/code": {
     /**
      * Search code
-     * @description Searches for query terms inside of a file. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).
+     * @description Searches for query terms inside of a file. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/guides/using-pagination-in-the-rest-api).
      *
      * When searching for code, you can get text match metadata for the file **content** and file **path** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/search/search#text-match-metadata).
      *
@@ -4887,7 +5272,7 @@ export interface paths {
   "/search/commits": {
     /**
      * Search commits
-     * @description Find commits via various criteria on the default branch (usually `main`). This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).
+     * @description Find commits via various criteria on the default branch (usually `main`). This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/guides/using-pagination-in-the-rest-api).
      *
      * When searching for commits, you can get text match metadata for the **message** field when you provide the `text-match` media type. For more details about how to receive highlighted search results, see [Text match
      * metadata](https://docs.github.com/github-ae@latest/rest/search/search#text-match-metadata).
@@ -4901,7 +5286,7 @@ export interface paths {
   "/search/issues": {
     /**
      * Search issues and pull requests
-     * @description Find issues by state and keyword. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).
+     * @description Find issues by state and keyword. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/guides/using-pagination-in-the-rest-api).
      *
      * When searching for issues, you can get text match metadata for the issue **title**, issue **body**, and issue **comment body** fields when you pass the `text-match` media type. For more details about how to receive highlighted
      * search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/search/search#text-match-metadata).
@@ -4919,7 +5304,7 @@ export interface paths {
   "/search/labels": {
     /**
      * Search labels
-     * @description Find labels in a repository with names or descriptions that match search keywords. Returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).
+     * @description Find labels in a repository with names or descriptions that match search keywords. Returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/guides/using-pagination-in-the-rest-api).
      *
      * When searching for labels, you can get text match metadata for the label **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/search/search#text-match-metadata).
      *
@@ -4934,7 +5319,7 @@ export interface paths {
   "/search/repositories": {
     /**
      * Search repositories
-     * @description Find repositories via various criteria. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).
+     * @description Find repositories via various criteria. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/guides/using-pagination-in-the-rest-api).
      *
      * When searching for repositories, you can get text match metadata for the **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/search/search#text-match-metadata).
      *
@@ -4949,7 +5334,7 @@ export interface paths {
   "/search/topics": {
     /**
      * Search topics
-     * @description Find topics via various criteria. Results are sorted by best match. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination). See "[Searching topics](https://docs.github.com/github-ae@latest/articles/searching-topics/)" for a detailed list of qualifiers.
+     * @description Find topics via various criteria. Results are sorted by best match. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/guides/using-pagination-in-the-rest-api). See "[Searching topics](https://docs.github.com/github-ae@latest/articles/searching-topics/)" for a detailed list of qualifiers.
      *
      * When searching for topics, you can get text match metadata for the topic's **short\_description**, **description**, **name**, or **display\_name** field when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/search/search#text-match-metadata).
      *
@@ -4964,7 +5349,7 @@ export interface paths {
   "/search/users": {
     /**
      * Search users
-     * @description Find users via various criteria. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).
+     * @description Find users via various criteria. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/guides/using-pagination-in-the-rest-api).
      *
      * When searching for users, you can get text match metadata for the issue **login**, public **email**, and **name** fields when you pass the `text-match` media type. For more details about highlighting search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/search/search#text-match-metadata). For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/search/search#text-match-metadata).
      *
@@ -5022,7 +5407,7 @@ export interface paths {
      *
      * Creates a new discussion post on a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      *
-     * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+     * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
      */
     post: operations["teams/create-discussion-legacy"];
   };
@@ -5068,7 +5453,7 @@ export interface paths {
      *
      * Creates a new comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
      *
-     * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+     * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
      */
     post: operations["teams/create-discussion-comment-legacy"];
   };
@@ -5132,7 +5517,7 @@ export interface paths {
      *
      * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub AE team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub AE](https://docs.github.com/github-ae@latest/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
      *
-     * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
+     * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP method](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#http-method)."
      */
     put: operations["teams/add-member-legacy"];
     /**
@@ -5257,7 +5642,7 @@ export interface paths {
      *
      * To add a repository to a team or update the team's permission on a repository, the authenticated user must have admin access to the repository, and must be able to see the team. The repository must be owned by the organization, or a direct fork of a repository owned by the organization. You will get a `422 Unprocessable Entity` status if you attempt to add a repository to a team that is not owned by the organization.
      *
-     * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
+     * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP method](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#http-method)."
      */
     put: operations["teams/add-or-update-repo-permissions-legacy"];
     /**
@@ -5310,7 +5695,7 @@ export interface paths {
     get: operations["users/check-person-is-followed-by-authenticated"];
     /**
      * Follow a user
-     * @description Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
+     * @description Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#http-method)."
      *
      * Following a user requires the user to be logged in and authenticated with basic auth or OAuth with the `user:follow` scope.
      */
@@ -5396,6 +5781,13 @@ export interface paths {
      * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
      * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
      * request id, use the "[List pull requests](https://docs.github.com/github-ae@latest/rest/pulls/pulls#list-pull-requests)" endpoint.
+     *
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+     * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+     * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
      */
     get: operations["issues/list-for-authenticated-user"];
   };
@@ -5522,8 +5914,8 @@ export interface paths {
      *
      * When using [OAuth](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
      *
-     * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.
-     * *   `repo` scope to create a private repository.
+     * *   `public_repo` scope or `repo` scope to create a public repository
+     * *   `repo` scope to create a private repository
      */
     post: operations["repos/create-for-authenticated-user"];
   };
@@ -5545,7 +5937,9 @@ export interface paths {
      * List repositories starred by the authenticated user
      * @description Lists repositories the authenticated user has starred.
      *
-     * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/) via the `Accept` header: `application/vnd.github.star+json`.
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.star+json`**: Includes a timestamp of when the star was created.
      */
     get: operations["activity/list-repos-starred-by-authenticated-user"];
   };
@@ -5557,7 +5951,7 @@ export interface paths {
     get: operations["activity/check-repo-is-starred-by-authenticated-user"];
     /**
      * Star a repository for the authenticated user
-     * @description Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
+     * @description Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP method](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#http-method)."
      */
     put: operations["activity/star-repo-for-authenticated-user"];
     /**
@@ -5596,7 +5990,7 @@ export interface paths {
      *
      * GitHub Apps with the `Plan` user permission can use this endpoint to retrieve information about a user's GitHub AE plan. The GitHub App must be authenticated as a user. See "[Identifying and authorizing users for GitHub Apps](https://docs.github.com/github-ae@latest/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/)" for details about authentication. For an example response, see 'Response with GitHub AE plan information' below"
      *
-     * The `email` key in the following response is the publicly visible email address from your GitHub AE [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be “public” which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub AE. For more information, see [Authentication](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#authentication).
+     * The `email` key in the following response is the publicly visible email address from your GitHub AE [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be “public” which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub AE. For more information, see [Authentication](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#authentication).
      *
      * The Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see "[Emails API](https://docs.github.com/github-ae@latest/rest/users/emails)".
      */
@@ -5697,7 +6091,7 @@ export interface paths {
   "/users/{username}/repos": {
     /**
      * List repositories for a user
-     * @description Lists public repositories for the specified user. Note: For GitHub AE, this endpoint will list internal repositories for the specified user.
+     * @description Lists public repositories for the specified user.
      */
     get: operations["repos/list-for-user"];
   };
@@ -5706,7 +6100,9 @@ export interface paths {
      * List repositories starred by a user
      * @description Lists repositories a user has starred.
      *
-     * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/) via the `Accept` header: `application/vnd.github.star+json`.
+     * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+     *
+     * - **`application/vnd.github.star+json`**: Includes a timestamp of when the star was created.
      */
     get: operations["activity/list-repos-starred-by-user"];
   };
@@ -5724,7 +6120,7 @@ export interface paths {
      *
      * You can suspend any user account except your own.
      *
-     * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
+     * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP method](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#http-method)."
      */
     put: operations["enterprise-admin/suspend-user"];
     /**
@@ -6062,10 +6458,20 @@ export interface components {
        */
       checks?: "read" | "write";
       /**
+       * @description The level of permission to grant the access token to create, edit, delete, and list Codespaces.
+       * @enum {string}
+       */
+      codespaces?: "read" | "write";
+      /**
        * @description The level of permission to grant the access token for repository contents, commits, branches, downloads, releases, and merges.
        * @enum {string}
        */
       contents?: "read" | "write";
+      /**
+       * @description The leve of permission to grant the access token to manage Dependabot secrets.
+       * @enum {string}
+       */
+      dependabot_secrets?: "read" | "write";
       /**
        * @description The level of permission to grant the access token for deployments and deployment statuses.
        * @enum {string}
@@ -6157,6 +6563,16 @@ export interface components {
        */
       organization_administration?: "read" | "write";
       /**
+       * @description The level of permission to grant the access token for managing access to GitHub Copilot for members of an organization with a Copilot Business subscription. This property is in beta and is subject to change.
+       * @enum {string}
+       */
+      organization_copilot_seat_management?: "write";
+      /**
+       * @description The level of permission to grant the access token to view events triggered by an activity in an organization.
+       * @enum {string}
+       */
+      organization_events?: "read";
+      /**
        * @description The level of permission to grant the access token to manage the post-receive hooks for an organization.
        * @enum {string}
        */
@@ -6206,6 +6622,41 @@ export interface components {
        * @enum {string}
        */
       team_discussions?: "read" | "write";
+      /**
+       * @description The level of permission to grant the access token to manage the email addresses belonging to a user.
+       * @enum {string}
+       */
+      email_addresses?: "read" | "write";
+      /**
+       * @description The level of permission to grant the access token to manage the followers belonging to a user.
+       * @enum {string}
+       */
+      followers?: "read" | "write";
+      /**
+       * @description The level of permission to grant the access token to manage git SSH keys.
+       * @enum {string}
+       */
+      git_ssh_keys?: "read" | "write";
+      /**
+       * @description The level of permission to grant the access token to view and manage GPG keys belonging to a user.
+       * @enum {string}
+       */
+      gpg_keys?: "read" | "write";
+      /**
+       * @description The level of permission to grant the access token to view and manage interaction limits on a repository.
+       * @enum {string}
+       */
+      interaction_limits?: "read" | "write";
+      /**
+       * @description The level of permission to grant the access token to manage the profile settings belonging to a user.
+       * @enum {string}
+       */
+      profile?: "write";
+      /**
+       * @description The level of permission to grant the access token to list and manage repositories a user is starring.
+       * @enum {string}
+       */
+      starring?: "read" | "write";
     };
     /**
      * Simple User
@@ -6982,7 +7433,7 @@ export interface components {
       /** @example 80 */
       watchers_count: number;
       /**
-       * @description The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0.
+       * @description The size of the repository, in kilobytes. Size is calculated hourly. When a repository is initially created, the size is 0.
        * @example 108
        */
       size: number;
@@ -7298,10 +7749,7 @@ export interface components {
        *
        * ## Attribution
        *
-       * This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 1.4, available at [http://contributor-covenant.org/version/1/4][version]
-       *
-       * [homepage]: http://contributor-covenant.org
-       * [version]: http://contributor-covenant.org/version/1/4/
+       * This Code of Conduct is adapted from the [Contributor Covenant](http://contributor-covenant.org), version 1.4, available at [http://contributor-covenant.org/version/1/4](http://contributor-covenant.org/version/1/4/).
        */
       body?: string;
       /** Format: uri */
@@ -8761,6 +9209,7 @@ export interface components {
         codespaces?: string[];
         copilot?: string[];
         packages?: string[];
+        actions?: string[];
       };
     };
     "security-and-analysis": {
@@ -8781,6 +9230,10 @@ export interface components {
         status?: "enabled" | "disabled";
       };
       secret_scanning_push_protection?: {
+        /** @enum {string} */
+        status?: "enabled" | "disabled";
+      };
+      secret_scanning_validity_checks?: {
         /** @enum {string} */
         status?: "enabled" | "disabled";
       };
@@ -8934,7 +9387,7 @@ export interface components {
       forks_count?: number;
       stargazers_count?: number;
       watchers_count?: number;
-      /** @description The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0. */
+      /** @description The size of the repository, in kilobytes. Size is calculated hourly. When a repository is initially created, the size is 0. */
       size?: number;
       default_branch?: string;
       open_issues_count?: number;
@@ -9227,6 +9680,11 @@ export interface components {
        */
       secret_scanning_push_protection_custom_link?: string | null;
       /**
+       * @description Whether secret scanning automatic validity checks on supported partner tokens is enabled for all repositories under this organization.
+       * @example false
+       */
+      secret_scanning_validity_checks_enabled?: boolean;
+      /**
        * Format: date-time
        * @example 2008-01-14T04:33:35Z
        */
@@ -9400,7 +9858,7 @@ export interface components {
       | "false positive"
       | "won't fix"
       | "used in tests";
-    "code-scanning-alert-rule": {
+    "code-scanning-alert-rule-summary": {
       /** @description A unique identifier for the rule used to detect the alert. */
       id?: string | null;
       /** @description The name of the rule used to detect the alert. */
@@ -9417,14 +9875,6 @@ export interface components {
       security_severity_level?: "low" | "medium" | "high" | "critical" | null;
       /** @description A short description of the rule used to detect the alert. */
       description?: string;
-      /** @description description of the rule used to detect the alert. */
-      full_description?: string;
-      /** @description A set of tags applicable for the rule. */
-      tags?: string[] | null;
-      /** @description Detailed documentation for the rule as GitHub Flavored Markdown. */
-      help?: string | null;
-      /** @description A link to the documentation for the rule used to detect the alert. */
-      help_uri?: string | null;
     };
     /** @description The version of the tool used to generate the code scanning analysis. */
     "code-scanning-analysis-tool-version": string | null;
@@ -9434,8 +9884,8 @@ export interface components {
       guid?: components["schemas"]["code-scanning-analysis-tool-guid"];
     };
     /**
-     * @description The full Git reference, formatted as `refs/heads/<branch name>`,
-     * `refs/pull/<number>/merge`, or `refs/pull/<number>/head`.
+     * @description The Git reference, formatted as `refs/pull/<number>/merge`, `refs/pull/<number>/head`,
+     * `refs/heads/<branch name>` or simply `<branch name>`.
      */
     "code-scanning-ref": string;
     /** @description Identifies the configuration under which the analysis was executed. For example, in GitHub Actions this includes the workflow filename and job name. */
@@ -9492,7 +9942,7 @@ export interface components {
       dismissed_by: components["schemas"]["nullable-simple-user"];
       dismissed_at: components["schemas"]["alert-dismissed-at"];
       dismissed_reason: components["schemas"]["code-scanning-alert-dismissed-reason"];
-      rule: components["schemas"]["code-scanning-alert-rule"];
+      rule: components["schemas"]["code-scanning-alert-rule-summary"];
       tool: components["schemas"]["code-scanning-analysis-tool"];
       most_recent_instance: components["schemas"]["code-scanning-alert-instance"];
       repository: components["schemas"]["simple-repository"];
@@ -9815,6 +10265,716 @@ export interface components {
       organization_permission?: "read" | "write" | "admin" | "none";
       /** @description Whether or not this project can be seen by everyone. Only present if owner is an organization. */
       private?: boolean;
+    };
+    /**
+     * Repository
+     * @description A repository on GitHub.
+     */
+    "nullable-repository": {
+      /**
+       * @description Unique identifier of the repository
+       * @example 42
+       */
+      id: number;
+      /** @example MDEwOlJlcG9zaXRvcnkxMjk2MjY5 */
+      node_id: string;
+      /**
+       * @description The name of the repository.
+       * @example Team Environment
+       */
+      name: string;
+      /** @example octocat/Hello-World */
+      full_name: string;
+      license: components["schemas"]["nullable-license-simple"];
+      organization?: components["schemas"]["nullable-simple-user"];
+      forks: number;
+      permissions?: {
+        admin: boolean;
+        pull: boolean;
+        triage?: boolean;
+        push: boolean;
+        maintain?: boolean;
+      };
+      owner: components["schemas"]["simple-user"];
+      /**
+       * @description Whether the repository is private or public.
+       * @default false
+       */
+      private: boolean;
+      /**
+       * Format: uri
+       * @example https://github.com/octocat/Hello-World
+       */
+      html_url: string;
+      /** @example This your first repo! */
+      description: string | null;
+      fork: boolean;
+      /**
+       * Format: uri
+       * @example https://api.github.com/repos/octocat/Hello-World
+       */
+      url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref} */
+      archive_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/assignees{/user} */
+      assignees_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/blobs{/sha} */
+      blobs_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/branches{/branch} */
+      branches_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator} */
+      collaborators_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/comments{/number} */
+      comments_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/commits{/sha} */
+      commits_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/compare/{base}...{head} */
+      compare_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/contents/{+path} */
+      contents_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/contributors
+       */
+      contributors_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/deployments
+       */
+      deployments_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/downloads
+       */
+      downloads_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/events
+       */
+      events_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/forks
+       */
+      forks_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/commits{/sha} */
+      git_commits_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/refs{/sha} */
+      git_refs_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/tags{/sha} */
+      git_tags_url: string;
+      /** @example git:github.com/octocat/Hello-World.git */
+      git_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/issues/comments{/number} */
+      issue_comment_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/issues/events{/number} */
+      issue_events_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/issues{/number} */
+      issues_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/keys{/key_id} */
+      keys_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/labels{/name} */
+      labels_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/languages
+       */
+      languages_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/merges
+       */
+      merges_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/milestones{/number} */
+      milestones_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating} */
+      notifications_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/pulls{/number} */
+      pulls_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/releases{/id} */
+      releases_url: string;
+      /** @example git@github.com:octocat/Hello-World.git */
+      ssh_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/stargazers
+       */
+      stargazers_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/statuses/{sha} */
+      statuses_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/subscribers
+       */
+      subscribers_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/subscription
+       */
+      subscription_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/tags
+       */
+      tags_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/teams
+       */
+      teams_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/trees{/sha} */
+      trees_url: string;
+      /** @example https://github.com/octocat/Hello-World.git */
+      clone_url: string;
+      /**
+       * Format: uri
+       * @example git:git.example.com/octocat/Hello-World
+       */
+      mirror_url: string | null;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/hooks
+       */
+      hooks_url: string;
+      /**
+       * Format: uri
+       * @example https://svn.github.com/octocat/Hello-World
+       */
+      svn_url: string;
+      /**
+       * Format: uri
+       * @example https://github.com
+       */
+      homepage: string | null;
+      language: string | null;
+      /** @example 9 */
+      forks_count: number;
+      /** @example 80 */
+      stargazers_count: number;
+      /** @example 80 */
+      watchers_count: number;
+      /**
+       * @description The size of the repository, in kilobytes. Size is calculated hourly. When a repository is initially created, the size is 0.
+       * @example 108
+       */
+      size: number;
+      /**
+       * @description The default branch of the repository.
+       * @example master
+       */
+      default_branch: string;
+      /** @example 0 */
+      open_issues_count: number;
+      /**
+       * @description Whether this repository acts as a template that can be used to generate new repositories.
+       * @default false
+       * @example true
+       */
+      is_template?: boolean;
+      topics?: string[];
+      /**
+       * @description Whether issues are enabled.
+       * @default true
+       * @example true
+       */
+      has_issues: boolean;
+      /**
+       * @description Whether projects are enabled.
+       * @default true
+       * @example true
+       */
+      has_projects: boolean;
+      /**
+       * @description Whether the wiki is enabled.
+       * @default true
+       * @example true
+       */
+      has_wiki: boolean;
+      has_pages: boolean;
+      /**
+       * @deprecated
+       * @description Whether downloads are enabled.
+       * @default true
+       * @example true
+       */
+      has_downloads: boolean;
+      /**
+       * @description Whether the repository is archived.
+       * @default false
+       */
+      archived: boolean;
+      /** @description Returns whether or not this repository disabled. */
+      disabled: boolean;
+      /**
+       * @description The repository visibility: public, private, or internal.
+       * @default public
+       */
+      visibility?: string;
+      /**
+       * Format: date-time
+       * @example 2011-01-26T19:06:43Z
+       */
+      pushed_at: string | null;
+      /**
+       * Format: date-time
+       * @example 2011-01-26T19:01:12Z
+       */
+      created_at: string | null;
+      /**
+       * Format: date-time
+       * @example 2011-01-26T19:14:43Z
+       */
+      updated_at: string | null;
+      /**
+       * @description Whether to allow rebase merges for pull requests.
+       * @default true
+       * @example true
+       */
+      allow_rebase_merge?: boolean;
+      template_repository?: {
+        id?: number;
+        node_id?: string;
+        name?: string;
+        full_name?: string;
+        owner?: {
+          login?: string;
+          id?: number;
+          node_id?: string;
+          avatar_url?: string;
+          gravatar_id?: string;
+          url?: string;
+          html_url?: string;
+          followers_url?: string;
+          following_url?: string;
+          gists_url?: string;
+          starred_url?: string;
+          subscriptions_url?: string;
+          organizations_url?: string;
+          repos_url?: string;
+          events_url?: string;
+          received_events_url?: string;
+          type?: string;
+          site_admin?: boolean;
+        };
+        private?: boolean;
+        html_url?: string;
+        description?: string;
+        fork?: boolean;
+        url?: string;
+        archive_url?: string;
+        assignees_url?: string;
+        blobs_url?: string;
+        branches_url?: string;
+        collaborators_url?: string;
+        comments_url?: string;
+        commits_url?: string;
+        compare_url?: string;
+        contents_url?: string;
+        contributors_url?: string;
+        deployments_url?: string;
+        downloads_url?: string;
+        events_url?: string;
+        forks_url?: string;
+        git_commits_url?: string;
+        git_refs_url?: string;
+        git_tags_url?: string;
+        git_url?: string;
+        issue_comment_url?: string;
+        issue_events_url?: string;
+        issues_url?: string;
+        keys_url?: string;
+        labels_url?: string;
+        languages_url?: string;
+        merges_url?: string;
+        milestones_url?: string;
+        notifications_url?: string;
+        pulls_url?: string;
+        releases_url?: string;
+        ssh_url?: string;
+        stargazers_url?: string;
+        statuses_url?: string;
+        subscribers_url?: string;
+        subscription_url?: string;
+        tags_url?: string;
+        teams_url?: string;
+        trees_url?: string;
+        clone_url?: string;
+        mirror_url?: string;
+        hooks_url?: string;
+        svn_url?: string;
+        homepage?: string;
+        language?: string;
+        forks_count?: number;
+        stargazers_count?: number;
+        watchers_count?: number;
+        size?: number;
+        default_branch?: string;
+        open_issues_count?: number;
+        is_template?: boolean;
+        topics?: string[];
+        has_issues?: boolean;
+        has_projects?: boolean;
+        has_wiki?: boolean;
+        has_pages?: boolean;
+        has_downloads?: boolean;
+        archived?: boolean;
+        disabled?: boolean;
+        visibility?: string;
+        pushed_at?: string;
+        created_at?: string;
+        updated_at?: string;
+        permissions?: {
+          admin?: boolean;
+          maintain?: boolean;
+          push?: boolean;
+          triage?: boolean;
+          pull?: boolean;
+        };
+        allow_rebase_merge?: boolean;
+        temp_clone_token?: string;
+        allow_squash_merge?: boolean;
+        allow_auto_merge?: boolean;
+        delete_branch_on_merge?: boolean;
+        allow_update_branch?: boolean;
+        allow_merge_commit?: boolean;
+        subscribers_count?: number;
+        network_count?: number;
+      } | null;
+      temp_clone_token?: string;
+      /**
+       * @description Whether to allow squash merges for pull requests.
+       * @default true
+       * @example true
+       */
+      allow_squash_merge?: boolean;
+      /**
+       * @description Whether to allow Auto-merge to be used on pull requests.
+       * @default false
+       * @example false
+       */
+      allow_auto_merge?: boolean;
+      /**
+       * @description Whether to delete head branches when pull requests are merged
+       * @default false
+       * @example false
+       */
+      delete_branch_on_merge?: boolean;
+      /**
+       * @description Whether or not a pull request head branch that is behind its base branch can always be updated even if it is not required to be up to date before merging.
+       * @default false
+       * @example false
+       */
+      allow_update_branch?: boolean;
+      /**
+       * @description Whether to allow merge commits for pull requests.
+       * @default true
+       * @example true
+       */
+      allow_merge_commit?: boolean;
+      /** @description Whether to allow forking this repo */
+      allow_forking?: boolean;
+      /**
+       * @description Whether to require contributors to sign off on web-based commits
+       * @default false
+       */
+      web_commit_signoff_required?: boolean;
+      subscribers_count?: number;
+      network_count?: number;
+      open_issues: number;
+      watchers: number;
+      master_branch?: string;
+      /** @example "2020-07-09T00:17:42Z" */
+      starred_at?: string;
+      /** @description Whether anonymous git access is enabled for this repository */
+      anonymous_access_enabled?: boolean;
+    } | null;
+    /**
+     * Code Of Conduct Simple
+     * @description Code of Conduct Simple
+     */
+    "code-of-conduct-simple": {
+      /**
+       * Format: uri
+       * @example https://api.github.com/repos/github/docs/community/code_of_conduct
+       */
+      url: string;
+      /** @example citizen_code_of_conduct */
+      key: string;
+      /** @example Citizen Code of Conduct */
+      name: string;
+      /**
+       * Format: uri
+       * @example https://github.com/github/docs/blob/main/CODE_OF_CONDUCT.md
+       */
+      html_url: string | null;
+    };
+    /**
+     * Full Repository
+     * @description Full Repository
+     */
+    "full-repository": {
+      /** @example 1296269 */
+      id: number;
+      /** @example MDEwOlJlcG9zaXRvcnkxMjk2MjY5 */
+      node_id: string;
+      /** @example Hello-World */
+      name: string;
+      /** @example octocat/Hello-World */
+      full_name: string;
+      owner: components["schemas"]["simple-user"];
+      private: boolean;
+      /**
+       * Format: uri
+       * @example https://github.com/octocat/Hello-World
+       */
+      html_url: string;
+      /** @example This your first repo! */
+      description: string | null;
+      fork: boolean;
+      /**
+       * Format: uri
+       * @example https://api.github.com/repos/octocat/Hello-World
+       */
+      url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref} */
+      archive_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/assignees{/user} */
+      assignees_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/blobs{/sha} */
+      blobs_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/branches{/branch} */
+      branches_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator} */
+      collaborators_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/comments{/number} */
+      comments_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/commits{/sha} */
+      commits_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/compare/{base}...{head} */
+      compare_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/contents/{+path} */
+      contents_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/contributors
+       */
+      contributors_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/deployments
+       */
+      deployments_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/downloads
+       */
+      downloads_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/events
+       */
+      events_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/forks
+       */
+      forks_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/commits{/sha} */
+      git_commits_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/refs{/sha} */
+      git_refs_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/tags{/sha} */
+      git_tags_url: string;
+      /** @example git:github.com/octocat/Hello-World.git */
+      git_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/issues/comments{/number} */
+      issue_comment_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/issues/events{/number} */
+      issue_events_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/issues{/number} */
+      issues_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/keys{/key_id} */
+      keys_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/labels{/name} */
+      labels_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/languages
+       */
+      languages_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/merges
+       */
+      merges_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/milestones{/number} */
+      milestones_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating} */
+      notifications_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/pulls{/number} */
+      pulls_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/releases{/id} */
+      releases_url: string;
+      /** @example git@github.com:octocat/Hello-World.git */
+      ssh_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/stargazers
+       */
+      stargazers_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/statuses/{sha} */
+      statuses_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/subscribers
+       */
+      subscribers_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/subscription
+       */
+      subscription_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/tags
+       */
+      tags_url: string;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/teams
+       */
+      teams_url: string;
+      /** @example http://api.github.com/repos/octocat/Hello-World/git/trees{/sha} */
+      trees_url: string;
+      /** @example https://github.com/octocat/Hello-World.git */
+      clone_url: string;
+      /**
+       * Format: uri
+       * @example git:git.example.com/octocat/Hello-World
+       */
+      mirror_url: string | null;
+      /**
+       * Format: uri
+       * @example http://api.github.com/repos/octocat/Hello-World/hooks
+       */
+      hooks_url: string;
+      /**
+       * Format: uri
+       * @example https://svn.github.com/octocat/Hello-World
+       */
+      svn_url: string;
+      /**
+       * Format: uri
+       * @example https://github.com
+       */
+      homepage: string | null;
+      language: string | null;
+      /** @example 9 */
+      forks_count: number;
+      /** @example 80 */
+      stargazers_count: number;
+      /** @example 80 */
+      watchers_count: number;
+      /**
+       * @description The size of the repository, in kilobytes. Size is calculated hourly. When a repository is initially created, the size is 0.
+       * @example 108
+       */
+      size: number;
+      /** @example master */
+      default_branch: string;
+      /** @example 0 */
+      open_issues_count: number;
+      /** @example true */
+      is_template?: boolean;
+      /**
+       * @example [
+       *   "octocat",
+       *   "atom",
+       *   "electron",
+       *   "API"
+       * ]
+       */
+      topics?: string[];
+      /** @example true */
+      has_issues: boolean;
+      /** @example true */
+      has_projects: boolean;
+      /** @example true */
+      has_wiki: boolean;
+      has_pages: boolean;
+      /** @example true */
+      has_downloads?: boolean;
+      /** @example true */
+      has_discussions: boolean;
+      archived: boolean;
+      /** @description Returns whether or not this repository disabled. */
+      disabled: boolean;
+      /**
+       * @description The repository visibility: public, private, or internal.
+       * @example public
+       */
+      visibility?: string;
+      /**
+       * Format: date-time
+       * @example 2011-01-26T19:06:43Z
+       */
+      pushed_at: string;
+      /**
+       * Format: date-time
+       * @example 2011-01-26T19:01:12Z
+       */
+      created_at: string;
+      /**
+       * Format: date-time
+       * @example 2011-01-26T19:14:43Z
+       */
+      updated_at: string;
+      permissions?: {
+        admin: boolean;
+        maintain?: boolean;
+        push: boolean;
+        triage?: boolean;
+        pull: boolean;
+      };
+      /** @example true */
+      allow_rebase_merge?: boolean;
+      template_repository?: components["schemas"]["nullable-repository"];
+      temp_clone_token?: string | null;
+      /** @example true */
+      allow_squash_merge?: boolean;
+      /** @example false */
+      allow_auto_merge?: boolean;
+      /** @example false */
+      delete_branch_on_merge?: boolean;
+      /** @example true */
+      allow_merge_commit?: boolean;
+      /** @example true */
+      allow_update_branch?: boolean;
+      /** @example false */
+      use_squash_pr_title_as_default?: boolean;
+      /** @example true */
+      allow_forking?: boolean;
+      /** @example false */
+      web_commit_signoff_required?: boolean;
+      /** @example 42 */
+      subscribers_count: number;
+      /** @example 0 */
+      network_count: number;
+      license: components["schemas"]["nullable-license-simple"];
+      organization?: components["schemas"]["nullable-simple-user"];
+      parent?: components["schemas"]["repository"];
+      source?: components["schemas"]["repository"];
+      forks: number;
+      master_branch?: string;
+      open_issues: number;
+      watchers: number;
+      /**
+       * @description Whether anonymous git access is allowed.
+       * @default true
+       */
+      anonymous_access_enabled?: boolean;
+      code_of_conduct?: components["schemas"]["code-of-conduct-simple"];
+      security_and_analysis?: components["schemas"]["security-and-analysis"];
     };
     /**
      * Team Simple
@@ -10171,7 +11331,7 @@ export interface components {
        */
       pinned: boolean;
       /**
-       * @description Whether or not this discussion should be restricted to team members and organization administrators.
+       * @description Whether or not this discussion should be restricted to team members and organization owners.
        * @example true
        */
       private: boolean;
@@ -10762,716 +11922,6 @@ export interface components {
         scim?: components["schemas"]["rate-limit"];
       };
       rate: components["schemas"]["rate-limit"];
-    };
-    /**
-     * Repository
-     * @description A repository on GitHub.
-     */
-    "nullable-repository": {
-      /**
-       * @description Unique identifier of the repository
-       * @example 42
-       */
-      id: number;
-      /** @example MDEwOlJlcG9zaXRvcnkxMjk2MjY5 */
-      node_id: string;
-      /**
-       * @description The name of the repository.
-       * @example Team Environment
-       */
-      name: string;
-      /** @example octocat/Hello-World */
-      full_name: string;
-      license: components["schemas"]["nullable-license-simple"];
-      organization?: components["schemas"]["nullable-simple-user"];
-      forks: number;
-      permissions?: {
-        admin: boolean;
-        pull: boolean;
-        triage?: boolean;
-        push: boolean;
-        maintain?: boolean;
-      };
-      owner: components["schemas"]["simple-user"];
-      /**
-       * @description Whether the repository is private or public.
-       * @default false
-       */
-      private: boolean;
-      /**
-       * Format: uri
-       * @example https://github.com/octocat/Hello-World
-       */
-      html_url: string;
-      /** @example This your first repo! */
-      description: string | null;
-      fork: boolean;
-      /**
-       * Format: uri
-       * @example https://api.github.com/repos/octocat/Hello-World
-       */
-      url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref} */
-      archive_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/assignees{/user} */
-      assignees_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/git/blobs{/sha} */
-      blobs_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/branches{/branch} */
-      branches_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator} */
-      collaborators_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/comments{/number} */
-      comments_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/commits{/sha} */
-      commits_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/compare/{base}...{head} */
-      compare_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/contents/{+path} */
-      contents_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/contributors
-       */
-      contributors_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/deployments
-       */
-      deployments_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/downloads
-       */
-      downloads_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/events
-       */
-      events_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/forks
-       */
-      forks_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/git/commits{/sha} */
-      git_commits_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/git/refs{/sha} */
-      git_refs_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/git/tags{/sha} */
-      git_tags_url: string;
-      /** @example git:github.com/octocat/Hello-World.git */
-      git_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/issues/comments{/number} */
-      issue_comment_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/issues/events{/number} */
-      issue_events_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/issues{/number} */
-      issues_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/keys{/key_id} */
-      keys_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/labels{/name} */
-      labels_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/languages
-       */
-      languages_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/merges
-       */
-      merges_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/milestones{/number} */
-      milestones_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating} */
-      notifications_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/pulls{/number} */
-      pulls_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/releases{/id} */
-      releases_url: string;
-      /** @example git@github.com:octocat/Hello-World.git */
-      ssh_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/stargazers
-       */
-      stargazers_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/statuses/{sha} */
-      statuses_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/subscribers
-       */
-      subscribers_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/subscription
-       */
-      subscription_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/tags
-       */
-      tags_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/teams
-       */
-      teams_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/git/trees{/sha} */
-      trees_url: string;
-      /** @example https://github.com/octocat/Hello-World.git */
-      clone_url: string;
-      /**
-       * Format: uri
-       * @example git:git.example.com/octocat/Hello-World
-       */
-      mirror_url: string | null;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/hooks
-       */
-      hooks_url: string;
-      /**
-       * Format: uri
-       * @example https://svn.github.com/octocat/Hello-World
-       */
-      svn_url: string;
-      /**
-       * Format: uri
-       * @example https://github.com
-       */
-      homepage: string | null;
-      language: string | null;
-      /** @example 9 */
-      forks_count: number;
-      /** @example 80 */
-      stargazers_count: number;
-      /** @example 80 */
-      watchers_count: number;
-      /**
-       * @description The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0.
-       * @example 108
-       */
-      size: number;
-      /**
-       * @description The default branch of the repository.
-       * @example master
-       */
-      default_branch: string;
-      /** @example 0 */
-      open_issues_count: number;
-      /**
-       * @description Whether this repository acts as a template that can be used to generate new repositories.
-       * @default false
-       * @example true
-       */
-      is_template?: boolean;
-      topics?: string[];
-      /**
-       * @description Whether issues are enabled.
-       * @default true
-       * @example true
-       */
-      has_issues: boolean;
-      /**
-       * @description Whether projects are enabled.
-       * @default true
-       * @example true
-       */
-      has_projects: boolean;
-      /**
-       * @description Whether the wiki is enabled.
-       * @default true
-       * @example true
-       */
-      has_wiki: boolean;
-      has_pages: boolean;
-      /**
-       * @deprecated
-       * @description Whether downloads are enabled.
-       * @default true
-       * @example true
-       */
-      has_downloads: boolean;
-      /**
-       * @description Whether the repository is archived.
-       * @default false
-       */
-      archived: boolean;
-      /** @description Returns whether or not this repository disabled. */
-      disabled: boolean;
-      /**
-       * @description The repository visibility: public, private, or internal.
-       * @default public
-       */
-      visibility?: string;
-      /**
-       * Format: date-time
-       * @example 2011-01-26T19:06:43Z
-       */
-      pushed_at: string | null;
-      /**
-       * Format: date-time
-       * @example 2011-01-26T19:01:12Z
-       */
-      created_at: string | null;
-      /**
-       * Format: date-time
-       * @example 2011-01-26T19:14:43Z
-       */
-      updated_at: string | null;
-      /**
-       * @description Whether to allow rebase merges for pull requests.
-       * @default true
-       * @example true
-       */
-      allow_rebase_merge?: boolean;
-      template_repository?: {
-        id?: number;
-        node_id?: string;
-        name?: string;
-        full_name?: string;
-        owner?: {
-          login?: string;
-          id?: number;
-          node_id?: string;
-          avatar_url?: string;
-          gravatar_id?: string;
-          url?: string;
-          html_url?: string;
-          followers_url?: string;
-          following_url?: string;
-          gists_url?: string;
-          starred_url?: string;
-          subscriptions_url?: string;
-          organizations_url?: string;
-          repos_url?: string;
-          events_url?: string;
-          received_events_url?: string;
-          type?: string;
-          site_admin?: boolean;
-        };
-        private?: boolean;
-        html_url?: string;
-        description?: string;
-        fork?: boolean;
-        url?: string;
-        archive_url?: string;
-        assignees_url?: string;
-        blobs_url?: string;
-        branches_url?: string;
-        collaborators_url?: string;
-        comments_url?: string;
-        commits_url?: string;
-        compare_url?: string;
-        contents_url?: string;
-        contributors_url?: string;
-        deployments_url?: string;
-        downloads_url?: string;
-        events_url?: string;
-        forks_url?: string;
-        git_commits_url?: string;
-        git_refs_url?: string;
-        git_tags_url?: string;
-        git_url?: string;
-        issue_comment_url?: string;
-        issue_events_url?: string;
-        issues_url?: string;
-        keys_url?: string;
-        labels_url?: string;
-        languages_url?: string;
-        merges_url?: string;
-        milestones_url?: string;
-        notifications_url?: string;
-        pulls_url?: string;
-        releases_url?: string;
-        ssh_url?: string;
-        stargazers_url?: string;
-        statuses_url?: string;
-        subscribers_url?: string;
-        subscription_url?: string;
-        tags_url?: string;
-        teams_url?: string;
-        trees_url?: string;
-        clone_url?: string;
-        mirror_url?: string;
-        hooks_url?: string;
-        svn_url?: string;
-        homepage?: string;
-        language?: string;
-        forks_count?: number;
-        stargazers_count?: number;
-        watchers_count?: number;
-        size?: number;
-        default_branch?: string;
-        open_issues_count?: number;
-        is_template?: boolean;
-        topics?: string[];
-        has_issues?: boolean;
-        has_projects?: boolean;
-        has_wiki?: boolean;
-        has_pages?: boolean;
-        has_downloads?: boolean;
-        archived?: boolean;
-        disabled?: boolean;
-        visibility?: string;
-        pushed_at?: string;
-        created_at?: string;
-        updated_at?: string;
-        permissions?: {
-          admin?: boolean;
-          maintain?: boolean;
-          push?: boolean;
-          triage?: boolean;
-          pull?: boolean;
-        };
-        allow_rebase_merge?: boolean;
-        temp_clone_token?: string;
-        allow_squash_merge?: boolean;
-        allow_auto_merge?: boolean;
-        delete_branch_on_merge?: boolean;
-        allow_update_branch?: boolean;
-        allow_merge_commit?: boolean;
-        subscribers_count?: number;
-        network_count?: number;
-      } | null;
-      temp_clone_token?: string;
-      /**
-       * @description Whether to allow squash merges for pull requests.
-       * @default true
-       * @example true
-       */
-      allow_squash_merge?: boolean;
-      /**
-       * @description Whether to allow Auto-merge to be used on pull requests.
-       * @default false
-       * @example false
-       */
-      allow_auto_merge?: boolean;
-      /**
-       * @description Whether to delete head branches when pull requests are merged
-       * @default false
-       * @example false
-       */
-      delete_branch_on_merge?: boolean;
-      /**
-       * @description Whether or not a pull request head branch that is behind its base branch can always be updated even if it is not required to be up to date before merging.
-       * @default false
-       * @example false
-       */
-      allow_update_branch?: boolean;
-      /**
-       * @description Whether to allow merge commits for pull requests.
-       * @default true
-       * @example true
-       */
-      allow_merge_commit?: boolean;
-      /** @description Whether to allow forking this repo */
-      allow_forking?: boolean;
-      /**
-       * @description Whether to require contributors to sign off on web-based commits
-       * @default false
-       */
-      web_commit_signoff_required?: boolean;
-      subscribers_count?: number;
-      network_count?: number;
-      open_issues: number;
-      watchers: number;
-      master_branch?: string;
-      /** @example "2020-07-09T00:17:42Z" */
-      starred_at?: string;
-      /** @description Whether anonymous git access is enabled for this repository */
-      anonymous_access_enabled?: boolean;
-    } | null;
-    /**
-     * Code Of Conduct Simple
-     * @description Code of Conduct Simple
-     */
-    "code-of-conduct-simple": {
-      /**
-       * Format: uri
-       * @example https://api.github.com/repos/github/docs/community/code_of_conduct
-       */
-      url: string;
-      /** @example citizen_code_of_conduct */
-      key: string;
-      /** @example Citizen Code of Conduct */
-      name: string;
-      /**
-       * Format: uri
-       * @example https://github.com/github/docs/blob/main/CODE_OF_CONDUCT.md
-       */
-      html_url: string | null;
-    };
-    /**
-     * Full Repository
-     * @description Full Repository
-     */
-    "full-repository": {
-      /** @example 1296269 */
-      id: number;
-      /** @example MDEwOlJlcG9zaXRvcnkxMjk2MjY5 */
-      node_id: string;
-      /** @example Hello-World */
-      name: string;
-      /** @example octocat/Hello-World */
-      full_name: string;
-      owner: components["schemas"]["simple-user"];
-      private: boolean;
-      /**
-       * Format: uri
-       * @example https://github.com/octocat/Hello-World
-       */
-      html_url: string;
-      /** @example This your first repo! */
-      description: string | null;
-      fork: boolean;
-      /**
-       * Format: uri
-       * @example https://api.github.com/repos/octocat/Hello-World
-       */
-      url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref} */
-      archive_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/assignees{/user} */
-      assignees_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/git/blobs{/sha} */
-      blobs_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/branches{/branch} */
-      branches_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator} */
-      collaborators_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/comments{/number} */
-      comments_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/commits{/sha} */
-      commits_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/compare/{base}...{head} */
-      compare_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/contents/{+path} */
-      contents_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/contributors
-       */
-      contributors_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/deployments
-       */
-      deployments_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/downloads
-       */
-      downloads_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/events
-       */
-      events_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/forks
-       */
-      forks_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/git/commits{/sha} */
-      git_commits_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/git/refs{/sha} */
-      git_refs_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/git/tags{/sha} */
-      git_tags_url: string;
-      /** @example git:github.com/octocat/Hello-World.git */
-      git_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/issues/comments{/number} */
-      issue_comment_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/issues/events{/number} */
-      issue_events_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/issues{/number} */
-      issues_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/keys{/key_id} */
-      keys_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/labels{/name} */
-      labels_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/languages
-       */
-      languages_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/merges
-       */
-      merges_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/milestones{/number} */
-      milestones_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating} */
-      notifications_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/pulls{/number} */
-      pulls_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/releases{/id} */
-      releases_url: string;
-      /** @example git@github.com:octocat/Hello-World.git */
-      ssh_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/stargazers
-       */
-      stargazers_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/statuses/{sha} */
-      statuses_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/subscribers
-       */
-      subscribers_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/subscription
-       */
-      subscription_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/tags
-       */
-      tags_url: string;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/teams
-       */
-      teams_url: string;
-      /** @example http://api.github.com/repos/octocat/Hello-World/git/trees{/sha} */
-      trees_url: string;
-      /** @example https://github.com/octocat/Hello-World.git */
-      clone_url: string;
-      /**
-       * Format: uri
-       * @example git:git.example.com/octocat/Hello-World
-       */
-      mirror_url: string | null;
-      /**
-       * Format: uri
-       * @example http://api.github.com/repos/octocat/Hello-World/hooks
-       */
-      hooks_url: string;
-      /**
-       * Format: uri
-       * @example https://svn.github.com/octocat/Hello-World
-       */
-      svn_url: string;
-      /**
-       * Format: uri
-       * @example https://github.com
-       */
-      homepage: string | null;
-      language: string | null;
-      /** @example 9 */
-      forks_count: number;
-      /** @example 80 */
-      stargazers_count: number;
-      /** @example 80 */
-      watchers_count: number;
-      /**
-       * @description The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0.
-       * @example 108
-       */
-      size: number;
-      /** @example master */
-      default_branch: string;
-      /** @example 0 */
-      open_issues_count: number;
-      /** @example true */
-      is_template?: boolean;
-      /**
-       * @example [
-       *   "octocat",
-       *   "atom",
-       *   "electron",
-       *   "API"
-       * ]
-       */
-      topics?: string[];
-      /** @example true */
-      has_issues: boolean;
-      /** @example true */
-      has_projects: boolean;
-      /** @example true */
-      has_wiki: boolean;
-      has_pages: boolean;
-      /** @example true */
-      has_downloads?: boolean;
-      /** @example true */
-      has_discussions: boolean;
-      archived: boolean;
-      /** @description Returns whether or not this repository disabled. */
-      disabled: boolean;
-      /**
-       * @description The repository visibility: public, private, or internal.
-       * @example public
-       */
-      visibility?: string;
-      /**
-       * Format: date-time
-       * @example 2011-01-26T19:06:43Z
-       */
-      pushed_at: string;
-      /**
-       * Format: date-time
-       * @example 2011-01-26T19:01:12Z
-       */
-      created_at: string;
-      /**
-       * Format: date-time
-       * @example 2011-01-26T19:14:43Z
-       */
-      updated_at: string;
-      permissions?: {
-        admin: boolean;
-        maintain?: boolean;
-        push: boolean;
-        triage?: boolean;
-        pull: boolean;
-      };
-      /** @example true */
-      allow_rebase_merge?: boolean;
-      template_repository?: components["schemas"]["nullable-repository"];
-      temp_clone_token?: string | null;
-      /** @example true */
-      allow_squash_merge?: boolean;
-      /** @example false */
-      allow_auto_merge?: boolean;
-      /** @example false */
-      delete_branch_on_merge?: boolean;
-      /** @example true */
-      allow_merge_commit?: boolean;
-      /** @example true */
-      allow_update_branch?: boolean;
-      /** @example false */
-      use_squash_pr_title_as_default?: boolean;
-      /** @example true */
-      allow_forking?: boolean;
-      /** @example false */
-      web_commit_signoff_required?: boolean;
-      /** @example 42 */
-      subscribers_count: number;
-      /** @example 0 */
-      network_count: number;
-      license: components["schemas"]["nullable-license-simple"];
-      organization?: components["schemas"]["nullable-simple-user"];
-      parent?: components["schemas"]["repository"];
-      source?: components["schemas"]["repository"];
-      forks: number;
-      master_branch?: string;
-      open_issues: number;
-      watchers: number;
-      /**
-       * @description Whether anonymous git access is allowed.
-       * @default true
-       */
-      anonymous_access_enabled?: boolean;
-      code_of_conduct?: components["schemas"]["code-of-conduct-simple"];
-      security_and_analysis?: components["schemas"]["security-and-analysis"];
     };
     /**
      * Artifact
@@ -12774,19 +13224,6 @@ export interface components {
       };
       repository: components["schemas"]["minimal-repository"];
     };
-    "code-scanning-alert-rule-summary": {
-      /** @description A unique identifier for the rule used to detect the alert. */
-      id?: string | null;
-      /** @description The name of the rule used to detect the alert. */
-      name?: string;
-      /**
-       * @description The severity of the alert.
-       * @enum {string|null}
-       */
-      severity?: "none" | "note" | "warning" | "error" | null;
-      /** @description A short description of the rule used to detect the alert. */
-      description?: string;
-    };
     "code-scanning-alert-items": {
       number: components["schemas"]["alert-number"];
       created_at: components["schemas"]["alert-created-at"];
@@ -12800,6 +13237,32 @@ export interface components {
       rule: components["schemas"]["code-scanning-alert-rule-summary"];
       tool: components["schemas"]["code-scanning-analysis-tool"];
       most_recent_instance: components["schemas"]["code-scanning-alert-instance"];
+    };
+    "code-scanning-alert-rule": {
+      /** @description A unique identifier for the rule used to detect the alert. */
+      id?: string | null;
+      /** @description The name of the rule used to detect the alert. */
+      name?: string;
+      /**
+       * @description The severity of the alert.
+       * @enum {string|null}
+       */
+      severity?: "none" | "note" | "warning" | "error" | null;
+      /**
+       * @description The security severity of the alert.
+       * @enum {string|null}
+       */
+      security_severity_level?: "low" | "medium" | "high" | "critical" | null;
+      /** @description A short description of the rule used to detect the alert. */
+      description?: string;
+      /** @description description of the rule used to detect the alert. */
+      full_description?: string;
+      /** @description A set of tags applicable for the rule. */
+      tags?: string[] | null;
+      /** @description Detailed documentation for the rule as GitHub Flavored Markdown. */
+      help?: string | null;
+      /** @description A link to the documentation for the rule used to detect the alert. */
+      help_uri?: string | null;
     };
     "code-scanning-alert": {
       number: components["schemas"]["alert-number"];
@@ -12880,6 +13343,12 @@ export interface components {
        */
       confirm_delete_url: string | null;
     };
+    /**
+     * @description The full Git reference, formatted as `refs/heads/<branch name>`,
+     * `refs/tags/<tag>`, `refs/pull/<number>/merge`, or `refs/pull/<number>/head`.
+     * @example refs/heads/main
+     */
+    "code-scanning-ref-full": string;
     /** @description A Base64 string representing the SARIF file to upload. You must first compress your SARIF file using [`gzip`](http://www.gnu.org/software/gzip/manual/gzip.html) and then translate the contents of the file into a Base64 encoding string. For more information, see "[SARIF support for code scanning](https://docs.github.com/github-ae@latest/code-security/secure-coding/sarif-support-for-code-scanning)." */
     "code-scanning-analysis-sarif-file": string;
     "code-scanning-sarifs-receipt": {
@@ -14335,24 +14804,7 @@ export interface components {
        * ]
        */
       events: string[];
-      config: {
-        /** @example "foo@bar.com" */
-        email?: string;
-        /** @example "foo" */
-        password?: string;
-        /** @example "roomer" */
-        room?: string;
-        /** @example "foo" */
-        subdomain?: string;
-        url?: components["schemas"]["webhook-config-url"];
-        insecure_ssl?: components["schemas"]["webhook-config-insecure-ssl"];
-        content_type?: components["schemas"]["webhook-config-content-type"];
-        /** @example "sha256" */
-        digest?: string;
-        secret?: components["schemas"]["webhook-config-secret"];
-        /** @example "abc" */
-        token?: string;
-      };
+      config: components["schemas"]["webhook-config"];
       /**
        * Format: date-time
        * @example 2011-09-06T20:39:23Z
@@ -16595,18 +17047,110 @@ export interface components {
        */
       issue_comment_url: string;
     };
+    /** @description Represents a 'discussion_title' secret scanning location type. This location type shows that a secret was detected in the title of a discussion. */
+    "secret-scanning-location-discussion-title": {
+      /**
+       * Format: uri
+       * @description The URL to the discussion where the secret was detected.
+       * @example https://github.com/community/community/discussions/39082
+       */
+      discussion_title_url: string;
+    };
+    /** @description Represents a 'discussion_body' secret scanning location type. This location type shows that a secret was detected in the body of a discussion. */
+    "secret-scanning-location-discussion-body": {
+      /**
+       * Format: uri
+       * @description The URL to the discussion where the secret was detected.
+       * @example https://github.com/community/community/discussions/39082#discussion-4566270
+       */
+      discussion_body_url: string;
+    };
+    /** @description Represents a 'discussion_comment' secret scanning location type. This location type shows that a secret was detected in a comment on a discussion. */
+    "secret-scanning-location-discussion-comment": {
+      /**
+       * Format: uri
+       * @description The API URL to get the discussion comment where the secret was detected.
+       * @example https://github.com/community/community/discussions/39082#discussioncomment-4158232
+       */
+      discussion_comment_url: string;
+    };
+    /** @description Represents a 'pull_request_title' secret scanning location type. This location type shows that a secret was detected in the title of a pull request. */
+    "secret-scanning-location-pull-request-title": {
+      /**
+       * Format: uri
+       * @description The API URL to get the pull request where the secret was detected.
+       * @example https://api.github.com/repos/octocat/Hello-World/pull/2846
+       */
+      pull_request_title_url: string;
+    };
+    /** @description Represents a 'pull_request_body' secret scanning location type. This location type shows that a secret was detected in the body of a pull request. */
+    "secret-scanning-location-pull-request-body": {
+      /**
+       * Format: uri
+       * @description The API URL to get the pull request where the secret was detected.
+       * @example https://api.github.com/repos/octocat/Hello-World/pull/2846
+       */
+      pull_request_body_url: string;
+    };
+    /** @description Represents a 'pull_request_comment' secret scanning location type. This location type shows that a secret was detected in a comment on a pull request. */
+    "secret-scanning-location-pull-request-comment": {
+      /**
+       * Format: uri
+       * @description The API URL to get the pull request comment where the secret was detected.
+       * @example https://api.github.com/repos/octocat/Hello-World/issues/comments/1081119451
+       */
+      pull_request_comment_url: string;
+    };
+    /** @description Represents a 'pull_request_review' secret scanning location type. This location type shows that a secret was detected in a review on a pull request. */
+    "secret-scanning-location-pull-request-review": {
+      /**
+       * Format: uri
+       * @description The API URL to get the pull request review where the secret was detected.
+       * @example https://api.github.com/repos/octocat/Hello-World/pulls/2846/reviews/80
+       */
+      pull_request_review_url: string;
+    };
+    /** @description Represents a 'pull_request_review_comment' secret scanning location type. This location type shows that a secret was detected in a review comment on a pull request. */
+    "secret-scanning-location-pull-request-review-comment": {
+      /**
+       * Format: uri
+       * @description The API URL to get the pull request review comment where the secret was detected.
+       * @example https://api.github.com/repos/octocat/Hello-World/pulls/comments/12
+       */
+      pull_request_review_comment_url: string;
+    };
     "secret-scanning-location": {
       /**
-       * @description The location type. Because secrets may be found in different types of resources (ie. code, comments, issues), this field identifies the type of resource where the secret was found.
+       * @description The location type. Because secrets may be found in different types of resources (ie. code, comments, issues, pull requests, discussions), this field identifies the type of resource where the secret was found.
        * @example commit
        * @enum {string}
        */
-      type: "commit" | "issue_title" | "issue_body" | "issue_comment";
+      type:
+        | "commit"
+        | "issue_title"
+        | "issue_body"
+        | "issue_comment"
+        | "discussion_title"
+        | "discussion_body"
+        | "discussion_comment"
+        | "pull_request_title"
+        | "pull_request_body"
+        | "pull_request_comment"
+        | "pull_request_review"
+        | "pull_request_review_comment";
       details:
         | components["schemas"]["secret-scanning-location-commit"]
         | components["schemas"]["secret-scanning-location-issue-title"]
         | components["schemas"]["secret-scanning-location-issue-body"]
-        | components["schemas"]["secret-scanning-location-issue-comment"];
+        | components["schemas"]["secret-scanning-location-issue-comment"]
+        | components["schemas"]["secret-scanning-location-discussion-title"]
+        | components["schemas"]["secret-scanning-location-discussion-body"]
+        | components["schemas"]["secret-scanning-location-discussion-comment"]
+        | components["schemas"]["secret-scanning-location-pull-request-title"]
+        | components["schemas"]["secret-scanning-location-pull-request-body"]
+        | components["schemas"]["secret-scanning-location-pull-request-comment"]
+        | components["schemas"]["secret-scanning-location-pull-request-review"]
+        | components["schemas"]["secret-scanning-location-pull-request-review-comment"];
     };
     /**
      * Stargazer
@@ -17664,7 +18208,7 @@ export interface components {
       /** @example 80 */
       watchers_count: number;
       /**
-       * @description The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0.
+       * @description The size of the repository, in kilobytes. Size is calculated hourly. When a repository is initially created, the size is 0.
        * @example 108
        */
       size: number;
@@ -17682,10 +18226,6 @@ export interface components {
        */
       is_template?: boolean;
       topics?: string[];
-      /** @description The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values. */
-      custom_properties?: {
-        [key: string]: unknown;
-      };
       /**
        * @description Whether issues are enabled.
        * @default true
@@ -18571,7 +19111,7 @@ export interface components {
       /** @example 80 */
       watchers_count: number;
       /**
-       * @description The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0.
+       * @description The size of the repository, in kilobytes. Size is calculated hourly. When a repository is initially created, the size is 0.
        * @example 108
        */
       size: number;
@@ -18589,10 +19129,6 @@ export interface components {
        */
       is_template?: boolean;
       topics?: string[];
-      /** @description The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values. */
-      custom_properties?: {
-        [key: string]: unknown;
-      };
       /**
        * @description Whether issues are enabled.
        * @default true
@@ -18878,6 +19414,11 @@ export interface components {
       resolution_comment?: string | null;
       /** @description The type of secret that secret scanning detected. */
       secret_type?: string;
+      /**
+       * @description The token status as of the latest validity check.
+       * @enum {string}
+       */
+      validity?: "active" | "inactive" | "unknown";
     };
     /** branch protection rule created event */
     "webhook-branch-protection-rule-created": {
@@ -20393,12 +20934,12 @@ export interface components {
          */
         created_at: string | null;
         /** @description The time that the alert was dismissed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
-        dismissed_at: Record<string, unknown> | null;
-        dismissed_by: Record<string, unknown> | null;
+        dismissed_at: unknown;
+        dismissed_by: unknown;
         dismissed_comment?: components["schemas"]["code-scanning-alert-dismissed-comment"];
         /** @description The reason for dismissing or closing the alert. Can be one of: `false positive`, `won't fix`, and `used in tests`. */
-        dismissed_reason: Record<string, unknown> | null;
-        fixed_at?: Record<string, unknown> | null;
+        dismissed_reason: unknown;
+        fixed_at?: unknown;
         /**
          * Format: uri
          * @description The GitHub URL of the alert resource.
@@ -20632,7 +21173,7 @@ export interface components {
         created_at: string;
         /** @description The time that the alert was dismissed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
         dismissed_at: string | null;
-        dismissed_by: Record<string, unknown> | null;
+        dismissed_by: unknown;
         /** @description The reason for dismissing or closing the alert. Can be one of: `false positive`, `won't fix`, and `used in tests`. */
         dismissed_reason: string | null;
         /**
@@ -20724,10 +21265,10 @@ export interface components {
          */
         created_at: string;
         /** @description The time that the alert was dismissed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
-        dismissed_at: Record<string, unknown> | null;
-        dismissed_by: Record<string, unknown> | null;
+        dismissed_at: unknown;
+        dismissed_by: unknown;
         /** @description The reason for dismissing or closing the alert. Can be one of: `false positive`, `won't fix`, and `used in tests`. */
-        dismissed_reason: Record<string, unknown> | null;
+        dismissed_reason: unknown;
         /**
          * Format: uri
          * @description The GitHub URL of the alert resource.
@@ -21393,7 +21934,7 @@ export interface components {
         display_title: string;
         event: string;
         head_branch: string;
-        head_commit?: Record<string, unknown> | null;
+        head_commit?: unknown;
         head_repository?: {
           archive_url?: string;
           assignees_url?: string;
@@ -21406,7 +21947,7 @@ export interface components {
           contents_url?: string;
           contributors_url?: string;
           deployments_url?: string;
-          description?: Record<string, unknown> | null;
+          description?: unknown;
           downloads_url?: string;
           events_url?: string;
           fork?: boolean;
@@ -21470,7 +22011,7 @@ export interface components {
         name: string;
         node_id: string;
         path: string;
-        previous_attempt_url?: Record<string, unknown> | null;
+        previous_attempt_url?: unknown;
         pull_requests: {
           base: {
             ref: string;
@@ -21518,7 +22059,7 @@ export interface components {
           contents_url?: string;
           contributors_url?: string;
           deployments_url?: string;
-          description?: Record<string, unknown> | null;
+          description?: unknown;
           downloads_url?: string;
           events_url?: string;
           fork?: boolean;
@@ -21723,17 +22264,17 @@ export interface components {
       sender: components["schemas"]["simple-user-webhooks"];
       since: string;
       workflow_job_run?: {
-        conclusion: Record<string, unknown> | null;
+        conclusion: unknown;
         created_at: string;
         environment: string;
         html_url: string;
         id: number;
-        name: Record<string, unknown> | null;
+        name: unknown;
         status: string;
         updated_at: string;
       };
       workflow_job_runs?: {
-        conclusion?: Record<string, unknown> | null;
+        conclusion?: unknown;
         created_at?: string;
         environment?: string;
         html_url?: string;
@@ -21801,7 +22342,7 @@ export interface components {
         display_title: string;
         event: string;
         head_branch: string;
-        head_commit?: Record<string, unknown> | null;
+        head_commit?: unknown;
         head_repository?: {
           archive_url?: string;
           assignees_url?: string;
@@ -22111,12 +22652,12 @@ export interface components {
       sender: components["schemas"]["simple-user-webhooks"];
       since: string;
       workflow_job_run?: {
-        conclusion: Record<string, unknown> | null;
+        conclusion: unknown;
         created_at: string;
         environment: string;
         html_url: string;
         id: number;
-        name: Record<string, unknown> | null;
+        name: unknown;
         status: string;
         updated_at: string;
       };
@@ -22188,7 +22729,7 @@ export interface components {
         created_at: string;
         event: string;
         head_branch: string;
-        head_commit?: Record<string, unknown> | null;
+        head_commit?: unknown;
         head_repository?: {
           archive_url?: string;
           assignees_url?: string;
@@ -22515,7 +23056,7 @@ export interface components {
       sender: components["schemas"]["simple-user-webhooks"];
       since: string;
       workflow_job_run: {
-        conclusion: Record<string, unknown> | null;
+        conclusion: unknown;
         created_at: string;
         environment: string;
         html_url: string;
@@ -22582,7 +23123,7 @@ export interface components {
         created_at: string;
         event: string;
         head_branch: string;
-        head_commit?: Record<string, unknown> | null;
+        head_commit?: unknown;
         head_repository?: {
           archive_url?: string;
           assignees_url?: string;
@@ -23440,7 +23981,7 @@ export interface components {
         display_title: string;
         event: string;
         head_branch: string;
-        head_commit?: Record<string, unknown> | null;
+        head_commit?: unknown;
         head_repository?: {
           archive_url?: string;
           assignees_url?: string;
@@ -23453,7 +23994,7 @@ export interface components {
           contents_url?: string;
           contributors_url?: string;
           deployments_url?: string;
-          description?: Record<string, unknown> | null;
+          description?: unknown;
           downloads_url?: string;
           events_url?: string;
           fork?: boolean;
@@ -23517,7 +24058,7 @@ export interface components {
         name: string;
         node_id: string;
         path: string;
-        previous_attempt_url?: Record<string, unknown> | null;
+        previous_attempt_url?: unknown;
         pull_requests: {
           base: {
             ref: string;
@@ -23565,7 +24106,7 @@ export interface components {
           contents_url?: string;
           contributors_url?: string;
           deployments_url?: string;
-          description?: Record<string, unknown> | null;
+          description?: unknown;
           downloads_url?: string;
           events_url?: string;
           fork?: boolean;
@@ -23705,7 +24246,7 @@ export interface components {
         html_url: string;
         id: number;
         node_id: string;
-        parent_id: Record<string, unknown> | null;
+        parent_id: unknown;
         /** Reactions */
         reactions?: {
           "+1": number;
@@ -24205,9 +24746,9 @@ export interface components {
           url?: string;
         } | null;
       } & {
-        active_lock_reason?: Record<string, unknown> | null;
-        answer_chosen_at: Record<string, unknown> | null;
-        answer_chosen_by: Record<string, unknown> | null;
+        active_lock_reason?: unknown;
+        answer_chosen_at: unknown;
+        answer_chosen_by: unknown;
         answer_html_url: string | null;
         author_association?: string;
         body?: string | null;
@@ -24398,7 +24939,7 @@ export interface components {
         html_url: string;
         id: number;
         node_id: string;
-        parent_id: Record<string, unknown> | null;
+        parent_id: unknown;
         /** Reactions */
         reactions?: {
           "+1": number;
@@ -24796,12 +25337,12 @@ export interface components {
         issues_url?: string;
         keys_url?: string;
         labels_url?: string;
-        language?: Record<string, unknown> | null;
+        language?: unknown;
         languages_url?: string;
-        license?: Record<string, unknown> | null;
+        license?: unknown;
         merges_url?: string;
         milestones_url?: string;
-        mirror_url?: Record<string, unknown> | null;
+        mirror_url?: unknown;
         name?: string;
         node_id?: string;
         notifications_url?: string;
@@ -24842,7 +25383,7 @@ export interface components {
         svn_url?: string;
         tags_url?: string;
         teams_url?: string;
-        topics?: (Record<string, unknown> | null)[];
+        topics?: unknown[];
         trees_url?: string;
         updated_at?: string;
         url?: string;
@@ -24859,10 +25400,6 @@ export interface components {
     "webhook-github-app-authorization-revoked": {
       /** @enum {string} */
       action: "revoked";
-      enterprise?: components["schemas"]["enterprise-webhooks"];
-      installation?: components["schemas"]["simple-installation"];
-      organization?: components["schemas"]["organization-simple-webhooks"];
-      repository?: components["schemas"]["repository-webhooks"];
       sender: components["schemas"]["simple-user-webhooks"];
     };
     /** gollum event */
@@ -24970,7 +25507,7 @@ export interface components {
         private: boolean;
       }[];
       repository?: components["schemas"]["repository-webhooks"];
-      requester?: Record<string, unknown> | null;
+      requester?: unknown;
       sender: components["schemas"]["simple-user-webhooks"];
     };
     /** installation new_permissions_accepted event */
@@ -24992,7 +25529,7 @@ export interface components {
         private: boolean;
       }[];
       repository?: components["schemas"]["repository-webhooks"];
-      requester?: Record<string, unknown> | null;
+      requester?: unknown;
       sender: components["schemas"]["simple-user-webhooks"];
     };
     /** installation_repositories added event */
@@ -25162,7 +25699,7 @@ export interface components {
         private: boolean;
       }[];
       repository?: components["schemas"]["repository-webhooks"];
-      requester?: Record<string, unknown> | null;
+      requester?: unknown;
       sender: components["schemas"]["simple-user-webhooks"];
     };
     "webhook-installation-target-renamed": {
@@ -25170,7 +25707,7 @@ export interface components {
         archived_at?: string | null;
         avatar_url: string;
         created_at?: string;
-        description?: Record<string, unknown> | null;
+        description?: unknown;
         events_url?: string;
         followers?: number;
         followers_url?: string;
@@ -25202,7 +25739,7 @@ export interface components {
         type?: string;
         updated_at?: string;
         url?: string;
-        website_url?: Record<string, unknown> | null;
+        website_url?: unknown;
       };
       /** @enum {string} */
       action: "renamed";
@@ -25240,7 +25777,7 @@ export interface components {
         private: boolean;
       }[];
       repository?: components["schemas"]["repository-webhooks"];
-      requester?: Record<string, unknown> | null;
+      requester?: unknown;
       sender: components["schemas"]["simple-user-webhooks"];
     };
     /** issue_comment created event */
@@ -25848,7 +26385,7 @@ export interface components {
           /** Format: uri */
           url?: string;
         } | null;
-        assignees?: (Record<string, unknown> | null)[];
+        assignees?: unknown[];
         author_association?: string;
         body?: string | null;
         closed_at?: string | null;
@@ -25875,10 +26412,10 @@ export interface components {
         }[];
         labels_url?: string;
         locked: boolean;
-        milestone?: Record<string, unknown> | null;
+        milestone?: unknown;
         node_id?: string;
         number?: number;
-        performed_via_github_app?: Record<string, unknown> | null;
+        performed_via_github_app?: unknown;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -26529,7 +27066,7 @@ export interface components {
           /** Format: uri */
           url?: string;
         } | null;
-        assignees?: (Record<string, unknown> | null)[];
+        assignees?: unknown[];
         author_association?: string;
         body?: string | null;
         closed_at?: string | null;
@@ -26556,10 +27093,10 @@ export interface components {
         }[];
         labels_url?: string;
         locked: boolean;
-        milestone?: Record<string, unknown> | null;
+        milestone?: unknown;
         node_id?: string;
         number?: number;
-        performed_via_github_app?: Record<string, unknown> | null;
+        performed_via_github_app?: unknown;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -27219,7 +27756,7 @@ export interface components {
           /** Format: uri */
           url?: string;
         } | null;
-        assignees?: (Record<string, unknown> | null)[];
+        assignees?: unknown[];
         author_association?: string;
         body?: string | null;
         closed_at?: string | null;
@@ -27246,10 +27783,10 @@ export interface components {
         }[];
         labels_url?: string;
         locked: boolean;
-        milestone?: Record<string, unknown> | null;
+        milestone?: unknown;
         node_id?: string;
         number?: number;
-        performed_via_github_app?: Record<string, unknown> | null;
+        performed_via_github_app?: unknown;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -28297,8 +28834,8 @@ export interface components {
         } | null;
       } & {
         active_lock_reason?: string | null;
-        assignee?: Record<string, unknown> | null;
-        assignees?: (Record<string, unknown> | null)[];
+        assignee?: unknown;
+        assignees?: unknown[];
         author_association?: string;
         body?: string | null;
         closed_at: string | null;
@@ -28308,13 +28845,13 @@ export interface components {
         events_url?: string;
         html_url?: string;
         id?: number;
-        labels?: (Record<string, unknown> | null)[];
+        labels?: unknown[];
         labels_url?: string;
         locked?: boolean;
-        milestone?: Record<string, unknown> | null;
+        milestone?: unknown;
         node_id?: string;
         number?: number;
-        performed_via_github_app?: Record<string, unknown> | null;
+        performed_via_github_app?: unknown;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -29311,8 +29848,8 @@ export interface components {
         } | null;
       } & {
         active_lock_reason?: string | null;
-        assignee?: Record<string, unknown> | null;
-        assignees?: (Record<string, unknown> | null)[];
+        assignee?: unknown;
+        assignees?: unknown[];
         author_association?: string;
         body?: string | null;
         closed_at?: string | null;
@@ -29322,7 +29859,7 @@ export interface components {
         events_url?: string;
         html_url?: string;
         id?: number;
-        labels?: (Record<string, unknown> | null)[];
+        labels?: unknown[];
         labels_url?: string;
         locked?: boolean;
         /**
@@ -29398,7 +29935,7 @@ export interface components {
         } | null;
         node_id?: string;
         number?: number;
-        performed_via_github_app?: Record<string, unknown> | null;
+        performed_via_github_app?: unknown;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -30999,8 +31536,8 @@ export interface components {
           | "too heated"
           | "spam"
           | null;
-        assignee?: Record<string, unknown> | null;
-        assignees?: (Record<string, unknown> | null)[];
+        assignee?: unknown;
+        assignees?: unknown[];
         author_association?: string;
         body?: string | null;
         closed_at?: string | null;
@@ -31010,14 +31547,14 @@ export interface components {
         events_url?: string;
         html_url?: string;
         id?: number;
-        labels?: (Record<string, unknown> | null)[];
+        labels?: unknown[];
         labels_url?: string;
         /** @enum {boolean} */
         locked: true;
-        milestone?: Record<string, unknown> | null;
+        milestone?: unknown;
         node_id?: string;
         number?: number;
-        performed_via_github_app?: Record<string, unknown> | null;
+        performed_via_github_app?: unknown;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -31534,8 +32071,8 @@ export interface components {
         } | null;
       } & {
         active_lock_reason?: string | null;
-        assignee?: Record<string, unknown> | null;
-        assignees?: (Record<string, unknown> | null)[];
+        assignee?: unknown;
+        assignees?: unknown[];
         author_association?: string;
         body?: string | null;
         closed_at?: string | null;
@@ -31545,7 +32082,7 @@ export interface components {
         events_url?: string;
         html_url?: string;
         id?: number;
-        labels?: (Record<string, unknown> | null)[];
+        labels?: unknown[];
         labels_url?: string;
         locked?: boolean;
         /**
@@ -31621,7 +32158,7 @@ export interface components {
         };
         node_id?: string;
         number?: number;
-        performed_via_github_app?: Record<string, unknown> | null;
+        performed_via_github_app?: unknown;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -32266,10 +32803,6 @@ export interface components {
           /** Format: uri */
           contributors_url: string;
           created_at: number | string;
-          /** @description The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values. */
-          custom_properties?: {
-            [key: string]: unknown;
-          };
           /** @description The default branch of the repository. */
           default_branch: string;
           /**
@@ -33885,8 +34418,8 @@ export interface components {
         } | null;
       } & {
         active_lock_reason?: string | null;
-        assignee?: Record<string, unknown> | null;
-        assignees?: (Record<string, unknown> | null)[];
+        assignee?: unknown;
+        assignees?: unknown[];
         author_association?: string;
         body?: string | null;
         closed_at?: string | null;
@@ -33896,13 +34429,13 @@ export interface components {
         events_url?: string;
         html_url?: string;
         id?: number;
-        labels?: (Record<string, unknown> | null)[];
+        labels?: unknown[];
         labels_url?: string;
         locked?: boolean;
-        milestone?: Record<string, unknown> | null;
+        milestone?: unknown;
         node_id?: string;
         number?: number;
-        performed_via_github_app?: Record<string, unknown> | null;
+        performed_via_github_app?: unknown;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -34477,10 +35010,6 @@ export interface components {
           /** Format: uri */
           contributors_url: string;
           created_at: number | string;
-          /** @description The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values. */
-          custom_properties?: {
-            [key: string]: unknown;
-          };
           /** @description The default branch of the repository. */
           default_branch: string;
           /**
@@ -36632,9 +37161,9 @@ export interface components {
           url?: string;
         } | null;
       } & {
-        active_lock_reason: Record<string, unknown> | null;
-        assignee?: Record<string, unknown> | null;
-        assignees?: (Record<string, unknown> | null)[];
+        active_lock_reason: unknown;
+        assignee?: unknown;
+        assignees?: unknown[];
         author_association?: string;
         body?: string | null;
         closed_at?: string | null;
@@ -36644,14 +37173,14 @@ export interface components {
         events_url?: string;
         html_url?: string;
         id?: number;
-        labels?: (Record<string, unknown> | null)[];
+        labels?: unknown[];
         labels_url?: string;
         /** @enum {boolean} */
         locked: false;
-        milestone?: Record<string, unknown> | null;
+        milestone?: unknown;
         node_id?: string;
         number?: number;
-        performed_via_github_app?: Record<string, unknown> | null;
+        performed_via_github_app?: unknown;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -38693,8 +39222,8 @@ export interface components {
           body?: string | Record<string, never>;
           body_html?: string;
           container_metadata?: {
-            labels?: Record<string, unknown> | null;
-            manifest?: Record<string, unknown> | null;
+            labels?: unknown;
+            manifest?: unknown;
             tag?: {
               digest?: string;
               name?: string;
@@ -38719,19 +39248,19 @@ export interface components {
             name?: string;
             version?: string;
             npm_user?: string;
-            author?: Record<string, unknown> | null;
-            bugs?: Record<string, unknown> | null;
+            author?: unknown;
+            bugs?: unknown;
             dependencies?: Record<string, never>;
             dev_dependencies?: Record<string, never>;
             peer_dependencies?: Record<string, never>;
             optional_dependencies?: Record<string, never>;
             description?: string;
-            dist?: Record<string, unknown> | null;
+            dist?: unknown;
             git_head?: string;
             homepage?: string;
             license?: string;
             main?: string;
-            repository?: Record<string, unknown> | null;
+            repository?: unknown;
             scripts?: Record<string, never>;
             id?: string;
             node_version?: string;
@@ -38744,7 +39273,7 @@ export interface components {
             files?: string[];
             bin?: Record<string, never>;
             man?: Record<string, never>;
-            directories?: Record<string, unknown> | null;
+            directories?: unknown;
             os?: string[];
             cpu?: string[];
             readme?: string;
@@ -68975,7 +69504,7 @@ export interface components {
       before: string;
       /** @description An array of commit objects describing the pushed commits. (Pushed commits are all commits that are included in the `compare` between the `before` commit and the `after` commit.) The array includes a maximum of 20 commits. If necessary, you can use the [Commits API](https://docs.github.com/github-ae@latest/rest/commits) to fetch additional commits. This limit is applied to timeline events only and isn't applied to webhook deliveries. */
       commits: {
-        /** @description An array of files added in the commit. */
+        /** @description An array of files added in the commit. A maximum of 3000 changed files will be reported per commit. */
         added?: string[];
         /**
          * Committer
@@ -69008,9 +69537,9 @@ export interface components {
         id: string;
         /** @description The commit message. */
         message: string;
-        /** @description An array of files modified by the commit. */
+        /** @description An array of files modified by the commit. A maximum of 3000 changed files will be reported per commit. */
         modified?: string[];
-        /** @description An array of files removed in the commit. */
+        /** @description An array of files removed in the commit. A maximum of 3000 changed files will be reported per commit. */
         removed?: string[];
         /**
          * Format: date-time
@@ -69157,10 +69686,6 @@ export interface components {
         /** Format: uri */
         contributors_url: string;
         created_at: number | string;
-        /** @description The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values. */
-        custom_properties?: {
-          [key: string]: unknown;
-        };
         /** @description The default branch of the repository. */
         default_branch: string;
         /**
@@ -69408,8 +69933,8 @@ export interface components {
           body?: string | Record<string, never>;
           body_html?: string;
           container_metadata?: {
-            labels?: Record<string, unknown> | null;
-            manifest?: Record<string, unknown> | null;
+            labels?: unknown;
+            manifest?: unknown;
             tag?: {
               digest?: string;
               name?: string;
@@ -69562,7 +70087,7 @@ export interface components {
       organization?: components["schemas"]["organization-simple-webhooks"];
       registry_package: {
         created_at: string;
-        description: Record<string, unknown> | null;
+        description: unknown;
         ecosystem: string;
         html_url: string;
         id: number;
@@ -69681,7 +70206,7 @@ export interface components {
           updated_at: string;
           version: string;
         };
-        registry: Record<string, unknown> | null;
+        registry: unknown;
         updated_at: string;
       };
       repository?: components["schemas"]["repository-webhooks"];
@@ -70318,7 +70843,7 @@ export interface components {
         /** Format: uri */
         zipball_url: string | null;
       } & {
-        assets?: (Record<string, unknown> | null)[];
+        assets?: unknown[];
         assets_url?: string;
         author?: {
           avatar_url?: string;
@@ -70513,7 +71038,7 @@ export interface components {
         /** Format: uri */
         zipball_url: string | null;
       } & {
-        assets?: (Record<string, unknown> | null)[];
+        assets?: unknown[];
         assets_url?: string;
         author?: {
           avatar_url?: string;
@@ -70862,7 +71387,7 @@ export interface components {
         /** Format: uri */
         zipball_url: string | null;
       } & {
-        assets?: (Record<string, unknown> | null)[];
+        assets?: unknown[];
         assets_url?: string;
         author?: {
           avatar_url?: string;
@@ -72001,7 +72526,7 @@ export interface components {
       repository: components["schemas"]["repository-webhooks"];
       sender: components["schemas"]["simple-user-webhooks"];
       /** @description The time the star was created. This is a timestamp in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. Will be `null` for the `deleted` action. */
-      starred_at: Record<string, unknown> | null;
+      starred_at: unknown;
     };
     /** status event */
     "webhook-status": {
@@ -72330,10 +72855,6 @@ export interface components {
         /** Format: uri */
         contributors_url: string;
         created_at: number | string;
-        /** @description The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values. */
-        custom_properties?: {
-          [key: string]: unknown;
-        };
         /** @description The default branch of the repository. */
         default_branch: string;
         /**
@@ -72647,10 +73168,6 @@ export interface components {
         /** Format: uri */
         contributors_url: string;
         created_at: number | string;
-        /** @description The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values. */
-        custom_properties?: {
-          [key: string]: unknown;
-        };
         /** @description The default branch of the repository. */
         default_branch: string;
         /**
@@ -72964,10 +73481,6 @@ export interface components {
         /** Format: uri */
         contributors_url: string;
         created_at: number | string;
-        /** @description The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values. */
-        custom_properties?: {
-          [key: string]: unknown;
-        };
         /** @description The default branch of the repository. */
         default_branch: string;
         /**
@@ -73312,10 +73825,6 @@ export interface components {
         /** Format: uri */
         contributors_url: string;
         created_at: number | string;
-        /** @description The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values. */
-        custom_properties?: {
-          [key: string]: unknown;
-        };
         /** @description The default branch of the repository. */
         default_branch: string;
         /**
@@ -73629,10 +74138,6 @@ export interface components {
         /** Format: uri */
         contributors_url: string;
         created_at: number | string;
-        /** @description The custom properties that were defined for the repository. The keys are the custom property names, and the values are the corresponding custom property values. */
-        custom_properties?: {
-          [key: string]: unknown;
-        };
         /** @description The default branch of the repository. */
         default_branch: string;
         /**
@@ -74098,7 +74603,7 @@ export interface components {
         head_branch?: string | null;
         /** @description The name of the workflow. */
         workflow_name?: string | null;
-        steps?: (Record<string, unknown> | null)[];
+        steps?: unknown[];
         url?: string;
       };
       deployment?: components["schemas"]["deployment"];
@@ -74863,7 +75368,7 @@ export interface components {
         node_id?: string;
         path?: string;
         previous_attempt_url?: string | null;
-        pull_requests?: (Record<string, unknown> | null)[];
+        pull_requests?: unknown[];
         referenced_workflows?:
           | {
               path: string;
@@ -75577,7 +76082,7 @@ export interface components {
         node_id?: string;
         path?: string;
         previous_attempt_url?: string | null;
-        pull_requests?: (Record<string, unknown> | null)[];
+        pull_requests?: unknown[];
         referenced_workflows?:
           | {
               path: string;
@@ -76301,9 +76806,9 @@ export interface components {
     };
   };
   parameters: {
-    /** @description The number of results per page (max 100). */
+    /** @description The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/using-pagination-in-the-rest-api)." */
     "per-page"?: number;
-    /** @description Page number of the results to fetch. */
+    /** @description The page number of the results to fetch. For more information, see "[Using pagination in the REST API](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/using-pagination-in-the-rest-api)." */
     page?: number;
     /** @description The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery. */
     "hook-id": number;
@@ -76364,9 +76869,9 @@ export interface components {
     "secret-scanning-alert-resolution"?: string;
     /** @description The property to sort the results by. `created` means when the alert was created. `updated` means when the alert was updated or resolved. */
     "secret-scanning-alert-sort"?: "created" | "updated";
-    /** @description A cursor, as given in the [Link header](https://docs.github.com/github-ae@latest/rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for results before this cursor. */
+    /** @description A cursor, as given in the [Link header](https://docs.github.com/github-ae@latest/rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for results before this cursor. For more information, see "[Using pagination in the REST API](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/using-pagination-in-the-rest-api)." */
     "pagination-before"?: string;
-    /** @description A cursor, as given in the [Link header](https://docs.github.com/github-ae@latest/rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for results after this cursor. */
+    /** @description A cursor, as given in the [Link header](https://docs.github.com/github-ae@latest/rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for results after this cursor. For more information, see "[Using pagination in the REST API](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/using-pagination-in-the-rest-api)." */
     "pagination-after"?: string;
     /** @description A comma-separated list of validities that, when present, will return alerts that match the validities in this list. Valid options are `active`, `inactive`, and `unknown`. */
     "secret-scanning-alert-validity"?: string;
@@ -76482,7 +76987,7 @@ export interface components {
     "commit-ref": string;
     /** @description deployment_id parameter */
     "deployment-id": number;
-    /** @description The name of the environment. */
+    /** @description The name of the environment. The name must be URL encoded. For example, any slashes in the name must be replaced with `%2F`. */
     "environment-name": string;
     /** @description The unique identifier of the branch policy. */
     "branch-policy-id": number;
@@ -77962,7 +78467,7 @@ export interface operations {
    * Get an app
    * @description **Note**: The `:app_slug` is just the URL-friendly name of your GitHub App. You can find this on the settings page for your GitHub App (e.g., `https://github.com/settings/apps/:app_slug`).
    *
-   * If the GitHub App you specify is public, you can access this endpoint without authenticating. If the GitHub App you specify is private, you must authenticate with a [personal access token](https://docs.github.com/github-ae@latest/articles/creating-a-personal-access-token-for-the-command-line/) or an [installation access token](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) to access this endpoint.
+   * If the GitHub App you specify is public, you can access this endpoint without authenticating. If the GitHub App you specify is private, you must authenticate with a [personal access token](https://docs.github.com/github-ae@latest/articles/creating-a-personal-access-token-for-the-command-line/) or an [installation access token](https://docs.github.com/github-ae@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-an-installation) of the target app to access this endpoint.
    */
   "apps/get-by-slug": {
     parameters: {
@@ -78878,7 +79383,7 @@ export interface operations {
    * @description GitHub AE provides several timeline resources in [Atom](http://en.wikipedia.org/wiki/Atom_(standard)) format. The Feeds API lists all the feeds available to the authenticated user:
    *
    * *   **Timeline**: The GitHub AE global public timeline
-   * *   **User**: The public timeline for any user, using [URI template](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#hypermedia)
+   * *   **User**: The public timeline for any user, using `uri_template`. For more information, see "[Hypermedia](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#hypermedia)."
    * *   **Current user public**: The public timeline for the authenticated user
    * *   **Current user**: The private timeline for the authenticated user
    * *   **Current user actor**: The private timeline for activity created by the authenticated user
@@ -78977,7 +79482,7 @@ export interface operations {
    * List public gists
    * @description List public gists sorted by most recently updated to least recently updated.
    *
-   * Note: With [pagination](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination), you can fetch up to 3000 gists. For example, you can fetch 100 pages with 30 gists per page or 30 pages with 100 gists per page.
+   * Note: With [pagination](https://docs.github.com/github-ae@latest/rest/guides/using-pagination-in-the-rest-api), you can fetch up to 3000 gists. For example, you can fetch 100 pages with 30 gists per page or 30 pages with 100 gists per page.
    */
   "gists/list-public": {
     parameters: {
@@ -79029,7 +79534,15 @@ export interface operations {
       403: components["responses"]["forbidden"];
     };
   };
-  /** Get a gist */
+  /**
+   * Get a gist
+   * @description Gets a specified gist.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences.
+   */
   "gists/get": {
     parameters: {
       path: {
@@ -79117,7 +79630,15 @@ export interface operations {
       422: components["responses"]["validation_failed"];
     };
   };
-  /** List gist comments */
+  /**
+   * List gist comments
+   * @description Lists the comments on a gist.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences.
+   */
   "gists/list-comments": {
     parameters: {
       query?: {
@@ -79143,7 +79664,15 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Create a gist comment */
+  /**
+   * Create a gist comment
+   * @description Creates a comment on a gist.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences.
+   */
   "gists/create-comment": {
     parameters: {
       path: {
@@ -79177,7 +79706,15 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Get a gist comment */
+  /**
+   * Get a gist comment
+   * @description Gets a comment on a gist.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences.
+   */
   "gists/get-comment": {
     parameters: {
       path: {
@@ -79215,7 +79752,15 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Update a gist comment */
+  /**
+   * Update a gist comment
+   * @description Updates a comment on a gist.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences.
+   */
   "gists/update-comment": {
     parameters: {
       path: {
@@ -79345,7 +79890,7 @@ export interface operations {
   };
   /**
    * Star a gist
-   * @description Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
+   * @description Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP method](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#http-method)."
    */
   "gists/star": {
     parameters: {
@@ -79380,7 +79925,15 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Get a gist revision */
+  /**
+   * Get a gist revision
+   * @description Gets a specified gist revision.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences.
+   */
   "gists/get-revision": {
     parameters: {
       path: {
@@ -79417,8 +79970,11 @@ export interface operations {
   };
   /**
    * Get a gitignore template
-   * @description The API also allows fetching the source of a single template.
-   * Use the raw [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/) to get the raw contents.
+   * @description Get the content of a gitignore template.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw .gitignore contents.
    */
   "gitignore/get-template": {
     parameters: {
@@ -79491,11 +80047,17 @@ export interface operations {
    * repositories, and organization repositories. You can use the `filter` query parameter to fetch issues that are not
    * necessarily assigned to you.
    *
-   *
    * **Note**: GitHub's REST API considers every pull request an issue, but not every issue is a pull request. For this
    * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
    * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
    * request id, use the "[List pull requests](https://docs.github.com/github-ae@latest/rest/pulls/pulls#list-pull-requests)" endpoint.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "issues/list": {
     parameters: {
@@ -79674,7 +80236,7 @@ export interface operations {
         since?: components["parameters"]["since"];
         before?: components["parameters"]["before"];
         page?: components["parameters"]["page"];
-        /** @description The number of results per page (max 50). */
+        /** @description The number of results per page (max 50). For more information, see "[Using pagination in the REST API](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/using-pagination-in-the-rest-api)." */
         per_page?: number;
       };
     };
@@ -79750,6 +80312,23 @@ export interface operations {
       304: components["responses"]["not_modified"];
       401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
+    };
+  };
+  /**
+   * Mark a thread as done
+   * @description Marks a thread as "done." Marking a thread as "done" is equivalent to marking a notification in your notification inbox on GitHub AE as done: https://github.com/notifications.
+   */
+  "activity/mark-thread-as-done": {
+    parameters: {
+      path: {
+        thread_id: components["parameters"]["thread-id"];
+      };
+    };
+    responses: {
+      /** @description No content */
+      204: {
+        content: never;
+      };
     };
   };
   /**
@@ -80052,6 +80631,8 @@ export interface operations {
            * You can check which security and analysis features are currently enabled by using a `GET /orgs/{org}` request.
            */
           secret_scanning_push_protection_enabled_for_new_repositories?: boolean;
+          /** @description Whether secret scanning automatic validity checks on supported partner tokens is enabled for all repositories under this organization. */
+          secret_scanning_validity_checks_enabled?: boolean;
         };
       };
     };
@@ -80965,7 +81546,7 @@ export interface operations {
    *
    * By default, the response includes up to 30 events from the past three months. Use the `phrase` parameter to filter results and retrieve older events. For example, use the `phrase` parameter with the `created` qualifier to filter events based on when the events occurred. For more information, see "[Reviewing the audit log for your organization](https://docs.github.com/github-ae@latest/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization#searching-the-audit-log)."
    *
-   * Use pagination to retrieve fewer or more than 30 events. For more information, see "[Resources in the REST API](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination)."
+   * Use pagination to retrieve fewer or more than 30 events. For more information, see "[Using pagination in the REST API](https://docs.github.com/github-ae@latest/rest/guides/using-pagination-in-the-rest-api)."
    */
   "orgs/get-audit-log": {
     parameters: {
@@ -80997,8 +81578,6 @@ export interface operations {
    * To use this endpoint, you must be an owner or security manager for the organization, and you must use an access token with the `repo` scope or `security_events` scope.
    *
    * For public repositories, you may instead use the `public_repo` scope.
-   *
-   * GitHub Apps must have the `security_events` read permission to use this endpoint.
    */
   "code-scanning/list-alerts-for-org": {
     parameters: {
@@ -81454,6 +82033,13 @@ export interface operations {
    * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
    * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
    * request id, use the "[List pull requests](https://docs.github.com/github-ae@latest/rest/pulls/pulls#list-pull-requests)" endpoint.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "issues/list-for-org": {
     parameters: {
@@ -82085,7 +82671,7 @@ export interface operations {
    *
    * When using [OAuth](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
    *
-   * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.
+   * *   `public_repo` scope or `repo` scope to create a public repository
    * *   `repo` scope to create a private repository
    */
   "repos/create-in-org": {
@@ -82213,7 +82799,7 @@ export interface operations {
           Location?: string;
         };
         content: {
-          "application/json": components["schemas"]["repository"];
+          "application/json": components["schemas"]["full-repository"];
         };
       };
       403: components["responses"]["forbidden"];
@@ -82463,7 +83049,7 @@ export interface operations {
    * Create a discussion
    * @description Creates a new discussion post on a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
-   * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/{org_id}/team/{team_id}/discussions`.
    */
@@ -82610,7 +83196,7 @@ export interface operations {
    * Create a discussion comment
    * @description Creates a new comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
-   * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
    */
@@ -83212,7 +83798,7 @@ export interface operations {
       content: {
         "application/json": {
           /**
-           * @description The permission to grant to the team for this project. Default: the team's `permission` attribute will be used to determine what permission to grant the team on this project. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
+           * @description The permission to grant to the team for this project. Default: the team's `permission` attribute will be used to determine what permission to grant the team on this project. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling this endpoint. For more information, see "[HTTP method](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#http-method)."
            * @enum {string}
            */
           permission?: "read" | "write" | "admin";
@@ -83293,6 +83879,8 @@ export interface operations {
    *
    * If a team doesn't have permission for the repository, you will receive a `404 Not Found` response status.
    *
+   * If the repository is private, you must have at least `read` permission for that repository, and your token must have the `repo` or `admin:org` scope. Otherwise, you will receive a `404 Not Found` response status.
+   *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo}`.
    */
   "teams/check-permissions-for-repo-in-org": {
@@ -83323,7 +83911,7 @@ export interface operations {
   };
   /**
    * Add or update team repository permissions
-   * @description To add a repository to a team or update the team's permission on a repository, the authenticated user must have admin access to the repository, and must be able to see the team. The repository must be owned by the organization, or a direct fork of a repository owned by the organization. You will get a `422 Unprocessable Entity` status if you attempt to add a repository to a team that is not owned by the organization. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
+   * @description To add a repository to a team or update the team's permission on a repository, the authenticated user must have admin access to the repository, and must be able to see the team. The repository must be owned by the organization, or a direct fork of a repository owned by the organization. You will get a `422 Unprocessable Entity` status if you attempt to add a repository to a team that is not owned by the organization. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP method](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#http-method)."
    *
    * **Note:** You can also specify a team by `org_id` and `team_id` using the route `PUT /organizations/{org_id}/team/{team_id}/repos/{owner}/{repo}`.
    *
@@ -84210,6 +84798,11 @@ export interface operations {
               /** @description Can be `enabled` or `disabled`. */
               status?: string;
             };
+            /** @description Use the `status` property to enable or disable secret scanning automatic validity checks on supported partner tokens for this repository. */
+            secret_scanning_validity_checks?: {
+              /** @description Can be `enabled` or `disabled`. */
+              status?: string;
+            };
           } | null;
           /**
            * @description Either `true` to enable issues for this repository or `false` to disable them.
@@ -84776,7 +85369,7 @@ export interface operations {
   };
   /**
    * List workflow runs for a repository
-   * @description Lists all workflow runs for a repository. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#parameters).
+   * @description Lists all workflow runs for a repository. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#parameters).
    *
    * Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint.
    */
@@ -84921,7 +85514,7 @@ export interface operations {
   };
   /**
    * List jobs for a workflow run attempt
-   * @description Lists jobs for a specific workflow run attempt. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#parameters).
+   * @description Lists jobs for a specific workflow run attempt. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#parameters).
    */
   "actions/list-jobs-for-workflow-run-attempt": {
     parameters: {
@@ -85032,7 +85625,7 @@ export interface operations {
   };
   /**
    * List jobs for a workflow run
-   * @description Lists jobs for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#parameters).
+   * @description Lists jobs for a workflow run. Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope. GitHub Apps must have the `actions:read` permission to use this endpoint. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#parameters).
    */
   "actions/list-jobs-for-workflow-run": {
     parameters: {
@@ -85124,7 +85717,7 @@ export interface operations {
     };
     requestBody?: {
       content: {
-        "application/json": Record<string, unknown> | null;
+        "application/json": unknown;
       };
     };
     responses: {
@@ -85438,7 +86031,7 @@ export interface operations {
   };
   /**
    * List workflow runs for a workflow
-   * @description List all workflow runs for a workflow. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#parameters).
+   * @description List all workflow runs for a workflow. You can replace `workflow_id` with the workflow file name. For example, you could use `main.yaml`. You can use parameters to narrow the list of results. For more information about using parameters, see [Parameters](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#parameters).
    *
    * Anyone with read access to the repository can use this endpoint. If the repository is private you must use an access token with the `repo` scope.
    */
@@ -85558,16 +86151,13 @@ export interface operations {
     };
   };
   /**
-   * List all autolinks of a repository
-   * @description This returns a list of autolinks configured for the given repository.
+   * Get all autolinks of a repository
+   * @description Gets all autolinks that are configured for a repository.
    *
    * Information about autolinks are only available to repository administrators.
    */
   "repos/list-autolinks": {
     parameters: {
-      query?: {
-        page?: components["parameters"]["page"];
-      };
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
@@ -86835,9 +87425,11 @@ export interface operations {
   };
   /**
    * Get a check run
-   * @description **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
+   * @description Gets a single check run using its `id`.
    *
-   * Gets a single check run using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth apps and authenticated users must have the `repo` scope to get check runs in a private repository.
+   * GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth apps and authenticated users must have the `repo` scope to get check runs in a private repository.
+   *
+   * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
    */
   "checks/get": {
     parameters: {
@@ -86858,7 +87450,9 @@ export interface operations {
   };
   /**
    * Update a check run
-   * @description Updates a check run for a specific commit in a repository. Your GitHub App must have the `checks:write` permission to edit check runs.
+   * @description Updates a check run for a specific commit in a repository.
+   *
+   * To update a check run, you must use a GitHub App with the `checks:write` permission. OAuth apps and authenticated users are not able to update a check run.
    *
    * **Note:** The endpoints to manage checks only look for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
    */
@@ -86984,7 +87578,13 @@ export interface operations {
   };
   /**
    * List check run annotations
-   * @description Lists annotations for a check run using the annotation `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get annotations for a check run. OAuth apps and authenticated users must have the `repo` scope to get annotations for a check run in a private repository.
+   * @description Lists annotations for a check run using the annotation `id`.
+   *
+   * GitHub Apps
+   * must have the `checks:read` permission on a private repository or pull access to
+   * a public repository to get annotations for a check run. OAuth apps and authenticated
+   * users must have the `repo` scope to get annotations for a check run in a private
+   * repository.
    */
   "checks/list-annotations": {
     parameters: {
@@ -87014,7 +87614,7 @@ export interface operations {
    * Rerequest a check run
    * @description Triggers GitHub to rerequest an existing check run, without pushing new code to a repository. This endpoint will trigger the [`check_run` webhook](https://docs.github.com/github-ae@latest/webhooks/event-payloads/#check_run) event with the action `rerequested`. When a check run is `rerequested`, its `status` is reset to `queued` and the `conclusion` is cleared.
    *
-   * To rerequest a check run, your GitHub App must have the `checks:read` permission on a private repository or pull access to a public repository.
+   * To rerequest a check run, you must use a GitHub App with the `checks:read` permission on a private repository or pull access to a public repository. OAuth apps and authenticated users are not able to rerequest a check run.
    *
    * For more information about how to re-run GitHub Actions jobs, see "[Re-run a job from a workflow run](https://docs.github.com/github-ae@latest/rest/actions/workflow-runs#re-run-a-job-from-a-workflow-run)".
    */
@@ -87050,9 +87650,11 @@ export interface operations {
   };
   /**
    * Create a check suite
-   * @description **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
+   * @description Creates a check suite manually. By default, check suites are automatically created when you create a [check run](https://docs.github.com/github-ae@latest/rest/checks/runs). You only need to use this endpoint for manually creating check suites when you've disabled automatic creation using "[Update repository preferences for check suites](https://docs.github.com/github-ae@latest/rest/checks/suites#update-repository-preferences-for-check-suites)".
    *
-   * By default, check suites are automatically created when you create a [check run](https://docs.github.com/github-ae@latest/rest/checks/runs). You only need to use this endpoint for manually creating check suites when you've disabled automatic creation using "[Update repository preferences for check suites](https://docs.github.com/github-ae@latest/rest/checks/suites#update-repository-preferences-for-check-suites)". Your GitHub App must have the `checks:write` permission to create check suites.
+   * To create a check suite, you must use a GitHub App with the `checks:write` permission. OAuth apps and authenticated users are not able to create a check suite.
+   *
+   * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
    */
   "checks/create-suite": {
     parameters: {
@@ -87086,7 +87688,8 @@ export interface operations {
   };
   /**
    * Update repository preferences for check suites
-   * @description Changes the default automatic flow when creating check suites. By default, a check suite is automatically created each time code is pushed to a repository. When you disable the automatic creation of check suites, you can manually [Create a check suite](https://docs.github.com/github-ae@latest/rest/checks/suites#create-a-check-suite). You must have admin permissions in the repository to set preferences for check suites.
+   * @description Changes the default automatic flow when creating check suites. By default, a check suite is automatically created each time code is pushed to a repository. When you disable the automatic creation of check suites, you can manually [Create a check suite](https://docs.github.com/github-ae@latest/rest/checks/suites#create-a-check-suite).
+   * You must have admin permissions in the repository to set preferences for check suites.
    */
   "checks/set-suites-preferences": {
     parameters: {
@@ -87122,9 +87725,11 @@ export interface operations {
   };
   /**
    * Get a check suite
-   * @description **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
+   * @description Gets a single check suite using its `id`.
    *
-   * Gets a single check suite using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check suites. OAuth apps and authenticated users must have the `repo` scope to get check suites in a private repository.
+   * GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check suites. OAuth apps and authenticated users must have the `repo` scope to get check suites in a private repository.
+   *
+   * **Note:** The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
    */
   "checks/get-suite": {
     parameters: {
@@ -87145,7 +87750,9 @@ export interface operations {
   };
   /**
    * List check runs in a check suite
-   * @description Lists check runs for a check suite using its `id`. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth apps and authenticated users must have the `repo` scope to get check runs in a private repository.
+   * @description Lists check runs for a check suite using its `id`.
+   *
+   * GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth apps and authenticated users must have the `repo` scope to get check runs in a private repository.
    *
    * **Note:** The endpoints to manage checks only look for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
    */
@@ -87184,7 +87791,7 @@ export interface operations {
    * Rerequest a check suite
    * @description Triggers GitHub to rerequest an existing check suite, without pushing new code to a repository. This endpoint will trigger the [`check_suite` webhook](https://docs.github.com/github-ae@latest/webhooks/event-payloads/#check_suite) event with the action `rerequested`. When a check suite is `rerequested`, its `status` is reset to `queued` and the `conclusion` is cleared.
    *
-   * To rerequest a check suite, your GitHub App must have the `checks:write` permission on a private repository or pull access to a public repository.
+   * To rerequest a check suite, you must use a GitHub App with the `checks:write` permission on a private repository or pull access to a public repository. OAuth apps and authenticated users are not able to rerequest a check suite.
    */
   "checks/rerequest-suite": {
     parameters: {
@@ -87208,9 +87815,6 @@ export interface operations {
    * @description Lists code scanning alerts.
    *
    * To use this endpoint, you must use an access token with the `security_events` scope or, for alerts from public repositories only, an access token with the `public_repo` scope.
-   *
-   * GitHub Apps must have the `security_events` read
-   * permission to use this endpoint.
    *
    * The response includes a `most_recent_instance` object.
    * This provides details of the most recent instance of this alert
@@ -87252,7 +87856,7 @@ export interface operations {
   };
   /**
    * Get a code scanning alert
-   * @description Gets a single code scanning alert. You must use an access token with the `security_events` scope to use this endpoint with private repos, the `public_repo` scope also grants permission to read security events on public repos only. GitHub Apps must have the `security_events` read permission to use this endpoint.
+   * @description Gets a single code scanning alert. You must use an access token with the `security_events` scope to use this endpoint with private repositories, the `public_repo` scope also grants permission to read security events on public repositories only.
    */
   "code-scanning/get-alert": {
     parameters: {
@@ -87310,9 +87914,8 @@ export interface operations {
   /**
    * List instances of a code scanning alert
    * @description Lists all instances of the specified code scanning alert.
-   * You must use an access token with the `security_events` scope to use this endpoint with private repos,
-   * the `public_repo` scope also grants permission to read security events on public repos only.
-   * GitHub Apps must have the `security_events` read permission to use this endpoint.
+   * You must use an access token with the `security_events` scope to use this endpoint with private repositories,
+   * the `public_repo` scope also grants permission to read security events on public repositories only.
    */
   "code-scanning/list-alert-instances": {
     parameters: {
@@ -87352,9 +87955,8 @@ export interface operations {
    * For very old analyses this data is not available,
    * and `0` is returned in this field.
    *
-   * You must use an access token with the `security_events` scope to use this endpoint with private repos,
-   * the `public_repo` scope also grants permission to read security events on public repos only.
-   * GitHub Apps must have the `security_events` read permission to use this endpoint.
+   * You must use an access token with the `security_events` scope to use this endpoint with private repositories,
+   * the `public_repo` scope also grants permission to read security events on public repositories only.
    *
    * **Deprecation notice**:
    * The `tool_name` field is deprecated and will, in future, not be included in the response for this endpoint. The example response reflects this change. The tool name can now be found inside the `tool` field.
@@ -87394,9 +87996,9 @@ export interface operations {
   /**
    * Get a code scanning analysis for a repository
    * @description Gets a specified code scanning analysis for a repository.
-   * You must use an access token with the `security_events` scope to use this endpoint with private repos,
-   * the `public_repo` scope also grants permission to read security events on public repos only.
-   * GitHub Apps must have the `security_events` read permission to use this endpoint.
+   *
+   * You must use an access token with the `security_events` scope to use this endpoint with private repositories,
+   * the `public_repo` scope also grants permission to read security events on public repositories only.
    *
    * The default JSON response contains fields that describe the analysis.
    * This includes the Git reference and commit SHA to which the analysis relates,
@@ -87408,10 +88010,9 @@ export interface operations {
    * For very old analyses this data is not available,
    * and `0` is returned in this field.
    *
-   * If you use the Accept header `application/sarif+json`,
-   * the response contains the analysis data that was uploaded.
-   * This is formatted as
-   * [SARIF version 2.1.0](https://docs.oasis-open.org/sarif/sarif/v2.1.0/cs01/sarif-v2.1.0-cs01.html).
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/sarif+json`**: Instead of returning a summary of the analysis, this endpoint returns a subset of the analysis data that was uploaded. The data is formatted as [SARIF version 2.1.0](https://docs.oasis-open.org/sarif/sarif/v2.1.0/cs01/sarif-v2.1.0-cs01.html). It also returns additional data such as the `github/alertNumber` and `github/alertUrl` properties.
    */
   "code-scanning/get-analysis": {
     parameters: {
@@ -87571,7 +88172,7 @@ export interface operations {
       content: {
         "application/json": {
           commit_sha: components["schemas"]["code-scanning-analysis-commit-sha"];
-          ref: components["schemas"]["code-scanning-ref"];
+          ref: components["schemas"]["code-scanning-ref-full"];
           sarif: components["schemas"]["code-scanning-analysis-sarif-file"];
           /**
            * Format: uri
@@ -87612,7 +88213,7 @@ export interface operations {
   };
   /**
    * Get information about a SARIF upload
-   * @description Gets information about a SARIF upload, including the status and the URL of the analysis that was uploaded so that you can retrieve details of the analysis. For more information, see "[Get a code scanning analysis for a repository](/rest/code-scanning/code-scanning#get-a-code-scanning-analysis-for-a-repository)." You must use an access token with the `security_events` scope to use this endpoint with private repos, the `public_repo` scope also grants permission to read security events on public repos only. GitHub Apps must have the `security_events` read permission to use this endpoint.
+   * @description Gets information about a SARIF upload, including the status and the URL of the analysis that was uploaded so that you can retrieve details of the analysis. For more information, see "[Get a code scanning analysis for a repository](/rest/code-scanning/code-scanning#get-a-code-scanning-analysis-for-a-repository)." You must use an access token with the `security_events` scope to use this endpoint with private repositories, the `public_repo` scope also grants permission to read security events on public repositories only.
    */
   "code-scanning/get-sarif": {
     parameters: {
@@ -87740,7 +88341,7 @@ export interface operations {
   };
   /**
    * Add a repository collaborator
-   * @description This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+   * @description This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
    *
    * Adding an outside collaborator may be restricted by enterprise administrators. For more information, see "[Enforcing repository management policies in your enterprise](https://docs.github.com/github-ae@latest/admin/policies/enforcing-policies-for-your-enterprise/enforcing-repository-management-policies-in-your-enterprise#enforcing-a-policy-for-inviting-outside-collaborators-to-repositories)."
    *
@@ -87750,7 +88351,7 @@ export interface operations {
    * Cannot assign {member} permission of {role name}
    * ```
    *
-   * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
+   * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP method](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#http-method)."
    *
    * **Updating an existing collaborator's permission level**
    *
@@ -87860,9 +88461,14 @@ export interface operations {
   };
   /**
    * List commit comments for a repository
-   * @description Commit Comments use [these custom media types](https://docs.github.com/github-ae@latest/rest/overview/media-types). You can read more about the use of media types in the API [here](https://docs.github.com/github-ae@latest/rest/overview/media-types/).
+   * @description Lists the commit comments for a specified repository. Comments are ordered by ascending ID.
    *
-   * Comments are ordered by ascending ID.
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "repos/list-commit-comments-for-repo": {
     parameters: {
@@ -87887,7 +88493,17 @@ export interface operations {
       };
     };
   };
-  /** Get a commit comment */
+  /**
+   * Get a commit comment
+   * @description Gets a specified commit comment.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+   */
   "repos/get-commit-comment": {
     parameters: {
       path: {
@@ -87923,7 +88539,17 @@ export interface operations {
       404: components["responses"]["not_found"];
     };
   };
-  /** Update a commit comment */
+  /**
+   * Update a commit comment
+   * @description Updates the contents of a specified commit comment.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+   */
   "repos/update-commit-comment": {
     parameters: {
       path: {
@@ -88154,7 +88780,14 @@ export interface operations {
   };
   /**
    * List commit comments
-   * @description Use the `:commit_sha` to specify the commit that will have its comments listed.
+   * @description Lists the comments for a specified commit.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "repos/list-comments-for-commit": {
     parameters: {
@@ -88184,7 +88817,14 @@ export interface operations {
    * Create a commit comment
    * @description Create a comment for a commit using its `:commit_sha`.
    *
-   * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "repos/create-commit-comment": {
     parameters: {
@@ -88259,9 +88899,11 @@ export interface operations {
    *
    * **Note:** If there are more than 300 files in the commit diff, the response will include pagination link headers for the remaining files, up to a limit of 3000 files. Each page contains the static commit information, and the only changes are to the file listing.
    *
-   * You can pass the appropriate [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to  fetch `diff` and `patch` formats. Diffs with binary data will have no `patch` property.
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
    *
-   * To return only the SHA-1 hash of the commit reference, you can provide the `sha` custom [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) in the `Accept` header. You can use this endpoint to check if a remote reference's SHA-1 hash is the same as your local reference's SHA-1 hash by providing the local SHA-1 reference as the ETag.
+   * - **`application/vnd.github.diff`**: Returns the diff of the commit.
+   * - **`application/vnd.github.patch`**: Returns the patch of the commit. Diffs with binary data will have no `patch` property.
+   * - **`application/vnd.github.sha`**: Returns the commit's SHA-1 hash. You can use this endpoint to check if a remote reference's SHA-1 hash is the same as your local reference's SHA-1 hash by providing the local SHA-1 reference as the ETag.
    *
    * **Signature verification object**
    *
@@ -88319,7 +88961,9 @@ export interface operations {
   };
   /**
    * List check runs for a Git reference
-   * @description Lists check runs for a commit ref. The `ref` can be a SHA, branch name, or a tag name. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth apps and authenticated users must have the `repo` scope to get check runs in a private repository.
+   * @description Lists check runs for a commit ref. The `ref` can be a SHA, branch name, or a tag name.
+   *
+   * GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to get check runs. OAuth apps and authenticated users must have the `repo` scope to get check runs in a private repository.
    *
    * **Note:** The endpoints to manage checks only look for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array.
    *
@@ -88359,7 +89003,9 @@ export interface operations {
   };
   /**
    * List check suites for a Git reference
-   * @description Lists check suites for a commit `ref`. The `ref` can be a SHA, branch name, or a tag name. GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to list check suites. OAuth apps and authenticated users must have the `repo` scope to get check suites in a private repository.
+   * @description Lists check suites for a commit `ref`. The `ref` can be a SHA, branch name, or a tag name.
+   *
+   * GitHub Apps must have the `checks:read` permission on a private repository or pull access to a public repository to list check suites. OAuth apps and authenticated users must have the `repo` scope to get check suites in a private repository.
    *
    * **Note:** The endpoints to manage checks only look for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty `pull_requests` array and a `null` value for `head_branch`.
    */
@@ -88464,7 +89110,12 @@ export interface operations {
    * Compare two commits
    * @description Compares two commits against one another. You can compare branches in the same repository, or you can compare branches that exist in different repositories within the same repository network, including fork branches. For more information about how to view a repository's network, see "[Understanding connections between repositories](https://docs.github.com/github-ae@latest/repositories/viewing-activity-and-data-for-your-repository/understanding-connections-between-repositories)."
    *
-   * This endpoint is equivalent to running the `git log BASE..HEAD` command, but it returns commits in a different order. The `git log BASE..HEAD` command returns commits in reverse chronological order, whereas the API returns commits in chronological order. You can pass the appropriate [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.
+   * This endpoint is equivalent to running the `git log BASE..HEAD` command, but it returns commits in a different order. The `git log BASE..HEAD` command returns commits in reverse chronological order, whereas the API returns commits in chronological order.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.diff`**: Returns the diff of the commit.
+   * - **`application/vnd.github.patch`**: Returns the patch of the commit. Diffs with binary data will have no `patch` property.
    *
    * The API response includes details about the files that were changed between the two commits. This includes the status of the change (if a file was added, removed, modified, or renamed), and details of the change itself. For example, files with a `renamed` status have a `previous_filename` field showing the previous filename of the file, and files with a `modified` status have a `patch` field showing the changes made to the file.
    *
@@ -89534,7 +90185,12 @@ export interface operations {
    * Get a blob
    * @description The `content` in the response will always be Base64 encoded.
    *
-   * _Note_: This API supports blobs up to 100 megabytes in size.
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw blob data.
+   * - **`application/vnd.github+json`**: Returns a JSON representation of the blob with `content` as a base64 encoded string. This is the default if no media type is specified.
+   *
+   * **Note** This endpoint supports blobs up to 100 megabytes in size.
    */
   "git/get-blob": {
     parameters: {
@@ -90129,10 +90785,6 @@ export interface operations {
             content_type?: components["schemas"]["webhook-config-content-type"];
             secret?: components["schemas"]["webhook-config-secret"];
             insecure_ssl?: components["schemas"]["webhook-config-insecure-ssl"];
-            /** @example "abc" */
-            token?: string;
-            /** @example "sha256" */
-            digest?: string;
           };
           /**
            * @description Determines what [events](https://docs.github.com/github-ae@latest/webhooks/event-payloads) the hook is triggered for.
@@ -90219,17 +90871,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** @description Key/value pairs to provide settings for this webhook. */
-          config?: {
-            url: components["schemas"]["webhook-config-url"];
-            content_type?: components["schemas"]["webhook-config-content-type"];
-            secret?: components["schemas"]["webhook-config-secret"];
-            insecure_ssl?: components["schemas"]["webhook-config-insecure-ssl"];
-            /** @example "bar@example.com" */
-            address?: string;
-            /** @example "The Serious Room" */
-            room?: string;
-          };
+          config?: components["schemas"]["webhook-config"];
           /**
            * @description Determines what [events](https://docs.github.com/github-ae@latest/webhooks/event-payloads) the hook is triggered for. This replaces the entire array of events.
            * @default [
@@ -90533,6 +91175,13 @@ export interface operations {
    * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
    * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
    * request id, use the "[List pull requests](https://docs.github.com/github-ae@latest/rest/pulls/pulls#list-pull-requests)" endpoint.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "issues/list-for-repo": {
     parameters: {
@@ -90579,7 +91228,15 @@ export interface operations {
    * Create an issue
    * @description Any user with pull access to a repository can create an issue. If [issues are disabled in the repository](https://docs.github.com/github-ae@latest/articles/disabling-issues/), the API returns a `410 Gone` status.
    *
-   * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+   * and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "issues/create": {
     parameters: {
@@ -90639,6 +91296,13 @@ export interface operations {
    * @description You can use the REST API to list comments on issues and pull requests for a repository. Every pull request is an issue, but not every issue is a pull request.
    *
    * By default, issue comments are ordered by ascending ID.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "issues/list-comments-for-repo": {
     parameters: {
@@ -90672,6 +91336,13 @@ export interface operations {
   /**
    * Get an issue comment
    * @description You can use the REST API to get comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "issues/get-comment": {
     parameters: {
@@ -90713,6 +91384,13 @@ export interface operations {
   /**
    * Update an issue comment
    * @description You can use the REST API to update comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "issues/update-comment": {
     parameters: {
@@ -90902,7 +91580,7 @@ export interface operations {
   };
   /**
    * Get an issue
-   * @description The API returns a [`301 Moved Permanently` status](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-redirects-redirects) if the issue was
+   * @description The API returns a [`301 Moved Permanently` status](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api#follow-redirects) if the issue was
    * [transferred](https://docs.github.com/github-ae@latest/articles/transferring-an-issue-to-another-repository/) to another repository. If
    * the issue was transferred to or deleted from a repository where the authenticated user lacks read access, the API
    * returns a `404 Not Found` status. If the issue was deleted from a repository where the authenticated user has read
@@ -90913,6 +91591,13 @@ export interface operations {
    * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
    * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
    * request id, use the "[List pull requests](https://docs.github.com/github-ae@latest/rest/pulls/pulls#list-pull-requests)" endpoint.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "issues/get": {
     parameters: {
@@ -90938,6 +91623,13 @@ export interface operations {
   /**
    * Update an issue
    * @description Issue owners and users with push access can edit an issue.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "issues/update": {
     parameters: {
@@ -91093,6 +91785,13 @@ export interface operations {
    * @description You can use the REST API to list comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request.
    *
    * Issue comments are ordered by ascending ID.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "issues/list-comments": {
     parameters: {
@@ -91123,14 +91822,19 @@ export interface operations {
   };
   /**
    * Create an issue comment
-   * @description
-   * You can use the REST API to create comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request.
+   * @description You can use the REST API to create comments on issues and pull requests. Every pull request is an issue, but not every issue is a pull request.
    *
    * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications).
    * Creating content too quickly using this endpoint may result in secondary rate limiting.
-   * See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)"
-   * and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)"
-   * for details.
+   * For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+   * and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "issues/create-comment": {
     parameters: {
@@ -91360,7 +92064,7 @@ export interface operations {
    * Lock an issue
    * @description Users with push access can lock an issue or pull request's conversation.
    *
-   * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
+   * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP method](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#http-method)."
    */
   "issues/lock": {
     parameters: {
@@ -91866,7 +92570,10 @@ export interface operations {
    * Get the license for a repository
    * @description This method returns the contents of the repository's license file, if one is detected.
    *
-   * Similar to [Get repository content](https://docs.github.com/github-ae@latest/rest/repos/contents#get-repository-content), this method also supports [custom media types](https://docs.github.com/github-ae@latest/rest/overview/media-types) for retrieving the raw license content or rendered license HTML.
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw contents of the license.
+   * - **`application/vnd.github.html+json`**: Returns the license contents in HTML. Markup languages are rendered to HTML using GitHub's open-source [Markup library](https://github.com/github/markup).
    */
   "licenses/get-for-repo": {
     parameters: {
@@ -92531,7 +93238,22 @@ export interface operations {
   };
   /**
    * List pull requests
-   * @description Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github-ae@latest/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
+   * @description Lists pull requests in a specified repository.
+   *
+   * Draft pull requests are available in public repositories with GitHub
+   * Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing
+   * plans, and in public and private repositories with GitHub Team and GitHub Enterprise
+   * Cloud. For more information, see [GitHub's products](https://docs.github.com/github-ae@latest/github/getting-started-with-github/githubs-products)
+   * in the GitHub Help documentation.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+   * - **`application/vnd.github.diff`**: For more information, see "[git-diff](https://git-scm.com/docs/git-diff)" in the Git documentation. If a diff is corrupt, contact us through the [GitHub Support portal](https://support.github.com/). Include the repository name and pull request ID in your message.
+   * - **`application/vnd.github.patch`**: For more information, see "[git-format-patch](https://git-scm.com/docs/git-format-patch)" in the Git documentation.
    */
   "pulls/list": {
     parameters: {
@@ -92574,7 +93296,15 @@ export interface operations {
    *
    * To open or update a pull request in a public repository, you must have write access to the head or the source branch. For organization-owned repositories, you must be a member of the organization that owns the repository to open or update a pull request.
    *
-   * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+   * - **`application/vnd.github.diff`**: For more information, see "[git-diff](https://git-scm.com/docs/git-diff)" in the Git documentation. If a diff is corrupt, contact us through the [GitHub Support portal](https://support.github.com/). Include the repository name and pull request ID in your message.
    */
   "pulls/create": {
     parameters: {
@@ -92624,7 +93354,15 @@ export interface operations {
   };
   /**
    * List review comments in a repository
-   * @description Lists review comments for all pull requests in a repository. By default, review comments are in ascending order by ID.
+   * @description Lists review comments for all pull requests in a repository. By default,
+   * review comments are in ascending order by ID.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "pulls/list-review-comments-for-repo": {
     parameters: {
@@ -92655,7 +93393,14 @@ export interface operations {
   };
   /**
    * Get a review comment for a pull request
-   * @description Provides details for a review comment.
+   * @description Provides details for a specified review comment.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "pulls/get-review-comment": {
     parameters: {
@@ -92697,7 +93442,14 @@ export interface operations {
   };
   /**
    * Update a review comment for a pull request
-   * @description Enables you to edit a review comment.
+   * @description Edits the content of a specified review comment.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "pulls/update-review-comment": {
     parameters: {
@@ -92849,6 +93601,14 @@ export interface operations {
    * *   If [rebased](https://docs.github.com/github-ae@latest/articles/about-merge-methods-on-github/#rebasing-and-merging-your-commits), `merge_commit_sha` represents the commit that the base branch was updated to.
    *
    * Pass the appropriate [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+   * - **`application/vnd.github.diff`**: For more information, see "[git-diff](https://git-scm.com/docs/git-diff)" in the Git documentation. If a diff is corrupt, contact us through the [GitHub Support portal](https://support.github.com/). Include the repository name and pull request ID in your message.
    */
   "pulls/get": {
     parameters: {
@@ -92876,6 +93636,14 @@ export interface operations {
    * @description Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github-ae@latest/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.
    *
    * To open or update a pull request in a public repository, you must have write access to the head or the source branch. For organization-owned repositories, you must be a member of the organization that owns the repository to open or update a pull request.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+   * - **`application/vnd.github.diff`**: For more information, see "[git-diff](https://git-scm.com/docs/git-diff)" in the Git documentation. If a diff is corrupt, contact us through the [GitHub Support portal](https://support.github.com/). Include the repository name and pull request ID in your message.
    */
   "pulls/update": {
     parameters: {
@@ -92917,7 +93685,15 @@ export interface operations {
   };
   /**
    * List review comments on a pull request
-   * @description Lists all review comments for a pull request. By default, review comments are in ascending order by ID.
+   * @description Lists all review comments for a specified pull request. By default, review comments
+   * are in ascending order by ID.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "pulls/list-review-comments": {
     parameters: {
@@ -92949,14 +93725,21 @@ export interface operations {
   };
   /**
    * Create a review comment for a pull request
-   * @description
-   * Creates a review comment in the pull request diff. To add a regular comment to a pull request timeline, see "[Create an issue comment](https://docs.github.com/github-ae@latest/rest/issues/comments#create-an-issue-comment)." We recommend creating a review comment using `line`, `side`, and optionally `start_line` and `start_side` if your comment applies to more than one line in the pull request diff.
+   * @description Creates a review comment on the diff of a specified pull request. To add a regular comment to a pull request timeline, see "[Create an issue comment](https://docs.github.com/github-ae@latest/rest/issues/comments#create-an-issue-comment)."
+   *
+   * If your comment applies to more than one line in the pull request diff, you should use the parameters `line`, `side`, and optionally `start_line` and `start_side` in your request.
    *
    * The `position` parameter is deprecated. If you use `position`, the `line`, `side`, `start_line`, and `start_side` parameters are not required.
    *
-   * **Note:** The position value equals the number of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.
+   * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+   * and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
    *
-   * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "pulls/create-review-comment": {
     parameters: {
@@ -92977,7 +93760,7 @@ export interface operations {
           path: string;
           /**
            * @deprecated
-           * @description **This parameter is deprecated. Use `line` instead**. The position in the diff where you want to add a review comment. Note this value is not the same as the line number in the file. For help finding the position value, read the note above.
+           * @description **This parameter is deprecated. Use `line` instead**. The position in the diff where you want to add a review comment. Note this value is not the same as the line number in the file. The position value equals the number of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.
            */
           position?: number;
           /**
@@ -93021,7 +93804,15 @@ export interface operations {
    * Create a reply for a review comment
    * @description Creates a reply to a review comment for a pull request. For the `comment_id`, provide the ID of the review comment you are replying to. This must be the ID of a _top-level review comment_, not a reply to that comment. Replies to replies are not supported.
    *
-   * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)"
+   * and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "pulls/create-reply-for-review-comment": {
     parameters: {
@@ -93056,7 +93847,17 @@ export interface operations {
   };
   /**
    * List commits on a pull request
-   * @description Lists a maximum of 250 commits for a pull request. To receive a complete commit list for pull requests with more than 250 commits, use the [List commits](https://docs.github.com/github-ae@latest/rest/commits/commits#list-commits) endpoint.
+   * @description Lists a maximum of 250 commits for a pull request. To receive a complete
+   * commit list for pull requests with more than 250 commits, use the [List commits](https://docs.github.com/github-ae@latest/rest/commits/commits#list-commits)
+   * endpoint.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+   * - **`application/vnd.github.diff`**: For more information, see "[git-diff](https://git-scm.com/docs/git-diff)" in the Git documentation. If a diff is corrupt, contact us through the [GitHub Support portal](https://support.github.com/). Include the repository name and pull request ID in your message.
    */
   "pulls/list-commits": {
     parameters: {
@@ -93084,7 +93885,18 @@ export interface operations {
   };
   /**
    * List pull requests files
-   * @description **Note:** Responses include a maximum of 3000 files. The paginated response returns 30 files per page by default.
+   * @description Lists the files in a specified pull request.
+   *
+   * **Note:** Responses include a maximum of 3000 files. The paginated response
+   * returns 30 files per page by default.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+   * - **`application/vnd.github.diff`**: For more information, see "[git-diff](https://git-scm.com/docs/git-diff)" in the Git documentation. If a diff is corrupt, contact us through the [GitHub Support portal](https://support.github.com/). Include the repository name and pull request ID in your message.
    */
   "pulls/list-files": {
     parameters: {
@@ -93139,7 +93951,7 @@ export interface operations {
   /**
    * Merge a pull request
    * @description Merges a pull request into the base branch.
-   * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
    */
   "pulls/merge": {
     parameters: {
@@ -93290,7 +94102,14 @@ export interface operations {
   };
   /**
    * List reviews for a pull request
-   * @description The list of reviews returns in chronological order.
+   * @description Lists all reviews for a specified pull request. The list of reviews returns in chronological order.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "pulls/list-reviews": {
     parameters: {
@@ -93318,13 +94137,22 @@ export interface operations {
   };
   /**
    * Create a review for a pull request
-   * @description This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+   * @description Creates a review on a specified pull request.
+   *
+   * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
    *
    * Pull request reviews created in the `PENDING` state are not submitted and therefore do not include the `submitted_at` property in the response. To create a pending review for a pull request, leave the `event` parameter blank. For more information about submitting a `PENDING` review, see "[Submit a review for a pull request](https://docs.github.com/github-ae@latest/rest/pulls/reviews#submit-a-review-for-a-pull-request)."
    *
-   * **Note:** To comment on a specific line in a file, you need to first determine the _position_ of that line in the diff. The GitHub REST API offers the `application/vnd.github.v3.diff` [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types#commits-commit-comparison-and-pull-requests). To see a pull request diff, add this media type to the `Accept` header of a call to the [single pull request](https://docs.github.com/github-ae@latest/rest/pulls/pulls#get-a-pull-request) endpoint.
+   * **Note:** To comment on a specific line in a file, you need to first determine the position of that line in the diff. To see a pull request diff, add the `application/vnd.github.v3.diff` media type to the `Accept` header of a call to the [Get a pull request](https://docs.github.com/github-ae@latest/rest/pulls/pulls#get-a-pull-request) endpoint.
    *
    * The `position` value equals the number of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "pulls/create-review": {
     parameters: {
@@ -93350,7 +94178,7 @@ export interface operations {
           comments?: {
             /** @description The relative path to the file that necessitates a review comment. */
             path: string;
-            /** @description The position in the diff where you want to add a review comment. Note this value is not the same as the line number in the file. For help finding the position value, read the note below. */
+            /** @description The position in the diff where you want to add a review comment. Note this value is not the same as the line number in the file. The `position` value equals the number of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file. */
             position?: number;
             /** @description Text of the review comment. */
             body: string;
@@ -93380,6 +94208,13 @@ export interface operations {
   /**
    * Get a review for a pull request
    * @description Retrieves a pull request review by its ID.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "pulls/get-review": {
     parameters: {
@@ -93402,7 +94237,14 @@ export interface operations {
   };
   /**
    * Update a review for a pull request
-   * @description Update the review summary comment with new text.
+   * @description Updates the contents of a specified review summary comment.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "pulls/update-review": {
     parameters: {
@@ -93434,6 +94276,13 @@ export interface operations {
   /**
    * Delete a pending review for a pull request
    * @description Deletes a pull request review that has not been submitted. Submitted reviews cannot be deleted.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "pulls/delete-pending-review": {
     parameters: {
@@ -93457,7 +94306,14 @@ export interface operations {
   };
   /**
    * List comments for a pull request review
-   * @description List comments for a specific pull request review.
+   * @description Lists comments for a specific pull request review.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "pulls/list-comments-for-review": {
     parameters: {
@@ -93487,7 +94343,18 @@ export interface operations {
   };
   /**
    * Dismiss a review for a pull request
-   * @description **Note:** To dismiss a pull request review on a [protected branch](https://docs.github.com/github-ae@latest/rest/branches/branch-protection), you must be a repository administrator or be included in the list of people or teams who can dismiss pull request reviews.
+   * @description Dismisses a specified review on a pull request.
+   *
+   * **Note:** To dismiss a pull request review on a [protected branch](https://docs.github.com/github-ae@latest/rest/branches/branch-protection),
+   * you must be a repository administrator or be included in the list of people or teams
+   * who can dismiss pull request reviews.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "pulls/dismiss-review": {
     parameters: {
@@ -93525,6 +94392,13 @@ export interface operations {
   /**
    * Submit a review for a pull request
    * @description Submits a pending review for a pull request. For more information about creating a pending review for a pull request, see "[Create a review for a pull request](https://docs.github.com/github-ae@latest/rest/pulls/reviews#create-a-review-for-a-pull-request)."
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "pulls/submit-review": {
     parameters: {
@@ -93598,7 +94472,10 @@ export interface operations {
    * Get a repository README
    * @description Gets the preferred README for a repository.
    *
-   * READMEs support [custom media types](https://docs.github.com/github-ae@latest/rest/overview/media-types) for retrieving the raw content or rendered HTML.
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw file contents. This is the default if you do not specify a media type.
+   * - **`application/vnd.github.html+json`**: Returns the README in HTML. Markup languages are rendered to HTML using GitHub's open-source [Markup library](https://github.com/github/markup).
    */
   "repos/get-readme": {
     parameters: {
@@ -93626,7 +94503,10 @@ export interface operations {
    * Get a repository README for a directory
    * @description Gets the README from a repository directory.
    *
-   * READMEs support [custom media types](https://docs.github.com/github-ae@latest/rest/overview/media-types) for retrieving the raw content or rendered HTML.
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw file contents. This is the default if you do not specify a media type.
+   * - **`application/vnd.github.html+json`**: Returns the README in HTML. Markup languages are rendered to HTML using GitHub's open-source [Markup library](https://github.com/github/markup).
    */
   "repos/get-readme-in-directory": {
     parameters: {
@@ -93686,7 +94566,7 @@ export interface operations {
    * Create a release
    * @description Users with push access to the repository can create a release.
    *
-   * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
    */
   "repos/create-release": {
     parameters: {
@@ -93852,7 +94732,11 @@ export interface operations {
   };
   /**
    * Get a release
-   * @description **Note:** This returns an `upload_url` key corresponding to the endpoint for uploading release assets. This key is a [hypermedia resource](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#hypermedia).
+   * @description Gets a public release with the specified release ID.
+   *
+   * **Note:** This returns an `upload_url` key corresponding to the endpoint
+   * for uploading release assets. This key is a hypermedia resource. For more information, see
+   * "[Getting started with the REST API](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#hypermedia)."
    */
   "repos/get-release": {
     parameters: {
@@ -93863,7 +94747,7 @@ export interface operations {
       };
     };
     responses: {
-      /** @description **Note:** This returns an `upload_url` key corresponding to the endpoint for uploading release assets. This key is a [hypermedia resource](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#hypermedia). */
+      /** @description **Note:** This returns an `upload_url` key corresponding to the endpoint for uploading release assets. This key is a hypermedia resource. For more information, see "[Getting started with the REST API](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#hypermedia)." */
       200: {
         content: {
           "application/json": components["schemas"]["release"];
@@ -93960,7 +94844,7 @@ export interface operations {
   };
   /**
    * Upload a release asset
-   * @description This endpoint makes use of [a Hypermedia relation](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#hypermedia) to determine which URL to access. The endpoint you call to upload release assets is specific to your release. Use the `upload_url` returned in
+   * @description This endpoint makes use of a [Hypermedia relation](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#hypermedia) to determine which URL to access. The endpoint you call to upload release assets is specific to your release. Use the `upload_url` returned in
    * the response of the [Create a release endpoint](https://docs.github.com/github-ae@latest/rest/releases/releases#create-a-release) to upload a release asset.
    *
    * You need to use an HTTP client which supports [SNI](http://en.wikipedia.org/wiki/Server_Name_Indication) to make calls to this endpoint.
@@ -94250,7 +95134,9 @@ export interface operations {
    * List stargazers
    * @description Lists the people that have starred the repository.
    *
-   * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/) via the `Accept` header: `application/vnd.github.star+json`.
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.star+json`**: Includes a timestamp of when the star was created.
    */
   "activity/list-stargazers-for-repo": {
     parameters: {
@@ -94280,7 +95166,11 @@ export interface operations {
   };
   /**
    * Get the weekly commit activity
-   * @description Returns a weekly aggregate of the number of additions and deletions pushed to a repository.
+   * @description
+   * Returns a weekly aggregate of the number of additions and deletions pushed to a repository.
+   *
+   * **Note:** This endpoint can only be used for repositories with fewer than 10,000 commits. If the repository contains
+   * 10,000 or more commits, a 422 status code will be returned.
    */
   "repos/get-code-frequency-stats": {
     parameters: {
@@ -94298,6 +95188,10 @@ export interface operations {
       };
       202: components["responses"]["accepted"];
       204: components["responses"]["no_content"];
+      /** @description Repository contains more than 10,000 commits */
+      422: {
+        content: never;
+      };
     };
   };
   /**
@@ -94327,10 +95221,12 @@ export interface operations {
    * @description
    * Returns the `total` number of commits authored by the contributor. In addition, the response includes a Weekly Hash (`weeks` array) with the following information:
    *
-   * *   `w` - Start of the week, given as a [Unix timestamp](http://en.wikipedia.org/wiki/Unix_time).
+   * *   `w` - Start of the week, given as a [Unix timestamp](https://en.wikipedia.org/wiki/Unix_time).
    * *   `a` - Number of additions
    * *   `d` - Number of deletions
    * *   `c` - Number of commits
+   *
+   * **Note:** This endpoint will return `0` values for all addition and deletion counts in repositories with 10,000 or more commits.
    */
   "repos/get-contributors-stats": {
     parameters: {
@@ -94754,7 +95650,7 @@ export interface operations {
    *
    * When using [OAuth](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
    *
-   * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.
+   * *   `public_repo` scope or `repo` scope to create a public repository
    * *   `repo` scope to create a private repository
    */
   "repos/create-using-template": {
@@ -94796,14 +95692,14 @@ export interface operations {
           Location?: string;
         };
         content: {
-          "application/json": components["schemas"]["repository"];
+          "application/json": components["schemas"]["full-repository"];
         };
       };
     };
   };
   /**
    * Search code
-   * @description Searches for query terms inside of a file. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).
+   * @description Searches for query terms inside of a file. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/guides/using-pagination-in-the-rest-api).
    *
    * When searching for code, you can get text match metadata for the file **content** and file **path** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/search/search#text-match-metadata).
    *
@@ -94862,7 +95758,7 @@ export interface operations {
   };
   /**
    * Search commits
-   * @description Find commits via various criteria on the default branch (usually `main`). This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).
+   * @description Find commits via various criteria on the default branch (usually `main`). This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/guides/using-pagination-in-the-rest-api).
    *
    * When searching for commits, you can get text match metadata for the **message** field when you provide the `text-match` media type. For more details about how to receive highlighted search results, see [Text match
    * metadata](https://docs.github.com/github-ae@latest/rest/search/search#text-match-metadata).
@@ -94899,7 +95795,7 @@ export interface operations {
   };
   /**
    * Search issues and pull requests
-   * @description Find issues by state and keyword. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).
+   * @description Find issues by state and keyword. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/guides/using-pagination-in-the-rest-api).
    *
    * When searching for issues, you can get text match metadata for the issue **title**, issue **body**, and issue **comment body** fields when you pass the `text-match` media type. For more details about how to receive highlighted
    * search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/search/search#text-match-metadata).
@@ -94954,7 +95850,7 @@ export interface operations {
   };
   /**
    * Search labels
-   * @description Find labels in a repository with names or descriptions that match search keywords. Returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).
+   * @description Find labels in a repository with names or descriptions that match search keywords. Returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/guides/using-pagination-in-the-rest-api).
    *
    * When searching for labels, you can get text match metadata for the label **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/search/search#text-match-metadata).
    *
@@ -94997,7 +95893,7 @@ export interface operations {
   };
   /**
    * Search repositories
-   * @description Find repositories via various criteria. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).
+   * @description Find repositories via various criteria. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/guides/using-pagination-in-the-rest-api).
    *
    * When searching for repositories, you can get text match metadata for the **name** and **description** fields when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/search/search#text-match-metadata).
    *
@@ -95037,7 +95933,7 @@ export interface operations {
   };
   /**
    * Search topics
-   * @description Find topics via various criteria. Results are sorted by best match. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination). See "[Searching topics](https://docs.github.com/github-ae@latest/articles/searching-topics/)" for a detailed list of qualifiers.
+   * @description Find topics via various criteria. Results are sorted by best match. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/guides/using-pagination-in-the-rest-api). See "[Searching topics](https://docs.github.com/github-ae@latest/articles/searching-topics/)" for a detailed list of qualifiers.
    *
    * When searching for topics, you can get text match metadata for the topic's **short\_description**, **description**, **name**, or **display\_name** field when you pass the `text-match` media type. For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/search/search#text-match-metadata).
    *
@@ -95072,7 +95968,7 @@ export interface operations {
   };
   /**
    * Search users
-   * @description Find users via various criteria. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#pagination).
+   * @description Find users via various criteria. This method returns up to 100 results [per page](https://docs.github.com/github-ae@latest/rest/guides/using-pagination-in-the-rest-api).
    *
    * When searching for users, you can get text match metadata for the issue **login**, public **email**, and **name** fields when you pass the `text-match` media type. For more details about highlighting search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/search/search#text-match-metadata). For more details about how to receive highlighted search results, see [Text match metadata](https://docs.github.com/github-ae@latest/rest/search/search#text-match-metadata).
    *
@@ -95264,7 +96160,7 @@ export interface operations {
    *
    * Creates a new discussion post on a team's page. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
-   * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
    */
   "teams/create-discussion-legacy": {
     parameters: {
@@ -95411,7 +96307,7 @@ export interface operations {
    *
    * Creates a new comment on a team discussion. OAuth access tokens require the `write:discussion` [scope](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/).
    *
-   * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. See "[Secondary rate limits](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#secondary-rate-limits)" and "[Dealing with secondary rate limits](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-integrators#dealing-with-secondary-rate-limits)" for details.
+   * This endpoint triggers [notifications](https://docs.github.com/github-ae@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/github-ae@latest/rest/overview/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/github-ae@latest/rest/guides/best-practices-for-using-the-rest-api)."
    */
   "teams/create-discussion-comment-legacy": {
     parameters: {
@@ -95587,7 +96483,7 @@ export interface operations {
    *
    * **Note:** When you have team synchronization set up for a team with your organization's identity provider (IdP), you will see an error if you attempt to use the API for making changes to the team's membership. If you have access to manage group membership in your IdP, you can manage GitHub AE team membership through your identity provider, which automatically adds and removes team members in an organization. For more information, see "[Synchronizing teams between your identity provider and GitHub AE](https://docs.github.com/github-ae@latest/articles/synchronizing-teams-between-your-identity-provider-and-github/)."
    *
-   * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
+   * Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP method](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#http-method)."
    */
   "teams/add-member-legacy": {
     parameters: {
@@ -95830,7 +96726,7 @@ export interface operations {
       content: {
         "application/json": {
           /**
-           * @description The permission to grant to the team for this project. Default: the team's `permission` attribute will be used to determine what permission to grant the team on this project. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
+           * @description The permission to grant to the team for this project. Default: the team's `permission` attribute will be used to determine what permission to grant the team on this project. Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling this endpoint. For more information, see "[HTTP method](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#http-method)."
            * @enum {string}
            */
           permission?: "read" | "write" | "admin";
@@ -95947,7 +96843,7 @@ export interface operations {
    *
    * To add a repository to a team or update the team's permission on a repository, the authenticated user must have admin access to the repository, and must be able to see the team. The repository must be owned by the organization, or a direct fork of a repository owned by the organization. You will get a `422 Unprocessable Entity` status if you attempt to add a repository to a team that is not owned by the organization.
    *
-   * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
+   * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP method](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#http-method)."
    */
   "teams/add-or-update-repo-permissions-legacy": {
     parameters: {
@@ -96186,7 +97082,7 @@ export interface operations {
   };
   /**
    * Follow a user
-   * @description Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
+   * @description Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#http-method)."
    *
    * Following a user requires the user to be logged in and authenticated with basic auth or OAuth with the `user:follow` scope.
    */
@@ -96457,6 +97353,13 @@ export interface operations {
    * reason, "Issues" endpoints may return both issues and pull requests in the response. You can identify pull requests by
    * the `pull_request` key. Be aware that the `id` of a pull request returned from "Issues" endpoints will be an _issue id_. To find out the pull
    * request id, use the "[List pull requests](https://docs.github.com/github-ae@latest/rest/pulls/pulls#list-pull-requests)" endpoint.
+   *
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.
+   * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.
+   * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
    */
   "issues/list-for-authenticated-user": {
     parameters: {
@@ -96956,8 +97859,8 @@ export interface operations {
    *
    * When using [OAuth](https://docs.github.com/github-ae@latest/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/), authorizations must include:
    *
-   * *   `public_repo` scope or `repo` scope to create a public repository. Note: For GitHub AE, use `repo` scope to create an internal repository.
-   * *   `repo` scope to create a private repository.
+   * *   `public_repo` scope or `repo` scope to create a public repository
+   * *   `repo` scope to create a private repository
    */
   "repos/create-for-authenticated-user": {
     requestBody: {
@@ -97105,7 +98008,7 @@ export interface operations {
           Location?: string;
         };
         content: {
-          "application/json": components["schemas"]["repository"];
+          "application/json": components["schemas"]["full-repository"];
         };
       };
       304: components["responses"]["not_modified"];
@@ -97183,7 +98086,9 @@ export interface operations {
    * List repositories starred by the authenticated user
    * @description Lists repositories the authenticated user has starred.
    *
-   * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/) via the `Accept` header: `application/vnd.github.star+json`.
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.star+json`**: Includes a timestamp of when the star was created.
    */
   "activity/list-repos-starred-by-authenticated-user": {
     parameters: {
@@ -97239,7 +98144,7 @@ export interface operations {
   };
   /**
    * Star a repository for the authenticated user
-   * @description Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
+   * @description Note that you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP method](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#http-method)."
    */
   "activity/star-repo-for-authenticated-user": {
     parameters: {
@@ -97366,7 +98271,7 @@ export interface operations {
    *
    * GitHub Apps with the `Plan` user permission can use this endpoint to retrieve information about a user's GitHub AE plan. The GitHub App must be authenticated as a user. See "[Identifying and authorizing users for GitHub Apps](https://docs.github.com/github-ae@latest/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps/)" for details about authentication. For an example response, see 'Response with GitHub AE plan information' below"
    *
-   * The `email` key in the following response is the publicly visible email address from your GitHub AE [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be “public” which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub AE. For more information, see [Authentication](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#authentication).
+   * The `email` key in the following response is the publicly visible email address from your GitHub AE [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be “public” which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub AE. For more information, see [Authentication](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#authentication).
    *
    * The Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see "[Emails API](https://docs.github.com/github-ae@latest/rest/users/emails)".
    */
@@ -97700,7 +98605,7 @@ export interface operations {
   };
   /**
    * List repositories for a user
-   * @description Lists public repositories for the specified user. Note: For GitHub AE, this endpoint will list internal repositories for the specified user.
+   * @description Lists public repositories for the specified user.
    */
   "repos/list-for-user": {
     parameters: {
@@ -97734,7 +98639,9 @@ export interface operations {
    * List repositories starred by a user
    * @description Lists repositories a user has starred.
    *
-   * You can also find out _when_ stars were created by passing the following custom [media type](https://docs.github.com/github-ae@latest/rest/overview/media-types/) via the `Accept` header: `application/vnd.github.star+json`.
+   * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/github-ae@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
+   *
+   * - **`application/vnd.github.star+json`**: Includes a timestamp of when the star was created.
    */
   "activity/list-repos-starred-by-user": {
     parameters: {
@@ -97794,7 +98701,7 @@ export interface operations {
    *
    * You can suspend any user account except your own.
    *
-   * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP verbs](https://docs.github.com/github-ae@latest/rest/overview/resources-in-the-rest-api#http-verbs)."
+   * Note that, if you choose not to pass any parameters, you'll need to set `Content-Length` to zero when calling out to this endpoint. For more information, see "[HTTP method](https://docs.github.com/github-ae@latest/rest/guides/getting-started-with-the-rest-api#http-method)."
    */
   "enterprise-admin/suspend-user": {
     parameters: {
