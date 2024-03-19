@@ -971,7 +971,7 @@ export interface paths {
   "/feeds": {
     /**
      * Get feeds
-     * @description GitHub Enterprise Server provides several timeline resources in [Atom](http://en.wikipedia.org/wiki/Atom_(standard)) format. The Feeds API lists all the feeds available to the authenticated user:
+     * @description Lists the feeds available to the authenticated user. The response provides a URL for each feed. You can then get a specific feed by sending a request to one of the feed URLs.
      *
      * *   **Timeline**: The GitHub Enterprise Server global public timeline
      * *   **User**: The public timeline for any user, using `uri_template`. For more information, see "[Hypermedia](https://docs.github.com/enterprise-server@3.8/rest/using-the-rest-api/getting-started-with-the-rest-api#hypermedia)."
@@ -980,6 +980,8 @@ export interface paths {
      * *   **Current user actor**: The private timeline for activity created by the authenticated user
      * *   **Current user organizations**: The private timeline for the organizations the authenticated user is a member of.
      * *   **Security advisories**: A collection of public announcements that provide information about security-related vulnerabilities in software on GitHub Enterprise Server.
+     *
+     * By default, timeline resources are returned in JSON. You can specify the `application/atom+xml` type in the `Accept` header to return timeline resources in Atom format. For more information, see "[Media types](https://docs.github.com/enterprise-server@3.8/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
      *
      * **Note**: Private feeds are only returned when [authenticating via Basic Auth](https://docs.github.com/enterprise-server@3.8/rest/overview/other-authentication-methods#basic-authentication) since current feed URIs use the older, non revocable auth tokens.
      */
@@ -1258,7 +1260,7 @@ export interface paths {
   "/organizations": {
     /**
      * List organizations
-     * @description Lists all organizations, in the order that they were created on GitHub Enterprise Server.
+     * @description Lists all organizations, in the order that they were created.
      *
      * **Note:** Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@3.8/rest/guides/using-pagination-in-the-rest-api#using-link-headers) to get the URL for the next page of organizations.
      */
@@ -4663,7 +4665,7 @@ export interface paths {
   "/repos/{owner}/{repo}/compare/{basehead}": {
     /**
      * Compare two commits
-     * @description Compares two commits against one another. You can compare branches in the same repository, or you can compare branches that exist in different repositories within the same repository network, including fork branches. For more information about how to view a repository's network, see "[Understanding connections between repositories](https://docs.github.com/enterprise-server@3.8/repositories/viewing-activity-and-data-for-your-repository/understanding-connections-between-repositories)."
+     * @description Compares two commits against one another. You can compare refs (branches or tags) and commit SHAs in the same repository, or you can compare refs and commit SHAs that exist in different repositories within the same repository network, including fork branches. For more information about how to view a repository's network, see "[Understanding connections between repositories](https://docs.github.com/enterprise-server@3.8/repositories/viewing-activity-and-data-for-your-repository/understanding-connections-between-repositories)."
      *
      * This endpoint is equivalent to running the `git log BASE..HEAD` command, but it returns commits in a different order. The `git log BASE..HEAD` command returns commits in reverse chronological order, whereas the API returns commits in chronological order.
      *
@@ -5054,6 +5056,109 @@ export interface paths {
      */
     delete: operations["repos/delete-deployment-branch-policy"];
   };
+  "/repos/{owner}/{repo}/environments/{environment_name}/secrets": {
+    /**
+     * List environment secrets
+     * @description Lists all secrets available in an environment without revealing their
+     * encrypted values.
+     *
+     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+     *
+     * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+     */
+    get: operations["actions/list-environment-secrets"];
+  };
+  "/repos/{owner}/{repo}/environments/{environment_name}/secrets/public-key": {
+    /**
+     * Get an environment public key
+     * @description Get the public key for an environment, which you need to encrypt environment
+     * secrets. You need to encrypt a secret before you can create or update secrets.
+     *
+     * Anyone with read access to the repository can use this endpoint.
+     *
+     * If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+     */
+    get: operations["actions/get-environment-public-key"];
+  };
+  "/repos/{owner}/{repo}/environments/{environment_name}/secrets/{secret_name}": {
+    /**
+     * Get an environment secret
+     * @description Gets a single environment secret without revealing its encrypted value.
+     *
+     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+     *
+     * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+     */
+    get: operations["actions/get-environment-secret"];
+    /**
+     * Create or update an environment secret
+     * @description Creates or updates an environment secret with an encrypted value. Encrypt your secret using
+     * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting secrets for the REST API](https://docs.github.com/enterprise-server@3.8/rest/guides/encrypting-secrets-for-the-rest-api)."
+     *
+     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+     *
+     * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+     */
+    put: operations["actions/create-or-update-environment-secret"];
+    /**
+     * Delete an environment secret
+     * @description Deletes a secret in an environment using the secret name.
+     *
+     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+     *
+     * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+     */
+    delete: operations["actions/delete-environment-secret"];
+  };
+  "/repos/{owner}/{repo}/environments/{environment_name}/variables": {
+    /**
+     * List environment variables
+     * @description Lists all environment variables.
+     *
+     * Authenticated users must have collaborator access to a repository to create, update, or read variables.
+     *
+     * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+     */
+    get: operations["actions/list-environment-variables"];
+    /**
+     * Create an environment variable
+     * @description Create an environment variable that you can reference in a GitHub Actions workflow.
+     *
+     * Authenticated users must have collaborator access to a repository to create, update, or read variables.
+     *
+     * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+     */
+    post: operations["actions/create-environment-variable"];
+  };
+  "/repos/{owner}/{repo}/environments/{environment_name}/variables/{name}": {
+    /**
+     * Get an environment variable
+     * @description Gets a specific variable in an environment.
+     *
+     * Authenticated users must have collaborator access to a repository to create, update, or read variables.
+     *
+     * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+     */
+    get: operations["actions/get-environment-variable"];
+    /**
+     * Delete an environment variable
+     * @description Deletes an environment variable using the variable name.
+     *
+     * Authenticated users must have collaborator access to a repository to create, update, or read variables.
+     *
+     * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+     */
+    delete: operations["actions/delete-environment-variable"];
+    /**
+     * Update an environment variable
+     * @description Updates an environment variable that you can reference in a GitHub Actions workflow.
+     *
+     * Authenticated users must have collaborator access to a repository to create, update, or read variables.
+     *
+     * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+     */
+    patch: operations["actions/update-environment-variable"];
+  };
   "/repos/{owner}/{repo}/events": {
     /**
      * List repository events
@@ -5196,9 +5301,15 @@ export interface paths {
     post: operations["git/create-ref"];
   };
   "/repos/{owner}/{repo}/git/refs/{ref}": {
-    /** Delete a reference */
+    /**
+     * Delete a reference
+     * @description Deletes the provided reference.
+     */
     delete: operations["git/delete-ref"];
-    /** Update a reference */
+    /**
+     * Update a reference
+     * @description Updates the provided reference to point to a new SHA. For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation.
+     */
     patch: operations["git/update-ref"];
   };
   "/repos/{owner}/{repo}/git/tags": {
@@ -6708,110 +6819,7 @@ export interface paths {
      */
     get: operations["repos/list-public"];
   };
-  "/repositories/{repository_id}/environments/{environment_name}/secrets": {
-    /**
-     * List environment secrets
-     * @description Lists all secrets available in an environment without revealing their
-     * encrypted values.
-     *
-     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
-     */
-    get: operations["actions/list-environment-secrets"];
-  };
-  "/repositories/{repository_id}/environments/{environment_name}/secrets/public-key": {
-    /**
-     * Get an environment public key
-     * @description Get the public key for an environment, which you need to encrypt environment
-     * secrets. You need to encrypt a secret before you can create or update secrets.
-     *
-     * Anyone with read access to the repository can use this endpoint.
-     *
-     * If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
-     */
-    get: operations["actions/get-environment-public-key"];
-  };
-  "/repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}": {
-    /**
-     * Get an environment secret
-     * @description Gets a single environment secret without revealing its encrypted value.
-     *
-     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
-     *
-     * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
-     */
-    get: operations["actions/get-environment-secret"];
-    /**
-     * Create or update an environment secret
-     * @description Creates or updates an environment secret with an encrypted value. Encrypt your secret using
-     * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting secrets for the REST API](https://docs.github.com/enterprise-server@3.8/rest/guides/encrypting-secrets-for-the-rest-api)."
-     *
-     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
-     *
-     * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
-     */
-    put: operations["actions/create-or-update-environment-secret"];
-    /**
-     * Delete an environment secret
-     * @description Deletes a secret in an environment using the secret name.
-     *
-     * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
-     *
-     * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
-     */
-    delete: operations["actions/delete-environment-secret"];
-  };
-  "/repositories/{repository_id}/environments/{environment_name}/variables": {
-    /**
-     * List environment variables
-     * @description Lists all environment variables.
-     *
-     * Authenticated users must have collaborator access to a repository to create, update, or read variables.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
-     */
-    get: operations["actions/list-environment-variables"];
-    /**
-     * Create an environment variable
-     * @description Create an environment variable that you can reference in a GitHub Actions workflow.
-     *
-     * Authenticated users must have collaborator access to a repository to create, update, or read variables.
-     *
-     * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
-     */
-    post: operations["actions/create-environment-variable"];
-  };
-  "/repositories/{repository_id}/environments/{environment_name}/variables/{name}": {
-    /**
-     * Get an environment variable
-     * @description Gets a specific variable in an environment.
-     *
-     * Authenticated users must have collaborator access to a repository to create, update, or read variables.
-     *
-     * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
-     */
-    get: operations["actions/get-environment-variable"];
-    /**
-     * Delete an environment variable
-     * @description Deletes an environment variable using the variable name.
-     *
-     * Authenticated users must have collaborator access to a repository to create, update, or read variables.
-     *
-     * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
-     */
-    delete: operations["actions/delete-environment-variable"];
-    /**
-     * Update an environment variable
-     * @description Updates an environment variable that you can reference in a GitHub Actions workflow.
-     *
-     * Authenticated users must have collaborator access to a repository to create, update, or read variables.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
-     */
-    patch: operations["actions/update-environment-variable"];
-  };
-  "/scim/v2/Groups": {
+  "/scim/v2/enterprises/{enterprise}/Groups": {
     /**
      * List provisioned SCIM groups for an enterprise
      * @description **Note:** The SCIM API endpoints for enterprise accounts are currently in *private* beta and are subject to change.
@@ -6831,7 +6839,7 @@ export interface paths {
      */
     post: operations["enterprise-admin/provision-enterprise-group"];
   };
-  "/scim/v2/Groups/{scim_group_id}": {
+  "/scim/v2/enterprises/{enterprise}/Groups/{scim_group_id}": {
     /**
      * Get SCIM provisioning information for an enterprise group
      * @description **Note:** The SCIM API endpoints for enterprise accounts are currently in *private* beta and are subject to change.
@@ -6867,7 +6875,7 @@ export interface paths {
      */
     patch: operations["enterprise-admin/update-attribute-for-enterprise-group"];
   };
-  "/scim/v2/Users": {
+  "/scim/v2/enterprises/{enterprise}/Users": {
     /**
      * List SCIM provisioned identities for an enterprise
      * @description **Note:** The SCIM API endpoints for enterprise accounts are currently in *private* beta and are subject to change.
@@ -6889,7 +6897,7 @@ export interface paths {
      */
     post: operations["enterprise-admin/provision-enterprise-user"];
   };
-  "/scim/v2/Users/{scim_user_id}": {
+  "/scim/v2/enterprises/{enterprise}/Users/{scim_user_id}": {
     /**
      * Get SCIM provisioning information for an enterprise user
      * @description **Note:** The SCIM API endpoints for enterprise accounts are currently in *private* beta and are subject to change.
@@ -7975,12 +7983,7 @@ export interface paths {
      * Get contextual information for a user
      * @description Provides hovercard information. You can find out more about someone in relation to their pull requests, issues, repositories, and organizations.
      *
-     * The `subject_type` and `subject_id` parameters provide context for the person's hovercard, which returns more information than without the parameters. For example, if you wanted to find out more about `octocat` who owns the `Spoon-Knife` repository via cURL, it would look like this:
-     *
-     * ```shell
-     *  curl -u username:token
-     *   https://api.github.com/users/octocat/hovercard?subject_type=repository&subject_id=1300192
-     * ```
+     *   The `subject_type` and `subject_id` parameters provide context for the person's hovercard, which returns more information than without the parameters. For example, if you wanted to find out more about `octocat` who owns the `Spoon-Knife` repository, you would use a `subject_type` value of `repository` and a `subject_id` value of `1300192` (the ID of the `Spoon-Knife` repository).
      *
      * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
      */
@@ -14514,7 +14517,13 @@ export interface components {
        * @example queued
        * @enum {string}
        */
-      status: "queued" | "in_progress" | "completed" | "waiting";
+      status:
+        | "queued"
+        | "in_progress"
+        | "completed"
+        | "waiting"
+        | "requested"
+        | "pending";
       /**
        * @description The outcome of the job.
        * @example success
@@ -15750,11 +15759,17 @@ export interface components {
       /** @example https://example.com */
       details_url: string | null;
       /**
-       * @description The phase of the lifecycle that the check is currently in.
+       * @description The phase of the lifecycle that the check is currently in. Statuses of waiting, requested, and pending are reserved for GitHub Actions check runs.
        * @example queued
        * @enum {string}
        */
-      status: "queued" | "in_progress" | "completed";
+      status:
+        | "queued"
+        | "in_progress"
+        | "completed"
+        | "waiting"
+        | "requested"
+        | "pending";
       /**
        * @example neutral
        * @enum {string|null}
@@ -15893,10 +15908,18 @@ export interface components {
        */
       head_sha: string;
       /**
+       * @description The phase of the lifecycle that the check suite is currently in. Statuses of waiting, requested, and pending are reserved for GitHub Actions check suites.
        * @example completed
        * @enum {string|null}
        */
-      status: "queued" | "in_progress" | "completed" | null;
+      status:
+        | "queued"
+        | "in_progress"
+        | "completed"
+        | "waiting"
+        | "requested"
+        | "pending"
+        | null;
       /**
        * @example neutral
        * @enum {string|null}
@@ -24496,7 +24519,7 @@ export interface components {
         created_at: string;
         /** @description The time that the alert was dismissed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
         dismissed_at: string | null;
-        dismissed_by: unknown;
+        dismissed_by: Record<string, unknown> | null;
         /** @description The reason for dismissing or closing the alert. Can be one of: `false positive`, `won't fix`, and `used in tests`. */
         dismissed_reason: string | null;
         /**
@@ -25623,7 +25646,7 @@ export interface components {
         display_title: string;
         event: string;
         head_branch: string;
-        head_commit?: unknown;
+        head_commit?: Record<string, unknown> | null;
         head_repository?: {
           archive_url?: string;
           assignees_url?: string;
@@ -26010,7 +26033,7 @@ export interface components {
         created_at: string;
         event: string;
         head_branch: string;
-        head_commit?: unknown;
+        head_commit?: Record<string, unknown> | null;
         head_repository?: {
           archive_url?: string;
           assignees_url?: string;
@@ -26404,7 +26427,7 @@ export interface components {
         created_at: string;
         event: string;
         head_branch: string;
-        head_commit?: unknown;
+        head_commit?: Record<string, unknown> | null;
         head_repository?: {
           archive_url?: string;
           assignees_url?: string;
@@ -28630,7 +28653,7 @@ export interface components {
         labels_url?: string;
         language?: unknown;
         languages_url?: string;
-        license?: unknown;
+        license?: Record<string, unknown> | null;
         merges_url?: string;
         milestones_url?: string;
         mirror_url?: unknown;
@@ -29675,7 +29698,7 @@ export interface components {
           /** Format: uri */
           url?: string;
         } | null;
-        assignees?: unknown[];
+        assignees?: (Record<string, unknown> | null)[];
         author_association?: string;
         body?: string | null;
         closed_at?: string | null;
@@ -29702,10 +29725,10 @@ export interface components {
         }[];
         labels_url?: string;
         locked: boolean;
-        milestone?: unknown;
+        milestone?: Record<string, unknown> | null;
         node_id?: string;
         number?: number;
-        performed_via_github_app?: unknown;
+        performed_via_github_app?: Record<string, unknown> | null;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -30356,7 +30379,7 @@ export interface components {
           /** Format: uri */
           url?: string;
         } | null;
-        assignees?: unknown[];
+        assignees?: (Record<string, unknown> | null)[];
         author_association?: string;
         body?: string | null;
         closed_at?: string | null;
@@ -30383,10 +30406,10 @@ export interface components {
         }[];
         labels_url?: string;
         locked: boolean;
-        milestone?: unknown;
+        milestone?: Record<string, unknown> | null;
         node_id?: string;
         number?: number;
-        performed_via_github_app?: unknown;
+        performed_via_github_app?: Record<string, unknown> | null;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -31046,7 +31069,7 @@ export interface components {
           /** Format: uri */
           url?: string;
         } | null;
-        assignees?: unknown[];
+        assignees?: (Record<string, unknown> | null)[];
         author_association?: string;
         body?: string | null;
         closed_at?: string | null;
@@ -31073,10 +31096,10 @@ export interface components {
         }[];
         labels_url?: string;
         locked: boolean;
-        milestone?: unknown;
+        milestone?: Record<string, unknown> | null;
         node_id?: string;
         number?: number;
-        performed_via_github_app?: unknown;
+        performed_via_github_app?: Record<string, unknown> | null;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -32124,8 +32147,8 @@ export interface components {
         } | null;
       } & {
         active_lock_reason?: string | null;
-        assignee?: unknown;
-        assignees?: unknown[];
+        assignee?: Record<string, unknown> | null;
+        assignees?: (Record<string, unknown> | null)[];
         author_association?: string;
         body?: string | null;
         closed_at: string | null;
@@ -32135,13 +32158,13 @@ export interface components {
         events_url?: string;
         html_url?: string;
         id?: number;
-        labels?: unknown[];
+        labels?: (Record<string, unknown> | null)[];
         labels_url?: string;
         locked?: boolean;
-        milestone?: unknown;
+        milestone?: Record<string, unknown> | null;
         node_id?: string;
         number?: number;
-        performed_via_github_app?: unknown;
+        performed_via_github_app?: Record<string, unknown> | null;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -33138,8 +33161,8 @@ export interface components {
         } | null;
       } & {
         active_lock_reason?: string | null;
-        assignee?: unknown;
-        assignees?: unknown[];
+        assignee?: Record<string, unknown> | null;
+        assignees?: (Record<string, unknown> | null)[];
         author_association?: string;
         body?: string | null;
         closed_at?: string | null;
@@ -33149,7 +33172,7 @@ export interface components {
         events_url?: string;
         html_url?: string;
         id?: number;
-        labels?: unknown[];
+        labels?: (Record<string, unknown> | null)[];
         labels_url?: string;
         locked?: boolean;
         /**
@@ -33225,7 +33248,7 @@ export interface components {
         } | null;
         node_id?: string;
         number?: number;
-        performed_via_github_app?: unknown;
+        performed_via_github_app?: Record<string, unknown> | null;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -34826,8 +34849,8 @@ export interface components {
           | "too heated"
           | "spam"
           | null;
-        assignee?: unknown;
-        assignees?: unknown[];
+        assignee?: Record<string, unknown> | null;
+        assignees?: (Record<string, unknown> | null)[];
         author_association?: string;
         body?: string | null;
         closed_at?: string | null;
@@ -34837,14 +34860,14 @@ export interface components {
         events_url?: string;
         html_url?: string;
         id?: number;
-        labels?: unknown[];
+        labels?: (Record<string, unknown> | null)[];
         labels_url?: string;
         /** @enum {boolean} */
         locked: true;
-        milestone?: unknown;
+        milestone?: Record<string, unknown> | null;
         node_id?: string;
         number?: number;
-        performed_via_github_app?: unknown;
+        performed_via_github_app?: Record<string, unknown> | null;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -35361,8 +35384,8 @@ export interface components {
         } | null;
       } & {
         active_lock_reason?: string | null;
-        assignee?: unknown;
-        assignees?: unknown[];
+        assignee?: Record<string, unknown> | null;
+        assignees?: (Record<string, unknown> | null)[];
         author_association?: string;
         body?: string | null;
         closed_at?: string | null;
@@ -35372,7 +35395,7 @@ export interface components {
         events_url?: string;
         html_url?: string;
         id?: number;
-        labels?: unknown[];
+        labels?: (Record<string, unknown> | null)[];
         labels_url?: string;
         locked?: boolean;
         /**
@@ -35448,7 +35471,7 @@ export interface components {
         };
         node_id?: string;
         number?: number;
-        performed_via_github_app?: unknown;
+        performed_via_github_app?: Record<string, unknown> | null;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -37708,8 +37731,8 @@ export interface components {
         } | null;
       } & {
         active_lock_reason?: string | null;
-        assignee?: unknown;
-        assignees?: unknown[];
+        assignee?: Record<string, unknown> | null;
+        assignees?: (Record<string, unknown> | null)[];
         author_association?: string;
         body?: string | null;
         closed_at?: string | null;
@@ -37719,13 +37742,13 @@ export interface components {
         events_url?: string;
         html_url?: string;
         id?: number;
-        labels?: unknown[];
+        labels?: (Record<string, unknown> | null)[];
         labels_url?: string;
         locked?: boolean;
-        milestone?: unknown;
+        milestone?: Record<string, unknown> | null;
         node_id?: string;
         number?: number;
-        performed_via_github_app?: unknown;
+        performed_via_github_app?: Record<string, unknown> | null;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -40452,8 +40475,8 @@ export interface components {
         } | null;
       } & {
         active_lock_reason: unknown;
-        assignee?: unknown;
-        assignees?: unknown[];
+        assignee?: Record<string, unknown> | null;
+        assignees?: (Record<string, unknown> | null)[];
         author_association?: string;
         body?: string | null;
         closed_at?: string | null;
@@ -40463,11 +40486,11 @@ export interface components {
         events_url?: string;
         html_url?: string;
         id?: number;
-        labels?: unknown[];
+        labels?: (Record<string, unknown> | null)[];
         labels_url?: string;
         /** @enum {boolean} */
         locked: false;
-        milestone?: unknown;
+        milestone?: Record<string, unknown> | null;
         node_id?: string;
         number?: number;
         performed_via_github_app?: unknown;
@@ -41091,9 +41114,19 @@ export interface components {
       /** @enum {string} */
       action: "added";
       changes?: {
+        /**
+         * @description This field is included for legacy purposes; use the `role_name` field instead. The `maintain`
+         * role is mapped to `write` and the `triage` role is mapped to `read`. To determine the role
+         * assigned to the collaborator, use the `role_name` field instead, which will provide the full
+         * role name, including custom roles.
+         */
         permission?: {
           /** @enum {string} */
           to: "write" | "admin" | "read";
+        };
+        /** @description The role assigned to the collaborator. */
+        role_name?: {
+          to: string;
         };
       };
       enterprise?: components["schemas"]["enterprise-webhooks"];
@@ -42490,8 +42523,8 @@ export interface components {
           body?: string | Record<string, never>;
           body_html?: string;
           container_metadata?: {
-            labels?: unknown;
-            manifest?: unknown;
+            labels?: Record<string, unknown> | null;
+            manifest?: Record<string, unknown> | null;
             tag?: {
               digest?: string;
               name?: string;
@@ -42516,19 +42549,19 @@ export interface components {
             name?: string;
             version?: string;
             npm_user?: string;
-            author?: unknown;
-            bugs?: unknown;
+            author?: Record<string, unknown> | null;
+            bugs?: Record<string, unknown> | null;
             dependencies?: Record<string, never>;
             dev_dependencies?: Record<string, never>;
             peer_dependencies?: Record<string, never>;
             optional_dependencies?: Record<string, never>;
             description?: string;
-            dist?: unknown;
+            dist?: Record<string, unknown> | null;
             git_head?: string;
             homepage?: string;
             license?: string;
             main?: string;
-            repository?: unknown;
+            repository?: Record<string, unknown> | null;
             scripts?: Record<string, never>;
             id?: string;
             node_version?: string;
@@ -42541,7 +42574,7 @@ export interface components {
             files?: string[];
             bin?: Record<string, never>;
             man?: Record<string, never>;
-            directories?: unknown;
+            directories?: Record<string, unknown> | null;
             os?: string[];
             cpu?: string[];
             readme?: string;
@@ -72814,7 +72847,7 @@ export interface components {
       base_ref: string | null;
       /** @description The SHA of the most recent commit on `ref` before the push. */
       before: string;
-      /** @description An array of commit objects describing the pushed commits. (Pushed commits are all commits that are included in the `compare` between the `before` commit and the `after` commit.) The array includes a maximum of 20 commits. If necessary, you can use the [Commits API](https://docs.github.com/enterprise-server@3.8/rest/commits) to fetch additional commits. This limit is applied to timeline events only and isn't applied to webhook deliveries. */
+      /** @description An array of commit objects describing the pushed commits. (Pushed commits are all commits that are included in the `compare` between the `before` commit and the `after` commit.) The array includes a maximum of 2048 commits. If necessary, you can use the [Commits API](https://docs.github.com/enterprise-server@3.8/rest/commits) to fetch additional commits. */
       commits: {
         /** @description An array of files added in the commit. A maximum of 3000 changed files will be reported per commit. */
         added?: string[];
@@ -73245,8 +73278,8 @@ export interface components {
           body?: string | Record<string, never>;
           body_html?: string;
           container_metadata?: {
-            labels?: unknown;
-            manifest?: unknown;
+            labels?: Record<string, unknown> | null;
+            manifest?: Record<string, unknown> | null;
             tag?: {
               digest?: string;
               name?: string;
@@ -73518,7 +73551,7 @@ export interface components {
           updated_at: string;
           version: string;
         };
-        registry: unknown;
+        registry: Record<string, unknown> | null;
         updated_at: string;
       };
       repository?: components["schemas"]["repository-webhooks"];
@@ -74155,7 +74188,7 @@ export interface components {
         /** Format: uri */
         zipball_url: string | null;
       } & {
-        assets?: unknown[];
+        assets?: (Record<string, unknown> | null)[];
         assets_url?: string;
         author?: {
           avatar_url?: string;
@@ -74350,7 +74383,7 @@ export interface components {
         /** Format: uri */
         zipball_url: string | null;
       } & {
-        assets?: unknown[];
+        assets?: (Record<string, unknown> | null)[];
         assets_url?: string;
         author?: {
           avatar_url?: string;
@@ -74699,7 +74732,7 @@ export interface components {
         /** Format: uri */
         zipball_url: string | null;
       } & {
-        assets?: unknown[];
+        assets?: (Record<string, unknown> | null)[];
         assets_url?: string;
         author?: {
           avatar_url?: string;
@@ -78340,7 +78373,7 @@ export interface components {
         head_branch?: string | null;
         /** @description The name of the workflow. */
         workflow_name?: string | null;
-        steps?: unknown[];
+        steps?: (Record<string, unknown> | null)[];
         url?: string;
       };
       deployment?: components["schemas"]["deployment"];
@@ -79164,7 +79197,7 @@ export interface components {
         node_id?: string;
         path?: string;
         previous_attempt_url?: string | null;
-        pull_requests?: unknown[];
+        pull_requests?: (Record<string, unknown> | null)[];
         referenced_workflows?:
           | {
               path: string;
@@ -79878,7 +79911,7 @@ export interface components {
         node_id?: string;
         path?: string;
         previous_attempt_url?: string | null;
-        pull_requests?: unknown[];
+        pull_requests?: (Record<string, unknown> | null)[];
         referenced_workflows?:
           | {
               path: string;
@@ -80890,7 +80923,7 @@ export interface components {
     "workflow-run-branch"?: string;
     /** @description Returns workflow run triggered by the event you specify. For example, `push`, `pull_request` or `issue`. For more information, see "[Events that trigger workflows](https://docs.github.com/enterprise-server@3.8/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows)." */
     event?: string;
-    /** @description Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub can set a status of `waiting` or `requested`. */
+    /** @description Returns workflow runs with the check run `status` or `conclusion` that you specify. For example, a conclusion can be `success` or a status can be `in_progress`. Only GitHub Actions can set a status of `waiting`, `pending`, or `requested`. */
     "workflow-run-status"?:
       | "completed"
       | "action_required"
@@ -80957,6 +80990,11 @@ export interface components {
     "environment-name": string;
     /** @description The unique identifier of the branch policy. */
     "branch-policy-id": number;
+    /**
+     * @description The Git reference. For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation.
+     * @example heads/feature-a
+     */
+    "git-ref-only": string;
     /** @description The unique identifier of the invitation. */
     "invitation-id": number;
     /** @description The property to sort the results by. */
@@ -84658,7 +84696,7 @@ export interface operations {
   };
   /**
    * Get feeds
-   * @description GitHub Enterprise Server provides several timeline resources in [Atom](http://en.wikipedia.org/wiki/Atom_(standard)) format. The Feeds API lists all the feeds available to the authenticated user:
+   * @description Lists the feeds available to the authenticated user. The response provides a URL for each feed. You can then get a specific feed by sending a request to one of the feed URLs.
    *
    * *   **Timeline**: The GitHub Enterprise Server global public timeline
    * *   **User**: The public timeline for any user, using `uri_template`. For more information, see "[Hypermedia](https://docs.github.com/enterprise-server@3.8/rest/using-the-rest-api/getting-started-with-the-rest-api#hypermedia)."
@@ -84667,6 +84705,8 @@ export interface operations {
    * *   **Current user actor**: The private timeline for activity created by the authenticated user
    * *   **Current user organizations**: The private timeline for the organizations the authenticated user is a member of.
    * *   **Security advisories**: A collection of public announcements that provide information about security-related vulnerabilities in software on GitHub Enterprise Server.
+   *
+   * By default, timeline resources are returned in JSON. You can specify the `application/atom+xml` type in the `Accept` header to return timeline resources in Atom format. For more information, see "[Media types](https://docs.github.com/enterprise-server@3.8/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
    *
    * **Note**: Private feeds are only returned when [authenticating via Basic Auth](https://docs.github.com/enterprise-server@3.8/rest/overview/other-authentication-methods#basic-authentication) since current feed URIs use the older, non revocable auth tokens.
    */
@@ -85726,7 +85766,7 @@ export interface operations {
   };
   /**
    * List organizations
-   * @description Lists all organizations, in the order that they were created on GitHub Enterprise Server.
+   * @description Lists all organizations, in the order that they were created.
    *
    * **Note:** Pagination is powered exclusively by the `since` parameter. Use the [Link header](https://docs.github.com/enterprise-server@3.8/rest/guides/using-pagination-in-the-rest-api#using-link-headers) to get the URL for the next page of organizations.
    */
@@ -95182,10 +95222,16 @@ export interface operations {
            */
           started_at?: string;
           /**
-           * @description The current status.
+           * @description The current status of the check run. Only GitHub Actions can set a status of `waiting`, `pending`, or `requested`.
            * @enum {string}
            */
-          status?: "queued" | "in_progress" | "completed";
+          status?:
+            | "queued"
+            | "in_progress"
+            | "completed"
+            | "waiting"
+            | "requested"
+            | "pending";
           /**
            * @description **Required if you provide `completed_at` or a `status` of `completed`**. The final conclusion of the check.
            * **Note:** Providing `conclusion` will automatically set the `status` parameter to `completed`. You cannot change a check run conclusion to `stale`, only GitHub can set this.
@@ -96479,6 +96525,7 @@ export interface operations {
           "application/json": components["schemas"]["branch-short"][];
         };
       };
+      409: components["responses"]["conflict"];
       422: components["responses"]["validation_failed"];
     };
   };
@@ -96595,6 +96642,7 @@ export interface operations {
           "application/json": components["schemas"]["pull-request-simple"][];
         };
       };
+      409: components["responses"]["conflict"];
     };
   };
   /**
@@ -96658,6 +96706,7 @@ export interface operations {
         };
       };
       404: components["responses"]["not_found"];
+      409: components["responses"]["conflict"];
       422: components["responses"]["validation_failed"];
       500: components["responses"]["internal_error"];
       503: components["responses"]["service_unavailable"];
@@ -96812,7 +96861,7 @@ export interface operations {
   };
   /**
    * Compare two commits
-   * @description Compares two commits against one another. You can compare branches in the same repository, or you can compare branches that exist in different repositories within the same repository network, including fork branches. For more information about how to view a repository's network, see "[Understanding connections between repositories](https://docs.github.com/enterprise-server@3.8/repositories/viewing-activity-and-data-for-your-repository/understanding-connections-between-repositories)."
+   * @description Compares two commits against one another. You can compare refs (branches or tags) and commit SHAs in the same repository, or you can compare refs and commit SHAs that exist in different repositories within the same repository network, including fork branches. For more information about how to view a repository's network, see "[Understanding connections between repositories](https://docs.github.com/enterprise-server@3.8/repositories/viewing-activity-and-data-for-your-repository/understanding-connections-between-repositories)."
    *
    * This endpoint is equivalent to running the `git log BASE..HEAD` command, but it returns commits in a different order. The `git log BASE..HEAD` command returns commits in reverse chronological order, whereas the API returns commits in chronological order.
    *
@@ -98091,6 +98140,313 @@ export interface operations {
     };
   };
   /**
+   * List environment secrets
+   * @description Lists all secrets available in an environment without revealing their
+   * encrypted values.
+   *
+   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+   *
+   * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+   */
+  "actions/list-environment-secrets": {
+    parameters: {
+      query?: {
+        per_page?: components["parameters"]["per-page"];
+        page?: components["parameters"]["page"];
+      };
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        environment_name: components["parameters"]["environment-name"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        headers: {
+          Link: components["headers"]["link"];
+        };
+        content: {
+          "application/json": {
+            total_count: number;
+            secrets: components["schemas"]["actions-secret"][];
+          };
+        };
+      };
+    };
+  };
+  /**
+   * Get an environment public key
+   * @description Get the public key for an environment, which you need to encrypt environment
+   * secrets. You need to encrypt a secret before you can create or update secrets.
+   *
+   * Anyone with read access to the repository can use this endpoint.
+   *
+   * If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+   */
+  "actions/get-environment-public-key": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        environment_name: components["parameters"]["environment-name"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["actions-public-key"];
+        };
+      };
+    };
+  };
+  /**
+   * Get an environment secret
+   * @description Gets a single environment secret without revealing its encrypted value.
+   *
+   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+   *
+   * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+   */
+  "actions/get-environment-secret": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        environment_name: components["parameters"]["environment-name"];
+        secret_name: components["parameters"]["secret-name"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["actions-secret"];
+        };
+      };
+    };
+  };
+  /**
+   * Create or update an environment secret
+   * @description Creates or updates an environment secret with an encrypted value. Encrypt your secret using
+   * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting secrets for the REST API](https://docs.github.com/enterprise-server@3.8/rest/guides/encrypting-secrets-for-the-rest-api)."
+   *
+   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+   *
+   * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+   */
+  "actions/create-or-update-environment-secret": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        environment_name: components["parameters"]["environment-name"];
+        secret_name: components["parameters"]["secret-name"];
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @description Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get an environment public key](https://docs.github.com/enterprise-server@3.8/rest/actions/secrets#get-an-environment-public-key) endpoint. */
+          encrypted_value: string;
+          /** @description ID of the key you used to encrypt the secret. */
+          key_id: string;
+        };
+      };
+    };
+    responses: {
+      /** @description Response when creating a secret */
+      201: {
+        content: {
+          "application/json": components["schemas"]["empty-object"];
+        };
+      };
+      /** @description Response when updating a secret */
+      204: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Delete an environment secret
+   * @description Deletes a secret in an environment using the secret name.
+   *
+   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
+   *
+   * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+   */
+  "actions/delete-environment-secret": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        environment_name: components["parameters"]["environment-name"];
+        secret_name: components["parameters"]["secret-name"];
+      };
+    };
+    responses: {
+      /** @description Default response */
+      204: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * List environment variables
+   * @description Lists all environment variables.
+   *
+   * Authenticated users must have collaborator access to a repository to create, update, or read variables.
+   *
+   * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+   */
+  "actions/list-environment-variables": {
+    parameters: {
+      query?: {
+        per_page?: components["parameters"]["variables-per-page"];
+        page?: components["parameters"]["page"];
+      };
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        environment_name: components["parameters"]["environment-name"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        headers: {
+          Link: components["headers"]["link"];
+        };
+        content: {
+          "application/json": {
+            total_count: number;
+            variables: components["schemas"]["actions-variable"][];
+          };
+        };
+      };
+    };
+  };
+  /**
+   * Create an environment variable
+   * @description Create an environment variable that you can reference in a GitHub Actions workflow.
+   *
+   * Authenticated users must have collaborator access to a repository to create, update, or read variables.
+   *
+   * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+   */
+  "actions/create-environment-variable": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        environment_name: components["parameters"]["environment-name"];
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @description The name of the variable. */
+          name: string;
+          /** @description The value of the variable. */
+          value: string;
+        };
+      };
+    };
+    responses: {
+      /** @description Response */
+      201: {
+        content: {
+          "application/json": components["schemas"]["empty-object"];
+        };
+      };
+    };
+  };
+  /**
+   * Get an environment variable
+   * @description Gets a specific variable in an environment.
+   *
+   * Authenticated users must have collaborator access to a repository to create, update, or read variables.
+   *
+   * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+   */
+  "actions/get-environment-variable": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        environment_name: components["parameters"]["environment-name"];
+        name: components["parameters"]["variable-name"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["actions-variable"];
+        };
+      };
+    };
+  };
+  /**
+   * Delete an environment variable
+   * @description Deletes an environment variable using the variable name.
+   *
+   * Authenticated users must have collaborator access to a repository to create, update, or read variables.
+   *
+   * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+   */
+  "actions/delete-environment-variable": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        name: components["parameters"]["variable-name"];
+        environment_name: components["parameters"]["environment-name"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      204: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Update an environment variable
+   * @description Updates an environment variable that you can reference in a GitHub Actions workflow.
+   *
+   * Authenticated users must have collaborator access to a repository to create, update, or read variables.
+   *
+   * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+   */
+  "actions/update-environment-variable": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        name: components["parameters"]["variable-name"];
+        environment_name: components["parameters"]["environment-name"];
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @description The name of the variable. */
+          name?: string;
+          /** @description The value of the variable. */
+          value?: string;
+        };
+      };
+    };
+    responses: {
+      /** @description Response */
+      204: {
+        content: never;
+      };
+    };
+  };
+  /**
    * List repository events
    * @description **Note**: This API is not built to serve real-time use cases. Depending on the time of day, event latency can be anywhere from 30s to 6h.
    */
@@ -98247,6 +98603,7 @@ export interface operations {
       };
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
+      409: components["responses"]["conflict"];
       422: components["responses"]["validation_failed"];
     };
   };
@@ -98340,6 +98697,7 @@ export interface operations {
         };
       };
       404: components["responses"]["not_found"];
+      409: components["responses"]["conflict"];
       422: components["responses"]["validation_failed"];
     };
   };
@@ -98394,6 +98752,7 @@ export interface operations {
         };
       };
       404: components["responses"]["not_found"];
+      409: components["responses"]["conflict"];
     };
   };
   /**
@@ -98411,7 +98770,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        ref: components["parameters"]["commit-ref"];
+        ref: components["parameters"]["git-ref-only"];
       };
     };
     responses: {
@@ -98424,6 +98783,7 @@ export interface operations {
           "application/json": components["schemas"]["git-ref"][];
         };
       };
+      409: components["responses"]["conflict"];
     };
   };
   /**
@@ -98437,7 +98797,7 @@ export interface operations {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        ref: components["parameters"]["commit-ref"];
+        ref: components["parameters"]["git-ref-only"];
       };
     };
     responses: {
@@ -98448,6 +98808,7 @@ export interface operations {
         };
       };
       404: components["responses"]["not_found"];
+      409: components["responses"]["conflict"];
     };
   };
   /**
@@ -98482,16 +98843,20 @@ export interface operations {
           "application/json": components["schemas"]["git-ref"];
         };
       };
+      409: components["responses"]["conflict"];
       422: components["responses"]["validation_failed"];
     };
   };
-  /** Delete a reference */
+  /**
+   * Delete a reference
+   * @description Deletes the provided reference.
+   */
   "git/delete-ref": {
     parameters: {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        ref: components["parameters"]["commit-ref"];
+        ref: components["parameters"]["git-ref-only"];
       };
     };
     responses: {
@@ -98499,20 +98864,20 @@ export interface operations {
       204: {
         content: never;
       };
+      409: components["responses"]["conflict"];
       422: components["responses"]["validation_failed"];
     };
   };
-  /** Update a reference */
+  /**
+   * Update a reference
+   * @description Updates the provided reference to point to a new SHA. For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation.
+   */
   "git/update-ref": {
     parameters: {
       path: {
         owner: components["parameters"]["owner"];
         repo: components["parameters"]["repo"];
-        /**
-         * @description The name of the reference to update (for example, `heads/featureA`). Can be a branch name (`heads/BRANCH_NAME`) or tag name (`tags/TAG_NAME`). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation.
-         * @example heads/featureA
-         */
-        ref: string;
+        ref: components["parameters"]["git-ref-only"];
       };
     };
     requestBody: {
@@ -98535,6 +98900,7 @@ export interface operations {
           "application/json": components["schemas"]["git-ref"];
         };
       };
+      409: components["responses"]["conflict"];
       422: components["responses"]["validation_failed"];
     };
   };
@@ -98618,6 +98984,7 @@ export interface operations {
           "application/json": components["schemas"]["git-tag"];
         };
       };
+      409: components["responses"]["conflict"];
       422: components["responses"]["validation_failed"];
     };
   };
@@ -98668,6 +99035,7 @@ export interface operations {
         };
       };
       404: components["responses"]["not_found"];
+      409: components["responses"]["conflict"];
     };
   };
   /**
@@ -98736,6 +99104,7 @@ export interface operations {
       };
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
+      409: components["responses"]["conflict"];
       422: components["responses"]["validation_failed"];
     };
   };
@@ -98769,6 +99138,7 @@ export interface operations {
         };
       };
       404: components["responses"]["not_found"];
+      409: components["responses"]["conflict"];
       422: components["responses"]["validation_failed"];
     };
   };
@@ -104088,303 +104458,6 @@ export interface operations {
     };
   };
   /**
-   * List environment secrets
-   * @description Lists all secrets available in an environment without revealing their
-   * encrypted values.
-   *
-   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
-   */
-  "actions/list-environment-secrets": {
-    parameters: {
-      query?: {
-        per_page?: components["parameters"]["per-page"];
-        page?: components["parameters"]["page"];
-      };
-      path: {
-        repository_id: components["parameters"]["repository-id"];
-        environment_name: components["parameters"]["environment-name"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      200: {
-        headers: {
-          Link: components["headers"]["link"];
-        };
-        content: {
-          "application/json": {
-            total_count: number;
-            secrets: components["schemas"]["actions-secret"][];
-          };
-        };
-      };
-    };
-  };
-  /**
-   * Get an environment public key
-   * @description Get the public key for an environment, which you need to encrypt environment
-   * secrets. You need to encrypt a secret before you can create or update secrets.
-   *
-   * Anyone with read access to the repository can use this endpoint.
-   *
-   * If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
-   */
-  "actions/get-environment-public-key": {
-    parameters: {
-      path: {
-        repository_id: components["parameters"]["repository-id"];
-        environment_name: components["parameters"]["environment-name"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["actions-public-key"];
-        };
-      };
-    };
-  };
-  /**
-   * Get an environment secret
-   * @description Gets a single environment secret without revealing its encrypted value.
-   *
-   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
-   *
-   * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
-   */
-  "actions/get-environment-secret": {
-    parameters: {
-      path: {
-        repository_id: components["parameters"]["repository-id"];
-        environment_name: components["parameters"]["environment-name"];
-        secret_name: components["parameters"]["secret-name"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["actions-secret"];
-        };
-      };
-    };
-  };
-  /**
-   * Create or update an environment secret
-   * @description Creates or updates an environment secret with an encrypted value. Encrypt your secret using
-   * [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting secrets for the REST API](https://docs.github.com/enterprise-server@3.8/rest/guides/encrypting-secrets-for-the-rest-api)."
-   *
-   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
-   *
-   * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
-   */
-  "actions/create-or-update-environment-secret": {
-    parameters: {
-      path: {
-        repository_id: components["parameters"]["repository-id"];
-        environment_name: components["parameters"]["environment-name"];
-        secret_name: components["parameters"]["secret-name"];
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** @description Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get an environment public key](https://docs.github.com/enterprise-server@3.8/rest/actions/secrets#get-an-environment-public-key) endpoint. */
-          encrypted_value: string;
-          /** @description ID of the key you used to encrypt the secret. */
-          key_id: string;
-        };
-      };
-    };
-    responses: {
-      /** @description Response when creating a secret */
-      201: {
-        content: {
-          "application/json": components["schemas"]["empty-object"];
-        };
-      };
-      /** @description Response when updating a secret */
-      204: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Delete an environment secret
-   * @description Deletes a secret in an environment using the secret name.
-   *
-   * Authenticated users must have collaborator access to a repository to create, update, or read secrets.
-   *
-   * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
-   */
-  "actions/delete-environment-secret": {
-    parameters: {
-      path: {
-        repository_id: components["parameters"]["repository-id"];
-        environment_name: components["parameters"]["environment-name"];
-        secret_name: components["parameters"]["secret-name"];
-      };
-    };
-    responses: {
-      /** @description Default response */
-      204: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * List environment variables
-   * @description Lists all environment variables.
-   *
-   * Authenticated users must have collaborator access to a repository to create, update, or read variables.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
-   */
-  "actions/list-environment-variables": {
-    parameters: {
-      query?: {
-        per_page?: components["parameters"]["variables-per-page"];
-        page?: components["parameters"]["page"];
-      };
-      path: {
-        repository_id: components["parameters"]["repository-id"];
-        environment_name: components["parameters"]["environment-name"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      200: {
-        headers: {
-          Link: components["headers"]["link"];
-        };
-        content: {
-          "application/json": {
-            total_count: number;
-            variables: components["schemas"]["actions-variable"][];
-          };
-        };
-      };
-    };
-  };
-  /**
-   * Create an environment variable
-   * @description Create an environment variable that you can reference in a GitHub Actions workflow.
-   *
-   * Authenticated users must have collaborator access to a repository to create, update, or read variables.
-   *
-   * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
-   */
-  "actions/create-environment-variable": {
-    parameters: {
-      path: {
-        repository_id: components["parameters"]["repository-id"];
-        environment_name: components["parameters"]["environment-name"];
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** @description The name of the variable. */
-          name: string;
-          /** @description The value of the variable. */
-          value: string;
-        };
-      };
-    };
-    responses: {
-      /** @description Response */
-      201: {
-        content: {
-          "application/json": components["schemas"]["empty-object"];
-        };
-      };
-    };
-  };
-  /**
-   * Get an environment variable
-   * @description Gets a specific variable in an environment.
-   *
-   * Authenticated users must have collaborator access to a repository to create, update, or read variables.
-   *
-   * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
-   */
-  "actions/get-environment-variable": {
-    parameters: {
-      path: {
-        repository_id: components["parameters"]["repository-id"];
-        environment_name: components["parameters"]["environment-name"];
-        name: components["parameters"]["variable-name"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["actions-variable"];
-        };
-      };
-    };
-  };
-  /**
-   * Delete an environment variable
-   * @description Deletes an environment variable using the variable name.
-   *
-   * Authenticated users must have collaborator access to a repository to create, update, or read variables.
-   *
-   * OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
-   */
-  "actions/delete-environment-variable": {
-    parameters: {
-      path: {
-        repository_id: components["parameters"]["repository-id"];
-        name: components["parameters"]["variable-name"];
-        environment_name: components["parameters"]["environment-name"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      204: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Update an environment variable
-   * @description Updates an environment variable that you can reference in a GitHub Actions workflow.
-   *
-   * Authenticated users must have collaborator access to a repository to create, update, or read variables.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
-   */
-  "actions/update-environment-variable": {
-    parameters: {
-      path: {
-        repository_id: components["parameters"]["repository-id"];
-        name: components["parameters"]["variable-name"];
-        environment_name: components["parameters"]["environment-name"];
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** @description The name of the variable. */
-          name?: string;
-          /** @description The value of the variable. */
-          value?: string;
-        };
-      };
-    };
-    responses: {
-      /** @description Response */
-      204: {
-        content: never;
-      };
-    };
-  };
-  /**
    * List provisioned SCIM groups for an enterprise
    * @description **Note:** The SCIM API endpoints for enterprise accounts are currently in *private* beta and are subject to change.
    *
@@ -104400,6 +104473,9 @@ export interface operations {
         excludedAttributes?: components["parameters"]["excluded-attributes"];
         startIndex?: components["parameters"]["start-index"];
         count?: components["parameters"]["count"];
+      };
+      path: {
+        enterprise: components["parameters"]["enterprise"];
       };
     };
     responses: {
@@ -104425,6 +104501,11 @@ export interface operations {
    * If members are included as part of the group provisioning payload, they will be created as external group members. It is up to a provider to store a mapping between the `externalId` and `id` of each user.
    */
   "enterprise-admin/provision-enterprise-group": {
+    parameters: {
+      path: {
+        enterprise: components["parameters"]["enterprise"];
+      };
+    };
     requestBody: {
       content: {
         "application/json": components["schemas"]["group"];
@@ -104458,6 +104539,7 @@ export interface operations {
       };
       path: {
         scim_group_id: components["parameters"]["scim-group-id"];
+        enterprise: components["parameters"]["enterprise"];
       };
     };
     responses: {
@@ -104487,6 +104569,7 @@ export interface operations {
     parameters: {
       path: {
         scim_group_id: components["parameters"]["scim-group-id"];
+        enterprise: components["parameters"]["enterprise"];
       };
     };
     requestBody: {
@@ -104520,6 +104603,7 @@ export interface operations {
     parameters: {
       path: {
         scim_group_id: components["parameters"]["scim-group-id"];
+        enterprise: components["parameters"]["enterprise"];
       };
     };
     responses: {
@@ -104549,6 +104633,7 @@ export interface operations {
     parameters: {
       path: {
         scim_group_id: components["parameters"]["scim-group-id"];
+        enterprise: components["parameters"]["enterprise"];
       };
     };
     requestBody: {
@@ -104592,6 +104677,9 @@ export interface operations {
         startIndex?: components["parameters"]["start-index"];
         count?: components["parameters"]["count"];
       };
+      path: {
+        enterprise: components["parameters"]["enterprise"];
+      };
     };
     responses: {
       /** @description Success, either users were found or not found */
@@ -104618,6 +104706,11 @@ export interface operations {
    * When converting existing enterprise to use SCIM, the user handle (`userName`) from the SCIM payload will be used to match the provisioned user to an already existing user in the enterprise. Since the new identity record is created for newly provisioned users the matching for those records is done using a user's handle. Currently the matching will be performed to all of the users no matter if they were SAML JIT provisioned or created as local users.
    */
   "enterprise-admin/provision-enterprise-user": {
+    parameters: {
+      path: {
+        enterprise: components["parameters"]["enterprise"];
+      };
+    };
     requestBody: {
       content: {
         "application/json": components["schemas"]["user"];
@@ -104648,6 +104741,7 @@ export interface operations {
     parameters: {
       path: {
         scim_user_id: components["parameters"]["scim-user-id"];
+        enterprise: components["parameters"]["enterprise"];
       };
     };
     responses: {
@@ -104679,6 +104773,7 @@ export interface operations {
     parameters: {
       path: {
         scim_user_id: components["parameters"]["scim-user-id"];
+        enterprise: components["parameters"]["enterprise"];
       };
     };
     requestBody: {
@@ -104712,6 +104807,7 @@ export interface operations {
     parameters: {
       path: {
         scim_user_id: components["parameters"]["scim-user-id"];
+        enterprise: components["parameters"]["enterprise"];
       };
     };
     responses: {
@@ -104753,6 +104849,7 @@ export interface operations {
     parameters: {
       path: {
         scim_user_id: components["parameters"]["scim-user-id"];
+        enterprise: components["parameters"]["enterprise"];
       };
     };
     requestBody: {
@@ -108254,12 +108351,7 @@ export interface operations {
    * Get contextual information for a user
    * @description Provides hovercard information. You can find out more about someone in relation to their pull requests, issues, repositories, and organizations.
    *
-   * The `subject_type` and `subject_id` parameters provide context for the person's hovercard, which returns more information than without the parameters. For example, if you wanted to find out more about `octocat` who owns the `Spoon-Knife` repository via cURL, it would look like this:
-   *
-   * ```shell
-   *  curl -u username:token
-   *   https://api.github.com/users/octocat/hovercard?subject_type=repository&subject_id=1300192
-   * ```
+   *   The `subject_type` and `subject_id` parameters provide context for the person's hovercard, which returns more information than without the parameters. For example, if you wanted to find out more about `octocat` who owns the `Spoon-Knife` repository, you would use a `subject_type` value of `repository` and a `subject_id` value of `1300192` (the ID of the `Spoon-Knife` repository).
    *
    * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
    */
