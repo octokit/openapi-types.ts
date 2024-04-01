@@ -21173,7 +21173,7 @@ export interface components {
         created_at: string;
         /** @description The time that the alert was dismissed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
         dismissed_at: string | null;
-        dismissed_by: unknown;
+        dismissed_by: Record<string, unknown> | null;
         /** @description The reason for dismissing or closing the alert. Can be one of: `false positive`, `won't fix`, and `used in tests`. */
         dismissed_reason: string | null;
         /**
@@ -22342,7 +22342,7 @@ export interface components {
         display_title: string;
         event: string;
         head_branch: string;
-        head_commit?: unknown;
+        head_commit?: Record<string, unknown> | null;
         head_repository?: {
           archive_url?: string;
           assignees_url?: string;
@@ -22729,7 +22729,7 @@ export interface components {
         created_at: string;
         event: string;
         head_branch: string;
-        head_commit?: unknown;
+        head_commit?: Record<string, unknown> | null;
         head_repository?: {
           archive_url?: string;
           assignees_url?: string;
@@ -23123,7 +23123,7 @@ export interface components {
         created_at: string;
         event: string;
         head_branch: string;
-        head_commit?: unknown;
+        head_commit?: Record<string, unknown> | null;
         head_repository?: {
           archive_url?: string;
           assignees_url?: string;
@@ -25339,7 +25339,7 @@ export interface components {
         labels_url?: string;
         language?: unknown;
         languages_url?: string;
-        license?: unknown;
+        license?: Record<string, unknown> | null;
         merges_url?: string;
         milestones_url?: string;
         mirror_url?: unknown;
@@ -26385,7 +26385,7 @@ export interface components {
           /** Format: uri */
           url?: string;
         } | null;
-        assignees?: unknown[];
+        assignees?: (Record<string, unknown> | null)[];
         author_association?: string;
         body?: string | null;
         closed_at?: string | null;
@@ -26412,10 +26412,10 @@ export interface components {
         }[];
         labels_url?: string;
         locked: boolean;
-        milestone?: unknown;
+        milestone?: Record<string, unknown> | null;
         node_id?: string;
         number?: number;
-        performed_via_github_app?: unknown;
+        performed_via_github_app?: Record<string, unknown> | null;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -27066,7 +27066,7 @@ export interface components {
           /** Format: uri */
           url?: string;
         } | null;
-        assignees?: unknown[];
+        assignees?: (Record<string, unknown> | null)[];
         author_association?: string;
         body?: string | null;
         closed_at?: string | null;
@@ -27093,10 +27093,10 @@ export interface components {
         }[];
         labels_url?: string;
         locked: boolean;
-        milestone?: unknown;
+        milestone?: Record<string, unknown> | null;
         node_id?: string;
         number?: number;
-        performed_via_github_app?: unknown;
+        performed_via_github_app?: Record<string, unknown> | null;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -27756,7 +27756,7 @@ export interface components {
           /** Format: uri */
           url?: string;
         } | null;
-        assignees?: unknown[];
+        assignees?: (Record<string, unknown> | null)[];
         author_association?: string;
         body?: string | null;
         closed_at?: string | null;
@@ -27783,10 +27783,10 @@ export interface components {
         }[];
         labels_url?: string;
         locked: boolean;
-        milestone?: unknown;
+        milestone?: Record<string, unknown> | null;
         node_id?: string;
         number?: number;
-        performed_via_github_app?: unknown;
+        performed_via_github_app?: Record<string, unknown> | null;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -28834,8 +28834,8 @@ export interface components {
         } | null;
       } & {
         active_lock_reason?: string | null;
-        assignee?: unknown;
-        assignees?: unknown[];
+        assignee?: Record<string, unknown> | null;
+        assignees?: (Record<string, unknown> | null)[];
         author_association?: string;
         body?: string | null;
         closed_at: string | null;
@@ -28845,13 +28845,13 @@ export interface components {
         events_url?: string;
         html_url?: string;
         id?: number;
-        labels?: unknown[];
+        labels?: (Record<string, unknown> | null)[];
         labels_url?: string;
         locked?: boolean;
-        milestone?: unknown;
+        milestone?: Record<string, unknown> | null;
         node_id?: string;
         number?: number;
-        performed_via_github_app?: unknown;
+        performed_via_github_app?: Record<string, unknown> | null;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -29848,8 +29848,8 @@ export interface components {
         } | null;
       } & {
         active_lock_reason?: string | null;
-        assignee?: unknown;
-        assignees?: unknown[];
+        assignee?: Record<string, unknown> | null;
+        assignees?: (Record<string, unknown> | null)[];
         author_association?: string;
         body?: string | null;
         closed_at?: string | null;
@@ -29859,7 +29859,7 @@ export interface components {
         events_url?: string;
         html_url?: string;
         id?: number;
-        labels?: unknown[];
+        labels?: (Record<string, unknown> | null)[];
         labels_url?: string;
         locked?: boolean;
         /**
@@ -29935,7 +29935,7 @@ export interface components {
         } | null;
         node_id?: string;
         number?: number;
-        performed_via_github_app?: unknown;
+        performed_via_github_app?: Record<string, unknown> | null;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -31536,8 +31536,8 @@ export interface components {
           | "too heated"
           | "spam"
           | null;
-        assignee?: unknown;
-        assignees?: unknown[];
+        assignee?: Record<string, unknown> | null;
+        assignees?: (Record<string, unknown> | null)[];
         author_association?: string;
         body?: string | null;
         closed_at?: string | null;
@@ -31547,14 +31547,14 @@ export interface components {
         events_url?: string;
         html_url?: string;
         id?: number;
-        labels?: unknown[];
+        labels?: (Record<string, unknown> | null)[];
         labels_url?: string;
         /** @enum {boolean} */
         locked: true;
-        milestone?: unknown;
+        milestone?: Record<string, unknown> | null;
         node_id?: string;
         number?: number;
-        performed_via_github_app?: unknown;
+        performed_via_github_app?: Record<string, unknown> | null;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -32071,8 +32071,8 @@ export interface components {
         } | null;
       } & {
         active_lock_reason?: string | null;
-        assignee?: unknown;
-        assignees?: unknown[];
+        assignee?: Record<string, unknown> | null;
+        assignees?: (Record<string, unknown> | null)[];
         author_association?: string;
         body?: string | null;
         closed_at?: string | null;
@@ -32082,7 +32082,7 @@ export interface components {
         events_url?: string;
         html_url?: string;
         id?: number;
-        labels?: unknown[];
+        labels?: (Record<string, unknown> | null)[];
         labels_url?: string;
         locked?: boolean;
         /**
@@ -32158,7 +32158,7 @@ export interface components {
         };
         node_id?: string;
         number?: number;
-        performed_via_github_app?: unknown;
+        performed_via_github_app?: Record<string, unknown> | null;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -34418,8 +34418,8 @@ export interface components {
         } | null;
       } & {
         active_lock_reason?: string | null;
-        assignee?: unknown;
-        assignees?: unknown[];
+        assignee?: Record<string, unknown> | null;
+        assignees?: (Record<string, unknown> | null)[];
         author_association?: string;
         body?: string | null;
         closed_at?: string | null;
@@ -34429,13 +34429,13 @@ export interface components {
         events_url?: string;
         html_url?: string;
         id?: number;
-        labels?: unknown[];
+        labels?: (Record<string, unknown> | null)[];
         labels_url?: string;
         locked?: boolean;
-        milestone?: unknown;
+        milestone?: Record<string, unknown> | null;
         node_id?: string;
         number?: number;
-        performed_via_github_app?: unknown;
+        performed_via_github_app?: Record<string, unknown> | null;
         reactions?: {
           "+1"?: number;
           "-1"?: number;
@@ -37162,8 +37162,8 @@ export interface components {
         } | null;
       } & {
         active_lock_reason: unknown;
-        assignee?: unknown;
-        assignees?: unknown[];
+        assignee?: Record<string, unknown> | null;
+        assignees?: (Record<string, unknown> | null)[];
         author_association?: string;
         body?: string | null;
         closed_at?: string | null;
@@ -37173,11 +37173,11 @@ export interface components {
         events_url?: string;
         html_url?: string;
         id?: number;
-        labels?: unknown[];
+        labels?: (Record<string, unknown> | null)[];
         labels_url?: string;
         /** @enum {boolean} */
         locked: false;
-        milestone?: unknown;
+        milestone?: Record<string, unknown> | null;
         node_id?: string;
         number?: number;
         performed_via_github_app?: unknown;
@@ -39222,8 +39222,8 @@ export interface components {
           body?: string | Record<string, never>;
           body_html?: string;
           container_metadata?: {
-            labels?: unknown;
-            manifest?: unknown;
+            labels?: Record<string, unknown> | null;
+            manifest?: Record<string, unknown> | null;
             tag?: {
               digest?: string;
               name?: string;
@@ -39248,19 +39248,19 @@ export interface components {
             name?: string;
             version?: string;
             npm_user?: string;
-            author?: unknown;
-            bugs?: unknown;
+            author?: Record<string, unknown> | null;
+            bugs?: Record<string, unknown> | null;
             dependencies?: Record<string, never>;
             dev_dependencies?: Record<string, never>;
             peer_dependencies?: Record<string, never>;
             optional_dependencies?: Record<string, never>;
             description?: string;
-            dist?: unknown;
+            dist?: Record<string, unknown> | null;
             git_head?: string;
             homepage?: string;
             license?: string;
             main?: string;
-            repository?: unknown;
+            repository?: Record<string, unknown> | null;
             scripts?: Record<string, never>;
             id?: string;
             node_version?: string;
@@ -39273,7 +39273,7 @@ export interface components {
             files?: string[];
             bin?: Record<string, never>;
             man?: Record<string, never>;
-            directories?: unknown;
+            directories?: Record<string, unknown> | null;
             os?: string[];
             cpu?: string[];
             readme?: string;
@@ -69933,8 +69933,8 @@ export interface components {
           body?: string | Record<string, never>;
           body_html?: string;
           container_metadata?: {
-            labels?: unknown;
-            manifest?: unknown;
+            labels?: Record<string, unknown> | null;
+            manifest?: Record<string, unknown> | null;
             tag?: {
               digest?: string;
               name?: string;
@@ -70206,7 +70206,7 @@ export interface components {
           updated_at: string;
           version: string;
         };
-        registry: unknown;
+        registry: Record<string, unknown> | null;
         updated_at: string;
       };
       repository?: components["schemas"]["repository-webhooks"];
@@ -70843,7 +70843,7 @@ export interface components {
         /** Format: uri */
         zipball_url: string | null;
       } & {
-        assets?: unknown[];
+        assets?: (Record<string, unknown> | null)[];
         assets_url?: string;
         author?: {
           avatar_url?: string;
@@ -71038,7 +71038,7 @@ export interface components {
         /** Format: uri */
         zipball_url: string | null;
       } & {
-        assets?: unknown[];
+        assets?: (Record<string, unknown> | null)[];
         assets_url?: string;
         author?: {
           avatar_url?: string;
@@ -71387,7 +71387,7 @@ export interface components {
         /** Format: uri */
         zipball_url: string | null;
       } & {
-        assets?: unknown[];
+        assets?: (Record<string, unknown> | null)[];
         assets_url?: string;
         author?: {
           avatar_url?: string;
@@ -74603,7 +74603,7 @@ export interface components {
         head_branch?: string | null;
         /** @description The name of the workflow. */
         workflow_name?: string | null;
-        steps?: unknown[];
+        steps?: (Record<string, unknown> | null)[];
         url?: string;
       };
       deployment?: components["schemas"]["deployment"];
@@ -75368,7 +75368,7 @@ export interface components {
         node_id?: string;
         path?: string;
         previous_attempt_url?: string | null;
-        pull_requests?: unknown[];
+        pull_requests?: (Record<string, unknown> | null)[];
         referenced_workflows?:
           | {
               path: string;
@@ -76082,7 +76082,7 @@ export interface components {
         node_id?: string;
         path?: string;
         previous_attempt_url?: string | null;
-        pull_requests?: unknown[];
+        pull_requests?: (Record<string, unknown> | null)[];
         referenced_workflows?:
           | {
               path: string;
@@ -85717,7 +85717,7 @@ export interface operations {
     };
     requestBody?: {
       content: {
-        "application/json": unknown;
+        "application/json": Record<string, unknown> | null;
       };
     };
     responses: {
