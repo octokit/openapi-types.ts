@@ -1,7 +1,8 @@
 {
   "name": "@octokit/openapi-types",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "version": "0.0.0-development",
   "description": "Generated TypeScript definitions based on GitHub's OpenAPI spec for https://api.github.com",
