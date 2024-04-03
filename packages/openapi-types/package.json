@@ -15,6 +15,6 @@
   "author": "Gregor Martynus (https://twitter.com/gr2m)",
   "license": "MIT",
   "octokit": {
-    "openapi-version": "14.1.0"
+    "openapi-version": "15.0.0"
   }
 }
