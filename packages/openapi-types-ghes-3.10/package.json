@@ -7,7 +7,8 @@
     "directory": "packages/openapi-types-ghes-3.10"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "version": "0.0.0-development",
   "main": "",
