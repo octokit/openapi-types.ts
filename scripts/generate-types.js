@@ -13,7 +13,7 @@ run();
 const packageDefaults = {
   publishConfig: {
     access: "public",
-    provenance: true
+    provenance: true,
   },
   version: "0.0.0-development",
   main: "",
