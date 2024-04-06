@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@octokit/core": "^6.0.0",
-    "@octokit/plugin-paginate-rest": "^10.0.0",
+    "@octokit/plugin-paginate-rest": "^11.0.0",
     "github-enterprise-server-versions": "^2.0.0",
     "openapi-typescript": "^6.2.1",
     "prettier": "3.2.5"
