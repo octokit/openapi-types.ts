@@ -42,7 +42,7 @@ async function run(version) {
     },
   );
 
-  const currentGHESVersions = await getCurrentVersions();
+  const currentGHESVersions = ["3.10", "3.11", ...(await getCurrentVersions())];
   for (const asset of releaseAssets) {
     if (!/\.json$/.test(asset.name)) continue;
     if (/deref/.test(asset.name)) continue;
