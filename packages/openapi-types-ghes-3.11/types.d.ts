@@ -106837,7 +106837,10 @@ export interface operations {
       /** @description Response */
       200: {
         content: {
-          "application/json": components["schemas"]["organization-fine-grained-permission"][];
+          "application/json": {
+            name: string;
+            description: string;
+          }[];
         };
       };
       404: components["responses"]["not_found"];
