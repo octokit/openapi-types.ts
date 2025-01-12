@@ -31039,6 +31039,7 @@ export interface components {
           url?: string;
           user_view_type?: string;
         } | null;
+        dismissed_comment?: components["schemas"]["code-scanning-alert-dismissed-comment"];
         /**
          * @description The reason for dismissing or closing the alert.
          * @enum {string|null}
@@ -31048,6 +31049,8 @@ export interface components {
           | "won't fix"
           | "used in tests"
           | null;
+        /** @description The time that the alert was fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
+        fixed_at?: unknown;
         /**
          * Format: uri
          * @description The GitHub URL of the alert resource.
@@ -31095,10 +31098,10 @@ export interface components {
           severity: "none" | "note" | "warning" | "error" | null;
         };
         /**
-         * @description State of a code scanning alert.
-         * @enum {string}
+         * @description State of a code scanning alert. Events for alerts found outside the default branch will return a `null` value until they are dismissed or fixed.
+         * @enum {string|null}
          */
-        state: "open" | "dismissed" | "fixed";
+        state: "open" | "dismissed" | "fixed" | null;
         tool: {
           /** @description The name of the tool used to generate the code scanning analysis alert. */
           name: string;
@@ -31170,6 +31173,7 @@ export interface components {
           url?: string;
           user_view_type?: string;
         } | null;
+        dismissed_comment?: components["schemas"]["code-scanning-alert-dismissed-comment"];
         /**
          * @description The reason for dismissing or closing the alert.
          * @enum {string|null}
@@ -31179,6 +31183,8 @@ export interface components {
           | "won't fix"
           | "used in tests"
           | null;
+        /** @description The time that the alert was fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
+        fixed_at?: unknown;
         /**
          * Format: uri
          * @description The GitHub URL of the alert resource.
@@ -31271,6 +31277,7 @@ export interface components {
         dismissed_comment?: components["schemas"]["code-scanning-alert-dismissed-comment"];
         /** @description The reason for dismissing or closing the alert. Can be one of: `false positive`, `won't fix`, and `used in tests`. */
         dismissed_reason: unknown;
+        /** @description The time that the alert was fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
         fixed_at?: unknown;
         /**
          * Format: uri
@@ -31326,7 +31333,7 @@ export interface components {
           tags?: string[] | null;
         };
         /**
-         * @description State of a code scanning alert.
+         * @description State of a code scanning alert. Events for alerts found outside the default branch will return a `null` value until they are dismissed or fixed.
          * @enum {string|null}
          */
         state: "open" | "dismissed" | null;
@@ -31403,6 +31410,7 @@ export interface components {
           url?: string;
           user_view_type?: string;
         } | null;
+        dismissed_comment?: components["schemas"]["code-scanning-alert-dismissed-comment"];
         /**
          * @description The reason for dismissing or closing the alert.
          * @enum {string|null}
@@ -31412,6 +31420,8 @@ export interface components {
           | "won't fix"
           | "used in tests"
           | null;
+        /** @description The time that the alert was fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
+        fixed_at?: unknown;
         /**
          * Format: uri
          * @description The GitHub URL of the alert resource.
@@ -31467,10 +31477,10 @@ export interface components {
           tags?: string[] | null;
         };
         /**
-         * @description State of a code scanning alert.
-         * @enum {string}
+         * @description State of a code scanning alert. Events for alerts found outside the default branch will return a `null` value until they are dismissed or fixed.
+         * @enum {string|null}
          */
-        state: "fixed";
+        state: "fixed" | null;
         tool: {
           guid?: string | null;
           /** @description The name of the tool used to generate the code scanning analysis alert. */
@@ -31503,8 +31513,11 @@ export interface components {
         /** @description The time that the alert was dismissed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
         dismissed_at: string | null;
         dismissed_by: Record<string, unknown> | null;
+        dismissed_comment?: components["schemas"]["code-scanning-alert-dismissed-comment"];
         /** @description The reason for dismissing or closing the alert. Can be one of: `false positive`, `won't fix`, and `used in tests`. */
         dismissed_reason: string | null;
+        /** @description The time that the alert was fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
+        fixed_at?: unknown;
         /**
          * Format: uri
          * @description The GitHub URL of the alert resource.
@@ -31558,10 +31571,10 @@ export interface components {
           tags?: string[] | null;
         };
         /**
-         * @description State of a code scanning alert.
-         * @enum {string}
+         * @description State of a code scanning alert. Events for alerts found outside the default branch will return a `null` value until they are dismissed or fixed.
+         * @enum {string|null}
          */
-        state: "open" | "dismissed" | "fixed";
+        state: "open" | "dismissed" | "fixed" | null;
         tool: {
           guid?: string | null;
           /** @description The name of the tool used to generate the code scanning analysis alert. */
@@ -31596,8 +31609,11 @@ export interface components {
         /** @description The time that the alert was dismissed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
         dismissed_at: unknown;
         dismissed_by: unknown;
+        dismissed_comment?: components["schemas"]["code-scanning-alert-dismissed-comment"];
         /** @description The reason for dismissing or closing the alert. Can be one of: `false positive`, `won't fix`, and `used in tests`. */
         dismissed_reason: unknown;
+        /** @description The time that the alert was fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
+        fixed_at?: unknown;
         /**
          * Format: uri
          * @description The GitHub URL of the alert resource.
@@ -31645,10 +31661,10 @@ export interface components {
           severity: "none" | "note" | "warning" | "error" | null;
         };
         /**
-         * @description State of a code scanning alert.
-         * @enum {string}
+         * @description State of a code scanning alert. Events for alerts found outside the default branch will return a `null` value until they are dismissed or fixed.
+         * @enum {string|null}
          */
-        state: "open" | "fixed";
+        state: "open" | "fixed" | null;
         tool: {
           /** @description The name of the tool used to generate the code scanning analysis alert. */
           name: string;
