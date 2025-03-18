@@ -5774,7 +5774,7 @@ export interface paths {
      *
      * The authenticated user must have admin or owner permissions to the repository to use this endpoint.
      *
-     * For more information about the app that is providing this custom deployment rule, see the [documentation for the `GET /apps/{app_slug}` endpoint](https://docs.github.com/enterprise-server@3.12/rest/apps/apps#get-an-app).
+     * For more information about the app that is providing this custom deployment rule, see the [documentation for the `GET /apps/{app_slug}` endpoint](https://docs.github.com/enterprise-server@3.12/rest/apps/apps#get-an-app), as well as the [guide to creating custom deployment protection rules](https://docs.github.com/enterprise-server@3.12/actions/managing-workflow-runs-and-deployments/managing-deployments/creating-custom-deployment-protection-rules).
      *
      * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
      */
@@ -9796,7 +9796,7 @@ export interface components {
        */
       contents?: "read" | "write";
       /**
-       * @description The leve of permission to grant the access token to manage Dependabot secrets.
+       * @description The level of permission to grant the access token to manage Dependabot secrets.
        * @enum {string}
        */
       dependabot_secrets?: "read" | "write";
@@ -10488,6 +10488,7 @@ export interface components {
      */
     "hook-delivery-item": {
       /**
+       * Format: int64
        * @description Unique identifier of the webhook delivery.
        * @example 42
        */
@@ -10534,11 +10535,13 @@ export interface components {
        */
       action: string | null;
       /**
+       * Format: int64
        * @description The id of the GitHub App installation associated with this event.
        * @example 123
        */
       installation_id: number | null;
       /**
+       * Format: int64
        * @description The id of the repository associated with this event.
        * @example 123
        */
@@ -11495,12 +11498,12 @@ export interface components {
      */
     runner: {
       /**
-       * @description The id of the runner.
+       * @description The ID of the runner.
        * @example 5
        */
       id: number;
       /**
-       * @description The id of the runner group.
+       * @description The ID of the runner group.
        * @example 1
        */
       runner_group_id?: number;
@@ -12382,6 +12385,46 @@ export interface components {
       due_on: string | null;
     } | null;
     /**
+     * Issue Type
+     * @description The type of issue.
+     */
+    "issue-type": {
+      /** @description The unique identifier of the issue type. */
+      id: number;
+      /** @description The node identifier of the issue type. */
+      node_id: string;
+      /** @description The name of the issue type. */
+      name: string;
+      /** @description The description of the issue type. */
+      description: string | null;
+      /**
+       * @description The color of the issue type.
+       * @enum {string|null}
+       */
+      color?:
+        | "gray"
+        | "blue"
+        | "green"
+        | "yellow"
+        | "orange"
+        | "red"
+        | "pink"
+        | "purple"
+        | null;
+      /**
+       * Format: date-time
+       * @description The time the issue type created.
+       */
+      created_at?: string;
+      /**
+       * Format: date-time
+       * @description The time the issue type last updated.
+       */
+      updated_at?: string;
+      /** @description The enabled state of the issue type. */
+      is_enabled?: boolean;
+    } | null;
+    /**
      * GitHub app
      * @description GitHub apps are a new way to extend GitHub. They can be installed directly on organizations and user accounts and granted access to specific repositories. They come with granular permissions and built-in webhooks. GitHub apps are first class actors within GitHub.
      */
@@ -12601,6 +12644,7 @@ export interface components {
       body_text?: string;
       /** Format: uri */
       timeline_url?: string;
+      type?: components["schemas"]["issue-type"];
       repository?: components["schemas"]["repository"];
       performed_via_github_app?: components["schemas"]["nullable-integration"];
       author_association: components["schemas"]["author-association"];
@@ -21046,6 +21090,7 @@ export interface components {
       body_text?: string;
       /** Format: uri */
       timeline_url?: string;
+      type?: components["schemas"]["issue-type"];
       repository?: components["schemas"]["repository"];
       performed_via_github_app?: components["schemas"]["nullable-integration"];
       author_association: components["schemas"]["author-association"];
@@ -23603,6 +23648,7 @@ export interface components {
       body_text?: string;
       /** Format: uri */
       timeline_url?: string;
+      type?: components["schemas"]["issue-type"];
       performed_via_github_app?: components["schemas"]["nullable-integration"];
       reactions?: components["schemas"]["reaction-rollup"];
     };
@@ -26128,6 +26174,7 @@ export interface components {
       timeline_url?: string;
       /** @description Title of the issue */
       title: string;
+      type?: components["schemas"]["issue-type"];
       /** Format: date-time */
       updated_at: string;
       /**
@@ -26681,6 +26728,7 @@ export interface components {
       timeline_url?: string;
       /** @description Title of the issue */
       title: string;
+      type?: components["schemas"]["issue-type"];
       /** Format: date-time */
       updated_at: string;
       /**
@@ -35737,6 +35785,7 @@ export interface components {
         timeline_url?: string;
         /** @description Title of the issue */
         title: string;
+        type?: components["schemas"]["issue-type"];
         /** Format: date-time */
         updated_at: string;
         /**
@@ -36340,6 +36389,7 @@ export interface components {
         timeline_url?: string;
         /** @description Title of the issue */
         title: string;
+        type?: components["schemas"]["issue-type"];
         /** Format: date-time */
         updated_at: string;
         /**
@@ -36947,6 +36997,7 @@ export interface components {
         timeline_url?: string;
         /** @description Title of the issue */
         title: string;
+        type?: components["schemas"]["issue-type"];
         /** Format: date-time */
         updated_at: string;
         /**
@@ -37570,6 +37621,7 @@ export interface components {
         timeline_url?: string;
         /** @description Title of the issue */
         title: string;
+        type?: components["schemas"]["issue-type"];
         /** Format: date-time */
         updated_at: string;
         /**
@@ -38122,6 +38174,7 @@ export interface components {
         timeline_url?: string;
         /** @description Title of the issue */
         title: string;
+        type?: components["schemas"]["issue-type"];
         /** Format: date-time */
         updated_at: string;
         /**
@@ -38611,6 +38664,7 @@ export interface components {
         timeline_url?: string;
         /** @description Title of the issue */
         title: string;
+        type?: components["schemas"]["issue-type"];
         /** Format: date-time */
         updated_at: string;
         /**
@@ -39114,6 +39168,7 @@ export interface components {
         state_reason?: string | null;
         /** Format: uri */
         timeline_url?: string;
+        type?: components["schemas"]["issue-type"];
         /** @description Title of the issue */
         title: string;
         /** Format: date-time */
@@ -39607,6 +39662,7 @@ export interface components {
         state_reason?: string | null;
         /** Format: uri */
         timeline_url?: string;
+        type?: components["schemas"]["issue-type"];
         /** @description Title of the issue */
         title: string;
         /** Format: date-time */
@@ -40102,6 +40158,7 @@ export interface components {
         state_reason?: string | null;
         /** Format: uri */
         timeline_url?: string;
+        type?: components["schemas"]["issue-type"];
         /** @description Title of the issue */
         title: string;
         /** Format: date-time */
@@ -40594,6 +40651,7 @@ export interface components {
         timeline_url?: string;
         /** @description Title of the issue */
         title: string;
+        type?: components["schemas"]["issue-type"];
         /** Format: date-time */
         updated_at: string;
         /**
@@ -41815,6 +41873,7 @@ export interface components {
         timeline_url?: string;
         /** @description Title of the issue */
         title: string;
+        type?: components["schemas"]["issue-type"];
         /** Format: date-time */
         updated_at: string;
         /**
@@ -42363,6 +42422,7 @@ export interface components {
           url?: string;
           user_view_type?: string;
         } | null;
+        type?: components["schemas"]["issue-type"];
       };
       organization?: components["schemas"]["organization-simple-webhooks"];
       repository: components["schemas"]["repository-webhooks"];
@@ -42807,6 +42867,7 @@ export interface components {
           timeline_url?: string;
           /** @description Title of the issue */
           title: string;
+          type?: components["schemas"]["issue-type"];
           /** Format: date-time */
           updated_at: string;
           /**
@@ -43576,6 +43637,7 @@ export interface components {
         timeline_url?: string;
         /** @description Title of the issue */
         title: string;
+        type?: components["schemas"]["issue-type"];
         /** Format: date-time */
         updated_at: string;
         /**
@@ -76552,6 +76614,8 @@ export interface components {
     "personal-access-token-before"?: string;
     /** @description Only show fine-grained personal access tokens used after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
     "personal-access-token-after"?: string;
+    /** @description The ID of the token */
+    "personal-access-token-token-id"?: string[];
     /** @description The unique identifier of the fine-grained personal access token. */
     "fine-grained-personal-access-token-id": number;
     /**
@@ -85395,6 +85459,8 @@ export interface operations {
         /** @description Indicates the state of the issues to return. */
         state?: "open" | "closed" | "all";
         labels?: components["parameters"]["labels"];
+        /** @description Can be the name of an issue type. */
+        type?: string;
         /** @description What to sort results by. */
         sort?: "created" | "updated" | "comments";
         direction?: components["parameters"]["direction"];
@@ -86154,6 +86220,7 @@ export interface operations {
         permission?: components["parameters"]["personal-access-token-permission"];
         last_used_before?: components["parameters"]["personal-access-token-before"];
         last_used_after?: components["parameters"]["personal-access-token-after"];
+        token_id?: components["parameters"]["personal-access-token-token-id"];
       };
       path: {
         org: components["parameters"]["org"];
@@ -86296,6 +86363,7 @@ export interface operations {
         permission?: components["parameters"]["personal-access-token-permission"];
         last_used_before?: components["parameters"]["personal-access-token-before"];
         last_used_after?: components["parameters"]["personal-access-token-after"];
+        token_id?: components["parameters"]["personal-access-token-token-id"];
       };
       path: {
         org: components["parameters"]["org"];
@@ -96154,7 +96222,7 @@ export interface operations {
    *
    * The authenticated user must have admin or owner permissions to the repository to use this endpoint.
    *
-   * For more information about the app that is providing this custom deployment rule, see the [documentation for the `GET /apps/{app_slug}` endpoint](https://docs.github.com/enterprise-server@3.12/rest/apps/apps#get-an-app).
+   * For more information about the app that is providing this custom deployment rule, see the [documentation for the `GET /apps/{app_slug}` endpoint](https://docs.github.com/enterprise-server@3.12/rest/apps/apps#get-an-app), as well as the [guide to creating custom deployment protection rules](https://docs.github.com/enterprise-server@3.12/actions/managing-workflow-runs-and-deployments/managing-deployments/creating-custom-deployment-protection-rules).
    *
    * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
    */
@@ -97753,6 +97821,8 @@ export interface operations {
         state?: "open" | "closed" | "all";
         /** @description Can be the name of a user. Pass in `none` for issues with no assigned user, and `*` for issues assigned to any user. */
         assignee?: string;
+        /** @description Can be the name of an issue type. If the string `*` is passed, issues with any type are accepted. If the string `none` is passed, issues without type are returned. */
+        type?: string;
         /** @description The user that created the issue. */
         creator?: string;
         /** @description A user that's mentioned in the issue. */
@@ -97830,6 +97900,11 @@ export interface operations {
           >[];
           /** @description Logins for Users to assign to this issue. _NOTE: Only users with push access can set assignees for new issues. Assignees are silently dropped otherwise._ */
           assignees?: string[];
+          /**
+           * @description The name of the issue type to associate with this issue.
+           * @example Epic
+           */
+          type?: string | null;
         };
       };
     };
@@ -98234,6 +98309,11 @@ export interface operations {
           >[];
           /** @description Usernames to assign to this issue. Pass one or more user logins to _replace_ the set of assignees on this issue. Send an empty array (`[]`) to clear all assignees from the issue. Only users with push access can set assignees for new issues. Without push access to the repository, assignee changes are silently dropped. */
           assignees?: string[];
+          /**
+           * @description The name of the issue type to associate with this issue or use `null` to remove the current issue type.
+           * @example Epic
+           */
+          type?: string | null;
         };
       };
     };
