@@ -1472,7 +1472,7 @@ export interface paths {
      * Get an organization
      * @description Gets information about an organization.
      *
-     * When the value of `two_factor_requirement_enabled` is `true`, the organization requires all members, billing managers, and outside collaborators to enable [two-factor authentication](https://docs.github.com/enterprise-server@3.12/articles/securing-your-account-with-two-factor-authentication-2fa/).
+     * When the value of `two_factor_requirement_enabled` is `true`, the organization requires all members, billing managers, outside collaborators, guest collaborators, repository collaborators, or everyone with access to any repository within the organization to enable [two-factor authentication](https://docs.github.com/enterprise-server@3.12/articles/securing-your-account-with-two-factor-authentication-2fa/).
      *
      * To see the full details about an organization, the authenticated user must be an organization owner.
      *
@@ -2632,15 +2632,7 @@ export interface paths {
     get: operations["orgs/get-membership-for-user"];
     /**
      * Set organization membership for a user
-     * @description Only authenticated organization owners can add a member to the organization or update the member's role.
-     *
-     * *   If the authenticated user is _adding_ a member to the organization, the invited user will receive an email inviting them to the organization. The user's [membership status](https://docs.github.com/enterprise-server@3.12/rest/orgs/members#get-organization-membership-for-a-user) will be `pending` until they accept the invitation.
-     *
-     * *   Authenticated users can _update_ a user's membership by passing the `role` parameter. If the authenticated user changes a member's role to `admin`, the affected user will receive an email notifying them that they've been made an organization owner. If the authenticated user changes an owner's role to `member`, no email will be sent.
-     *
-     * **Rate limits**
-     *
-     * To prevent abuse, organization owners are limited to creating 50 organization invitations for an organization within a 24 hour period. If the organization is more than one month old or on a paid plan, the limit is 500 invitations per 24 hour period.
+     * @description Only authenticated organization owners can add a member to the organization or update the member's role. If the authenticated user is _adding_ a member to the organization, the invited user will receive an email inviting them to the organization. The user's [membership status](https://docs.github.com/enterprise-server@3.12/rest/orgs/members#get-organization-membership-for-a-user) will be `pending` until they accept the invitation. Authenticated users can _update_ a user's membership by passing the `role` parameter. If the authenticated user changes a member's role to `admin`, the affected user will receive an email notifying them that they've been made an organization owner. If the authenticated user changes an owner's role to `member`, no email will be sent. The same rate limits as set on the appliance are applied to this endpoint. Most commonly, you will hit the secondary rate limit (if configured) due to CPU usage.
      */
     put: operations["orgs/set-membership-for-user"];
     /**
@@ -4421,8 +4413,8 @@ export interface paths {
   };
   "/repos/{owner}/{repo}/automated-security-fixes": {
     /**
-     * Check if automated security fixes are enabled for a repository
-     * @description Shows whether automated security fixes are enabled, disabled or paused for a repository. The authenticated user must have admin read access to the repository. For more information, see "[Configuring automated security fixes](https://docs.github.com/enterprise-server@3.12/articles/configuring-automated-security-fixes)".
+     * Check if Dependabot security updates are enabled for a repository
+     * @description Shows whether Dependabot security updates are enabled, disabled or paused for a repository. The authenticated user must have admin read access to the repository. For more information, see "[Configuring Dependabot security updates](https://docs.github.com/enterprise-server@3.12/articles/configuring-automated-security-fixes)".
      */
     get: operations["repos/check-automated-security-fixes"];
   };
@@ -8953,9 +8945,9 @@ export interface paths {
      * Get a user using their ID
      * @description Provides publicly available information about someone with a GitHub account. This method takes their durable user `ID` instead of their `login`, which can change over time.
      *
-     * The `email` key in the following response is the publicly visible email address from your GitHub Enterprise Server [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be “public” which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub Enterprise Server. For more information, see [Authentication](https://docs.github.com/enterprise-server@3.12/rest/guides/getting-started-with-the-rest-api#authentication).
+     * The `email` key in the following response is the publicly visible email address from your GitHub Enterprise Server [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be public which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub Enterprise Server. For more information, see [Authentication](https://docs.github.com/enterprise-server@3.12/rest/guides/getting-started-with-the-rest-api#authentication).
      *
-     * The Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see "[Emails API](https://docs.github.com/enterprise-server@3.12/rest/users/emails)".
+     * The Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see [Emails API](https://docs.github.com/enterprise-server@3.12/rest/users/emails).
      */
     get: operations["users/get-by-id"];
   };
@@ -8973,9 +8965,9 @@ export interface paths {
      * Get a user
      * @description Provides publicly available information about someone with a GitHub account.
      *
-     * The `email` key in the following response is the publicly visible email address from your GitHub Enterprise Server [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be “public” which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub Enterprise Server. For more information, see [Authentication](https://docs.github.com/enterprise-server@3.12/rest/guides/getting-started-with-the-rest-api#authentication).
+     * The `email` key in the following response is the publicly visible email address from your GitHub Enterprise Server [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be public which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub Enterprise Server. For more information, see [Authentication](https://docs.github.com/enterprise-server@3.12/rest/guides/getting-started-with-the-rest-api#authentication).
      *
-     * The Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see "[Emails API](https://docs.github.com/enterprise-server@3.12/rest/users/emails)".
+     * The Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see [Emails API](https://docs.github.com/enterprise-server@3.12/rest/users/emails).
      */
     get: operations["users/get-by-username"];
   };
@@ -10194,6 +10186,11 @@ export interface components {
         score: number | null;
       } | null;
     } | null;
+    /** @description The EPSS scores as calculated by the [Exploit Prediction Scoring System](https://www.first.org/epss). */
+    readonly "security-advisory-epss": {
+      readonly percentage?: number;
+      readonly percentile?: number;
+    } | null;
     /**
      * @description The type of credit the user is receiving.
      * @enum {string}
@@ -10293,6 +10290,7 @@ export interface components {
         score: number | null;
       } | null;
       cvss_severities?: components["schemas"]["cvss-severities"];
+      epss?: components["schemas"]["security-advisory-epss"];
       cwes:
         | {
             /** @description The Common Weakness Enumeration (CWE) identifier. */
@@ -10301,10 +10299,6 @@ export interface components {
             name: string;
           }[]
         | null;
-      epss?: {
-        percentage?: number;
-        percentile?: number;
-      } | null;
       /** @description In GitHub Enterprise Server, this field will always be empty because the user metadata of credited users will not be available. */
       credits:
         | readonly {
@@ -10333,6 +10327,53 @@ export interface components {
       errors?: string[];
     };
     /**
+     * Enterprise
+     * @description An enterprise on GitHub.
+     */
+    enterprise: {
+      /** @description A short description of the enterprise. */
+      description?: string | null;
+      /**
+       * Format: uri
+       * @example https://github.com/enterprises/octo-business
+       */
+      html_url: string;
+      /**
+       * Format: uri
+       * @description The enterprise's website URL.
+       */
+      website_url?: string | null;
+      /**
+       * @description Unique identifier of the enterprise
+       * @example 42
+       */
+      id: number;
+      /** @example MDEwOlJlcG9zaXRvcnkxMjk2MjY5 */
+      node_id: string;
+      /**
+       * @description The name of the enterprise.
+       * @example Octo Business
+       */
+      name: string;
+      /**
+       * @description The slug url identifier for the enterprise.
+       * @example octo-business
+       */
+      slug: string;
+      /**
+       * Format: date-time
+       * @example 2019-01-26T19:01:12Z
+       */
+      created_at: string | null;
+      /**
+       * Format: date-time
+       * @example 2019-01-26T19:14:43Z
+       */
+      updated_at: string | null;
+      /** Format: uri */
+      avatar_url: string;
+    };
+    /**
      * GitHub app
      * @description GitHub apps are a new way to extend GitHub. They can be installed directly on organizations and user accounts and granted access to specific repositories. They come with granular permissions and built-in webhooks. GitHub apps are first class actors within GitHub.
      */
@@ -10349,7 +10390,9 @@ export interface components {
       slug?: string;
       /** @example MDExOkludGVncmF0aW9uMQ== */
       node_id: string;
-      owner: components["schemas"]["nullable-simple-user"];
+      owner:
+        | components["schemas"]["simple-user"]
+        | components["schemas"]["enterprise"];
       /**
        * @description The name of the GitHub app
        * @example Probot Owners
@@ -10625,53 +10668,6 @@ export interface components {
         /** @description The response payload received. */
         payload: string | null;
       };
-    };
-    /**
-     * Enterprise
-     * @description An enterprise on GitHub.
-     */
-    enterprise: {
-      /** @description A short description of the enterprise. */
-      description?: string | null;
-      /**
-       * Format: uri
-       * @example https://github.com/enterprises/octo-business
-       */
-      html_url: string;
-      /**
-       * Format: uri
-       * @description The enterprise's website URL.
-       */
-      website_url?: string | null;
-      /**
-       * @description Unique identifier of the enterprise
-       * @example 42
-       */
-      id: number;
-      /** @example MDEwOlJlcG9zaXRvcnkxMjk2MjY5 */
-      node_id: string;
-      /**
-       * @description The name of the enterprise.
-       * @example Octo Business
-       */
-      name: string;
-      /**
-       * @description The slug url identifier for the enterprise.
-       * @example octo-business
-       */
-      slug: string;
-      /**
-       * Format: date-time
-       * @example 2019-01-26T19:01:12Z
-       */
-      created_at: string | null;
-      /**
-       * Format: date-time
-       * @example 2019-01-26T19:14:43Z
-       */
-      updated_at: string | null;
-      /** Format: uri */
-      avatar_url: string;
     };
     /**
      * Integration Installation Request
@@ -11279,12 +11275,19 @@ export interface components {
      */
     "announcement-expiration": string | null;
     /**
+     * @description Whether an announcement can be dismissed by the user.
+     * @default false
+     * @example false
+     */
+    "announcement-user-dismissible": boolean | null;
+    /**
      * Enterprise Announcement
      * @description Enterprise global announcement
      */
     announcement: {
       announcement: components["schemas"]["announcement-message"];
       expires_at?: components["schemas"]["announcement-expiration"];
+      user_dismissible?: components["schemas"]["announcement-user-dismissible"];
     };
     "license-info": {
       seats?: string | number;
@@ -11518,6 +11521,7 @@ export interface components {
       status: string;
       busy: boolean;
       labels: components["schemas"]["runner-label"][];
+      ephemeral?: boolean;
     };
     /**
      * Runner Application
@@ -12026,6 +12030,7 @@ export interface components {
       tool: components["schemas"]["code-scanning-analysis-tool"];
       most_recent_instance: components["schemas"]["code-scanning-alert-instance"];
       repository: components["schemas"]["simple-repository"];
+      dismissal_approved_by?: components["schemas"]["nullable-simple-user"];
     };
     /** Enterprise Security Analysis Settings */
     "enterprise-security-analysis-settings": {
@@ -12393,7 +12398,9 @@ export interface components {
       slug?: string;
       /** @example MDExOkludGVncmF0aW9uMQ== */
       node_id: string;
-      owner: components["schemas"]["nullable-simple-user"];
+      owner:
+        | components["schemas"]["simple-user"]
+        | components["schemas"]["enterprise"];
       /**
        * @description The name of the GitHub app
        * @example Probot Owners
@@ -13245,7 +13252,7 @@ export interface components {
       clusterSupport?: boolean;
       /** @description The company under which the license is issued. */
       company?: string;
-      /** @description Whether the Github Connect feature is enabled. */
+      /** @description Whether the GitHub Connect feature is enabled. */
       croquetSupport?: boolean;
       /** @description Whether this license is issued under custom terms. */
       customTerms?: boolean;
@@ -14231,12 +14238,6 @@ export interface components {
        */
       selected_repositories_url?: string;
     };
-    /**
-     * @description Whether an announcement can be dismissed by the user.
-     * @default false
-     * @example false
-     */
-    "announcement-user-dismissible": boolean | null;
     /**
      * Announcement Banner
      * @description Announcement at either the repository, organization, or enterprise level
@@ -15890,6 +15891,19 @@ export interface components {
       type: "required_signatures";
     };
     /**
+     * Reviewer
+     * @description A required reviewing team
+     */
+    "repository-rule-params-reviewer": {
+      /** @description ID of the reviewer which must review changes to matching files. */
+      id: number;
+      /**
+       * @description The type of the reviewer
+       * @enum {string}
+       */
+      type: "Team";
+    };
+    /**
      * RequiredReviewerConfiguration
      * @description A reviewing team, and file patterns describing which files they must approve changes to.
      */
@@ -15898,8 +15912,7 @@ export interface components {
       file_patterns: string[];
       /** @description Minimum number of approvals required from the specified team. If set to zero, the team will be added to the pull request but approval is optional. */
       minimum_approvals: number;
-      /** @description Node ID of the team which must review changes to matching files. */
-      reviewer_id: string;
+      reviewer?: components["schemas"]["repository-rule-params-reviewer"];
     };
     /**
      * pull_request
@@ -15909,7 +15922,7 @@ export interface components {
       /** @enum {string} */
       type: "pull_request";
       parameters?: {
-        /** @description When merging pull requests, you can allow any combination of merge commits, squashing, or rebasing. At least one option must be enabled. */
+        /** @description Array of allowed merge methods. Allowed values include `merge`, `squash`, and `rebase`. At least one option must be enabled. */
         allowed_merge_methods?: string[];
         /** @description New, reviewable commits pushed will dismiss previous pull request review approvals. */
         dismiss_stale_reviews_on_push: boolean;
@@ -18122,17 +18135,17 @@ export interface components {
       is_alphanumeric: boolean;
     };
     /**
-     * Check Automated Security Fixes
-     * @description Check Automated Security Fixes
+     * Check Dependabot security updates
+     * @description Check Dependabot security updates
      */
     "check-automated-security-fixes": {
       /**
-       * @description Whether automated security fixes are enabled for the repository.
+       * @description Whether Dependabot security updates are enabled for the repository.
        * @example true
        */
       enabled: boolean;
       /**
-       * @description Whether automated security fixes are paused for the repository.
+       * @description Whether Dependabot security updates are paused for the repository.
        * @example false
        */
       paused: boolean;
@@ -18971,6 +18984,7 @@ export interface components {
       rule: components["schemas"]["code-scanning-alert-rule-summary"];
       tool: components["schemas"]["code-scanning-analysis-tool"];
       most_recent_instance: components["schemas"]["code-scanning-alert-instance"];
+      dismissal_approved_by?: components["schemas"]["nullable-simple-user"];
     };
     "code-scanning-alert-rule": {
       /** @description A unique identifier for the rule used to detect the alert. */
@@ -19014,12 +19028,15 @@ export interface components {
       rule: components["schemas"]["code-scanning-alert-rule"];
       tool: components["schemas"]["code-scanning-analysis-tool"];
       most_recent_instance: components["schemas"]["code-scanning-alert-instance"];
+      dismissal_approved_by?: components["schemas"]["nullable-simple-user"];
     };
     /**
      * @description Sets the state of the code scanning alert. You must provide `dismissed_reason` when you set the state to `dismissed`.
      * @enum {string}
      */
     "code-scanning-alert-set-state": "open" | "dismissed";
+    /** @description If `true`, attempt to create an alert dismissal request. */
+    "code-scanning-alert-create-request": boolean;
     /**
      * @description An identifier for the upload.
      * @example 6c81cd8e-b078-4ac3-a3be-1dad7dbd0b53
@@ -31251,6 +31268,44 @@ export interface components {
         };
         /** Format: uri */
         url: string;
+        /** User */
+        dismissal_approved_by?: {
+          /** Format: uri */
+          avatar_url?: string;
+          deleted?: boolean;
+          email?: string | null;
+          /** Format: uri-template */
+          events_url?: string;
+          /** Format: uri */
+          followers_url?: string;
+          /** Format: uri-template */
+          following_url?: string;
+          /** Format: uri-template */
+          gists_url?: string;
+          gravatar_id?: string;
+          /** Format: uri */
+          html_url?: string;
+          id: number;
+          login: string;
+          name?: string;
+          node_id?: string;
+          /** Format: uri */
+          organizations_url?: string;
+          /** Format: uri */
+          received_events_url?: string;
+          /** Format: uri */
+          repos_url?: string;
+          site_admin?: boolean;
+          /** Format: uri-template */
+          starred_url?: string;
+          /** Format: uri */
+          subscriptions_url?: string;
+          /** @enum {string} */
+          type?: "Bot" | "User" | "Organization";
+          /** Format: uri */
+          url?: string;
+          user_view_type?: string;
+        } | null;
       };
       commit_oid: components["schemas"]["webhooks_code_scanning_commit_oid"];
       enterprise?: components["schemas"]["enterprise-webhooks"];
@@ -31347,6 +31402,7 @@ export interface components {
         updated_at?: string | null;
         /** Format: uri */
         url: string;
+        dismissal_approved_by?: unknown;
       };
       commit_oid: components["schemas"]["webhooks_code_scanning_commit_oid"];
       enterprise?: components["schemas"]["enterprise-webhooks"];
@@ -71919,6 +71975,10 @@ export interface components {
           /** @description The previous version of the name if the action was `edited`. */
           from: string;
         };
+        tag_name?: {
+          /** @description The previous version of the tag_name if the action was `edited`. */
+          from: string;
+        };
         make_latest?: {
           /** @description Whether this release was explicitly `edited` to be the latest. */
           to: boolean;
@@ -76125,6 +76185,12 @@ export interface components {
         };
       };
     };
+    /** @description Conflict */
+    conflict: {
+      content: {
+        "application/json": components["schemas"]["basic-error"];
+      };
+    };
     /** @description Response */
     actions_runner_labels: {
       content: {
@@ -76179,12 +76245,6 @@ export interface components {
         "application/json": components["schemas"]["basic-error"];
       };
     };
-    /** @description Conflict */
-    conflict: {
-      content: {
-        "application/json": components["schemas"]["basic-error"];
-      };
-    };
     /** @description The value of `per_page` multiplied by `page` cannot be greater than 10000. */
     package_es_list_error: {
       content: never;
@@ -76221,7 +76281,7 @@ export interface components {
     found: {
       content: never;
     };
-    /** @description Response if GitHub Advanced Security is not enabled for this repository */
+    /** @description Response for a private repository when GitHub Advanced Security is not enabled, or if used against a fork */
     dependency_review_forbidden: {
       content: {
         "application/json": components["schemas"]["basic-error"];
@@ -76688,6 +76748,11 @@ export interface components {
     "scim-user-id": string;
     /** @description Determines whether the first search result returned is the highest number of matches (`desc`) or lowest number of matches (`asc`). This parameter is ignored unless you provide `sort`. */
     order?: "desc" | "asc";
+    /**
+     * @description Set to `true` to use advanced search.
+     * Example: `http://api.github.com/search/issues?q={query}&advanced_search=true`
+     */
+    "issues-advanced-search"?: string;
     /** @description The unique identifier of the GPG key. */
     "gpg-key-id": number;
     /** @description Only show repositories updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
@@ -80014,6 +80079,7 @@ export interface operations {
     responses: {
       201: components["responses"]["actions_runner_jitconfig"];
       404: components["responses"]["not_found"];
+      409: components["responses"]["conflict"];
       422: components["responses"]["validation_failed_simple"];
     };
   };
@@ -82250,7 +82316,7 @@ export interface operations {
    * Get an organization
    * @description Gets information about an organization.
    *
-   * When the value of `two_factor_requirement_enabled` is `true`, the organization requires all members, billing managers, and outside collaborators to enable [two-factor authentication](https://docs.github.com/enterprise-server@3.12/articles/securing-your-account-with-two-factor-authentication-2fa/).
+   * When the value of `two_factor_requirement_enabled` is `true`, the organization requires all members, billing managers, outside collaborators, guest collaborators, repository collaborators, or everyone with access to any repository within the organization to enable [two-factor authentication](https://docs.github.com/enterprise-server@3.12/articles/securing-your-account-with-two-factor-authentication-2fa/).
    *
    * To see the full details about an organization, the authenticated user must be an organization owner.
    *
@@ -83263,6 +83329,7 @@ export interface operations {
     responses: {
       201: components["responses"]["actions_runner_jitconfig"];
       404: components["responses"]["not_found"];
+      409: components["responses"]["conflict"];
       422: components["responses"]["validation_failed_simple"];
     };
   };
@@ -85456,15 +85523,7 @@ export interface operations {
   };
   /**
    * Set organization membership for a user
-   * @description Only authenticated organization owners can add a member to the organization or update the member's role.
-   *
-   * *   If the authenticated user is _adding_ a member to the organization, the invited user will receive an email inviting them to the organization. The user's [membership status](https://docs.github.com/enterprise-server@3.12/rest/orgs/members#get-organization-membership-for-a-user) will be `pending` until they accept the invitation.
-   *
-   * *   Authenticated users can _update_ a user's membership by passing the `role` parameter. If the authenticated user changes a member's role to `admin`, the affected user will receive an email notifying them that they've been made an organization owner. If the authenticated user changes an owner's role to `member`, no email will be sent.
-   *
-   * **Rate limits**
-   *
-   * To prevent abuse, organization owners are limited to creating 50 organization invitations for an organization within a 24 hour period. If the organization is more than one month old or on a paid plan, the limit is 500 invitations per 24 hour period.
+   * @description Only authenticated organization owners can add a member to the organization or update the member's role. If the authenticated user is _adding_ a member to the organization, the invited user will receive an email inviting them to the organization. The user's [membership status](https://docs.github.com/enterprise-server@3.12/rest/orgs/members#get-organization-membership-for-a-user) will be `pending` until they accept the invitation. Authenticated users can _update_ a user's membership by passing the `role` parameter. If the authenticated user changes a member's role to `admin`, the affected user will receive an email notifying them that they've been made an organization owner. If the authenticated user changes an owner's role to `member`, no email will be sent. The same rate limits as set on the appliance are applied to this endpoint. Most commonly, you will hit the secondary rate limit (if configured) due to CPU usage.
    */
   "orgs/set-membership-for-user": {
     parameters: {
@@ -90212,6 +90271,7 @@ export interface operations {
     responses: {
       201: components["responses"]["actions_runner_jitconfig"];
       404: components["responses"]["not_found"];
+      409: components["responses"]["conflict"];
       422: components["responses"]["validation_failed_simple"];
     };
   };
@@ -91122,9 +91182,9 @@ export interface operations {
       content: {
         "application/json": {
           /** @description Value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get a repository public key](https://docs.github.com/enterprise-server@3.12/rest/actions/secrets#get-a-repository-public-key) endpoint. */
-          encrypted_value?: string;
+          encrypted_value: string;
           /** @description ID of the key you used to encrypt the secret. */
-          key_id?: string;
+          key_id: string;
         };
       };
     };
@@ -91720,8 +91780,8 @@ export interface operations {
     };
   };
   /**
-   * Check if automated security fixes are enabled for a repository
-   * @description Shows whether automated security fixes are enabled, disabled or paused for a repository. The authenticated user must have admin read access to the repository. For more information, see "[Configuring automated security fixes](https://docs.github.com/enterprise-server@3.12/articles/configuring-automated-security-fixes)".
+   * Check if Dependabot security updates are enabled for a repository
+   * @description Shows whether Dependabot security updates are enabled, disabled or paused for a repository. The authenticated user must have admin read access to the repository. For more information, see "[Configuring Dependabot security updates](https://docs.github.com/enterprise-server@3.12/articles/configuring-automated-security-fixes)".
    */
   "repos/check-automated-security-fixes": {
     parameters: {
@@ -93456,6 +93516,7 @@ export interface operations {
           state: components["schemas"]["code-scanning-alert-set-state"];
           dismissed_reason?: components["schemas"]["code-scanning-alert-dismissed-reason"];
           dismissed_comment?: components["schemas"]["code-scanning-alert-dismissed-comment"];
+          create_request?: components["schemas"]["code-scanning-alert-create-request"];
         };
       };
     };
@@ -93466,6 +93527,7 @@ export interface operations {
           "application/json": components["schemas"]["code-scanning-alert"];
         };
       };
+      400: components["responses"]["bad_request"];
       403: components["responses"]["code_scanning_forbidden_write"];
       404: components["responses"]["not_found"];
       503: components["responses"]["service_unavailable"];
@@ -95070,20 +95132,6 @@ export interface operations {
         scope?: components["parameters"]["dependabot-alert-scope"];
         sort?: components["parameters"]["dependabot-alert-sort"];
         direction?: components["parameters"]["direction"];
-        /**
-         * @deprecated
-         * @description **Closing down notice**. Page number of the results to fetch. Use cursor-based pagination with `before` or `after` instead.
-         */
-        page?: number;
-        /**
-         * @deprecated
-         * @description The number of results per page (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/enterprise-server@3.12/rest/using-the-rest-api/using-pagination-in-the-rest-api)."
-         */
-        per_page?: number;
-        before?: components["parameters"]["pagination-before"];
-        after?: components["parameters"]["pagination-after"];
-        first?: components["parameters"]["pagination-first"];
-        last?: components["parameters"]["pagination-last"];
       };
       path: {
         owner: components["parameters"]["owner"];
@@ -102910,7 +102958,7 @@ export interface operations {
   "enterprise-admin/list-provisioned-groups-enterprise": {
     parameters: {
       query?: {
-        /** @description If specified, only results that match the specified filter will be returned. Multiple filters are not supported. Possible filters are `externalId`, `id`, and `displayName`. For example, `?filter="externalId eq '9138790-10932-109120392-12321'"`. */
+        /** @description If specified, only results that match the specified filter will be returned. Multiple filters are not supported. Possible filters are `externalId`, `id`, and `displayName`. For example, `?filter=externalId eq "9138790-10932-109120392-12321"`. */
         filter?: string;
         excludedAttributes?: components["parameters"]["excluded-attributes"];
         startIndex?: components["parameters"]["start-index"];
@@ -103120,7 +103168,7 @@ export interface operations {
   "enterprise-admin/list-provisioned-identities-enterprise": {
     parameters: {
       query?: {
-        /** @description If specified, only results that match the specified filter will be returned. Multiple filters are not supported. Possible filters are `userName`, `externalId`, `id`, and `displayName`. For example, `?filter="externalId eq '9138790-10932-109120392-12321'"`. */
+        /** @description If specified, only results that match the specified filter will be returned. Multiple filters are not supported. Possible filters are `userName`, `externalId`, `id`, and `displayName`. For example, `?filter=externalId eq "9138790-10932-109120392-12321"`. */
         filter?: string;
         startIndex?: components["parameters"]["start-index"];
         count?: components["parameters"]["count"];
@@ -103454,6 +103502,7 @@ export interface operations {
         order?: components["parameters"]["order"];
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
+        advanced_search?: components["parameters"]["issues-advanced-search"];
       };
     };
     responses: {
@@ -106945,9 +106994,9 @@ export interface operations {
    * Get a user using their ID
    * @description Provides publicly available information about someone with a GitHub account. This method takes their durable user `ID` instead of their `login`, which can change over time.
    *
-   * The `email` key in the following response is the publicly visible email address from your GitHub Enterprise Server [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be “public” which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub Enterprise Server. For more information, see [Authentication](https://docs.github.com/enterprise-server@3.12/rest/guides/getting-started-with-the-rest-api#authentication).
+   * The `email` key in the following response is the publicly visible email address from your GitHub Enterprise Server [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be public which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub Enterprise Server. For more information, see [Authentication](https://docs.github.com/enterprise-server@3.12/rest/guides/getting-started-with-the-rest-api#authentication).
    *
-   * The Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see "[Emails API](https://docs.github.com/enterprise-server@3.12/rest/users/emails)".
+   * The Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see [Emails API](https://docs.github.com/enterprise-server@3.12/rest/users/emails).
    */
   "users/get-by-id": {
     parameters: {
@@ -106998,9 +107047,9 @@ export interface operations {
    * Get a user
    * @description Provides publicly available information about someone with a GitHub account.
    *
-   * The `email` key in the following response is the publicly visible email address from your GitHub Enterprise Server [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be “public” which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub Enterprise Server. For more information, see [Authentication](https://docs.github.com/enterprise-server@3.12/rest/guides/getting-started-with-the-rest-api#authentication).
+   * The `email` key in the following response is the publicly visible email address from your GitHub Enterprise Server [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be public which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub Enterprise Server. For more information, see [Authentication](https://docs.github.com/enterprise-server@3.12/rest/guides/getting-started-with-the-rest-api#authentication).
    *
-   * The Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see "[Emails API](https://docs.github.com/enterprise-server@3.12/rest/users/emails)".
+   * The Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see [Emails API](https://docs.github.com/enterprise-server@3.12/rest/users/emails).
    */
   "users/get-by-username": {
     parameters: {
@@ -107900,7 +107949,7 @@ export interface operations {
       /** @description Response */
       200: {
         content: {
-          "application/json": string;
+          "text/plain": string;
         };
       };
     };
