@@ -18,7 +18,7 @@ jobs:
       github.event_name == 'workflow_dispatch' ||
       github.event.client_payload.action == 'published'
     steps:
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v2
         id: app-token
         with:
           app-id: ${{ vars.OCTOKIT_APP_ID }}
