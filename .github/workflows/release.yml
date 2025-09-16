@@ -25,7 +25,7 @@ jobs:
           private-key: ${{ secrets.OCTOKIT_APP_PRIVATE_KEY }}
           owner: octokit # Needed to be able to close issues in other repositories
       - uses: actions/checkout@v5
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           cache: npm
           node-version: lts/*
