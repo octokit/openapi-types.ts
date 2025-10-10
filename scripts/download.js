@@ -3,8 +3,7 @@ import { mkdir, rm } from "node:fs/promises";
 
 import { Octokit } from "@octokit/core";
 import { paginateRest } from "@octokit/plugin-paginate-rest";
-import gheVersions from "github-enterprise-server-versions";
-const { getCurrentVersions } = gheVersions;
+import { getCurrentVersions } from "github-enterprise-server-versions";
 
 if (!process.env.OCTOKIT_OPENAPI_VERSION) {
   throw new Error("OCTOKIT_OPENAPI_VERSION is not set");
