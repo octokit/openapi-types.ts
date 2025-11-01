@@ -8,9 +8,9 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "download": "node scripts/download",
-    "generate-types": "node scripts/generate-types",
-    "update-package": "node scripts/update-package",
+    "download": "node scripts/download.js",
+    "generate-types": "node scripts/generate-types.js",
+    "update-package": "node scripts/update-package.js",
     "lint": "prettier --check '*.{md,json}' 'scripts/*.js' 'packages/**/*.{ts,md,json,d.ts}'",
     "lint:fix": "prettier --write '*.{md,json}' 'scripts/*.js' 'packages/**/*.{ts,md,json,d.ts}'"
   },

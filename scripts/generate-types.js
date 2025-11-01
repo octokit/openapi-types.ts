@@ -3,6 +3,7 @@ import { basename } from "node:path";
 
 import * as prettier from "prettier";
 import openapiTS from "openapi-typescript";
+import { type } from "node:os";
 
 if (!process.env.OCTOKIT_OPENAPI_VERSION) {
   throw new Error("OCTOKIT_OPENAPI_VERSION is not set");
@@ -82,12 +83,27 @@ type Repository = components["schemas"]["full-repository"]
         { parser: "markdown" },
       ),
     );
-
     await copyFile("LICENSE", `packages/${packageName}/LICENSE`);
+
+    const schemaTS = await openapiTS(`cache/${name}.json`, {
+      transform(schemaObject, metadata) {
+        if (
+          schemaObject.format === "binary" &&
+          metadata.path.endsWith("application/octet-stream")
+        ) {
+          // Make sure that file upload endpoints don't use 'string' type for binary data
+          // Use some common types that can represent binary data in various environments
+          return schemaObject.nullable
+            ? "string | File | UInt8Array | Blob | null"
+            : "string | File | UInt8Array | Blob";
+        }
+        return undefined;
+      },
+    });
 
     await writeFile(
       `packages/${packageName}/types.d.ts`,
-      await prettier.format(await openapiTS(`cache/${name}.json`), {
+      await prettier.format(schemaTS, {
         parser: "typescript",
       }),
     );
