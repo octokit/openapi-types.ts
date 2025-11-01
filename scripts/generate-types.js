@@ -83,6 +83,7 @@ type Repository = components["schemas"]["full-repository"]
         { parser: "markdown" },
       ),
     );
+
     await copyFile("LICENSE", `packages/${packageName}/LICENSE`);
 
     const schemaTS = await openapiTS(`cache/${name}.json`, {
