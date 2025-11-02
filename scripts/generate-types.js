@@ -94,8 +94,8 @@ type Repository = components["schemas"]["full-repository"]
           // Make sure that file upload endpoints don't use 'string' type for binary data
           // Use some common types that can represent binary data in various environments
           return schemaObject.nullable
-            ? "string | File | UInt8Array | Blob | null"
-            : "string | File | UInt8Array | Blob";
+            ? "string | File | Uint8Array | Blob | null"
+            : "string | File | Uint8Array | Blob";
         }
         return undefined;
       },
