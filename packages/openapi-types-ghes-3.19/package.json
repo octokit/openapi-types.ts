@@ -1,0 +1,21 @@
+{
+  "name": "@octokit/openapi-types-ghes-3.19",
+  "description": "Generated TypeScript definitions based on GitHub's OpenAPI spec for ghes-3.19",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/octokit/openapi-types.ts.git",
+    "directory": "packages/openapi-types-ghes-3.19"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "version": "0.0.0-development",
+  "main": "",
+  "types": "types.d.ts",
+  "author": "Gregor Martynus (https://twitter.com/gr2m)",
+  "license": "MIT",
+  "octokit": {
+    "openapi-version": "22.0.0"
+  }
+}
