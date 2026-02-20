@@ -97,6 +97,11 @@ type Repository = components["schemas"]["full-repository"]
             ? "string | File | Uint8Array | Blob | null"
             : "string | File | Uint8Array | Blob";
         }
+        if (schemaObject.format === "int64") {
+          return schemaObject.nullable
+            ? "number | bigint | null"
+            : "number | bigint";
+        }
         return undefined;
       },
     });
