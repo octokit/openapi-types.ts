@@ -25,6 +25,29 @@ const packageDefaults = {
   },
 };
 
+const openapiInterfaces = /** @type {const} */[
+  "components",
+  "operations",
+];
+
+/**
+ * @param {string} schema
+ * @returns {string} 
+ */
+
+/**
+ * @param {string} schema
+ * @returns {string} 
+ */
+function patchInt64Type(schema) {
+  for (const interfaceName of openapiInterfaces) {
+    schema = schema.replace(new RegExp(`export interface ${interfaceName} `, 'gm'), (match) => {
+      return `export interface ${interfaceName}<int64 extends number | bigint = number | bigint> \n`;
+    });
+  }
+  return schema;
+}
+
 async function run() {
   await rm("packages", { recursive: true }).catch(() => {});
   await mkdir("packages");
@@ -85,7 +108,7 @@ type Repository = components["schemas"]["full-repository"]
 
     await copyFile("LICENSE", `packages/${packageName}/LICENSE`);
 
-    const schemaTS = await openapiTS(`cache/${name}.json`, {
+    let schemaTS = await openapiTS(`cache/${name}.json`, {
       transform(schemaObject, metadata) {
         if (
           schemaObject.format === "binary" &&
@@ -99,12 +122,14 @@ type Repository = components["schemas"]["full-repository"]
         }
         if (schemaObject.format === "int64") {
           return schemaObject.nullable
-            ? "number | bigint | null"
-            : "number | bigint";
+            ? "int64 | null"
+            : "int64";
         }
         return undefined;
       },
     });
+
+    schemaTS = patchInt64Type(schemaTS);
 
     await writeFile(
       `packages/${packageName}/types.d.ts`,
