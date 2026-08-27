@@ -302,6 +302,9 @@ export interface paths {
      * Create an installation access token for an app
      * @description Creates an installation access token that enables a GitHub App to make authenticated API requests for the app's installation on an organization or individual account. Installation tokens expire one hour from the time you create them. Using an expired token produces a status code of `401 - Unauthorized`, and requires creating a new installation token. By default the installation token has access to all repositories that the installation can access.
      *
+     * > [!NOTE]
+     * > Starting April 27, 2026, GitHub began a staged rollout of a stateless format (`ghs_APPID_JWT`) to all newly minted GitHub App installation tokens, making them more performant and improving the reliability of our API surface. If your application expects or relies on installation tokens being exactly 40 characters long, it may not handle this new token format correctly. You can now validate your apps and workflows using a temporary request header that lets you enable the token format on demand. For more information about the temporary header, see [the GitHub blog](https://github.blog/changelog/2026-05-15-github-app-installation-tokens-per-request-override-header).
+     *
      * Optionally, you can use the `repositories` or `repository_ids` body parameters to specify individual repositories that the installation access token can access. If you don't use `repositories` or `repository_ids` to grant access to specific repositories, the installation access token will have access to all repositories that the installation was granted access to. The installation access token cannot be granted access to repositories that the installation was not granted access to. Up to 500 repositories can be listed in this manner.
      *
      * Optionally, use the `permissions` body parameter to specify the permissions that the installation access token should have. If `permissions` is not specified, the installation access token will have all of the permissions that were granted to the app. The installation access token cannot be granted permissions that the app was not granted.
@@ -499,19 +502,6 @@ export interface paths {
      */
     get: operations["codes-of-conduct/get-conduct-code"];
   };
-  "/credentials/revoke": {
-    /**
-     * Revoke a list of credentials
-     * @description Submit a list of credentials to be revoked. This endpoint is intended to revoke credentials the caller does not own and may have found exposed on GitHub.com or elsewhere. Credential owners will be notified of the revocation.
-     *
-     * This endpoint currently accepts the following credential types:
-     * - classic personal access tokens
-     * - fine-grained personal access tokens
-     *
-     * To prevent abuse, this API is limited to 60 authenticated requests per hour and a max of 1000 tokens per API request.
-     */
-    post: operations["credentials/revoke"];
-  };
   "/emojis": {
     /**
      * Get emojis
@@ -535,6 +525,67 @@ export interface paths {
      * @description Sets the message and expiration time for the global announcement banner in your enterprise.
      */
     patch: operations["enterprise-admin/set-announcement"];
+  };
+  "/enterprise/live-migrations": {
+    /**
+     * List Enterprise Live Migrations
+     * @description List Enterprise Live Migrations (ELM) for the current GHES appliance.
+     */
+    get: operations["enterprise-admin/live-migration-list"];
+    /**
+     * Create an Enterprise Live Migration
+     * @description Create an Enterprise Live Migration (ELM) for a single repository on the current GHES appliance. The migration is created in a `created` state and is not started; run the start endpoint to launch backfill and live updates. Credentials are referenced by name (`pat_name`) rather than submitted inline, and are not echoed back in the response.
+     */
+    post: operations["enterprise-admin/live-migration-create"];
+  };
+  "/enterprise/live-migrations/{migration_id}": {
+    /**
+     * Get an Enterprise Live Migration
+     * @description Retrieve combined status, progress, cutover readiness, expiration, and timing for an Enterprise Live Migration (ELM) on the current GHES appliance.
+     */
+    get: operations["enterprise-admin/live-migration-get"];
+  };
+  "/enterprise/live-migrations/{migration_id}/cancel": {
+    /**
+     * Cancel an Enterprise Live Migration
+     * @description Cancel an Enterprise Live Migration (ELM) in progress. This terminates the migration: it is cancelled locally, aborted on the migration backend, and its work items are removed. This is a terminal action with no recovery — a subsequent status request reflects the terminated state.
+     */
+    post: operations["enterprise-admin/live-migration-cancel"];
+  };
+  "/enterprise/live-migrations/{migration_id}/cutover": {
+    /**
+     * Cutover an Enterprise Live Migration
+     * @description Initiate cutover for an Enterprise Live Migration (ELM), archiving the source repository and draining remaining changes. Cutover is asynchronous; the migration transitions through cutover_pending and cutover_finalizing to completed. No content is returned — query the migration status to observe progress.
+     */
+    post: operations["enterprise-admin/live-migration-cutover"];
+  };
+  "/enterprise/live-migrations/{migration_id}/pause": {
+    /**
+     * Pause an Enterprise Live Migration
+     * @description Pause source-load work for an active Enterprise Live Migration (ELM). Backfill and Git synchronization are paused while live event collection and delivery continue. The operation is idempotent for a migration that is already paused. No content is returned; query the migration status to observe the durable state.
+     */
+    post: operations["enterprise-admin/live-migration-pause"];
+  };
+  "/enterprise/live-migrations/{migration_id}/resume": {
+    /**
+     * Resume an Enterprise Live Migration
+     * @description Resume a paused Enterprise Live Migration (ELM). The migration is re-queued and resumes backfill and live updates. A subsequent status request reflects the resumed state.
+     */
+    post: operations["enterprise-admin/live-migration-resume"];
+  };
+  "/enterprise/live-migrations/{migration_id}/revert-cutover": {
+    /**
+     * Revert cutover for an Enterprise Live Migration
+     * @description Revert cutover for an Enterprise Live Migration (ELM). This unarchives the source repository and terminates any cutover or migration still in progress so the source repository can be migrated again.
+     */
+    post: operations["enterprise-admin/live-migration-revert-cutover"];
+  };
+  "/enterprise/live-migrations/{migration_id}/start": {
+    /**
+     * Start an Enterprise Live Migration
+     * @description Start a created Enterprise Live Migration (ELM), launching backfill and enabling live updates. The migration must be in a startable state (for example, created, paused, or failed); preflight validation runs before the migration is queued unless it has been skipped.
+     */
+    post: operations["enterprise-admin/live-migration-start"];
   };
   "/enterprise/settings/license": {
     /** Get license information */
@@ -1478,7 +1529,6 @@ export interface paths {
      * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
      *
      * - **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
-     * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences.
      */
     get: operations["gists/get"];
     /** Delete a gist */
@@ -1497,7 +1547,6 @@ export interface paths {
      * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
      *
      * - **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
-     * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences.
      */
     get: operations["gists/list-comments"];
     /**
@@ -1507,7 +1556,6 @@ export interface paths {
      * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
      *
      * - **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
-     * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences.
      */
     post: operations["gists/create-comment"];
   };
@@ -1519,7 +1567,6 @@ export interface paths {
      * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
      *
      * - **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
-     * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences.
      */
     get: operations["gists/get-comment"];
     /** Delete a gist comment */
@@ -1531,7 +1578,6 @@ export interface paths {
      * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
      *
      * - **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
-     * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences.
      */
     patch: operations["gists/update-comment"];
   };
@@ -1564,7 +1610,6 @@ export interface paths {
      * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
      *
      * - **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
-     * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences.
      */
     get: operations["gists/get-revision"];
   };
@@ -1884,46 +1929,6 @@ export interface paths {
      * OAuth app tokens and personal access tokens (classic) need the `admin:org` or `repo` scope to use this endpoint.
      */
     get: operations["orgs/list-custom-roles"];
-  };
-  "/organizations/{org}/dependabot/repository-access": {
-    /**
-     * Lists the repositories Dependabot can access in an organization
-     * @description Lists repositories that organization admins have allowed Dependabot to access when updating dependencies.
-     * > [!NOTE]
-     * >    This operation supports both server-to-server and user-to-server access.
-     * Unauthorized users will not see the existence of this endpoint.
-     */
-    get: operations["dependabot/repository-access-for-org"];
-    /**
-     * Updates Dependabot's repository access list for an organization
-     * @description Updates repositories according to the list of repositories that organization admins have given Dependabot access to when they've updated dependencies.
-     *
-     * > [!NOTE]
-     * >    This operation supports both server-to-server and user-to-server access.
-     * Unauthorized users will not see the existence of this endpoint.
-     *
-     * **Example request body:**
-     * ```json
-     * {
-     *   "repository_ids_to_add": [123, 456],
-     *   "repository_ids_to_remove": [789]
-     * }
-     * ```
-     */
-    patch: operations["dependabot/update-repository-access-for-org"];
-  };
-  "/organizations/{org}/dependabot/repository-access/default-level": {
-    /**
-     * Set the default repository access level for Dependabot
-     * @description Sets the default level of repository access Dependabot will have while performing an update.  Available values are:
-     * - 'public' - Dependabot will only have access to public repositories, unless access is explicitly granted to non-public repositories.
-     * - 'internal' - Dependabot will only have access to public and internal repositories, unless access is explicitly granted to private repositories.
-     *
-     * Unauthorized users will not see the existence of this endpoint.
-     *
-     * This operation supports both server-to-server and user-to-server access.
-     */
-    put: operations["dependabot/set-repository-access-default-level"];
   };
   "/orgs/{org}": {
     /**
@@ -2945,6 +2950,46 @@ export interface paths {
      */
     get: operations["dependabot/list-alerts-for-org"];
   };
+  "/orgs/{org}/dependabot/repository-access": {
+    /**
+     * Lists the repositories Dependabot can access in an organization
+     * @description Lists repositories that organization admins have allowed Dependabot to access when updating dependencies.
+     * > [!NOTE]
+     * >    This operation supports both server-to-server and user-to-server access.
+     * Unauthorized users will not see the existence of this endpoint.
+     */
+    get: operations["dependabot/repository-access-for-org"];
+    /**
+     * Updates Dependabot's repository access list for an organization
+     * @description Updates repositories according to the list of repositories that organization admins have given Dependabot access to when they've updated dependencies.
+     *
+     * > [!NOTE]
+     * >    This operation supports both server-to-server and user-to-server access.
+     * Unauthorized users will not see the existence of this endpoint.
+     *
+     * **Example request body:**
+     * ```json
+     * {
+     *   "repository_ids_to_add": [123, 456],
+     *   "repository_ids_to_remove": [789]
+     * }
+     * ```
+     */
+    patch: operations["dependabot/update-repository-access-for-org"];
+  };
+  "/orgs/{org}/dependabot/repository-access/default-level": {
+    /**
+     * Set the default repository access level for Dependabot
+     * @description Sets the default level of repository access Dependabot will have while performing an update.  Available values are:
+     * - 'public' - Dependabot will only have access to public repositories, unless access is explicitly granted to non-public repositories.
+     * - 'internal' - Dependabot will only have access to public and internal repositories, unless access is explicitly granted to private repositories.
+     *
+     * Unauthorized users will not see the existence of this endpoint.
+     *
+     * This operation supports both server-to-server and user-to-server access.
+     */
+    put: operations["dependabot/set-repository-access-default-level"];
+  };
   "/orgs/{org}/dependabot/secrets": {
     /**
      * List organization secrets
@@ -3108,6 +3153,17 @@ export interface paths {
      * Personal access tokens (classic) need the `security_events` scope to use this endpoint.
      */
     get: operations["code-scanning/list-org-dismissal-requests"];
+  };
+  "/orgs/{org}/dismissal-requests/dependabot": {
+    /**
+     * List dismissal requests for Dependabot alerts for an organization
+     * @description Lists dismissal requests for Dependabot alerts in an organization.
+     *
+     * Delegated alert dismissal must be enabled on repositories in the org and the user must be an org admin, security manager,
+     * or have the appropriate permission to access this endpoint.
+     * Personal access tokens (classic) need the `security_events` scope to use this endpoint.
+     */
+    get: operations["dependabot/list-dismissal-requests-for-org"];
   };
   "/orgs/{org}/dismissal-requests/secret-scanning": {
     /**
@@ -3432,7 +3488,7 @@ export interface paths {
      * To use this endpoint, the authenticated user must be one of:
      *
      * - An administrator for the organization.
-     * - A user, or a user on a team, with the fine-grained permissions of `read_organization_custom_org_role` in the organization.
+     * - An organization member (or a member of a team) assigned a custom organization role that includes the **View organization roles** (`read_organization_custom_org_role`) permission. For more information, see "[Permissions for organization access](https://docs.github.com/enterprise-server@3.19/organizations/managing-peoples-access-to-your-organization-with-roles/permissions-of-custom-organization-roles#permissions-for-organization-access)."
      *
      * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
      */
@@ -3446,7 +3502,7 @@ export interface paths {
      * To use this endpoint, the authenticated user must be one of:
      *
      * - An administrator for the organization.
-     * - A user, or a user on a team, with the fine-grained permissions of `read_organization_custom_org_role` in the organization.
+     * - An organization member (or a member of a team) assigned a custom organization role that includes the **View organization roles** (`read_organization_custom_org_role`) permission. For more information, see "[Permissions for organization access](https://docs.github.com/enterprise-server@3.19/organizations/managing-peoples-access-to-your-organization-with-roles/permissions-of-custom-organization-roles#permissions-for-organization-access)."
      *
      * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
      */
@@ -3469,7 +3525,7 @@ export interface paths {
      * To use this endpoint, the authenticated user must be one of:
      *
      * - An administrator for the organization.
-     * - A user, or a user on a team, with the fine-grained permissions of `write_organization_custom_org_role` in the organization.
+     * - An organization member (or a member of a team) assigned a custom organization role that includes the **Manage custom organization roles** (`write_organization_custom_org_role`) permission. For more information, see "[Permissions for organization access](https://docs.github.com/enterprise-server@3.19/organizations/managing-peoples-access-to-your-organization-with-roles/permissions-of-custom-organization-roles#permissions-for-organization-access)."
      *
      * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
      */
@@ -3545,7 +3601,7 @@ export interface paths {
      * To use this endpoint, the authenticated user must be one of:
      *
      * - An administrator for the organization.
-     * - A user, or a user on a team, with the fine-grained permissions of `read_organization_custom_org_role` in the organization.
+     * - An organization member (or a member of a team) assigned a custom organization role that includes the **View organization roles** (`read_organization_custom_org_role`) permission. For more information, see "[Permissions for organization access](https://docs.github.com/enterprise-server@3.19/organizations/managing-peoples-access-to-your-organization-with-roles/permissions-of-custom-organization-roles#permissions-for-organization-access)."
      *
      * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
      */
@@ -3557,7 +3613,7 @@ export interface paths {
      * To use this endpoint, the authenticated user must be one of:
      *
      * - An administrator for the organization.
-     * - A user, or a user on a team, with the fine-grained permissions of `write_organization_custom_org_role` in the organization.
+     * - An organization member (or a member of a team) assigned a custom organization role that includes the **Manage custom organization roles** (`write_organization_custom_org_role`) permission. For more information, see "[Permissions for organization access](https://docs.github.com/enterprise-server@3.19/organizations/managing-peoples-access-to-your-organization-with-roles/permissions-of-custom-organization-roles#permissions-for-organization-access)."
      *
      * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
      */
@@ -3574,7 +3630,7 @@ export interface paths {
      * To use this endpoint, the authenticated user must be one of:
      *
      * - An administrator for the organization.
-     * - A user, or a user on a team, with the fine-grained permissions of `write_organization_custom_org_role` in the organization.
+     * - An organization member (or a member of a team) assigned a custom organization role that includes the **Manage custom organization roles** (`write_organization_custom_org_role`) permission. For more information, see "[Permissions for organization access](https://docs.github.com/enterprise-server@3.19/organizations/managing-peoples-access-to-your-organization-with-roles/permissions-of-custom-organization-roles#permissions-for-organization-access)."
      *
      * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
      */
@@ -3808,6 +3864,7 @@ export interface paths {
      * Create a private registry for an organization
      * @description
      * Creates a private registry configuration with an encrypted value for an organization. Encrypt your secret using [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting secrets for the REST API](https://docs.github.com/enterprise-server@3.19/rest/guides/encrypting-secrets-for-the-rest-api)."
+     * For OIDC-based registries (`oidc_azure`, `oidc_aws`, `oidc_jfrog`, `oidc_cloudsmith`, or `oidc_gcp`), the `encrypted_value` and `key_id` fields should be omitted.
      *
      * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
      */
@@ -3844,6 +3901,7 @@ export interface paths {
      * Update a private registry for an organization
      * @description
      * Updates a private registry configuration with an encrypted value for an organization. Encrypt your secret using [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting secrets for the REST API](https://docs.github.com/enterprise-server@3.19/rest/guides/encrypting-secrets-for-the-rest-api)."
+     * For OIDC-based registries (`oidc_azure`, `oidc_aws`, `oidc_jfrog`, `oidc_cloudsmith`, or `oidc_gcp`), the `encrypted_value` and `key_id` fields should be omitted.
      *
      * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
      */
@@ -4141,190 +4199,6 @@ export interface paths {
      */
     patch: operations["teams/update-in-org"];
   };
-  "/orgs/{org}/teams/{team_slug}/discussions": {
-    /**
-     * List discussions
-     * @description List all discussions on a team's page.
-     *
-     * > [!NOTE]
-     * > You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions`.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
-     */
-    get: operations["teams/list-discussions-in-org"];
-    /**
-     * Create a discussion
-     * @description Creates a new discussion post on a team's page.
-     *
-     * This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.19/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/enterprise-server@3.19/rest/guides/best-practices-for-using-the-rest-api)."
-     *
-     * > [!NOTE]
-     * > You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/{org_id}/team/{team_id}/discussions`.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-     */
-    post: operations["teams/create-discussion-in-org"];
-  };
-  "/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}": {
-    /**
-     * Get a discussion
-     * @description Get a specific discussion on a team's page.
-     *
-     * > [!NOTE]
-     * > You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
-     */
-    get: operations["teams/get-discussion-in-org"];
-    /**
-     * Delete a discussion
-     * @description Delete a discussion from a team's page.
-     *
-     * > [!NOTE]
-     * > You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-     */
-    delete: operations["teams/delete-discussion-in-org"];
-    /**
-     * Update a discussion
-     * @description Edits the title and body text of a discussion post. Only the parameters you provide are updated.
-     *
-     * > [!NOTE]
-     * > You can also specify a team by `org_id` and `team_id` using the route `PATCH /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-     */
-    patch: operations["teams/update-discussion-in-org"];
-  };
-  "/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments": {
-    /**
-     * List discussion comments
-     * @description List all comments on a team discussion.
-     *
-     * > [!NOTE]
-     * > You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
-     */
-    get: operations["teams/list-discussion-comments-in-org"];
-    /**
-     * Create a discussion comment
-     * @description Creates a new comment on a team discussion.
-     *
-     * This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.19/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/enterprise-server@3.19/rest/guides/best-practices-for-using-the-rest-api)."
-     *
-     * > [!NOTE]
-     * > You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-     */
-    post: operations["teams/create-discussion-comment-in-org"];
-  };
-  "/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}": {
-    /**
-     * Get a discussion comment
-     * @description Get a specific comment on a team discussion.
-     *
-     * > [!NOTE]
-     * > You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
-     */
-    get: operations["teams/get-discussion-comment-in-org"];
-    /**
-     * Delete a discussion comment
-     * @description Deletes a comment on a team discussion.
-     *
-     * > [!NOTE]
-     * > You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-     */
-    delete: operations["teams/delete-discussion-comment-in-org"];
-    /**
-     * Update a discussion comment
-     * @description Edits the body text of a discussion comment.
-     *
-     * > [!NOTE]
-     * > You can also specify a team by `org_id` and `team_id` using the route `PATCH /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-     */
-    patch: operations["teams/update-discussion-comment-in-org"];
-  };
-  "/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions": {
-    /**
-     * List reactions for a team discussion comment
-     * @description List the reactions to a [team discussion comment](https://docs.github.com/enterprise-server@3.19/rest/teams/discussion-comments#get-a-discussion-comment).
-     *
-     * > [!NOTE]
-     * > You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions`.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
-     */
-    get: operations["reactions/list-for-team-discussion-comment-in-org"];
-    /**
-     * Create reaction for a team discussion comment
-     * @description Create a reaction to a [team discussion comment](https://docs.github.com/enterprise-server@3.19/rest/teams/discussion-comments#get-a-discussion-comment).
-     *
-     * A response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
-     *
-     * > [!NOTE]
-     * > You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions`.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-     */
-    post: operations["reactions/create-for-team-discussion-comment-in-org"];
-  };
-  "/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions/{reaction_id}": {
-    /**
-     * Delete team discussion comment reaction
-     * @description > [!NOTE]
-     * > You can also specify a team or organization with `team_id` and `org_id` using the route `DELETE /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions/:reaction_id`.
-     *
-     * Delete a reaction to a [team discussion comment](https://docs.github.com/enterprise-server@3.19/rest/teams/discussion-comments#get-a-discussion-comment).
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-     */
-    delete: operations["reactions/delete-for-team-discussion-comment"];
-  };
-  "/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions": {
-    /**
-     * List reactions for a team discussion
-     * @description List the reactions to a [team discussion](https://docs.github.com/enterprise-server@3.19/rest/teams/discussions#get-a-discussion).
-     *
-     * > [!NOTE]
-     * > You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions`.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
-     */
-    get: operations["reactions/list-for-team-discussion-in-org"];
-    /**
-     * Create reaction for a team discussion
-     * @description Create a reaction to a [team discussion](https://docs.github.com/enterprise-server@3.19/rest/teams/discussions#get-a-discussion).
-     *
-     * A response with an HTTP `200` status means that you already added the reaction type to this team discussion.
-     *
-     * > [!NOTE]
-     * > You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions`.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-     */
-    post: operations["reactions/create-for-team-discussion-in-org"];
-  };
-  "/orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions/{reaction_id}": {
-    /**
-     * Delete team discussion reaction
-     * @description > [!NOTE]
-     * > You can also specify a team or organization with `team_id` and `org_id` using the route `DELETE /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions/:reaction_id`.
-     *
-     * Delete a reaction to a [team discussion](https://docs.github.com/enterprise-server@3.19/rest/teams/discussions#get-a-discussion).
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-     */
-    delete: operations["reactions/delete-for-team-discussion"];
-  };
   "/orgs/{org}/teams/{team_slug}/external-groups": {
     /**
      * List a connection between an external group and a team
@@ -4352,6 +4226,8 @@ export interface paths {
     /**
      * List team members
      * @description Team members will include the members of child teams.
+     *
+     * Each member includes their `role` on the team (`member` or `maintainer`) and an `inherited` flag indicating whether the membership is inherited from a child team (`true`) or is a direct membership (`false`). These fields let you read a member's role and direct/inherited status without additional requests.
      *
      * To list members in a team, the team must be visible to the authenticated user.
      */
@@ -4408,6 +4284,8 @@ export interface paths {
     /**
      * List team repositories
      * @description Lists a team's repositories visible to the authenticated user.
+     *
+     * OAuth app tokens and personal access tokens (classic) need the `read:org` or `repo` scope to use this endpoint.
      *
      * > [!NOTE]
      * > You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/repos`.
@@ -4487,7 +4365,6 @@ export interface paths {
      * * The `integration_manifest` object provides your rate limit status for the `POST /app-manifests/{code}/conversions` operation. For more information, see "[Creating a GitHub App from a manifest](https://docs.github.com/enterprise-server@3.19/apps/creating-github-apps/setting-up-a-github-app/creating-a-github-app-from-a-manifest#3-you-exchange-the-temporary-code-to-retrieve-the-app-configuration)."
      * * The `dependency_snapshots` object provides your rate limit status for submitting snapshots to the dependency graph. For more information, see "[Dependency graph](https://docs.github.com/enterprise-server@3.19/rest/dependency-graph)."
      * * The `dependency_sbom` object provides your rate limit status for requesting SBOMs from the dependency graph. For more information, see "[Dependency graph](https://docs.github.com/enterprise-server@3.19/rest/dependency-graph)."
-     * * The `code_scanning_upload` object provides your rate limit status for uploading SARIF results to code scanning. For more information, see "[Uploading a SARIF file to GitHub](https://docs.github.com/enterprise-server@3.19/code-security/code-scanning/integrating-with-code-scanning/uploading-a-sarif-file-to-github)."
      * * The `actions_runner_registration` object provides your rate limit status for registering self-hosted runners in GitHub Actions. For more information, see "[Self-hosted runners](https://docs.github.com/enterprise-server@3.19/rest/actions/self-hosted-runners)."
      * * The `source_import` object is no longer in use for any API endpoints, and it will be removed in the next API version. For more information about API versions, see "[API Versions](https://docs.github.com/enterprise-server@3.19/rest/about-the-rest-api/api-versions)."
      *
@@ -6254,6 +6131,8 @@ export interface paths {
      * Create a commit comment
      * @description Create a comment for a commit using its `:commit_sha`.
      *
+     * Access to commit comments can be controlled by organization owners. For more information, see "[Managing commit comments for your organization](https://docs.github.com/enterprise-server@3.19/organizations/managing-organization-settings/managing-commit-comments-for-your-organization)".
+     *
      * This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.19/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/enterprise-server@3.19/rest/guides/best-practices-for-using-the-rest-api)."
      *
      * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
@@ -7658,6 +7537,13 @@ export interface paths {
      */
     get: operations["issues/list-events"];
   };
+  "/repos/{owner}/{repo}/issues/{issue_number}/issue-field-values": {
+    /**
+     * List issue field values for an issue
+     * @description Lists all issue field values for an issue.
+     */
+    get: operations["issues/list-issue-field-values-for-issue"];
+  };
   "/repos/{owner}/{repo}/issues/{issue_number}/labels": {
     /**
      * List labels for an issue
@@ -7671,7 +7557,7 @@ export interface paths {
     put: operations["issues/set-labels"];
     /**
      * Add labels to an issue
-     * @description Adds labels to an issue. If you provide an empty array of labels, all labels are removed from the issue.
+     * @description Adds labels to an issue.
      */
     post: operations["issues/add-labels"];
     /**
@@ -7789,14 +7675,14 @@ export interface paths {
      * Enable Git LFS for a repository
      * @description Enables Git LFS for a repository.
      *
-     * OAuth app tokens and personal access tokens (classic) need the `admin:enterprise` scope to use this endpoint.
+     * OAuth app tokens and personal access tokens (classic) need the `site_admin` scope to use this endpoint.
      */
     put: operations["repos/enable-lfs-for-repo"];
     /**
      * Disable Git LFS for a repository
      * @description Disables Git LFS for a repository.
      *
-     * OAuth app tokens and personal access tokens (classic) need the `admin:enterprise` scope to use this endpoint.
+     * OAuth app tokens and personal access tokens (classic) need the `site_admin` scope to use this endpoint.
      */
     delete: operations["repos/disable-lfs-for-repo"];
   };
@@ -8427,6 +8313,11 @@ export interface paths {
      * Create a release
      * @description Users with push access to the repository can create a release.
      *
+     * > [!NOTE]
+     * > If the commit identified by `target_commitish` (or, when `target_commitish` is omitted, the latest commit on the default branch) adds or modifies any file under `.github/workflows/` relative to the repository's default branch, the authenticating token must be authorized to modify workflows. Otherwise, this endpoint returns `404 Not Found`; some authentication paths surface `403 Resource not accessible by integration` instead.
+     *
+     * OAuth app tokens and personal access tokens (classic) need the `workflow` scope when the resolved target commit modifies workflow files. Fine-grained access tokens and GitHub App installation tokens also need the "Workflows" repository permission (write). The `GITHUB_TOKEN` available to GitHub Actions cannot be authorized for this; for more information, see "[Automatic token authentication](https://docs.github.com/enterprise-server@3.19/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token)".
+     *
      * This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.19/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/enterprise-server@3.19/rest/guides/best-practices-for-using-the-rest-api)."
      */
     post: operations["repos/create-release"];
@@ -8491,6 +8382,11 @@ export interface paths {
     /**
      * Update a release
      * @description Users with push access to the repository can edit a release.
+     *
+     * > [!NOTE]
+     * > If the resolved target commit (the new value of `target_commitish` if you are changing it, otherwise the existing target) adds or modifies any file under `.github/workflows/` relative to the repository's default branch, the authenticating token must be authorized to modify workflows. Otherwise, this endpoint returns `404 Not Found`; some authentication paths surface `403 Resource not accessible by integration` instead.
+     *
+     * OAuth app tokens and personal access tokens (classic) need the `workflow` scope when the resolved target commit modifies workflow files. Fine-grained access tokens and GitHub App installation tokens also need the "Workflows" repository permission (write). The `GITHUB_TOKEN` available to GitHub Actions cannot be authorized for this; for more information, see "[Automatic token authentication](https://docs.github.com/enterprise-server@3.19/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token)".
      */
     patch: operations["repos/update-release"];
   };
@@ -8681,7 +8577,7 @@ export interface paths {
      * @description Lists the latest default incremental and backfill scans by type for a repository. Scans from Copilot Secret Scanning are not included.
      *
      * > [!NOTE]
-     * > This endpoint requires [GitHub Advanced Security](https://docs.github.com/enterprise-server@3.19/get-started/learning-about-github/about-github-advanced-security)."
+     * > This endpoint requires [GitHub Advanced Security](https://docs.github.com/enterprise-server@3.19/get-started/learning-about-github/about-github-advanced-security).
      *
      * OAuth app tokens and personal access tokens (classic) need the `repo` or `security_events` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead.
      */
@@ -9202,180 +9098,6 @@ export interface paths {
      */
     patch: operations["teams/update-legacy"];
   };
-  "/teams/{team_id}/discussions": {
-    /**
-     * List discussions (Legacy)
-     * @deprecated
-     * @description > [!WARNING]
-     * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List discussions`](https://docs.github.com/enterprise-server@3.19/rest/teams/discussions#list-discussions) endpoint.
-     *
-     * List all discussions on a team's page.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
-     */
-    get: operations["teams/list-discussions-legacy"];
-    /**
-     * Create a discussion (Legacy)
-     * @deprecated
-     * @description > [!WARNING]
-     * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create a discussion`](https://docs.github.com/enterprise-server@3.19/rest/teams/discussions#create-a-discussion) endpoint.
-     *
-     * Creates a new discussion post on a team's page.
-     *
-     * This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.19/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/enterprise-server@3.19/rest/guides/best-practices-for-using-the-rest-api)."
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-     */
-    post: operations["teams/create-discussion-legacy"];
-  };
-  "/teams/{team_id}/discussions/{discussion_number}": {
-    /**
-     * Get a discussion (Legacy)
-     * @deprecated
-     * @description > [!WARNING]
-     * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion](https://docs.github.com/enterprise-server@3.19/rest/teams/discussions#get-a-discussion) endpoint.
-     *
-     * Get a specific discussion on a team's page.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
-     */
-    get: operations["teams/get-discussion-legacy"];
-    /**
-     * Delete a discussion (Legacy)
-     * @deprecated
-     * @description > [!WARNING]
-     * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Delete a discussion`](https://docs.github.com/enterprise-server@3.19/rest/teams/discussions#delete-a-discussion) endpoint.
-     *
-     * Delete a discussion from a team's page.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-     */
-    delete: operations["teams/delete-discussion-legacy"];
-    /**
-     * Update a discussion (Legacy)
-     * @deprecated
-     * @description > [!WARNING]
-     * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion](https://docs.github.com/enterprise-server@3.19/rest/teams/discussions#update-a-discussion) endpoint.
-     *
-     * Edits the title and body text of a discussion post. Only the parameters you provide are updated.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-     */
-    patch: operations["teams/update-discussion-legacy"];
-  };
-  "/teams/{team_id}/discussions/{discussion_number}/comments": {
-    /**
-     * List discussion comments (Legacy)
-     * @deprecated
-     * @description > [!WARNING]
-     * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [List discussion comments](https://docs.github.com/enterprise-server@3.19/rest/teams/discussion-comments#list-discussion-comments) endpoint.
-     *
-     * List all comments on a team discussion.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
-     */
-    get: operations["teams/list-discussion-comments-legacy"];
-    /**
-     * Create a discussion comment (Legacy)
-     * @deprecated
-     * @description > [!WARNING]
-     * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Create a discussion comment](https://docs.github.com/enterprise-server@3.19/rest/teams/discussion-comments#create-a-discussion-comment) endpoint.
-     *
-     * Creates a new comment on a team discussion.
-     *
-     * This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.19/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/enterprise-server@3.19/rest/guides/best-practices-for-using-the-rest-api)."
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-     */
-    post: operations["teams/create-discussion-comment-legacy"];
-  };
-  "/teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}": {
-    /**
-     * Get a discussion comment (Legacy)
-     * @deprecated
-     * @description > [!WARNING]
-     * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion comment](https://docs.github.com/enterprise-server@3.19/rest/teams/discussion-comments#get-a-discussion-comment) endpoint.
-     *
-     * Get a specific comment on a team discussion.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
-     */
-    get: operations["teams/get-discussion-comment-legacy"];
-    /**
-     * Delete a discussion comment (Legacy)
-     * @deprecated
-     * @description > [!WARNING]
-     * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a discussion comment](https://docs.github.com/enterprise-server@3.19/rest/teams/discussion-comments#delete-a-discussion-comment) endpoint.
-     *
-     * Deletes a comment on a team discussion.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-     */
-    delete: operations["teams/delete-discussion-comment-legacy"];
-    /**
-     * Update a discussion comment (Legacy)
-     * @deprecated
-     * @description > [!WARNING]
-     * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion comment](https://docs.github.com/enterprise-server@3.19/rest/teams/discussion-comments#update-a-discussion-comment) endpoint.
-     *
-     * Edits the body text of a discussion comment.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-     */
-    patch: operations["teams/update-discussion-comment-legacy"];
-  };
-  "/teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}/reactions": {
-    /**
-     * List reactions for a team discussion comment (Legacy)
-     * @deprecated
-     * @description > [!WARNING]
-     * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion comment`](https://docs.github.com/enterprise-server@3.19/rest/reactions/reactions#list-reactions-for-a-team-discussion-comment) endpoint.
-     *
-     * List the reactions to a [team discussion comment](https://docs.github.com/enterprise-server@3.19/rest/teams/discussion-comments#get-a-discussion-comment).
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
-     */
-    get: operations["reactions/list-for-team-discussion-comment-legacy"];
-    /**
-     * Create reaction for a team discussion comment (Legacy)
-     * @deprecated
-     * @description > [!WARNING]
-     * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new "[Create reaction for a team discussion comment](https://docs.github.com/enterprise-server@3.19/rest/reactions/reactions#create-reaction-for-a-team-discussion-comment)" endpoint.
-     *
-     * Create a reaction to a [team discussion comment](https://docs.github.com/enterprise-server@3.19/rest/teams/discussion-comments#get-a-discussion-comment).
-     *
-     * A response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-     */
-    post: operations["reactions/create-for-team-discussion-comment-legacy"];
-  };
-  "/teams/{team_id}/discussions/{discussion_number}/reactions": {
-    /**
-     * List reactions for a team discussion (Legacy)
-     * @deprecated
-     * @description > [!WARNING]
-     * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion`](https://docs.github.com/enterprise-server@3.19/rest/reactions/reactions#list-reactions-for-a-team-discussion) endpoint.
-     *
-     * List the reactions to a [team discussion](https://docs.github.com/enterprise-server@3.19/rest/teams/discussions#get-a-discussion).
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
-     */
-    get: operations["reactions/list-for-team-discussion-legacy"];
-    /**
-     * Create reaction for a team discussion (Legacy)
-     * @deprecated
-     * @description > [!WARNING]
-     * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create reaction for a team discussion`](https://docs.github.com/enterprise-server@3.19/rest/reactions/reactions#create-reaction-for-a-team-discussion) endpoint.
-     *
-     * Create a reaction to a [team discussion](https://docs.github.com/enterprise-server@3.19/rest/teams/discussions#get-a-discussion).
-     *
-     * A response with an HTTP `200` status means that you already added the reaction type to this team discussion.
-     *
-     * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-     */
-    post: operations["reactions/create-for-team-discussion-legacy"];
-  };
   "/teams/{team_id}/members": {
     /**
      * List team members (Legacy)
@@ -9384,6 +9106,8 @@ export interface paths {
      * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List team members`](https://docs.github.com/enterprise-server@3.19/rest/teams/members#list-team-members) endpoint.
      *
      * Team members will include the members of child teams.
+     *
+     * Each member includes their `role` on the team (`member` or `maintainer`) and an `inherited` flag indicating whether the membership is inherited from a child team (`true`) or is a direct membership (`false`).
      */
     get: operations["teams/list-members-legacy"];
   };
@@ -10825,7 +10549,7 @@ export interface components {
     } | null;
     /**
      * App Permissions
-     * @description The permissions granted to the user access token.
+     * @description The permissions granted to the fine-grained access token.
      * @example {
      *   "contents": "read",
      *   "issues": "read",
@@ -10859,6 +10583,11 @@ export interface components {
        * @enum {string}
        */
       checks?: "read" | "write";
+      /**
+       * @description The level of permission to grant the access token to view and manage code quality data.
+       * @enum {string}
+       */
+      code_quality?: "read" | "write";
       /**
        * @description The level of permission to grant the access token to create, edit, delete, and list Codespaces.
        * @enum {string}
@@ -10998,7 +10727,12 @@ export interface components {
        * @description The level of permission to grant the access token for managing access to GitHub Copilot for members of an organization with a Copilot Business subscription. This property is in public preview and is subject to change.
        * @enum {string}
        */
-      organization_copilot_seat_management?: "write";
+      organization_copilot_seat_management?: "read" | "write";
+      /**
+       * @description The level of permission to grant the access token to view and manage Copilot cloud agent settings for an organization.
+       * @enum {string}
+       */
+      organization_copilot_agent_settings?: "read" | "write";
       /**
        * @description The level of permission to grant the access token to view and manage announcement banners for an organization.
        * @enum {string}
@@ -11054,11 +10788,6 @@ export interface components {
        * @enum {string}
        */
       organization_user_blocking?: "read" | "write";
-      /**
-       * @description The level of permission to grant the access token to manage team discussions and related comments.
-       * @enum {string}
-       */
-      team_discussions?: "read" | "write";
       /**
        * @description The level of permission to grant the access token to manage the email addresses belonging to a user.
        * @enum {string}
@@ -12128,6 +11857,18 @@ export interface components {
        */
       has_discussions?: boolean;
       /**
+       * @description Whether pull requests are enabled.
+       * @default true
+       * @example true
+       */
+      has_pull_requests?: boolean;
+      /**
+       * @description The policy controlling who can create pull requests: all or collaborators_only.
+       * @example all
+       * @enum {string}
+       */
+      pull_request_creation_policy?: "all" | "collaborators_only";
+      /**
        * @description Whether the repository is archived.
        * @default false
        */
@@ -12691,6 +12432,11 @@ export interface components {
       busy: boolean;
       labels: components["schemas"]["runner-label"][];
       ephemeral?: boolean;
+      /**
+       * @description The version of the GitHub Actions Runner software. This is only set if the runner has connected to the service at least once.
+       * @example 2.323.0
+       */
+      version?: string | null;
     };
     /**
      * Runner Application
@@ -13299,6 +13045,7 @@ export interface components {
       | "false positive"
       | "won't fix"
       | "used in tests"
+      | "mitigated"
       | null;
     /** @description The dismissal comment associated with the dismissal of the alert. */
     "code-scanning-alert-dismissed-comment": string | null;
@@ -13373,6 +13120,8 @@ export interface components {
       commit_sha?: string;
       message?: {
         text?: string;
+        /** @description The message text as GitHub-flavored Markdown, with placeholder links for related locations replaced by links to the relevant code. Only populated when related locations are available for the alert instance. */
+        markdown?: string;
       };
       location?: components["schemas"]["code-scanning-alert-location"];
       html_url?: string;
@@ -13681,6 +13430,15 @@ export interface components {
        * @enum {string}
        */
       dependabot_security_updates?: "enabled" | "disabled" | "not_set";
+      /**
+       * @description The enablement status of Dependabot delegated alert dismissal
+       * @enum {string|null}
+       */
+      dependabot_delegated_alert_dismissal?:
+        | "enabled"
+        | "disabled"
+        | "not_set"
+        | null;
       /** @description Feature options for code scanning */
       code_scanning_options?: {
         /** @description Whether to allow repos which use advanced setup */
@@ -13735,6 +13493,8 @@ export interface components {
            * @enum {string}
            */
           reviewer_type: "TEAM" | "ROLE";
+          /** @description The ID of the security configuration associated with this bypass reviewer */
+          security_configuration_id?: number;
         }[];
       };
       /**
@@ -14549,7 +14309,7 @@ export interface components {
     } | null;
     /**
      * Issue Type
-     * @description The type of issue.
+     * @description The type assigned to the issue. This is only present for issues in repositories where issue types are supported.
      */
     "issue-type": {
       /** @description The unique identifier of the issue type. */
@@ -14700,6 +14460,75 @@ export interface components {
       completed: number;
       percent_completed: number;
     };
+    /**
+     * Pinned Issue Comment
+     * @description Context around who pinned an issue comment and when it was pinned.
+     */
+    "nullable-pinned-issue-comment": {
+      /**
+       * Format: date-time
+       * @example 2011-04-14T16:00:49Z
+       */
+      pinned_at: string;
+      pinned_by: components["schemas"]["nullable-simple-user"];
+    } | null;
+    /**
+     * Minimized Issue Comment
+     * @description Details about why an issue comment was minimized.
+     */
+    "nullable-issue-comment-minimized": {
+      /**
+       * @description The reason the comment was minimized.
+       * @example low-quality
+       */
+      reason: string | null;
+    } | null;
+    /**
+     * Issue Comment
+     * @description Comments provide a way for people to collaborate on an issue.
+     */
+    "nullable-issue-comment": {
+      /**
+       * Format: int64
+       * @description Unique identifier of the issue comment
+       * @example 42
+       */
+      id: number | bigint;
+      node_id: string;
+      /**
+       * Format: uri
+       * @description URL for the issue comment
+       * @example https://api.github.com/repositories/42/issues/comments/1
+       */
+      url: string;
+      /**
+       * @description Contents of the issue comment
+       * @example What version of Safari were you using when you observed this bug?
+       */
+      body?: string;
+      body_text?: string;
+      body_html?: string;
+      /** Format: uri */
+      html_url: string;
+      user: components["schemas"]["nullable-simple-user"];
+      /**
+       * Format: date-time
+       * @example 2011-04-14T16:00:49Z
+       */
+      created_at: string;
+      /**
+       * Format: date-time
+       * @example 2011-04-14T16:00:49Z
+       */
+      updated_at: string;
+      /** Format: uri */
+      issue_url: string;
+      author_association?: components["schemas"]["author-association"];
+      performed_via_github_app?: components["schemas"]["nullable-integration"];
+      reactions?: components["schemas"]["reaction-rollup"];
+      pin?: components["schemas"]["nullable-pinned-issue-comment"];
+      minimized?: components["schemas"]["nullable-issue-comment-minimized"];
+    } | null;
     /** Issue Dependencies Summary */
     "issue-dependencies-summary": {
       blocked_by: number;
@@ -14718,6 +14547,11 @@ export interface components {
        * @example 1
        */
       issue_field_id: number | bigint;
+      /**
+       * @description The human-readable name of the issue field.
+       * @example Priority
+       */
+      issue_field_name?: string;
       /** @example IFT_GDKND */
       node_id: string;
       /**
@@ -14725,7 +14559,7 @@ export interface components {
        * @example text
        * @enum {string}
        */
-      data_type: "text" | "single_select" | "number" | "date";
+      data_type: "text" | "single_select" | "multi_select" | "number" | "date";
       /** @description The value of the issue field */
       value: (string | number) | null;
       /** @description Details about the selected option (only present for single_select fields) */
@@ -14747,6 +14581,27 @@ export interface components {
          */
         color: string;
       } | null;
+      /** @description Details about the selected options */
+      multi_select_options?:
+        | {
+            /**
+             * Format: int64
+             * @description Unique identifier for the option.
+             * @example 1
+             */
+            id: number | bigint;
+            /**
+             * @description The name of the option
+             * @example High
+             */
+            name: string;
+            /**
+             * @description The color of the option
+             * @example red
+             */
+            color: string;
+          }[]
+        | null;
     };
     /**
      * Issue
@@ -14827,7 +14682,7 @@ export interface components {
         ]
       >[];
       assignee: components["schemas"]["nullable-simple-user"];
-      assignees?: components["schemas"]["simple-user"][] | null;
+      assignees?: components["schemas"]["simple-user"][];
       milestone: components["schemas"]["nullable-milestone"];
       locked: boolean;
       active_lock_reason?: string | null;
@@ -14867,6 +14722,7 @@ export interface components {
        * @description URL to get the parent issue of this issue, if it is a sub-issue
        */
       parent_issue_url?: string | null;
+      pinned_comment?: components["schemas"]["nullable-issue-comment"];
       issue_dependencies_summary?: components["schemas"]["issue-dependencies-summary"];
       issue_field_values?: components["schemas"]["issue-field-value"][];
     };
@@ -14953,6 +14809,8 @@ export interface components {
       author_association?: components["schemas"]["author-association"];
       performed_via_github_app?: components["schemas"]["nullable-integration"];
       reactions?: components["schemas"]["reaction-rollup"];
+      pin?: components["schemas"]["nullable-pinned-issue-comment"];
+      minimized?: components["schemas"]["nullable-issue-comment-minimized"];
     };
     /**
      * Team Simple
@@ -15054,6 +14912,26 @@ export interface components {
       commit_title: string;
       /** @description Commit message for the merge commit. */
       commit_message: string;
+    } | null;
+    /**
+     * Pull Request Stack
+     * @description The stack information associated with a pull request.
+     */
+    "pull-request-stack": {
+      base: {
+        /** @description The base ref of the stack this pull request belongs to. */
+        ref: string;
+        /** @description The base SHA of the stack this pull request belongs to. */
+        sha: string;
+      };
+      /** @description The total number of pull requests in the stack. */
+      size?: number;
+      /** @description The one-based position of this pull request within the stack, where 1 is the bottom of the stack. */
+      position?: number;
+      /** @description The ID of the stack that this pull request belongs to. */
+      id?: number;
+      /** @description The number of the stack that this pull request belongs to. */
+      number?: number;
     } | null;
     /**
      * Pull Request
@@ -15171,9 +15049,9 @@ export interface components {
       /** @example e5bd3914e2e596debea16f433f57875b5b90bcd6 */
       merge_commit_sha: string | null;
       assignee: components["schemas"]["nullable-simple-user"];
-      assignees?: components["schemas"]["simple-user"][] | null;
-      requested_reviewers?: components["schemas"]["simple-user"][] | null;
-      requested_teams?: components["schemas"]["team-simple"][] | null;
+      assignees?: components["schemas"]["simple-user"][];
+      requested_reviewers?: components["schemas"]["simple-user"][];
+      requested_teams?: components["schemas"]["team-simple"][];
       head: {
         label: string;
         ref: string;
@@ -15200,6 +15078,7 @@ export interface components {
       };
       author_association: components["schemas"]["author-association"];
       auto_merge: components["schemas"]["auto-merge"];
+      stack?: components["schemas"]["pull-request-stack"];
       /**
        * @description Indicates whether or not the pull request is a draft.
        * @example false
@@ -16244,6 +16123,7 @@ export interface components {
         codespaces?: string[];
         copilot?: string[];
         packages?: string[];
+        storage?: string[];
         actions?: string[];
         actions_inbound?: {
           full_domains?: string[];
@@ -16461,6 +16341,12 @@ export interface components {
       has_pages?: boolean;
       has_downloads?: boolean;
       has_discussions?: boolean;
+      has_pull_requests?: boolean;
+      /**
+       * @description The policy controlling who can create pull requests: all or collaborators_only.
+       * @enum {string}
+       */
+      pull_request_creation_policy?: "all" | "collaborators_only";
       archived?: boolean;
       disabled?: boolean;
       visibility?: string;
@@ -16497,7 +16383,7 @@ export interface components {
         key?: string;
         name?: string;
         spdx_id?: string;
-        url?: string;
+        url?: string | null;
         node_id?: string;
       } | null;
       /** @example 0 */
@@ -16589,261 +16475,6 @@ export interface components {
       created_at: string;
       /** Format: date-time */
       updated_at: string;
-    };
-    /**
-     * Simple Repository
-     * @description A GitHub repository.
-     */
-    "nullable-simple-repository": {
-      /**
-       * Format: int64
-       * @description A unique identifier of the repository.
-       * @example 1296269
-       */
-      id: number | bigint;
-      /**
-       * @description The GraphQL identifier of the repository.
-       * @example MDEwOlJlcG9zaXRvcnkxMjk2MjY5
-       */
-      node_id: string;
-      /**
-       * @description The name of the repository.
-       * @example Hello-World
-       */
-      name: string;
-      /**
-       * @description The full, globally unique, name of the repository.
-       * @example octocat/Hello-World
-       */
-      full_name: string;
-      owner: components["schemas"]["simple-user"];
-      /** @description Whether the repository is private. */
-      private: boolean;
-      /**
-       * Format: uri
-       * @description The URL to view the repository on GitHub.com.
-       * @example https://github.com/octocat/Hello-World
-       */
-      html_url: string;
-      /**
-       * @description The repository description.
-       * @example This your first repo!
-       */
-      description: string | null;
-      /** @description Whether the repository is a fork. */
-      fork: boolean;
-      /**
-       * Format: uri
-       * @description The URL to get more information about the repository from the GitHub API.
-       * @example https://api.github.com/repos/octocat/Hello-World
-       */
-      url: string;
-      /**
-       * @description A template for the API URL to download the repository as an archive.
-       * @example https://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}
-       */
-      archive_url: string;
-      /**
-       * @description A template for the API URL to list the available assignees for issues in the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/assignees{/user}
-       */
-      assignees_url: string;
-      /**
-       * @description A template for the API URL to create or retrieve a raw Git blob in the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}
-       */
-      blobs_url: string;
-      /**
-       * @description A template for the API URL to get information about branches in the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/branches{/branch}
-       */
-      branches_url: string;
-      /**
-       * @description A template for the API URL to get information about collaborators of the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}
-       */
-      collaborators_url: string;
-      /**
-       * @description A template for the API URL to get information about comments on the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/comments{/number}
-       */
-      comments_url: string;
-      /**
-       * @description A template for the API URL to get information about commits on the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/commits{/sha}
-       */
-      commits_url: string;
-      /**
-       * @description A template for the API URL to compare two commits or refs.
-       * @example https://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}
-       */
-      compare_url: string;
-      /**
-       * @description A template for the API URL to get the contents of the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/contents/{+path}
-       */
-      contents_url: string;
-      /**
-       * Format: uri
-       * @description A template for the API URL to list the contributors to the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/contributors
-       */
-      contributors_url: string;
-      /**
-       * Format: uri
-       * @description The API URL to list the deployments of the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/deployments
-       */
-      deployments_url: string;
-      /**
-       * Format: uri
-       * @description The API URL to list the downloads on the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/downloads
-       */
-      downloads_url: string;
-      /**
-       * Format: uri
-       * @description The API URL to list the events of the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/events
-       */
-      events_url: string;
-      /**
-       * Format: uri
-       * @description The API URL to list the forks of the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/forks
-       */
-      forks_url: string;
-      /**
-       * @description A template for the API URL to get information about Git commits of the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/git/commits{/sha}
-       */
-      git_commits_url: string;
-      /**
-       * @description A template for the API URL to get information about Git refs of the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/git/refs{/sha}
-       */
-      git_refs_url: string;
-      /**
-       * @description A template for the API URL to get information about Git tags of the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/git/tags{/sha}
-       */
-      git_tags_url: string;
-      /**
-       * @description A template for the API URL to get information about issue comments on the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/issues/comments{/number}
-       */
-      issue_comment_url: string;
-      /**
-       * @description A template for the API URL to get information about issue events on the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/issues/events{/number}
-       */
-      issue_events_url: string;
-      /**
-       * @description A template for the API URL to get information about issues on the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/issues{/number}
-       */
-      issues_url: string;
-      /**
-       * @description A template for the API URL to get information about deploy keys on the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/keys{/key_id}
-       */
-      keys_url: string;
-      /**
-       * @description A template for the API URL to get information about labels of the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/labels{/name}
-       */
-      labels_url: string;
-      /**
-       * Format: uri
-       * @description The API URL to get information about the languages of the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/languages
-       */
-      languages_url: string;
-      /**
-       * Format: uri
-       * @description The API URL to merge branches in the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/merges
-       */
-      merges_url: string;
-      /**
-       * @description A template for the API URL to get information about milestones of the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/milestones{/number}
-       */
-      milestones_url: string;
-      /**
-       * @description A template for the API URL to get information about notifications on the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}
-       */
-      notifications_url: string;
-      /**
-       * @description A template for the API URL to get information about pull requests on the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/pulls{/number}
-       */
-      pulls_url: string;
-      /**
-       * @description A template for the API URL to get information about releases on the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/releases{/id}
-       */
-      releases_url: string;
-      /**
-       * Format: uri
-       * @description The API URL to list the stargazers on the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/stargazers
-       */
-      stargazers_url: string;
-      /**
-       * @description A template for the API URL to get information about statuses of a commit.
-       * @example https://api.github.com/repos/octocat/Hello-World/statuses/{sha}
-       */
-      statuses_url: string;
-      /**
-       * Format: uri
-       * @description The API URL to list the subscribers on the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/subscribers
-       */
-      subscribers_url: string;
-      /**
-       * Format: uri
-       * @description The API URL to subscribe to notifications for this repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/subscription
-       */
-      subscription_url: string;
-      /**
-       * Format: uri
-       * @description The API URL to get information about tags on the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/tags
-       */
-      tags_url: string;
-      /**
-       * Format: uri
-       * @description The API URL to list the teams on the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/teams
-       */
-      teams_url: string;
-      /**
-       * @description A template for the API URL to create or retrieve a raw Git tree of the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/git/trees{/sha}
-       */
-      trees_url: string;
-      /**
-       * Format: uri
-       * @description The API URL to list the hooks on the repository.
-       * @example https://api.github.com/repos/octocat/Hello-World/hooks
-       */
-      hooks_url: string;
-    } | null;
-    /**
-     * Dependabot Repository Access Details
-     * @description Information about repositories that Dependabot is able to access in an organization
-     */
-    "dependabot-repository-access-details": {
-      /**
-       * @description The default repository access level for Dependabot updates.
-       * @example internal
-       * @enum {string|null}
-       */
-      default_level?: "public" | "internal" | null;
-      accessible_repositories?: components["schemas"]["nullable-simple-repository"][];
     };
     /**
      * Organization Full
@@ -17293,6 +16924,261 @@ export interface components {
       permissions?: string[];
     };
     /**
+     * Simple Repository
+     * @description A GitHub repository.
+     */
+    "nullable-simple-repository": {
+      /**
+       * Format: int64
+       * @description A unique identifier of the repository.
+       * @example 1296269
+       */
+      id: number | bigint;
+      /**
+       * @description The GraphQL identifier of the repository.
+       * @example MDEwOlJlcG9zaXRvcnkxMjk2MjY5
+       */
+      node_id: string;
+      /**
+       * @description The name of the repository.
+       * @example Hello-World
+       */
+      name: string;
+      /**
+       * @description The full, globally unique, name of the repository.
+       * @example octocat/Hello-World
+       */
+      full_name: string;
+      owner: components["schemas"]["simple-user"];
+      /** @description Whether the repository is private. */
+      private: boolean;
+      /**
+       * Format: uri
+       * @description The URL to view the repository on GitHub.com.
+       * @example https://github.com/octocat/Hello-World
+       */
+      html_url: string;
+      /**
+       * @description The repository description.
+       * @example This your first repo!
+       */
+      description: string | null;
+      /** @description Whether the repository is a fork. */
+      fork: boolean;
+      /**
+       * Format: uri
+       * @description The URL to get more information about the repository from the GitHub API.
+       * @example https://api.github.com/repos/octocat/Hello-World
+       */
+      url: string;
+      /**
+       * @description A template for the API URL to download the repository as an archive.
+       * @example https://api.github.com/repos/octocat/Hello-World/{archive_format}{/ref}
+       */
+      archive_url: string;
+      /**
+       * @description A template for the API URL to list the available assignees for issues in the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/assignees{/user}
+       */
+      assignees_url: string;
+      /**
+       * @description A template for the API URL to create or retrieve a raw Git blob in the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/git/blobs{/sha}
+       */
+      blobs_url: string;
+      /**
+       * @description A template for the API URL to get information about branches in the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/branches{/branch}
+       */
+      branches_url: string;
+      /**
+       * @description A template for the API URL to get information about collaborators of the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/collaborators{/collaborator}
+       */
+      collaborators_url: string;
+      /**
+       * @description A template for the API URL to get information about comments on the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/comments{/number}
+       */
+      comments_url: string;
+      /**
+       * @description A template for the API URL to get information about commits on the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/commits{/sha}
+       */
+      commits_url: string;
+      /**
+       * @description A template for the API URL to compare two commits or refs.
+       * @example https://api.github.com/repos/octocat/Hello-World/compare/{base}...{head}
+       */
+      compare_url: string;
+      /**
+       * @description A template for the API URL to get the contents of the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/contents/{+path}
+       */
+      contents_url: string;
+      /**
+       * Format: uri
+       * @description A template for the API URL to list the contributors to the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/contributors
+       */
+      contributors_url: string;
+      /**
+       * Format: uri
+       * @description The API URL to list the deployments of the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/deployments
+       */
+      deployments_url: string;
+      /**
+       * Format: uri
+       * @description The API URL to list the downloads on the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/downloads
+       */
+      downloads_url: string;
+      /**
+       * Format: uri
+       * @description The API URL to list the events of the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/events
+       */
+      events_url: string;
+      /**
+       * Format: uri
+       * @description The API URL to list the forks of the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/forks
+       */
+      forks_url: string;
+      /**
+       * @description A template for the API URL to get information about Git commits of the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/git/commits{/sha}
+       */
+      git_commits_url: string;
+      /**
+       * @description A template for the API URL to get information about Git refs of the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/git/refs{/sha}
+       */
+      git_refs_url: string;
+      /**
+       * @description A template for the API URL to get information about Git tags of the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/git/tags{/sha}
+       */
+      git_tags_url: string;
+      /**
+       * @description A template for the API URL to get information about issue comments on the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/issues/comments{/number}
+       */
+      issue_comment_url: string;
+      /**
+       * @description A template for the API URL to get information about issue events on the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/issues/events{/number}
+       */
+      issue_events_url: string;
+      /**
+       * @description A template for the API URL to get information about issues on the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/issues{/number}
+       */
+      issues_url: string;
+      /**
+       * @description A template for the API URL to get information about deploy keys on the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/keys{/key_id}
+       */
+      keys_url: string;
+      /**
+       * @description A template for the API URL to get information about labels of the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/labels{/name}
+       */
+      labels_url: string;
+      /**
+       * Format: uri
+       * @description The API URL to get information about the languages of the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/languages
+       */
+      languages_url: string;
+      /**
+       * Format: uri
+       * @description The API URL to merge branches in the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/merges
+       */
+      merges_url: string;
+      /**
+       * @description A template for the API URL to get information about milestones of the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/milestones{/number}
+       */
+      milestones_url: string;
+      /**
+       * @description A template for the API URL to get information about notifications on the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/notifications{?since,all,participating}
+       */
+      notifications_url: string;
+      /**
+       * @description A template for the API URL to get information about pull requests on the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/pulls{/number}
+       */
+      pulls_url: string;
+      /**
+       * @description A template for the API URL to get information about releases on the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/releases{/id}
+       */
+      releases_url: string;
+      /**
+       * Format: uri
+       * @description The API URL to list the stargazers on the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/stargazers
+       */
+      stargazers_url: string;
+      /**
+       * @description A template for the API URL to get information about statuses of a commit.
+       * @example https://api.github.com/repos/octocat/Hello-World/statuses/{sha}
+       */
+      statuses_url: string;
+      /**
+       * Format: uri
+       * @description The API URL to list the subscribers on the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/subscribers
+       */
+      subscribers_url: string;
+      /**
+       * Format: uri
+       * @description The API URL to subscribe to notifications for this repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/subscription
+       */
+      subscription_url: string;
+      /**
+       * Format: uri
+       * @description The API URL to get information about tags on the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/tags
+       */
+      tags_url: string;
+      /**
+       * Format: uri
+       * @description The API URL to list the teams on the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/teams
+       */
+      teams_url: string;
+      /**
+       * @description A template for the API URL to create or retrieve a raw Git tree of the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/git/trees{/sha}
+       */
+      trees_url: string;
+      /**
+       * Format: uri
+       * @description The API URL to list the hooks on the repository.
+       * @example https://api.github.com/repos/octocat/Hello-World/hooks
+       */
+      hooks_url: string;
+    } | null;
+    /**
+     * Dependabot Repository Access Details
+     * @description Information about repositories that Dependabot is able to access in an organization
+     */
+    "dependabot-repository-access-details": {
+      /**
+       * @description The default repository access level for Dependabot updates.
+       * @example internal
+       * @enum {string|null}
+       */
+      default_level?: "public" | "internal" | null;
+      accessible_repositories?: components["schemas"]["nullable-simple-repository"][];
+    };
+    /**
      * Dependabot Secret for an Organization
      * @description Secrets for GitHub Dependabot for an organization.
      */
@@ -17459,6 +17345,102 @@ export interface components {
        * Format: uri
        * @description The URL to view the dismissal request in a browser.
        * @example https://github.com/octo-org/smile/code-scanning/alerts/1
+       */
+      html_url?: string;
+    };
+    /**
+     * Dependabot alert dismissal request
+     * @description Alert dismissal request made by a user asking to dismiss a Dependabot alert.
+     */
+    "dependabot-alert-dismissal-request": {
+      /**
+       * Format: int64
+       * @description The unique identifier of the dismissal request.
+       */
+      id?: number | bigint;
+      /**
+       * Format: int64
+       * @description The number uniquely identifying the dismissal request within its repository.
+       */
+      number?: number | bigint;
+      /** @description The repository the dismissal request is for. */
+      repository?: {
+        /**
+         * Format: int64
+         * @description The ID of the repository the dismissal request is for.
+         */
+        id?: number | bigint;
+        /** @description The name of the repository the dismissal request is for. */
+        name?: string;
+        /** @description The full name of the repository the dismissal request is for. */
+        full_name?: string;
+      };
+      /** @description The organization associated with the repository the dismissal request is for. */
+      organization?: {
+        /**
+         * Format: int64
+         * @description The ID of the organization.
+         */
+        id?: number | bigint;
+        /** @description The name of the organization. */
+        name?: string;
+      };
+      /** @description The user who requested the dismissal request. */
+      requester?: {
+        /**
+         * Format: int64
+         * @description The ID of the GitHub user who requested the dismissal request.
+         */
+        actor_id?: number | bigint;
+        /** @description The name of the GitHub user who requested the dismissal request. */
+        actor_name?: string;
+      };
+      /** @description The type of request. */
+      request_type?: string;
+      /** @description Data describing the dismissal request metadata. */
+      data?:
+        | {
+            /** @description The reason for the dismissal request. */
+            reason?: string;
+            /** @description The alert number. */
+            alert_number?: string;
+            /** @description The title of the alert. */
+            alert_title?: string;
+          }[]
+        | null;
+      /**
+       * @description The unique identifier for the request type of the dismissal request.
+       * @example 123
+       */
+      resource_identifier?: string;
+      /**
+       * @description The status of the dismissal request.
+       * @enum {string}
+       */
+      status?: "pending" | "denied" | "approved" | "expired";
+      /** @description The comment the requester provided when creating the dismissal request. */
+      requester_comment?: string | null;
+      /**
+       * Format: date-time
+       * @description The date and time the dismissal request will expire.
+       */
+      expires_at?: string;
+      /**
+       * Format: date-time
+       * @description The date and time the dismissal request was created.
+       */
+      created_at?: string;
+      /** @description The responses to the dismissal request. */
+      responses?: components["schemas"]["dismissal-request-response"][] | null;
+      /**
+       * Format: uri
+       * @example https://api.github.com/repos/octo-org/smile/dismissal-requests/dependabot/1
+       */
+      url?: string;
+      /**
+       * Format: uri
+       * @description The URL to view the dismissal request in a browser.
+       * @example https://github.com/octo-org/smile/security/dependabot/1
        */
       html_url?: string;
     };
@@ -17710,6 +17692,12 @@ export interface components {
       has_pages?: boolean;
       has_downloads?: boolean;
       has_discussions?: boolean;
+      has_pull_requests?: boolean;
+      /**
+       * @description The policy controlling who can create pull requests: all or collaborators_only.
+       * @enum {string}
+       */
+      pull_request_creation_policy?: "all" | "collaborators_only";
       archived?: boolean;
       disabled?: boolean;
       visibility?: string;
@@ -17746,7 +17734,7 @@ export interface components {
         key?: string;
         name?: string;
         spdx_id?: string;
-        url?: string;
+        url?: string | null;
         node_id?: string;
       } | null;
       /** @example 0 */
@@ -18546,6 +18534,18 @@ export interface components {
         | "python_index"
         | "terraform_registry";
       /**
+       * @description The authentication type for the private registry.
+       * @enum {string}
+       */
+      auth_type?:
+        | "token"
+        | "username_password"
+        | "oidc_azure"
+        | "oidc_aws"
+        | "oidc_jfrog"
+        | "oidc_cloudsmith"
+        | "oidc_gcp";
+      /**
        * Format: uri
        * @description The URL of the private registry.
        */
@@ -18565,6 +18565,36 @@ export interface components {
        * @enum {string}
        */
       visibility: "all" | "private" | "selected";
+      /** @description The tenant ID of the Azure AD application. */
+      tenant_id?: string;
+      /** @description The client ID of the Azure AD application. */
+      client_id?: string;
+      /** @description The AWS region. */
+      aws_region?: string;
+      /** @description The AWS account ID. */
+      account_id?: string;
+      /** @description The AWS IAM role name. */
+      role_name?: string;
+      /** @description The CodeArtifact domain. */
+      domain?: string;
+      /** @description The CodeArtifact domain owner. */
+      domain_owner?: string;
+      /** @description The JFrog OIDC provider name. */
+      jfrog_oidc_provider_name?: string;
+      /** @description The OIDC audience. */
+      audience?: string;
+      /** @description The JFrog identity mapping name. */
+      identity_mapping_name?: string;
+      /** @description The Cloudsmith organization namespace. */
+      namespace?: string;
+      /** @description The Cloudsmith service account slug. */
+      service_slug?: string;
+      /** @description The Cloudsmith API host. */
+      api_host?: string;
+      /** @description The full resource name of the GCP Workload Identity Provider (e.g. `projects/<NUM>/locations/global/workloadIdentityPools/<POOL>/providers/<PROVIDER>`). */
+      workload_identity_provider?: string;
+      /** @description The GCP service account email to impersonate. If omitted, the federated token is used directly (direct WIF). */
+      service_account?: string;
       /** Format: date-time */
       created_at: string;
       /** Format: date-time */
@@ -18601,6 +18631,18 @@ export interface components {
         | "python_index"
         | "terraform_registry";
       /**
+       * @description The authentication type for the private registry.
+       * @enum {string}
+       */
+      auth_type?:
+        | "token"
+        | "username_password"
+        | "oidc_azure"
+        | "oidc_aws"
+        | "oidc_jfrog"
+        | "oidc_cloudsmith"
+        | "oidc_gcp";
+      /**
        * Format: uri
        * @description The URL of the private registry.
        */
@@ -18622,6 +18664,36 @@ export interface components {
       visibility: "all" | "private" | "selected";
       /** @description An array of repository IDs that can access the organization private registry when `visibility` is set to `selected`. */
       selected_repository_ids?: number[];
+      /** @description The tenant ID of the Azure AD application. */
+      tenant_id?: string;
+      /** @description The client ID of the Azure AD application. */
+      client_id?: string;
+      /** @description The AWS region. */
+      aws_region?: string;
+      /** @description The AWS account ID. */
+      account_id?: string;
+      /** @description The AWS IAM role name. */
+      role_name?: string;
+      /** @description The CodeArtifact domain. */
+      domain?: string;
+      /** @description The CodeArtifact domain owner. */
+      domain_owner?: string;
+      /** @description The JFrog OIDC provider name. */
+      jfrog_oidc_provider_name?: string;
+      /** @description The OIDC audience. */
+      audience?: string;
+      /** @description The JFrog identity mapping name. */
+      identity_mapping_name?: string;
+      /** @description The Cloudsmith organization namespace. */
+      namespace?: string;
+      /** @description The Cloudsmith service account slug. */
+      service_slug?: string;
+      /** @description The Cloudsmith API host. */
+      api_host?: string;
+      /** @description The full resource name of the GCP Workload Identity Provider (e.g. `projects/<NUM>/locations/global/workloadIdentityPools/<POOL>/providers/<PROVIDER>`). */
+      workload_identity_provider?: string;
+      /** @description The GCP service account email to impersonate. If omitted, the federated token is used directly (direct WIF). */
+      service_account?: string;
       /** Format: date-time */
       created_at: string;
       /** Format: date-time */
@@ -18889,6 +18961,18 @@ export interface components {
        * @example true
        */
       has_discussions?: boolean;
+      /**
+       * @description Whether pull requests are enabled.
+       * @default true
+       * @example true
+       */
+      has_pull_requests?: boolean;
+      /**
+       * @description The policy controlling who can create pull requests: all or collaborators_only.
+       * @example all
+       * @enum {string}
+       */
+      pull_request_creation_policy?: "all" | "collaborators_only";
       /**
        * @description Whether the repository is archived.
        * @default false
@@ -19234,6 +19318,14 @@ export interface components {
       has_downloads?: boolean;
       /** @example true */
       has_discussions: boolean;
+      /** @example true */
+      has_pull_requests?: boolean;
+      /**
+       * @description The policy controlling who can create pull requests: all or collaborators_only.
+       * @example all
+       * @enum {string}
+       */
+      pull_request_creation_policy?: "all" | "collaborators_only";
       archived: boolean;
       /** @description Returns whether or not this repository disabled. */
       disabled: boolean;
@@ -19364,7 +19456,7 @@ export interface components {
      * @description An actor that can bypass rules in a ruleset
      */
     "repository-ruleset-bypass-actor": {
-      /** @description The ID of the actor that can bypass a ruleset. Required for `Integration`, `RepositoryRole`, and `Team` actor types. If `actor_type` is `OrganizationAdmin`, this should be `1`. If `actor_type` is `DeployKey`, this should be null. If `actor_type` is `EnterpriseOwner`, `actor_id` is ignored. `OrganizationAdmin` and `EnterpriseOwner` are not applicable for personal repositories. */
+      /** @description The ID of the actor that can bypass a ruleset. Required for `Integration`, `RepositoryRole`, and `Team` actor types. If `actor_type` is `OrganizationAdmin`, `actor_id` is ignored. If `actor_type` is `DeployKey`, this should be null. If `actor_type` is `EnterpriseOwner`, `actor_id` is ignored. `OrganizationAdmin` and `EnterpriseOwner` are not applicable for personal repositories. */
       actor_id?: number | null;
       /**
        * @description The type of actor that can bypass a ruleset
@@ -19547,6 +19639,29 @@ export interface components {
       type: "required_signatures";
     };
     /**
+     * Actor
+     * @description An actor allowed to dismiss pull request reviews
+     */
+    "repository-rule-params-actor": {
+      /** @description ID of the actor that can dismiss reviews. */
+      id: number;
+      /**
+       * @description The type of the actor
+       * @enum {string}
+       */
+      type: "User" | "Team" | "IntegrationInstallation" | "RepositoryRole";
+    };
+    /**
+     * DismissalRestriction
+     * @description Specify people, teams, or apps allowed to dismiss pull request reviews.
+     */
+    "repository-rule-params-dismissal-restriction": {
+      /** @description Specify people, teams, or apps allowed to dismiss pull request reviews. */
+      allowed_actors?: components["schemas"]["repository-rule-params-actor"][];
+      /** @description Whether to restrict review dismissal to specific actors. */
+      enabled: boolean;
+    };
+    /**
      * Reviewer
      * @description A required reviewing team
      */
@@ -19582,6 +19697,7 @@ export interface components {
         allowed_merge_methods?: ("merge" | "squash" | "rebase")[];
         /** @description New, reviewable commits pushed will dismiss previous pull request review approvals. */
         dismiss_stale_reviews_on_push: boolean;
+        dismissal_restriction?: components["schemas"]["repository-rule-params-dismissal-restriction"];
         /** @description Require an approving review in pull requests that modify files that have a designated code owner. */
         require_code_owner_review: boolean;
         /** @description Whether the most recent reviewable push must be approved by someone other than the person who pushed it. */
@@ -19641,7 +19757,7 @@ export interface components {
       /** @enum {string} */
       type: "commit_message_pattern";
       parameters?: {
-        /** @description How this rule will appear to users. */
+        /** @description How this rule appears when configuring it. */
         name?: string;
         /** @description If true, the rule will fail if the pattern matches. */
         negate?: boolean;
@@ -19662,7 +19778,7 @@ export interface components {
       /** @enum {string} */
       type: "commit_author_email_pattern";
       parameters?: {
-        /** @description How this rule will appear to users. */
+        /** @description How this rule appears when configuring it. */
         name?: string;
         /** @description If true, the rule will fail if the pattern matches. */
         negate?: boolean;
@@ -19683,7 +19799,7 @@ export interface components {
       /** @enum {string} */
       type: "committer_email_pattern";
       parameters?: {
-        /** @description How this rule will appear to users. */
+        /** @description How this rule appears when configuring it. */
         name?: string;
         /** @description If true, the rule will fail if the pattern matches. */
         negate?: boolean;
@@ -19704,7 +19820,7 @@ export interface components {
       /** @enum {string} */
       type: "branch_name_pattern";
       parameters?: {
-        /** @description How this rule will appear to users. */
+        /** @description How this rule appears when configuring it. */
         name?: string;
         /** @description If true, the rule will fail if the pattern matches. */
         negate?: boolean;
@@ -19725,7 +19841,7 @@ export interface components {
       /** @enum {string} */
       type: "tag_name_pattern";
       parameters?: {
-        /** @description How this rule will appear to users. */
+        /** @description How this rule appears when configuring it. */
         name?: string;
         /** @description If true, the rule will fail if the pattern matches. */
         negate?: boolean;
@@ -19737,64 +19853,6 @@ export interface components {
         /** @description The pattern to match with. */
         pattern: string;
       };
-    };
-    /**
-     * file_path_restriction
-     * @description Prevent commits that include changes in specified file and folder paths from being pushed to the commit graph. This includes absolute paths that contain file names.
-     */
-    "repository-rule-file-path-restriction": {
-      /** @enum {string} */
-      type: "file_path_restriction";
-      parameters?: {
-        /** @description The file paths that are restricted from being pushed to the commit graph. */
-        restricted_file_paths: string[];
-      };
-    };
-    /**
-     * max_file_path_length
-     * @description Prevent commits that include file paths that exceed the specified character limit from being pushed to the commit graph.
-     */
-    "repository-rule-max-file-path-length": {
-      /** @enum {string} */
-      type: "max_file_path_length";
-      parameters?: {
-        /** @description The maximum amount of characters allowed in file paths. */
-        max_file_path_length: number;
-      };
-    };
-    /**
-     * file_extension_restriction
-     * @description Prevent commits that include files with specified file extensions from being pushed to the commit graph.
-     */
-    "repository-rule-file-extension-restriction": {
-      /** @enum {string} */
-      type: "file_extension_restriction";
-      parameters?: {
-        /** @description The file extensions that are restricted from being pushed to the commit graph. */
-        restricted_file_extensions: string[];
-      };
-    };
-    /**
-     * max_file_size
-     * @description Prevent commits with individual files that exceed the specified limit from being pushed to the commit graph.
-     */
-    "repository-rule-max-file-size": {
-      /** @enum {string} */
-      type: "max_file_size";
-      parameters?: {
-        /** @description The maximum file size allowed in megabytes. This limit does not apply to Git Large File Storage (Git LFS). */
-        max_file_size: number;
-      };
-    };
-    /**
-     * RestrictedCommits
-     * @description Restricted commit
-     */
-    "repository-rule-params-restricted-commits": {
-      /** @description Full or abbreviated commit hash to reject */
-      oid: string;
-      /** @description Reason for restriction */
-      reason?: string;
     };
     /**
      * WorkflowFileReference
@@ -19874,15 +19932,52 @@ export interface components {
       };
     };
     /**
-     * CopilotCodeReviewAnalysisTool
-     * @description A tool that must provide code review results for this rule to pass.
+     * file_path_restriction
+     * @description Prevent commits that include changes in specified file and folder paths from being pushed to the commit graph. This includes absolute paths that contain file names.
      */
-    "repository-rule-params-copilot-code-review-analysis-tool": {
-      /**
-       * @description The name of a code review analysis tool
-       * @enum {string}
-       */
-      name: "CodeQL" | "ESLint" | "PMD";
+    "repository-rule-file-path-restriction": {
+      /** @enum {string} */
+      type: "file_path_restriction";
+      parameters?: {
+        /** @description The file paths that are restricted from being pushed to the commit graph. */
+        restricted_file_paths: string[];
+      };
+    };
+    /**
+     * max_file_path_length
+     * @description Prevent commits that include file paths that exceed the specified character limit from being pushed to the commit graph.
+     */
+    "repository-rule-max-file-path-length": {
+      /** @enum {string} */
+      type: "max_file_path_length";
+      parameters?: {
+        /** @description The maximum amount of characters allowed in file paths. */
+        max_file_path_length: number;
+      };
+    };
+    /**
+     * file_extension_restriction
+     * @description Prevent commits that include files with specified file extensions from being pushed to the commit graph.
+     */
+    "repository-rule-file-extension-restriction": {
+      /** @enum {string} */
+      type: "file_extension_restriction";
+      parameters?: {
+        /** @description The file extensions that are restricted from being pushed to the commit graph. */
+        restricted_file_extensions: string[];
+      };
+    };
+    /**
+     * max_file_size
+     * @description Prevent commits with individual files that exceed the specified limit from being pushed to the commit graph.
+     */
+    "repository-rule-max-file-size": {
+      /** @enum {string} */
+      type: "max_file_size";
+      parameters?: {
+        /** @description The maximum file size allowed in megabytes. This limit does not apply to Git Large File Storage (Git LFS). */
+        max_file_size: number;
+      };
     };
     /**
      * Repository Rule
@@ -19904,13 +19999,13 @@ export interface components {
       | components["schemas"]["repository-rule-committer-email-pattern"]
       | components["schemas"]["repository-rule-branch-name-pattern"]
       | components["schemas"]["repository-rule-tag-name-pattern"]
+      | components["schemas"]["repository-rule-workflows"]
+      | components["schemas"]["repository-rule-code-scanning"]
+      | components["schemas"]["repository-rule-copilot-code-review"]
       | components["schemas"]["repository-rule-file-path-restriction"]
       | components["schemas"]["repository-rule-max-file-path-length"]
       | components["schemas"]["repository-rule-file-extension-restriction"]
-      | components["schemas"]["repository-rule-max-file-size"]
-      | components["schemas"]["repository-rule-workflows"]
-      | components["schemas"]["repository-rule-code-scanning"]
-      | components["schemas"]["repository-rule-copilot-code-review"];
+      | components["schemas"]["repository-rule-max-file-size"];
     /**
      * Repository ruleset
      * @description A set of rules to apply when specified conditions are met.
@@ -19963,6 +20058,16 @@ export interface components {
       created_at?: string;
       /** Format: date-time */
       updated_at?: string;
+    };
+    /**
+     * RestrictedCommits
+     * @description Restricted commit
+     */
+    "repository-rule-params-restricted-commits": {
+      /** @description Full or abbreviated commit hash to reject */
+      oid: string;
+      /** @description Reason for restriction */
+      reason?: string;
     };
     /**
      * Repository Rule
@@ -20027,6 +20132,70 @@ export interface components {
        */
       evaluation_result?: "pass" | "fail" | "bypass";
     }[];
+    /**
+     * Pull request rule suite metadata
+     * @description Metadata for a pull request rule evaluation result.
+     */
+    "rule-suite-pull-request": {
+      /** @description The pull request associated with the rule evaluation. */
+      pull_request?: {
+        /** @description The unique identifier of the pull request. */
+        id?: number;
+        /** @description The number of the pull request. */
+        number?: number;
+        /** @description The user who created the pull request. */
+        user?: {
+          /** @description The unique identifier of the user. */
+          id?: number;
+          /** @description The handle for the GitHub user account. */
+          login?: string;
+          /** @description The type of the user. */
+          type?: string;
+        };
+        /** @description The reviews associated with the pull request. */
+        reviews?: {
+          /** @description The unique identifier of the review. */
+          id?: number;
+          /** @description The user who submitted the review. */
+          user?: {
+            /** @description The unique identifier of the user. */
+            id?: number;
+            /** @description The handle for the GitHub user account. */
+            login?: string;
+            /** @description The type of the user. */
+            type?: string;
+          };
+          /** @description The state of the review. */
+          state?: string;
+        }[];
+      };
+    };
+    /**
+     * Required status checks rule suite metadata
+     * @description Metadata for a required status checks rule evaluation result.
+     */
+    "rule-suite-required-status-checks": {
+      /** @description The status checks associated with the rule evaluation. */
+      checks?: {
+        /** @description The unique identifier of the status check. */
+        id?: number;
+        /** @description The context name of the status check. */
+        context?: string;
+        /** @description The state of the status check. */
+        state?: string;
+        /** @description The type of the status check. */
+        type?: string;
+        /** @description The GitHub App associated with the status check. */
+        app?: {
+          /** @description The unique identifier of the GitHub App. */
+          id?: number;
+          /** @description The slug of the GitHub App. */
+          slug?: string;
+          /** @description The name of the GitHub App. */
+          name?: string;
+        } | null;
+      }[];
+    };
     /**
      * Rule Suite
      * @description Response
@@ -20358,164 +20527,89 @@ export interface components {
       enterprise_id?: number;
     };
     /**
-     * Team Discussion
-     * @description A team discussion is a persistent record of a free-form conversation within a team.
+     * Team Member
+     * @description A user that is a member of a team, including their role on the team and whether the membership is inherited from a child team.
      */
-    "team-discussion": {
-      author: components["schemas"]["nullable-simple-user"];
+    "team-member": {
+      name?: string | null;
+      email?: string | null;
+      /** @example octocat */
+      login: string;
       /**
-       * @description The main text of the discussion.
-       * @example Please suggest improvements to our workflow in comments.
+       * Format: int64
+       * @example 1
        */
-      body: string;
-      /** @example <p>Hi! This is an area for us to collaborate as a team</p> */
-      body_html: string;
-      /**
-       * @description The current version of the body content. If provided, this update operation will be rejected if the given version does not match the latest version on the server.
-       * @example 0307116bbf7ced493b8d8a346c650b71
-       */
-      body_version: string;
-      /** @example 0 */
-      comments_count: number;
-      /**
-       * Format: uri
-       * @example https://api.github.com/organizations/1/team/2343027/discussions/1/comments
-       */
-      comments_url: string;
-      /**
-       * Format: date-time
-       * @example 2018-01-25T18:56:31Z
-       */
-      created_at: string;
-      /** Format: date-time */
-      last_edited_at: string | null;
-      /**
-       * Format: uri
-       * @example https://github.com/orgs/github/teams/justice-league/discussions/1
-       */
-      html_url: string;
-      /** @example MDE0OlRlYW1EaXNjdXNzaW9uMQ== */
+      id: number | bigint;
+      /** @example MDQ6VXNlcjE= */
       node_id: string;
       /**
-       * @description The unique sequence number of a team discussion.
-       * @example 42
+       * Format: uri
+       * @example https://github.com/images/error/octocat_happy.gif
        */
-      number: number;
-      /**
-       * @description Whether or not this discussion should be pinned for easy retrieval.
-       * @example true
-       */
-      pinned: boolean;
-      /**
-       * @description Whether or not this discussion should be restricted to team members and organization owners.
-       * @example true
-       */
-      private: boolean;
+      avatar_url: string;
+      /** @example 41d064eb2195891e12d0413f63227ea7 */
+      gravatar_id: string | null;
       /**
        * Format: uri
-       * @example https://api.github.com/organizations/1/team/2343027
-       */
-      team_url: string;
-      /**
-       * @description The title of the discussion.
-       * @example How can we improve our workflow?
-       */
-      title: string;
-      /**
-       * Format: date-time
-       * @example 2018-01-25T18:56:31Z
-       */
-      updated_at: string;
-      /**
-       * Format: uri
-       * @example https://api.github.com/organizations/1/team/2343027/discussions/1
+       * @example https://api.github.com/users/octocat
        */
       url: string;
-      reactions?: components["schemas"]["reaction-rollup"];
-    };
-    /**
-     * Team Discussion Comment
-     * @description A reply to a discussion within a team.
-     */
-    "team-discussion-comment": {
-      author: components["schemas"]["nullable-simple-user"];
-      /**
-       * @description The main text of the comment.
-       * @example I agree with this suggestion.
-       */
-      body: string;
-      /** @example <p>Do you like apples?</p> */
-      body_html: string;
-      /**
-       * @description The current version of the body content. If provided, this update operation will be rejected if the given version does not match the latest version on the server.
-       * @example 0307116bbf7ced493b8d8a346c650b71
-       */
-      body_version: string;
-      /**
-       * Format: date-time
-       * @example 2018-01-15T23:53:58Z
-       */
-      created_at: string;
-      /** Format: date-time */
-      last_edited_at: string | null;
       /**
        * Format: uri
-       * @example https://api.github.com/organizations/1/team/2403582/discussions/1
-       */
-      discussion_url: string;
-      /**
-       * Format: uri
-       * @example https://github.com/orgs/github/teams/justice-league/discussions/1/comments/1
+       * @example https://github.com/octocat
        */
       html_url: string;
-      /** @example MDIxOlRlYW1EaXNjdXNzaW9uQ29tbWVudDE= */
-      node_id: string;
-      /**
-       * @description The unique sequence number of a team discussion comment.
-       * @example 42
-       */
-      number: number;
-      /**
-       * Format: date-time
-       * @example 2018-01-15T23:53:58Z
-       */
-      updated_at: string;
       /**
        * Format: uri
-       * @example https://api.github.com/organizations/1/team/2403582/discussions/1/comments/1
+       * @example https://api.github.com/users/octocat/followers
        */
-      url: string;
-      reactions?: components["schemas"]["reaction-rollup"];
-    };
-    /**
-     * Reaction
-     * @description Reactions to conversations provide a way to help people express their feelings more simply and effectively.
-     */
-    reaction: {
-      /** @example 1 */
-      id: number;
-      /** @example MDg6UmVhY3Rpb24x */
-      node_id: string;
-      user: components["schemas"]["nullable-simple-user"];
+      followers_url: string;
+      /** @example https://api.github.com/users/octocat/following{/other_user} */
+      following_url: string;
+      /** @example https://api.github.com/users/octocat/gists{/gist_id} */
+      gists_url: string;
+      /** @example https://api.github.com/users/octocat/starred{/owner}{/repo} */
+      starred_url: string;
       /**
-       * @description The reaction to use
-       * @example heart
+       * Format: uri
+       * @example https://api.github.com/users/octocat/subscriptions
+       */
+      subscriptions_url: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/users/octocat/orgs
+       */
+      organizations_url: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/users/octocat/repos
+       */
+      repos_url: string;
+      /** @example https://api.github.com/users/octocat/events{/privacy} */
+      events_url: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/users/octocat/received_events
+       */
+      received_events_url: string;
+      /** @example User */
+      type: string;
+      site_admin: boolean;
+      /** @example "2020-07-09T00:17:55Z" */
+      starred_at?: string;
+      /** @example public */
+      user_view_type?: string;
+      /**
+       * @description The member's role on the team. Only present on the `List team members` endpoint, and only when the feature is enabled for the organization.
+       * @example member
        * @enum {string}
        */
-      content:
-        | "+1"
-        | "-1"
-        | "laugh"
-        | "confused"
-        | "heart"
-        | "hooray"
-        | "rocket"
-        | "eyes";
+      role?: "member" | "maintainer";
       /**
-       * Format: date-time
-       * @example 2016-05-20T20:09:31Z
+       * @description Whether the user is a member of the team only through a child team. `true` means the membership is inherited from a child team; `false` means the user is a direct (immediate) member of the team. Only present on the `List team members` endpoint, and only when the feature is enabled for the organization.
+       * @example false
        */
-      created_at: string;
+      inherited?: boolean;
     };
     /**
      * Team Membership
@@ -20861,11 +20955,11 @@ export interface components {
         code_search?: components["schemas"]["rate-limit"];
         source_import?: components["schemas"]["rate-limit"];
         integration_manifest?: components["schemas"]["rate-limit"];
-        code_scanning_upload?: components["schemas"]["rate-limit"];
         actions_runner_registration?: components["schemas"]["rate-limit"];
         scim?: components["schemas"]["rate-limit"];
         dependency_sbom?: components["schemas"]["rate-limit"];
         code_scanning_autofix?: components["schemas"]["rate-limit"];
+        copilot_usage_records?: components["schemas"]["rate-limit"];
       };
       rate: components["schemas"]["rate-limit"];
     };
@@ -20964,15 +21058,17 @@ export interface components {
      */
     job: {
       /**
+       * Format: int64
        * @description The id of the job.
        * @example 21
        */
-      id: number;
+      id: number | bigint;
       /**
+       * Format: int64
        * @description The id of the associated workflow run.
        * @example 5
        */
-      run_id: number;
+      run_id: number | bigint;
       /** @example https://api.github.com/repos/github/hello-world/actions/runs/5 */
       run_url: string;
       /**
@@ -21277,10 +21373,11 @@ export interface components {
      */
     "workflow-run": {
       /**
+       * Format: int64
        * @description The ID of the workflow run.
        * @example 5
        */
-      id: number;
+      id: number | bigint;
       /**
        * @description The name of the workflow run.
        * @example Build
@@ -21289,10 +21386,11 @@ export interface components {
       /** @example MDEwOkNoZWNrU3VpdGU1 */
       node_id: string;
       /**
+       * Format: int64
        * @description The ID of the associated check suite.
        * @example 42
        */
-      check_suite_id?: number;
+      check_suite_id?: number | bigint;
       /**
        * @description The node ID of the associated check suite.
        * @example MDEwOkNoZWNrU3VpdGU0Mg==
@@ -21651,19 +21749,6 @@ export interface components {
       deleted_at?: string;
     };
     /**
-     * Workflow Run ID
-     * Format: int64
-     * @description The unique identifier for a workflow run
-     */
-    "workflow-run-id": number | bigint;
-    /**
-     * Workflow Dispatch Response
-     * @description Response containing the workflow run ID
-     */
-    "workflow-dispatch-response": {
-      workflow_run_id: components["schemas"]["workflow-run-id"];
-    };
-    /**
      * Activity
      * @description Activity
      */
@@ -21997,6 +22082,21 @@ export interface components {
        */
       date?: string;
     } | null;
+    /**
+     * Git User
+     * @description Metaproperties for Git author/committer information.
+     */
+    "git-user": {
+      /** @example "Chris Wanstrath" */
+      name?: string;
+      /** @example "chris@ozmm.org" */
+      email?: string;
+      /**
+       * Format: date-time
+       * @example "2007-10-29T02:42:39.000-07:00"
+       */
+      date?: string;
+    };
     /** Verification */
     verification: {
       verified: boolean;
@@ -22601,6 +22701,148 @@ export interface components {
       /** @description A link to the documentation for the rule used to detect the alert. */
       help_uri?: string | null;
     };
+    /**
+     * Pull Request Simple
+     * @description Pull Request Simple
+     */
+    "pull-request-simple": {
+      /**
+       * Format: uri
+       * @example https://api.github.com/repos/octocat/Hello-World/pulls/1347
+       */
+      url: string;
+      /**
+       * Format: int64
+       * @example 1
+       */
+      id: number | bigint;
+      /** @example MDExOlB1bGxSZXF1ZXN0MQ== */
+      node_id: string;
+      /**
+       * Format: uri
+       * @example https://github.com/octocat/Hello-World/pull/1347
+       */
+      html_url: string;
+      /**
+       * Format: uri
+       * @example https://github.com/octocat/Hello-World/pull/1347.diff
+       */
+      diff_url: string;
+      /**
+       * Format: uri
+       * @example https://github.com/octocat/Hello-World/pull/1347.patch
+       */
+      patch_url: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/repos/octocat/Hello-World/issues/1347
+       */
+      issue_url: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/repos/octocat/Hello-World/pulls/1347/commits
+       */
+      commits_url: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/repos/octocat/Hello-World/pulls/1347/comments
+       */
+      review_comments_url: string;
+      /** @example https://api.github.com/repos/octocat/Hello-World/pulls/comments{/number} */
+      review_comment_url: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/repos/octocat/Hello-World/issues/1347/comments
+       */
+      comments_url: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/repos/octocat/Hello-World/statuses/6dcb09b5b57875f334f61aebed695e2e4193db5e
+       */
+      statuses_url: string;
+      /** @example 1347 */
+      number: number;
+      /** @example open */
+      state: string;
+      /** @example true */
+      locked: boolean;
+      /** @example new-feature */
+      title: string;
+      user: components["schemas"]["nullable-simple-user"];
+      /** @example Please pull these awesome changes */
+      body: string | null;
+      labels: {
+        /** Format: int64 */
+        id: number | bigint;
+        node_id: string;
+        url: string;
+        name: string;
+        description: string;
+        color: string;
+        default: boolean;
+      }[];
+      milestone: components["schemas"]["nullable-milestone"];
+      /** @example too heated */
+      active_lock_reason?: string | null;
+      /**
+       * Format: date-time
+       * @example 2011-01-26T19:01:12Z
+       */
+      created_at: string;
+      /**
+       * Format: date-time
+       * @example 2011-01-26T19:01:12Z
+       */
+      updated_at: string;
+      /**
+       * Format: date-time
+       * @example 2011-01-26T19:01:12Z
+       */
+      closed_at: string | null;
+      /**
+       * Format: date-time
+       * @example 2011-01-26T19:01:12Z
+       */
+      merged_at: string | null;
+      /** @example e5bd3914e2e596debea16f433f57875b5b90bcd6 */
+      merge_commit_sha: string | null;
+      assignee: components["schemas"]["nullable-simple-user"];
+      assignees?: components["schemas"]["simple-user"][];
+      requested_reviewers?: components["schemas"]["simple-user"][];
+      requested_teams?: components["schemas"]["team"][];
+      head: {
+        label: string;
+        ref: string;
+        repo: components["schemas"]["repository"];
+        sha: string;
+        user: components["schemas"]["nullable-simple-user"];
+      };
+      base: {
+        label: string;
+        ref: string;
+        repo: components["schemas"]["repository"];
+        sha: string;
+        user: components["schemas"]["nullable-simple-user"];
+      };
+      _links: {
+        comments: components["schemas"]["link"];
+        commits: components["schemas"]["link"];
+        statuses: components["schemas"]["link"];
+        html: components["schemas"]["link"];
+        issue: components["schemas"]["link"];
+        review_comments: components["schemas"]["link"];
+        review_comment: components["schemas"]["link"];
+        self: components["schemas"]["link"];
+      };
+      author_association: components["schemas"]["author-association"];
+      auto_merge: components["schemas"]["auto-merge"];
+      stack?: components["schemas"]["pull-request-stack"];
+      /**
+       * @description Indicates whether or not the pull request is a draft.
+       * @example false
+       */
+      draft?: boolean;
+    };
     "code-scanning-alert": {
       number: components["schemas"]["alert-number"];
       created_at: components["schemas"]["alert-created-at"];
@@ -22619,6 +22861,8 @@ export interface components {
       most_recent_instance: components["schemas"]["code-scanning-alert-instance"];
       dismissal_approved_by?: components["schemas"]["nullable-simple-user"];
       assignees?: components["schemas"]["simple-user"][];
+      /** @description Pull requests linked to this alert. */
+      linked_pull_requests?: components["schemas"]["pull-request-simple"][];
     };
     /**
      * @description Sets the state of the code scanning alert. You must provide `dismissed_reason` when you set the state to `dismissed`.
@@ -22627,6 +22871,31 @@ export interface components {
     "code-scanning-alert-set-state": "open" | "dismissed";
     /** @description If `true`, attempt to create an alert dismissal request. */
     "code-scanning-alert-create-request": boolean;
+    /** @description The list of users to assign to the code scanning alert. An empty array unassigns all previous assignees from the alert. */
+    "code-scanning-alert-assignees": string[];
+    /**
+     * @description State of a code scanning alert instance.
+     * @enum {string|null}
+     */
+    "code-scanning-alert-instance-state": "open" | "fixed" | null;
+    "code-scanning-alert-instance-list": {
+      ref?: components["schemas"]["code-scanning-ref"];
+      analysis_key?: components["schemas"]["code-scanning-analysis-analysis-key"];
+      environment?: components["schemas"]["code-scanning-alert-environment"];
+      category?: components["schemas"]["code-scanning-analysis-category"];
+      state?: components["schemas"]["code-scanning-alert-instance-state"];
+      commit_sha?: string;
+      message?: {
+        text?: string;
+      };
+      location?: components["schemas"]["code-scanning-alert-location"];
+      html_url?: string;
+      /**
+       * @description Classifications that have been applied to the file that triggered the alert.
+       * For example identifying it as documentation, or a generated file.
+       */
+      classifications?: components["schemas"]["code-scanning-alert-classification"][];
+    };
     /**
      * @description An identifier for the upload.
      * @example 6c81cd8e-b078-4ac3-a3be-1dad7dbd0b53
@@ -23080,6 +23349,36 @@ export interface components {
       reactions?: components["schemas"]["reaction-rollup"];
     };
     /**
+     * Reaction
+     * @description Reactions to conversations provide a way to help people express their feelings more simply and effectively.
+     */
+    reaction: {
+      /** @example 1 */
+      id: number;
+      /** @example MDg6UmVhY3Rpb24x */
+      node_id: string;
+      user: components["schemas"]["nullable-simple-user"];
+      /**
+       * @description The reaction to use
+       * @example heart
+       * @enum {string}
+       */
+      content:
+        | "+1"
+        | "-1"
+        | "laugh"
+        | "confused"
+        | "heart"
+        | "hooray"
+        | "rocket"
+        | "eyes";
+      /**
+       * Format: date-time
+       * @example 2016-05-20T20:09:31Z
+       */
+      created_at: string;
+    };
+    /**
      * Branch Short
      * @description Branch Short
      */
@@ -23090,147 +23389,6 @@ export interface components {
         url: string;
       };
       protected: boolean;
-    };
-    /**
-     * Pull Request Simple
-     * @description Pull Request Simple
-     */
-    "pull-request-simple": {
-      /**
-       * Format: uri
-       * @example https://api.github.com/repos/octocat/Hello-World/pulls/1347
-       */
-      url: string;
-      /**
-       * Format: int64
-       * @example 1
-       */
-      id: number | bigint;
-      /** @example MDExOlB1bGxSZXF1ZXN0MQ== */
-      node_id: string;
-      /**
-       * Format: uri
-       * @example https://github.com/octocat/Hello-World/pull/1347
-       */
-      html_url: string;
-      /**
-       * Format: uri
-       * @example https://github.com/octocat/Hello-World/pull/1347.diff
-       */
-      diff_url: string;
-      /**
-       * Format: uri
-       * @example https://github.com/octocat/Hello-World/pull/1347.patch
-       */
-      patch_url: string;
-      /**
-       * Format: uri
-       * @example https://api.github.com/repos/octocat/Hello-World/issues/1347
-       */
-      issue_url: string;
-      /**
-       * Format: uri
-       * @example https://api.github.com/repos/octocat/Hello-World/pulls/1347/commits
-       */
-      commits_url: string;
-      /**
-       * Format: uri
-       * @example https://api.github.com/repos/octocat/Hello-World/pulls/1347/comments
-       */
-      review_comments_url: string;
-      /** @example https://api.github.com/repos/octocat/Hello-World/pulls/comments{/number} */
-      review_comment_url: string;
-      /**
-       * Format: uri
-       * @example https://api.github.com/repos/octocat/Hello-World/issues/1347/comments
-       */
-      comments_url: string;
-      /**
-       * Format: uri
-       * @example https://api.github.com/repos/octocat/Hello-World/statuses/6dcb09b5b57875f334f61aebed695e2e4193db5e
-       */
-      statuses_url: string;
-      /** @example 1347 */
-      number: number;
-      /** @example open */
-      state: string;
-      /** @example true */
-      locked: boolean;
-      /** @example new-feature */
-      title: string;
-      user: components["schemas"]["nullable-simple-user"];
-      /** @example Please pull these awesome changes */
-      body: string | null;
-      labels: {
-        /** Format: int64 */
-        id: number | bigint;
-        node_id: string;
-        url: string;
-        name: string;
-        description: string;
-        color: string;
-        default: boolean;
-      }[];
-      milestone: components["schemas"]["nullable-milestone"];
-      /** @example too heated */
-      active_lock_reason?: string | null;
-      /**
-       * Format: date-time
-       * @example 2011-01-26T19:01:12Z
-       */
-      created_at: string;
-      /**
-       * Format: date-time
-       * @example 2011-01-26T19:01:12Z
-       */
-      updated_at: string;
-      /**
-       * Format: date-time
-       * @example 2011-01-26T19:01:12Z
-       */
-      closed_at: string | null;
-      /**
-       * Format: date-time
-       * @example 2011-01-26T19:01:12Z
-       */
-      merged_at: string | null;
-      /** @example e5bd3914e2e596debea16f433f57875b5b90bcd6 */
-      merge_commit_sha: string | null;
-      assignee: components["schemas"]["nullable-simple-user"];
-      assignees?: components["schemas"]["simple-user"][] | null;
-      requested_reviewers?: components["schemas"]["simple-user"][] | null;
-      requested_teams?: components["schemas"]["team"][] | null;
-      head: {
-        label: string;
-        ref: string;
-        repo: components["schemas"]["repository"];
-        sha: string;
-        user: components["schemas"]["nullable-simple-user"];
-      };
-      base: {
-        label: string;
-        ref: string;
-        repo: components["schemas"]["repository"];
-        sha: string;
-        user: components["schemas"]["nullable-simple-user"];
-      };
-      _links: {
-        comments: components["schemas"]["link"];
-        commits: components["schemas"]["link"];
-        statuses: components["schemas"]["link"];
-        html: components["schemas"]["link"];
-        issue: components["schemas"]["link"];
-        review_comments: components["schemas"]["link"];
-        review_comment: components["schemas"]["link"];
-        self: components["schemas"]["link"];
-      };
-      author_association: components["schemas"]["author-association"];
-      auto_merge: components["schemas"]["auto-merge"];
-      /**
-       * @description Indicates whether or not the pull request is a draft.
-       * @example false
-       */
-      draft?: boolean;
     };
     /** Simple Commit Status */
     "simple-commit-status": {
@@ -23908,7 +24066,7 @@ export interface components {
         html_url?: string;
       };
       /**
-       * @description The commit SHA associated with this dependency snapshot. Maximum length: 40 characters.
+       * @description The commit SHA associated with this dependency snapshot. Maximum length: 64 characters.
        * @example ddc951f4b1293222421f2c8df679786153acf689
        */
       sha: string;
@@ -24032,102 +24190,6 @@ export interface components {
        */
       log_url?: string;
       performed_via_github_app?: components["schemas"]["nullable-integration"];
-    };
-    /**
-     * Dependabot alert dismissal request
-     * @description Alert dismissal request made by a user asking to dismiss a Dependabot alert.
-     */
-    "dependabot-alert-dismissal-request": {
-      /**
-       * Format: int64
-       * @description The unique identifier of the dismissal request.
-       */
-      id?: number | bigint;
-      /**
-       * Format: int64
-       * @description The number uniquely identifying the dismissal request within its repository.
-       */
-      number?: number | bigint;
-      /** @description The repository the dismissal request is for. */
-      repository?: {
-        /**
-         * Format: int64
-         * @description The ID of the repository the dismissal request is for.
-         */
-        id?: number | bigint;
-        /** @description The name of the repository the dismissal request is for. */
-        name?: string;
-        /** @description The full name of the repository the dismissal request is for. */
-        full_name?: string;
-      };
-      /** @description The organization associated with the repository the dismissal request is for. */
-      organization?: {
-        /**
-         * Format: int64
-         * @description The ID of the organization.
-         */
-        id?: number | bigint;
-        /** @description The name of the organization. */
-        name?: string;
-      };
-      /** @description The user who requested the dismissal request. */
-      requester?: {
-        /**
-         * Format: int64
-         * @description The ID of the GitHub user who requested the dismissal request.
-         */
-        actor_id?: number | bigint;
-        /** @description The name of the GitHub user who requested the dismissal request. */
-        actor_name?: string;
-      };
-      /** @description The type of request. */
-      request_type?: string;
-      /** @description Data describing the dismissal request metadata. */
-      data?:
-        | {
-            /** @description The reason for the dismissal request. */
-            reason?: string;
-            /** @description The alert number. */
-            alert_number?: string;
-            /** @description The title of the alert. */
-            alert_title?: string;
-          }[]
-        | null;
-      /**
-       * @description The unique identifier for the request type of the dismissal request.
-       * @example 123
-       */
-      resource_identifier?: string;
-      /**
-       * @description The status of the dismissal request.
-       * @enum {string}
-       */
-      status?: "pending" | "denied" | "approved" | "expired";
-      /** @description The comment the requester provided when creating the dismissal request. */
-      requester_comment?: string | null;
-      /**
-       * Format: date-time
-       * @description The date and time the dismissal request will expire.
-       */
-      expires_at?: string;
-      /**
-       * Format: date-time
-       * @description The date and time the dismissal request was created.
-       */
-      created_at?: string;
-      /** @description The responses to the dismissal request. */
-      responses?: components["schemas"]["dismissal-request-response"][] | null;
-      /**
-       * Format: uri
-       * @example https://api.github.com/repos/octo-org/smile/dismissal-requests/dependabot/1
-       */
-      url?: string;
-      /**
-       * Format: uri
-       * @description The URL to view the dismissal request in a browser.
-       * @example https://github.com/octo-org/smile/security/dependabot/1
-       */
-      html_url?: string;
     };
     /**
      * @description The amount of time to delay a job after the job is initially triggered. The time (in minutes) must be an integer between 0 and 43,200 (30 days).
@@ -24708,7 +24770,7 @@ export interface components {
         ]
       >[];
       assignee: components["schemas"]["nullable-simple-user"];
-      assignees?: components["schemas"]["simple-user"][] | null;
+      assignees?: components["schemas"]["simple-user"][];
       milestone: components["schemas"]["nullable-milestone"];
       locked: boolean;
       active_lock_reason?: string | null;
@@ -24748,6 +24810,7 @@ export interface components {
        * @description URL to get the parent issue of this issue, if it is a sub-issue
        */
       parent_issue_url?: string | null;
+      pinned_comment?: components["schemas"]["nullable-issue-comment"];
       issue_dependencies_summary?: components["schemas"]["issue-dependencies-summary"];
       issue_field_values?: components["schemas"]["issue-field-value"][];
     } | null;
@@ -24796,6 +24859,72 @@ export interface components {
       to: string;
     };
     /**
+     * Issue Type
+     * @description The type of issue.
+     */
+    "issue-type-webhook": {
+      /** @description The unique identifier of the issue type. */
+      id: number;
+      /** @description The name of the issue type. */
+      name: string;
+      /**
+       * @description The color of the issue type.
+       * @enum {string|null}
+       */
+      color?:
+        | "gray"
+        | "blue"
+        | "green"
+        | "yellow"
+        | "orange"
+        | "red"
+        | "pink"
+        | "purple"
+        | null;
+    } | null;
+    /**
+     * Issue Reference
+     * @description A minimal reference to an issue linked from a timeline event (e.g. sub-issue, parent-issue, or dependency events).
+     */
+    "nullable-issue-reference": {
+      /** @description The number of the referenced issue. */
+      number: number;
+      /** @description The title of the referenced issue. */
+      title: string;
+      /** @description The state of the referenced issue. */
+      state: string;
+      /** @description The reason for the referenced issue's state. */
+      state_reason?: string | null;
+      repository: components["schemas"]["simple-repository"];
+      /**
+       * Issue Type
+       * @description The type of the referenced issue.
+       */
+      issue_type: {
+        /** @description The unique identifier of the issue type. */
+        id: number;
+        /** @description The node identifier of the issue type. */
+        node_id: string;
+        /** @description The name of the issue type. */
+        name: string;
+        /** @description The color of the issue type. */
+        color?: string | null;
+      } | null;
+    } | null;
+    /**
+     * Issue Event Intent
+     * @description The intent behind an agent's action on an issue, including the rationale and confidence. Present (and `null` when the event carried no agent intent) on supported event types while the issue suggestions feature is enabled for the repository; the property is omitted entirely when the feature is disabled or the event type does not support intent.
+     */
+    "nullable-issue-event-intent": {
+      /** @description The reasoning the agent provided for the change. */
+      rationale?: string | null;
+      /**
+       * @description The confidence level the agent had when performing this action.
+       * @enum {string|null}
+       */
+      confidence?: "LOW" | "MEDIUM" | "HIGH" | null;
+    } | null;
+    /**
      * Issue Event
      * @description Issue Event
      */
@@ -24835,6 +24964,13 @@ export interface components {
       milestone?: components["schemas"]["issue-event-milestone"];
       project_card?: components["schemas"]["issue-event-project-card"];
       rename?: components["schemas"]["issue-event-rename"];
+      issue_type?: components["schemas"]["issue-type-webhook"];
+      prev_issue_type?: components["schemas"]["issue-type-webhook"];
+      sub_issue?: components["schemas"]["nullable-issue-reference"];
+      parent_issue?: components["schemas"]["nullable-issue-reference"];
+      blocked_by?: components["schemas"]["nullable-issue-reference"];
+      blocking?: components["schemas"]["nullable-issue-reference"];
+      intent?: components["schemas"]["nullable-issue-event-intent"];
       author_association?: components["schemas"]["author-association"];
       lock_reason?: string | null;
       performed_via_github_app?: components["schemas"]["nullable-integration"];
@@ -24857,6 +24993,7 @@ export interface components {
         name: string;
         color: string;
       };
+      intent?: components["schemas"]["nullable-issue-event-intent"];
     };
     /**
      * Unlabeled Issue Event
@@ -24876,6 +25013,7 @@ export interface components {
         name: string;
         color: string;
       };
+      intent?: components["schemas"]["nullable-issue-event-intent"];
     };
     /**
      * Assigned Issue Event
@@ -24893,6 +25031,7 @@ export interface components {
       performed_via_github_app: components["schemas"]["integration"];
       assignee: components["schemas"]["simple-user"];
       assigner: components["schemas"]["simple-user"];
+      intent?: components["schemas"]["nullable-issue-event-intent"];
     };
     /**
      * Unassigned Issue Event
@@ -25141,6 +25280,186 @@ export interface components {
       };
     };
     /**
+     * Issue Type Added Issue Event
+     * @description Issue Type Added Issue Event
+     */
+    "issue-type-added-issue-event": {
+      id: number;
+      node_id: string;
+      url: string;
+      actor: components["schemas"]["simple-user"];
+      event: string;
+      commit_id: string | null;
+      commit_url: string | null;
+      created_at: string;
+      performed_via_github_app: components["schemas"]["nullable-integration"];
+      issue_type: components["schemas"]["issue-type-webhook"];
+      intent?: components["schemas"]["nullable-issue-event-intent"];
+    };
+    /**
+     * Issue Type Removed Issue Event
+     * @description Issue Type Removed Issue Event
+     */
+    "issue-type-removed-issue-event": {
+      id: number;
+      node_id: string;
+      url: string;
+      actor: components["schemas"]["simple-user"];
+      event: string;
+      commit_id: string | null;
+      commit_url: string | null;
+      created_at: string;
+      performed_via_github_app: components["schemas"]["nullable-integration"];
+      prev_issue_type: components["schemas"]["issue-type-webhook"];
+      intent?: components["schemas"]["nullable-issue-event-intent"];
+    };
+    /**
+     * Issue Type Changed Issue Event
+     * @description Issue Type Changed Issue Event
+     */
+    "issue-type-changed-issue-event": {
+      id: number;
+      node_id: string;
+      url: string;
+      actor: components["schemas"]["simple-user"];
+      event: string;
+      commit_id: string | null;
+      commit_url: string | null;
+      created_at: string;
+      performed_via_github_app: components["schemas"]["nullable-integration"];
+      issue_type: components["schemas"]["issue-type-webhook"];
+      prev_issue_type: components["schemas"]["issue-type-webhook"];
+      intent?: components["schemas"]["nullable-issue-event-intent"];
+    };
+    /**
+     * Sub-issue Added Issue Event
+     * @description Sub-issue Added Issue Event
+     */
+    "sub-issue-added-issue-event": {
+      id: number;
+      node_id: string;
+      url: string;
+      actor: components["schemas"]["simple-user"];
+      event: string;
+      commit_id: string | null;
+      commit_url: string | null;
+      created_at: string;
+      performed_via_github_app: components["schemas"]["nullable-integration"];
+      sub_issue: components["schemas"]["nullable-issue-reference"];
+    };
+    /**
+     * Sub-issue Removed Issue Event
+     * @description Sub-issue Removed Issue Event
+     */
+    "sub-issue-removed-issue-event": {
+      id: number;
+      node_id: string;
+      url: string;
+      actor: components["schemas"]["simple-user"];
+      event: string;
+      commit_id: string | null;
+      commit_url: string | null;
+      created_at: string;
+      performed_via_github_app: components["schemas"]["nullable-integration"];
+      sub_issue: components["schemas"]["nullable-issue-reference"];
+    };
+    /**
+     * Parent-issue Added Issue Event
+     * @description Parent-issue Added Issue Event
+     */
+    "parent-issue-added-issue-event": {
+      id: number;
+      node_id: string;
+      url: string;
+      actor: components["schemas"]["simple-user"];
+      event: string;
+      commit_id: string | null;
+      commit_url: string | null;
+      created_at: string;
+      performed_via_github_app: components["schemas"]["nullable-integration"];
+      parent_issue: components["schemas"]["nullable-issue-reference"];
+    };
+    /**
+     * Parent-issue Removed Issue Event
+     * @description Parent-issue Removed Issue Event
+     */
+    "parent-issue-removed-issue-event": {
+      id: number;
+      node_id: string;
+      url: string;
+      actor: components["schemas"]["simple-user"];
+      event: string;
+      commit_id: string | null;
+      commit_url: string | null;
+      created_at: string;
+      performed_via_github_app: components["schemas"]["nullable-integration"];
+      parent_issue: components["schemas"]["nullable-issue-reference"];
+    };
+    /**
+     * Blocked-by Added Issue Event
+     * @description Blocked-by Added Issue Event
+     */
+    "blocked-by-added-issue-event": {
+      id: number;
+      node_id: string;
+      url: string;
+      actor: components["schemas"]["simple-user"];
+      event: string;
+      commit_id: string | null;
+      commit_url: string | null;
+      created_at: string;
+      performed_via_github_app: components["schemas"]["nullable-integration"];
+      blocked_by: components["schemas"]["nullable-issue-reference"];
+    };
+    /**
+     * Blocked-by Removed Issue Event
+     * @description Blocked-by Removed Issue Event
+     */
+    "blocked-by-removed-issue-event": {
+      id: number;
+      node_id: string;
+      url: string;
+      actor: components["schemas"]["simple-user"];
+      event: string;
+      commit_id: string | null;
+      commit_url: string | null;
+      created_at: string;
+      performed_via_github_app: components["schemas"]["nullable-integration"];
+      blocked_by: components["schemas"]["nullable-issue-reference"];
+    };
+    /**
+     * Blocking Added Issue Event
+     * @description Blocking Added Issue Event
+     */
+    "blocking-added-issue-event": {
+      id: number;
+      node_id: string;
+      url: string;
+      actor: components["schemas"]["simple-user"];
+      event: string;
+      commit_id: string | null;
+      commit_url: string | null;
+      created_at: string;
+      performed_via_github_app: components["schemas"]["nullable-integration"];
+      blocking: components["schemas"]["nullable-issue-reference"];
+    };
+    /**
+     * Blocking Removed Issue Event
+     * @description Blocking Removed Issue Event
+     */
+    "blocking-removed-issue-event": {
+      id: number;
+      node_id: string;
+      url: string;
+      actor: components["schemas"]["simple-user"];
+      event: string;
+      commit_id: string | null;
+      commit_url: string | null;
+      created_at: string;
+      performed_via_github_app: components["schemas"]["nullable-integration"];
+      blocking: components["schemas"]["nullable-issue-reference"];
+    };
+    /**
      * Issue Event for Issue
      * @description Issue Event for Issue
      */
@@ -25159,7 +25478,18 @@ export interface components {
       | components["schemas"]["added-to-project-issue-event"]
       | components["schemas"]["moved-column-in-project-issue-event"]
       | components["schemas"]["removed-from-project-issue-event"]
-      | components["schemas"]["converted-note-to-issue-issue-event"];
+      | components["schemas"]["converted-note-to-issue-issue-event"]
+      | components["schemas"]["issue-type-added-issue-event"]
+      | components["schemas"]["issue-type-removed-issue-event"]
+      | components["schemas"]["issue-type-changed-issue-event"]
+      | components["schemas"]["sub-issue-added-issue-event"]
+      | components["schemas"]["sub-issue-removed-issue-event"]
+      | components["schemas"]["parent-issue-added-issue-event"]
+      | components["schemas"]["parent-issue-removed-issue-event"]
+      | components["schemas"]["blocked-by-added-issue-event"]
+      | components["schemas"]["blocked-by-removed-issue-event"]
+      | components["schemas"]["blocking-added-issue-event"]
+      | components["schemas"]["blocking-removed-issue-event"];
     /**
      * Timeline Comment Event
      * @description Timeline Comment Event
@@ -25204,6 +25534,8 @@ export interface components {
       author_association: components["schemas"]["author-association"];
       performed_via_github_app?: components["schemas"]["nullable-integration"];
       reactions?: components["schemas"]["reaction-rollup"];
+      pin?: components["schemas"]["nullable-pinned-issue-comment"];
+      minimized?: components["schemas"]["nullable-issue-comment-minimized"];
     };
     /**
      * Timeline Cross Referenced Event
@@ -25422,7 +25754,7 @@ export interface components {
        * @example 8
        */
       in_reply_to_id?: number;
-      user: components["schemas"]["simple-user"];
+      user: components["schemas"]["nullable-simple-user"];
       /**
        * @description The text of the comment.
        * @example We should probably include a check for null values here.
@@ -25551,6 +25883,7 @@ export interface components {
       created_at: string;
       performed_via_github_app: components["schemas"]["nullable-integration"];
       assignee: components["schemas"]["simple-user"];
+      intent?: components["schemas"]["nullable-issue-event-intent"];
     };
     /**
      * Timeline Unassigned Issue Event
@@ -25583,6 +25916,7 @@ export interface components {
       created_at: string;
       performed_via_github_app: components["schemas"]["nullable-integration"];
       state_reason?: string | null;
+      intent?: components["schemas"]["nullable-issue-event-intent"];
     };
     /**
      * Timeline Event
@@ -25610,7 +25944,18 @@ export interface components {
       | components["schemas"]["timeline-commit-commented-event"]
       | components["schemas"]["timeline-assigned-issue-event"]
       | components["schemas"]["timeline-unassigned-issue-event"]
-      | components["schemas"]["state-change-issue-event"];
+      | components["schemas"]["state-change-issue-event"]
+      | components["schemas"]["issue-type-added-issue-event"]
+      | components["schemas"]["issue-type-removed-issue-event"]
+      | components["schemas"]["issue-type-changed-issue-event"]
+      | components["schemas"]["sub-issue-added-issue-event"]
+      | components["schemas"]["sub-issue-removed-issue-event"]
+      | components["schemas"]["parent-issue-added-issue-event"]
+      | components["schemas"]["parent-issue-removed-issue-event"]
+      | components["schemas"]["blocked-by-added-issue-event"]
+      | components["schemas"]["blocked-by-removed-issue-event"]
+      | components["schemas"]["blocking-added-issue-event"]
+      | components["schemas"]["blocking-removed-issue-event"];
     /**
      * Deploy Key
      * @description An SSH key granting access to a single repository.
@@ -26164,6 +26509,12 @@ export interface components {
           components["schemas"]["repository-rule-ruleset-info"])
       | (components["schemas"]["repository-rule-tag-name-pattern"] &
           components["schemas"]["repository-rule-ruleset-info"])
+      | (components["schemas"]["repository-rule-workflows"] &
+          components["schemas"]["repository-rule-ruleset-info"])
+      | (components["schemas"]["repository-rule-code-scanning"] &
+          components["schemas"]["repository-rule-ruleset-info"])
+      | (components["schemas"]["repository-rule-copilot-code-review"] &
+          components["schemas"]["repository-rule-ruleset-info"])
       | (components["schemas"]["repository-rule-file-path-restriction"] &
           components["schemas"]["repository-rule-ruleset-info"])
       | (components["schemas"]["repository-rule-max-file-path-length"] &
@@ -26171,14 +26522,70 @@ export interface components {
       | (components["schemas"]["repository-rule-file-extension-restriction"] &
           components["schemas"]["repository-rule-ruleset-info"])
       | (components["schemas"]["repository-rule-max-file-size"] &
-          components["schemas"]["repository-rule-ruleset-info"])
-      | (components["schemas"]["repository-rule-workflows"] &
-          components["schemas"]["repository-rule-ruleset-info"])
-      | (components["schemas"]["repository-rule-code-scanning"] &
-          components["schemas"]["repository-rule-ruleset-info"])
-      | (components["schemas"]["repository-rule-copilot-code-review"] &
           components["schemas"]["repository-rule-ruleset-info"]);
     "secret-scanning-alert": {
+      number?: components["schemas"]["alert-number"];
+      created_at?: components["schemas"]["alert-created-at"];
+      updated_at?: components["schemas"]["nullable-alert-updated-at"];
+      url?: components["schemas"]["alert-url"];
+      html_url?: components["schemas"]["alert-html-url"];
+      /**
+       * Format: uri
+       * @description The REST API URL of the code locations for this alert.
+       */
+      locations_url?: string;
+      state?: components["schemas"]["secret-scanning-alert-state"];
+      resolution?: components["schemas"]["secret-scanning-alert-resolution"];
+      /**
+       * Format: date-time
+       * @description The time that the alert was resolved in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+       */
+      resolved_at?: string | null;
+      resolved_by?: components["schemas"]["nullable-simple-user"];
+      /** @description An optional comment to resolve an alert. */
+      resolution_comment?: string | null;
+      /** @description The type of secret that secret scanning detected. */
+      secret_type?: string;
+      /**
+       * @description User-friendly name for the detected secret, matching the `secret_type`.
+       * For a list of built-in patterns, see "[Supported secret scanning patterns](https://docs.github.com/enterprise-server@3.19/code-security/secret-scanning/introduction/supported-secret-scanning-patterns#supported-secrets)."
+       */
+      secret_type_display_name?: string;
+      /** @description The secret that was detected. */
+      secret?: string;
+      /** @description Whether push protection was bypassed for the detected secret. */
+      push_protection_bypassed?: boolean | null;
+      push_protection_bypassed_by?: components["schemas"]["nullable-simple-user"];
+      /**
+       * Format: date-time
+       * @description The time that push protection was bypassed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`.
+       */
+      push_protection_bypassed_at?: string | null;
+      push_protection_bypass_request_reviewer?: components["schemas"]["nullable-simple-user"];
+      /** @description An optional comment when reviewing a push protection bypass. */
+      push_protection_bypass_request_reviewer_comment?: string | null;
+      /** @description An optional comment when requesting a push protection bypass. */
+      push_protection_bypass_request_comment?: string | null;
+      /**
+       * Format: uri
+       * @description The URL to a push protection bypass request.
+       */
+      push_protection_bypass_request_html_url?: string | null;
+      /**
+       * @description The token status as of the latest validity check.
+       * @enum {string}
+       */
+      validity?: "active" | "inactive" | "unknown";
+      /** @description Whether the detected secret was found in multiple repositories under the same organization or enterprise. */
+      multi_repo?: boolean | null;
+      /** @description A boolean value representing whether or not alert is base64 encoded */
+      is_base64_encoded?: boolean | null;
+      first_location_detected?: components["schemas"]["nullable-secret-scanning-first-detected-location"];
+      /** @description A boolean value representing whether or not the token in the alert was detected in more than one location. */
+      has_more_locations?: boolean;
+      assigned_to?: components["schemas"]["nullable-simple-user"];
+    };
+    "secret-scanning-alert-with-metadata": {
       number?: components["schemas"]["alert-number"];
       created_at?: components["schemas"]["alert-created-at"];
       updated_at?: components["schemas"]["nullable-alert-updated-at"];
@@ -26299,7 +26706,7 @@ export interface components {
     "secret-scanning-scan": {
       /** @description The type of scan */
       type?: string;
-      /** @description The state of the scan. Either "completed", "running", or "pending" */
+      /** @description 'The state of the scan. Either "completed", "running", or "pending"' */
       status?: string;
       /**
        * Format: date-time
@@ -26985,6 +27392,7 @@ export interface components {
       timeline_url?: string;
       type?: components["schemas"]["issue-type"];
       performed_via_github_app?: components["schemas"]["nullable-integration"];
+      pinned_comment?: components["schemas"]["nullable-issue-comment"];
       reactions?: components["schemas"]["reaction-rollup"];
     };
     /**
@@ -27103,6 +27511,12 @@ export interface components {
       has_wiki: boolean;
       has_downloads: boolean;
       has_discussions?: boolean;
+      has_pull_requests?: boolean;
+      /**
+       * @description The policy controlling who can create pull requests: all or collaborators_only.
+       * @enum {string}
+       */
+      pull_request_creation_policy?: "all" | "collaborators_only";
       archived: boolean;
       /** @description Returns whether or not this repository disabled. */
       disabled: boolean;
@@ -27876,6 +28290,17 @@ export interface components {
        */
       has_discussions?: boolean;
       /**
+       * @description Whether pull requests are enabled.
+       * @default true
+       * @example true
+       */
+      has_pull_requests?: boolean;
+      /**
+       * @description The policy controlling who can create pull requests: all or collaborators_only.
+       * @enum {string}
+       */
+      pull_request_creation_policy?: "all" | "collaborators_only";
+      /**
        * @description Whether the repository is archived.
        * @default false
        */
@@ -28303,6 +28728,22 @@ export interface components {
       }[];
     };
     /**
+     * License compliance alert closure request data
+     * @description License compliance alerts that have closure requests.
+     */
+    "dismissal-request-license-compliance": {
+      /**
+       * @description The type of request
+       * @enum {string}
+       */
+      type?: "license_compliance_dismissal";
+      /** @description The data related to the License compliance alerts that have closure requests. */
+      data?: {
+        /** @description The number of the alert to be closed */
+        alert_number?: string;
+      }[];
+    };
+    /**
      * Secret Scanning Push Protection Exemption Request Metadata
      * @description Metadata for a secret scanning push protection exemption request.
      */
@@ -28360,6 +28801,19 @@ export interface components {
         | "tolerable_risk";
     };
     /**
+     * License compliance alert closure request metadata
+     * @description Metadata for a License compliance alert closure request.
+     */
+    "dismissal-request-license-compliance-metadata": {
+      /** @description The title of the License compliance alert */
+      alert_title?: string;
+      /**
+       * @description The reason for the closure request
+       * @enum {string}
+       */
+      reason?: "amendment" | "private package" | "inaccurate license";
+    };
+    /**
      * Exemption response
      * @description A response to an exemption request by a delegated bypasser.
      */
@@ -28407,13 +28861,15 @@ export interface components {
         | "secret_scanning"
         | "secret_scanning_closure"
         | "code_scanning_alert_dismissal"
-        | "dependabot_alert_dismissal";
+        | "dependabot_alert_dismissal"
+        | "license_compliance_dismissal";
       exemption_request_data?:
         | components["schemas"]["exemption-request-push-ruleset-bypass"]
         | components["schemas"]["exemption-request-secret-scanning"]
         | components["schemas"]["dismissal-request-secret-scanning"]
         | components["schemas"]["dismissal-request-code-scanning"]
-        | components["schemas"]["dismissal-request-dependabot"];
+        | components["schemas"]["dismissal-request-dependabot"]
+        | components["schemas"]["dismissal-request-license-compliance"];
       /**
        * @description The unique identifier for the request type of the exemption request. For example, a commit SHA.
        * @example 827efc6d56897b048c772eb4087f854f46256132
@@ -28433,6 +28889,7 @@ export interface components {
             | components["schemas"]["dismissal-request-secret-scanning-metadata"]
             | components["schemas"]["dismissal-request-code-scanning-metadata"]
             | components["schemas"]["dismissal-request-dependabot-metadata"]
+            | components["schemas"]["dismissal-request-license-compliance-metadata"]
           )
         | null;
       /**
@@ -28616,6 +29073,86 @@ export interface components {
       updated_at: string;
       /** Format: uri */
       url: string;
+    } | null;
+    /**
+     * Deployment
+     * @description A request for a specific ref(branch,sha,tag) to be deployed
+     */
+    "nullable-deployment": {
+      /**
+       * Format: uri
+       * @example https://api.github.com/repos/octocat/example/deployments/1
+       */
+      url: string;
+      /**
+       * Format: int64
+       * @description Unique identifier of the deployment
+       * @example 42
+       */
+      id: number | bigint;
+      /** @example MDEwOkRlcGxveW1lbnQx */
+      node_id: string;
+      /** @example a84d88e7554fc1fa21bcbc4efae3c782a70d2b9d */
+      sha: string;
+      /**
+       * @description The ref to deploy. This can be a branch, tag, or sha.
+       * @example topic-branch
+       */
+      ref: string;
+      /**
+       * @description Parameter to specify a task to execute
+       * @example deploy
+       */
+      task: string;
+      payload: OneOf<
+        [
+          {
+            [key: string]: unknown;
+          },
+          string,
+        ]
+      >;
+      /** @example staging */
+      original_environment?: string;
+      /**
+       * @description Name for the target deployment environment.
+       * @example production
+       */
+      environment: string;
+      /** @example Deploy request from hubot */
+      description: string | null;
+      creator: components["schemas"]["nullable-simple-user"];
+      /**
+       * Format: date-time
+       * @example 2012-07-20T01:19:13Z
+       */
+      created_at: string;
+      /**
+       * Format: date-time
+       * @example 2012-07-20T01:19:13Z
+       */
+      updated_at: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/repos/octocat/example/deployments/1/statuses
+       */
+      statuses_url: string;
+      /**
+       * Format: uri
+       * @example https://api.github.com/repos/octocat/example
+       */
+      repository_url: string;
+      /**
+       * @description Specifies if the given environment is will no longer exist at some point in the future. Default: false.
+       * @example true
+       */
+      transient_environment?: boolean;
+      /**
+       * @description Specifies if the given environment is one that end-users directly interact with. Default: false.
+       * @example true
+       */
+      production_environment?: boolean;
+      performed_via_github_app?: components["schemas"]["nullable-integration"];
     } | null;
     webhooks_approver: {
       avatar_url?: string;
@@ -29180,6 +29717,8 @@ export interface components {
         url?: string;
         user_view_type?: string;
       } | null;
+      pin?: components["schemas"]["nullable-pinned-issue-comment"];
+      minimized?: components["schemas"]["nullable-issue-comment-minimized"];
     };
     /** @description The changes to the comment. */
     webhooks_changes: {
@@ -29569,8 +30108,6 @@ export interface components {
           /** @enum {string} */
           statuses?: "read" | "write";
           /** @enum {string} */
-          team_discussions?: "read" | "write";
-          /** @enum {string} */
           vulnerability_alerts?: "read" | "write";
           /** @enum {string} */
           workflows?: "read" | "write";
@@ -29608,6 +30145,7 @@ export interface components {
       };
       /** Format: uri */
       repository_url: string;
+      pinned_comment?: components["schemas"]["nullable-issue-comment"];
       sub_issues_summary?: components["schemas"]["sub-issues-summary"];
       issue_dependencies_summary?: components["schemas"]["issue-dependencies-summary"];
       issue_field_values?: components["schemas"]["issue-field-value"][];
@@ -30120,8 +30658,6 @@ export interface components {
           /** @enum {string} */
           statuses?: "read" | "write";
           /** @enum {string} */
-          team_discussions?: "read" | "write";
-          /** @enum {string} */
           vulnerability_alerts?: "read" | "write";
           /** @enum {string} */
           workflows?: "read" | "write";
@@ -30159,6 +30695,7 @@ export interface components {
       };
       /** Format: uri */
       repository_url: string;
+      pinned_comment?: components["schemas"]["nullable-issue-comment"];
       sub_issues_summary?: components["schemas"]["sub-issues-summary"];
       issue_dependencies_summary?: components["schemas"]["issue-dependencies-summary"];
       issue_field_values?: components["schemas"]["issue-field-value"][];
@@ -30595,6 +31132,17 @@ export interface components {
        * @example true
        */
       has_discussions?: boolean;
+      /**
+       * @description Whether pull requests are enabled.
+       * @default true
+       * @example true
+       */
+      has_pull_requests?: boolean;
+      /**
+       * @description The policy controlling who can create pull requests: all or collaborators_only.
+       * @enum {string}
+       */
+      pull_request_creation_policy?: "all" | "collaborators_only";
       /**
        * @description Whether the repository is archived.
        * @default false
@@ -31766,6 +32314,16 @@ export interface components {
            * @default false
            */
           has_discussions: boolean;
+          /**
+           * @description Whether pull requests are enabled.
+           * @default true
+           */
+          has_pull_requests?: boolean;
+          /**
+           * @description The policy controlling who can create pull requests: all or collaborators_only.
+           * @enum {string}
+           */
+          pull_request_creation_policy?: "all" | "collaborators_only";
           homepage: string | null;
           /** Format: uri */
           hooks_url: string;
@@ -32112,6 +32670,16 @@ export interface components {
            * @default false
            */
           has_discussions: boolean;
+          /**
+           * @description Whether pull requests are enabled.
+           * @default true
+           */
+          has_pull_requests?: boolean;
+          /**
+           * @description The policy controlling who can create pull requests: all or collaborators_only.
+           * @enum {string}
+           */
+          pull_request_creation_policy?: "all" | "collaborators_only";
           homepage: string | null;
           /** Format: uri */
           hooks_url: string;
@@ -32618,6 +33186,7 @@ export interface components {
       review_comments?: number;
       /** Format: uri */
       review_comments_url: string;
+      stack?: components["schemas"]["pull-request-stack"];
       /**
        * @description State of this Pull Request. Either `open` or `closed`.
        * @enum {string}
@@ -33277,7 +33846,7 @@ export interface components {
       number: number;
       severity: string;
       /** @enum {string} */
-      state: "open";
+      state: "auto_dismissed" | "open";
     };
     /**
      * @description The reason for resolving the alert.
@@ -34046,8 +34615,6 @@ export interface components {
             /** @enum {string} */
             statuses?: "read" | "write";
             /** @enum {string} */
-            team_discussions?: "read" | "write";
-            /** @enum {string} */
             vulnerability_alerts?: "read" | "write";
             /** @enum {string} */
             workflows?: "read" | "write";
@@ -34306,6 +34873,8 @@ export interface components {
             /** @enum {string} */
             checks?: "read" | "write";
             /** @enum {string} */
+            code_quality?: "read" | "write";
+            /** @enum {string} */
             content_references?: "read" | "write";
             /** @enum {string} */
             contents?: "read" | "write";
@@ -34315,6 +34884,8 @@ export interface components {
             deployments?: "read" | "write";
             /** @enum {string} */
             discussions?: "read" | "write";
+            /** @enum {string} */
+            drives?: "read" | "write";
             /** @enum {string} */
             emails?: "read" | "write";
             /** @enum {string} */
@@ -34369,8 +34940,6 @@ export interface components {
             single_file?: "read" | "write";
             /** @enum {string} */
             statuses?: "read" | "write";
-            /** @enum {string} */
-            team_discussions?: "read" | "write";
             /** @enum {string} */
             vulnerability_alerts?: "read" | "write";
             /** @enum {string} */
@@ -34618,6 +35187,8 @@ export interface components {
             /** @enum {string} */
             checks?: "read" | "write";
             /** @enum {string} */
+            code_quality?: "read" | "write";
+            /** @enum {string} */
             content_references?: "read" | "write";
             /** @enum {string} */
             contents?: "read" | "write";
@@ -34627,6 +35198,8 @@ export interface components {
             deployments?: "read" | "write";
             /** @enum {string} */
             discussions?: "read" | "write";
+            /** @enum {string} */
+            drives?: "read" | "write";
             /** @enum {string} */
             emails?: "read" | "write";
             /** @enum {string} */
@@ -34681,8 +35254,6 @@ export interface components {
             single_file?: "read" | "write";
             /** @enum {string} */
             statuses?: "read" | "write";
-            /** @enum {string} */
-            team_discussions?: "read" | "write";
             /** @enum {string} */
             vulnerability_alerts?: "read" | "write";
             /** @enum {string} */
@@ -34865,6 +35436,7 @@ export interface components {
           | "false positive"
           | "won't fix"
           | "used in tests"
+          | "mitigated"
           | null;
         /** @description The time that the alert was fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
         fixed_at?: unknown;
@@ -35000,6 +35572,7 @@ export interface components {
           | "false positive"
           | "won't fix"
           | "used in tests"
+          | "mitigated"
           | null;
         /** @description The time that the alert was fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
         fixed_at?: unknown;
@@ -35131,7 +35704,7 @@ export interface components {
         dismissed_at: unknown;
         dismissed_by: unknown;
         dismissed_comment?: components["schemas"]["code-scanning-alert-dismissed-comment"];
-        /** @description The reason for dismissing or closing the alert. Can be one of: `false positive`, `won't fix`, and `used in tests`. */
+        /** @description The reason for dismissing or closing the alert. Can be one of: `false positive`, `won't fix`, `used in tests`, and `mitigated`. */
         dismissed_reason: unknown;
         /** @description The time that the alert was fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
         fixed_at?: unknown;
@@ -35278,6 +35851,7 @@ export interface components {
           | "false positive"
           | "won't fix"
           | "used in tests"
+          | "mitigated"
           | null;
         /** @description The time that the alert was fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
         fixed_at?: unknown;
@@ -35374,7 +35948,7 @@ export interface components {
         dismissed_at: string | null;
         dismissed_by: Record<string, unknown> | null;
         dismissed_comment?: components["schemas"]["code-scanning-alert-dismissed-comment"];
-        /** @description The reason for dismissing or closing the alert. Can be one of: `false positive`, `won't fix`, and `used in tests`. */
+        /** @description The reason for dismissing or closing the alert. Can be one of: `false positive`, `won't fix`, `used in tests`, and `mitigated`. */
         dismissed_reason: string | null;
         /** @description The time that the alert was fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
         fixed_at?: unknown;
@@ -35474,7 +36048,7 @@ export interface components {
         dismissed_at: unknown;
         dismissed_by: unknown;
         dismissed_comment?: components["schemas"]["code-scanning-alert-dismissed-comment"];
-        /** @description The reason for dismissing or closing the alert. Can be one of: `false positive`, `won't fix`, and `used in tests`. */
+        /** @description The reason for dismissing or closing the alert. Can be one of: `false positive`, `won't fix`, `used in tests`, and `mitigated`. */
         dismissed_reason: unknown;
         /** @description The time that the alert was fixed in ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`. */
         fixed_at?: unknown;
@@ -36068,8 +36642,6 @@ export interface components {
             /** @enum {string} */
             statuses?: "read" | "write";
             /** @enum {string} */
-            team_discussions?: "read" | "write";
-            /** @enum {string} */
             vulnerability_alerts?: "read" | "write";
             /** @enum {string} */
             workflows?: "read" | "write";
@@ -36405,12 +36977,16 @@ export interface components {
       environment?: string;
       /** @description The event that triggered the deployment protection rule. */
       event?: string;
+      /** @description The commit SHA that triggered the workflow. Always populated from the check suite, regardless of whether a deployment is created. */
+      sha?: string;
+      /** @description The ref (branch or tag) that triggered the workflow. Always populated from the check suite, regardless of whether a deployment is created. */
+      ref?: string;
       /**
        * Format: uri
        * @description The URL to review the deployment protection rule.
        */
       deployment_callback_url?: string;
-      deployment?: components["schemas"]["deployment"];
+      deployment?: components["schemas"]["nullable-deployment"];
       pull_requests?: components["schemas"]["pull-request"][];
       repository?: components["schemas"]["repository-webhooks"];
       organization?: components["schemas"]["organization-simple-webhooks"];
@@ -37696,8 +38272,6 @@ export interface components {
             /** @enum {string} */
             statuses?: "read" | "write";
             /** @enum {string} */
-            team_discussions?: "read" | "write";
-            /** @enum {string} */
             vulnerability_alerts?: "read" | "write";
             /** @enum {string} */
             workflows?: "read" | "write";
@@ -37946,8 +38520,6 @@ export interface components {
             single_file?: "read" | "write";
             /** @enum {string} */
             statuses?: "read" | "write";
-            /** @enum {string} */
-            team_discussions?: "read" | "write";
             /** @enum {string} */
             vulnerability_alerts?: "read" | "write";
             /** @enum {string} */
@@ -38947,7 +39519,7 @@ export interface components {
       installation: components["schemas"]["installation"];
       organization?: components["schemas"]["organization-simple-webhooks"];
       repositories_added: components["schemas"]["webhooks_repositories_added"];
-      /** @description An array of repository objects, which were removed from the installation. */
+      /** @description An array of repository objects, which were removed from the installation. When `repository_selection` changes from `all` to `selected`, this array is empty. */
       repositories_removed: {
         full_name?: string;
         /** @description Unique identifier of the repository */
@@ -38971,7 +39543,7 @@ export interface components {
       installation: components["schemas"]["installation"];
       organization?: components["schemas"]["organization-simple-webhooks"];
       repositories_added: components["schemas"]["webhooks_repositories_added"];
-      /** @description An array of repository objects, which were removed from the installation. */
+      /** @description An array of repository objects, which were removed from the installation. When `repository_selection` changes from `all` to `selected`, this array is empty. */
       repositories_removed: {
         full_name: string;
         /** @description Unique identifier of the repository */
@@ -39127,6 +39699,8 @@ export interface components {
          * @description URL for the issue comment
          */
         url: string;
+        pin?: components["schemas"]["nullable-pinned-issue-comment"];
+        minimized?: components["schemas"]["nullable-issue-comment-minimized"];
         /** User */
         user: {
           /** Format: uri */
@@ -39546,8 +40120,6 @@ export interface components {
             single_file?: "read" | "write";
             /** @enum {string} */
             statuses?: "read" | "write";
-            /** @enum {string} */
-            team_discussions?: "read" | "write";
             /** @enum {string} */
             vulnerability_alerts?: "read" | "write";
             /** @enum {string} */
@@ -40146,8 +40718,6 @@ export interface components {
             single_file?: "read" | "write";
             /** @enum {string} */
             statuses?: "read" | "write";
-            /** @enum {string} */
-            team_discussions?: "read" | "write";
             /** @enum {string} */
             vulnerability_alerts?: "read" | "write";
             /** @enum {string} */
@@ -40750,8 +41320,6 @@ export interface components {
             single_file?: "read" | "write";
             /** @enum {string} */
             statuses?: "read" | "write";
-            /** @enum {string} */
-            team_discussions?: "read" | "write";
             /** @enum {string} */
             vulnerability_alerts?: "read" | "write";
             /** @enum {string} */
@@ -41435,8 +42003,6 @@ export interface components {
             /** @enum {string} */
             statuses?: "read" | "write";
             /** @enum {string} */
-            team_discussions?: "read" | "write";
-            /** @enum {string} */
             vulnerability_alerts?: "read" | "write";
             /** @enum {string} */
             workflows?: "read" | "write";
@@ -41474,6 +42040,7 @@ export interface components {
         };
         /** Format: uri */
         repository_url: string;
+        pinned_comment?: components["schemas"]["nullable-issue-comment"];
         sub_issues_summary?: components["schemas"]["sub-issues-summary"];
         issue_dependencies_summary?: components["schemas"]["issue-dependencies-summary"];
         issue_field_values?: components["schemas"]["issue-field-value"][];
@@ -41986,8 +42553,6 @@ export interface components {
             /** @enum {string} */
             statuses?: "read" | "write";
             /** @enum {string} */
-            team_discussions?: "read" | "write";
-            /** @enum {string} */
             vulnerability_alerts?: "read" | "write";
             /** @enum {string} */
             workflows?: "read" | "write";
@@ -42025,6 +42590,7 @@ export interface components {
         };
         /** Format: uri */
         repository_url: string;
+        pinned_comment?: components["schemas"]["nullable-issue-comment"];
         sub_issues_summary?: components["schemas"]["sub-issues-summary"];
         issue_dependencies_summary?: components["schemas"]["issue-dependencies-summary"];
         issue_field_values?: components["schemas"]["issue-field-value"][];
@@ -42473,8 +43039,6 @@ export interface components {
             /** @enum {string} */
             statuses?: "read" | "write";
             /** @enum {string} */
-            team_discussions?: "read" | "write";
-            /** @enum {string} */
             vulnerability_alerts?: "read" | "write";
             /** @enum {string} */
             workflows?: "read" | "write";
@@ -42512,6 +43076,7 @@ export interface components {
         };
         /** Format: uri */
         repository_url: string;
+        pinned_comment?: components["schemas"]["nullable-issue-comment"];
         sub_issues_summary?: components["schemas"]["sub-issues-summary"];
         issue_dependencies_summary?: components["schemas"]["issue-dependencies-summary"];
         issue_field_values?: components["schemas"]["issue-field-value"][];
@@ -42976,8 +43541,6 @@ export interface components {
             /** @enum {string} */
             statuses?: "read" | "write";
             /** @enum {string} */
-            team_discussions?: "read" | "write";
-            /** @enum {string} */
             vulnerability_alerts?: "read" | "write";
             /** @enum {string} */
             workflows?: "read" | "write";
@@ -43015,6 +43578,7 @@ export interface components {
         };
         /** Format: uri */
         repository_url: string;
+        pinned_comment?: components["schemas"]["nullable-issue-comment"];
         sub_issues_summary?: components["schemas"]["sub-issues-summary"];
         issue_dependencies_summary?: components["schemas"]["issue-dependencies-summary"];
         issue_field_values?: components["schemas"]["issue-field-value"][];
@@ -43467,8 +44031,6 @@ export interface components {
             /** @enum {string} */
             statuses?: "read" | "write";
             /** @enum {string} */
-            team_discussions?: "read" | "write";
-            /** @enum {string} */
             vulnerability_alerts?: "read" | "write";
             /** @enum {string} */
             workflows?: "read" | "write";
@@ -43506,6 +44068,7 @@ export interface components {
         };
         /** Format: uri */
         repository_url: string;
+        pinned_comment?: components["schemas"]["nullable-issue-comment"];
         sub_issues_summary?: components["schemas"]["sub-issues-summary"];
         issue_dependencies_summary?: components["schemas"]["issue-dependencies-summary"];
         issue_field_values?: components["schemas"]["issue-field-value"][];
@@ -43960,8 +44523,6 @@ export interface components {
             /** @enum {string} */
             statuses?: "read" | "write";
             /** @enum {string} */
-            team_discussions?: "read" | "write";
-            /** @enum {string} */
             vulnerability_alerts?: "read" | "write";
             /** @enum {string} */
             workflows?: "read" | "write";
@@ -43999,6 +44560,7 @@ export interface components {
         };
         /** Format: uri */
         repository_url: string;
+        pinned_comment?: components["schemas"]["nullable-issue-comment"];
         sub_issues_summary?: components["schemas"]["sub-issues-summary"];
         issue_dependencies_summary?: components["schemas"]["issue-dependencies-summary"];
         issue_field_values?: components["schemas"]["issue-field-value"][];
@@ -44448,8 +45010,6 @@ export interface components {
             /** @enum {string} */
             statuses?: "read" | "write";
             /** @enum {string} */
-            team_discussions?: "read" | "write";
-            /** @enum {string} */
             vulnerability_alerts?: "read" | "write";
             /** @enum {string} */
             workflows?: "read" | "write";
@@ -44487,6 +45047,7 @@ export interface components {
         };
         /** Format: uri */
         repository_url: string;
+        pinned_comment?: components["schemas"]["nullable-issue-comment"];
         sub_issues_summary?: components["schemas"]["sub-issues-summary"];
         issue_dependencies_summary?: components["schemas"]["issue-dependencies-summary"];
         issue_field_values?: components["schemas"]["issue-field-value"][];
@@ -44937,8 +45498,6 @@ export interface components {
               /** @enum {string} */
               statuses?: "read" | "write";
               /** @enum {string} */
-              team_discussions?: "read" | "write";
-              /** @enum {string} */
               vulnerability_alerts?: "read" | "write";
               /** @enum {string} */
               workflows?: "read" | "write";
@@ -44996,6 +45555,7 @@ export interface components {
            * @description URL for the issue
            */
           url?: string;
+          pinned_comment?: components["schemas"]["nullable-issue-comment"];
           /** User */
           user?: {
             /** Format: uri */
@@ -45129,6 +45689,16 @@ export interface components {
           git_url: string;
           /** @description Whether the repository has discussions enabled. */
           has_discussions?: boolean;
+          /**
+           * @description Whether pull requests are enabled.
+           * @default true
+           */
+          has_pull_requests?: boolean;
+          /**
+           * @description The policy controlling who can create pull requests: all or collaborators_only.
+           * @enum {string}
+           */
+          pull_request_creation_policy?: "all" | "collaborators_only";
           /**
            * @description Whether downloads are enabled.
            * @default true
@@ -45669,8 +46239,6 @@ export interface components {
             /** @enum {string} */
             statuses?: "read" | "write";
             /** @enum {string} */
-            team_discussions?: "read" | "write";
-            /** @enum {string} */
             vulnerability_alerts?: "read" | "write";
             /** @enum {string} */
             workflows?: "read" | "write";
@@ -45729,6 +46297,7 @@ export interface components {
          * @description URL for the issue
          */
         url: string;
+        pinned_comment?: components["schemas"]["nullable-issue-comment"];
         /** User */
         user: {
           /** Format: uri */
@@ -46169,8 +46738,6 @@ export interface components {
             /** @enum {string} */
             statuses?: "read" | "write";
             /** @enum {string} */
-            team_discussions?: "read" | "write";
-            /** @enum {string} */
             vulnerability_alerts?: "read" | "write";
             /** @enum {string} */
             workflows?: "read" | "write";
@@ -46208,6 +46775,7 @@ export interface components {
         };
         /** Format: uri */
         repository_url: string;
+        pinned_comment?: components["schemas"]["nullable-issue-comment"];
         sub_issues_summary?: components["schemas"]["sub-issues-summary"];
         issue_dependencies_summary?: components["schemas"]["issue-dependencies-summary"];
         issue_field_values?: components["schemas"]["issue-field-value"][];
@@ -46657,8 +47225,6 @@ export interface components {
               /** @enum {string} */
               statuses?: "read" | "write";
               /** @enum {string} */
-              team_discussions?: "read" | "write";
-              /** @enum {string} */
               vulnerability_alerts?: "read" | "write";
               /** @enum {string} */
               workflows?: "read" | "write";
@@ -46696,6 +47262,7 @@ export interface components {
           };
           /** Format: uri */
           repository_url: string;
+          pinned_comment?: components["schemas"]["nullable-issue-comment"];
           sub_issues_summary?: components["schemas"]["sub-issues-summary"];
           issue_dependencies_summary?: components["schemas"]["issue-dependencies-summary"];
           issue_field_values?: components["schemas"]["issue-field-value"][];
@@ -46873,6 +47440,16 @@ export interface components {
            * @default false
            */
           has_discussions: boolean;
+          /**
+           * @description Whether pull requests are enabled.
+           * @default true
+           */
+          has_pull_requests?: boolean;
+          /**
+           * @description The policy controlling who can create pull requests: all or collaborators_only.
+           * @enum {string}
+           */
+          pull_request_creation_policy?: "all" | "collaborators_only";
           homepage: string | null;
           /** Format: uri */
           hooks_url: string;
@@ -47428,8 +48005,6 @@ export interface components {
             /** @enum {string} */
             statuses?: "read" | "write";
             /** @enum {string} */
-            team_discussions?: "read" | "write";
-            /** @enum {string} */
             vulnerability_alerts?: "read" | "write";
             /** @enum {string} */
             workflows?: "read" | "write";
@@ -47467,6 +48042,7 @@ export interface components {
         };
         /** Format: uri */
         repository_url: string;
+        pinned_comment?: components["schemas"]["nullable-issue-comment"];
         sub_issues_summary?: components["schemas"]["sub-issues-summary"];
         issue_dependencies_summary?: components["schemas"]["issue-dependencies-summary"];
         issue_field_values?: components["schemas"]["issue-field-value"][];
@@ -49508,6 +50084,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -49857,6 +50443,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -50367,6 +50963,7 @@ export interface components {
         review_comments?: number;
         /** Format: uri */
         review_comments_url: string;
+        stack?: components["schemas"]["pull-request-stack"];
         /**
          * @description State of this Pull Request. Either `open` or `closed`.
          * @enum {string}
@@ -50728,6 +51325,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             has_pages: boolean;
             /**
              * @description Whether projects are enabled.
@@ -51088,6 +51695,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -51598,6 +52215,7 @@ export interface components {
         review_comments?: number;
         /** Format: uri */
         review_comments_url: string;
+        stack?: components["schemas"]["pull-request-stack"];
         /**
          * @description State of this Pull Request. Either `open` or `closed`.
          * @enum {string}
@@ -51971,6 +52589,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -52320,6 +52948,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -52827,6 +53465,7 @@ export interface components {
         review_comments?: number;
         /** Format: uri */
         review_comments_url: string;
+        stack?: components["schemas"]["pull-request-stack"];
         /**
          * @description State of this Pull Request. Either `open` or `closed`.
          * @enum {string}
@@ -53268,6 +53907,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -53617,6 +54266,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -54127,6 +54786,7 @@ export interface components {
         review_comments?: number;
         /** Format: uri */
         review_comments_url: string;
+        stack?: components["schemas"]["pull-request-stack"];
         /**
          * @description State of this Pull Request. Either `open` or `closed`.
          * @enum {string}
@@ -54499,6 +55159,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -54848,6 +55518,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -55358,6 +56038,7 @@ export interface components {
         review_comments?: number;
         /** Format: uri */
         review_comments_url: string;
+        stack?: components["schemas"]["pull-request-stack"];
         /**
          * @description State of this Pull Request. Either `open` or `closed`.
          * @enum {string}
@@ -55930,6 +56611,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -56272,6 +56963,16 @@ export interface components {
              * @default false
              */
             has_discussions?: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -56735,6 +57436,7 @@ export interface components {
         review_comment_url: string;
         /** Format: uri */
         review_comments_url: string;
+        stack?: components["schemas"]["pull-request-stack"];
         /** @enum {string} */
         state: "open" | "closed";
         /** Format: uri */
@@ -57100,6 +57802,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -57442,6 +58154,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -57905,6 +58627,7 @@ export interface components {
         review_comment_url: string;
         /** Format: uri */
         review_comments_url: string;
+        stack?: components["schemas"]["pull-request-stack"];
         /** @enum {string} */
         state: "open" | "closed";
         /** Format: uri */
@@ -58272,6 +58995,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -58614,6 +59347,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -59077,6 +59820,7 @@ export interface components {
         review_comment_url: string;
         /** Format: uri */
         review_comments_url: string;
+        stack?: components["schemas"]["pull-request-stack"];
         /** @enum {string} */
         state: "open" | "closed";
         /** Format: uri */
@@ -59442,6 +60186,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -59784,6 +60538,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -60247,6 +61011,7 @@ export interface components {
         review_comment_url: string;
         /** Format: uri */
         review_comments_url: string;
+        stack?: components["schemas"]["pull-request-stack"];
         /** @enum {string} */
         state: "open" | "closed";
         /** Format: uri */
@@ -61782,6 +62547,16 @@ export interface components {
                  * @default false
                  */
                 has_discussions: boolean;
+                /**
+                 * @description Whether pull requests are enabled.
+                 * @default true
+                 */
+                has_pull_requests?: boolean;
+                /**
+                 * @description The policy controlling who can create pull requests: all or collaborators_only.
+                 * @enum {string}
+                 */
+                pull_request_creation_policy?: "all" | "collaborators_only";
                 homepage: string | null;
                 /** Format: uri */
                 hooks_url: string;
@@ -62124,6 +62899,16 @@ export interface components {
                  * @default false
                  */
                 has_discussions: boolean;
+                /**
+                 * @description Whether pull requests are enabled.
+                 * @default true
+                 */
+                has_pull_requests?: boolean;
+                /**
+                 * @description The policy controlling who can create pull requests: all or collaborators_only.
+                 * @enum {string}
+                 */
+                pull_request_creation_policy?: "all" | "collaborators_only";
                 homepage: string | null;
                 /** Format: uri */
                 hooks_url: string;
@@ -62634,6 +63419,7 @@ export interface components {
             review_comments?: number;
             /** Format: uri */
             review_comments_url: string;
+            stack?: components["schemas"]["pull-request-stack"];
             /**
              * @description State of this Pull Request. Either `open` or `closed`.
              * @enum {string}
@@ -63045,6 +63831,16 @@ export interface components {
                  * @default false
                  */
                 has_discussions: boolean;
+                /**
+                 * @description Whether pull requests are enabled.
+                 * @default true
+                 */
+                has_pull_requests?: boolean;
+                /**
+                 * @description The policy controlling who can create pull requests: all or collaborators_only.
+                 * @enum {string}
+                 */
+                pull_request_creation_policy?: "all" | "collaborators_only";
                 homepage: string | null;
                 /** Format: uri */
                 hooks_url: string;
@@ -63394,6 +64190,16 @@ export interface components {
                  * @default false
                  */
                 has_discussions: boolean;
+                /**
+                 * @description Whether pull requests are enabled.
+                 * @default true
+                 */
+                has_pull_requests?: boolean;
+                /**
+                 * @description The policy controlling who can create pull requests: all or collaborators_only.
+                 * @enum {string}
+                 */
+                pull_request_creation_policy?: "all" | "collaborators_only";
                 homepage: string | null;
                 /** Format: uri */
                 hooks_url: string;
@@ -63904,6 +64710,7 @@ export interface components {
             review_comments?: number;
             /** Format: uri */
             review_comments_url: string;
+            stack?: components["schemas"]["pull-request-stack"];
             /**
              * @description State of this Pull Request. Either `open` or `closed`.
              * @enum {string}
@@ -64337,6 +65144,16 @@ export interface components {
                  * @default false
                  */
                 has_discussions: boolean;
+                /**
+                 * @description Whether pull requests are enabled.
+                 * @default true
+                 */
+                has_pull_requests?: boolean;
+                /**
+                 * @description The policy controlling who can create pull requests: all or collaborators_only.
+                 * @enum {string}
+                 */
+                pull_request_creation_policy?: "all" | "collaborators_only";
                 homepage: string | null;
                 /** Format: uri */
                 hooks_url: string;
@@ -64686,6 +65503,16 @@ export interface components {
                  * @default false
                  */
                 has_discussions: boolean;
+                /**
+                 * @description Whether pull requests are enabled.
+                 * @default true
+                 */
+                has_pull_requests?: boolean;
+                /**
+                 * @description The policy controlling who can create pull requests: all or collaborators_only.
+                 * @enum {string}
+                 */
+                pull_request_creation_policy?: "all" | "collaborators_only";
                 homepage: string | null;
                 /** Format: uri */
                 hooks_url: string;
@@ -65196,6 +66023,7 @@ export interface components {
             review_comments?: number;
             /** Format: uri */
             review_comments_url: string;
+            stack?: components["schemas"]["pull-request-stack"];
             /**
              * @description State of this Pull Request. Either `open` or `closed`.
              * @enum {string}
@@ -65607,6 +66435,16 @@ export interface components {
                  * @default false
                  */
                 has_discussions: boolean;
+                /**
+                 * @description Whether pull requests are enabled.
+                 * @default true
+                 */
+                has_pull_requests?: boolean;
+                /**
+                 * @description The policy controlling who can create pull requests: all or collaborators_only.
+                 * @enum {string}
+                 */
+                pull_request_creation_policy?: "all" | "collaborators_only";
                 homepage: string | null;
                 /** Format: uri */
                 hooks_url: string;
@@ -65956,6 +66794,16 @@ export interface components {
                  * @default false
                  */
                 has_discussions: boolean;
+                /**
+                 * @description Whether pull requests are enabled.
+                 * @default true
+                 */
+                has_pull_requests?: boolean;
+                /**
+                 * @description The policy controlling who can create pull requests: all or collaborators_only.
+                 * @enum {string}
+                 */
+                pull_request_creation_policy?: "all" | "collaborators_only";
                 homepage: string | null;
                 /** Format: uri */
                 hooks_url: string;
@@ -66466,6 +67314,7 @@ export interface components {
             review_comments?: number;
             /** Format: uri */
             review_comments_url: string;
+            stack?: components["schemas"]["pull-request-stack"];
             /**
              * @description State of this Pull Request. Either `open` or `closed`.
              * @enum {string}
@@ -66893,6 +67742,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -67235,6 +68094,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -67698,6 +68567,7 @@ export interface components {
         review_comment_url: string;
         /** Format: uri */
         review_comments_url: string;
+        stack?: components["schemas"]["pull-request-stack"];
         /** @enum {string} */
         state: "open" | "closed";
         /** Format: uri */
@@ -68064,6 +68934,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -68364,6 +69244,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -68785,6 +69675,7 @@ export interface components {
         review_comment_url: string;
         /** Format: uri */
         review_comments_url: string;
+        stack?: components["schemas"]["pull-request-stack"];
         /** @enum {string} */
         state: "open" | "closed";
         /** Format: uri */
@@ -69306,6 +70197,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -69606,6 +70507,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -70027,6 +70938,7 @@ export interface components {
         review_comment_url: string;
         /** Format: uri */
         review_comments_url: string;
+        stack?: components["schemas"]["pull-request-stack"];
         /** @enum {string} */
         state: "open" | "closed";
         /** Format: uri */
@@ -70552,6 +71464,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -70901,6 +71823,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -71404,6 +72336,7 @@ export interface components {
         review_comments?: number;
         /** Format: uri */
         review_comments_url: string;
+        stack?: components["schemas"]["pull-request-stack"];
         /**
          * @description State of this Pull Request. Either `open` or `closed`.
          * @enum {string}
@@ -71777,6 +72710,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -72126,6 +73069,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -72636,6 +73589,7 @@ export interface components {
         review_comments?: number;
         /** Format: uri */
         review_comments_url: string;
+        stack?: components["schemas"]["pull-request-stack"];
         /**
          * @description State of this Pull Request. Either `open` or `closed`.
          * @enum {string}
@@ -73009,6 +73963,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -73358,6 +74322,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -73861,6 +74835,7 @@ export interface components {
         review_comments?: number;
         /** Format: uri */
         review_comments_url: string;
+        stack?: components["schemas"]["pull-request-stack"];
         /**
          * @description State of this Pull Request. Either `open` or `closed`.
          * @enum {string}
@@ -74233,6 +75208,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -74582,6 +75567,16 @@ export interface components {
              * @default false
              */
             has_discussions: boolean;
+            /**
+             * @description Whether pull requests are enabled.
+             * @default true
+             */
+            has_pull_requests?: boolean;
+            /**
+             * @description The policy controlling who can create pull requests: all or collaborators_only.
+             * @enum {string}
+             */
+            pull_request_creation_policy?: "all" | "collaborators_only";
             homepage: string | null;
             /** Format: uri */
             hooks_url: string;
@@ -75092,6 +76087,7 @@ export interface components {
         review_comments?: number;
         /** Format: uri */
         review_comments_url: string;
+        stack?: components["schemas"]["pull-request-stack"];
         /**
          * @description State of this Pull Request. Either `open` or `closed`.
          * @enum {string}
@@ -75399,6 +76395,16 @@ export interface components {
          * @default false
          */
         has_discussions: boolean;
+        /**
+         * @description Whether pull requests are enabled.
+         * @default true
+         */
+        has_pull_requests?: boolean;
+        /**
+         * @description The policy controlling who can create pull requests: all or collaborators_only.
+         * @enum {string}
+         */
+        pull_request_creation_policy?: "all" | "collaborators_only";
         homepage: string | null;
         /** Format: uri */
         hooks_url: string;
@@ -80238,6 +81244,12 @@ export interface components {
         has_wiki?: boolean;
         has_pages?: boolean;
         has_discussions?: boolean;
+        has_pull_requests?: boolean;
+        /**
+         * @description The policy controlling who can create pull requests: all or collaborators_only.
+         * @enum {string}
+         */
+        pull_request_creation_policy?: "all" | "collaborators_only";
         forks_count?: number;
         mirror_url?: string | null;
         archived?: boolean;
@@ -80535,6 +81547,16 @@ export interface components {
         "application/json": components["schemas"]["basic-error"];
       };
     };
+    /** @description Service unavailable */
+    service_unavailable: {
+      content: {
+        "application/json": {
+          code?: string;
+          message?: string;
+          documentation_url?: string;
+        };
+      };
+    };
     /** @description Authorization failure */
     authorization_failure: {
       content: never;
@@ -80570,16 +81592,6 @@ export interface components {
         "application/json": {
           total_count: number;
           labels: components["schemas"]["runner-label"][];
-        };
-      };
-    };
-    /** @description Service unavailable */
-    service_unavailable: {
-      content: {
-        "application/json": {
-          code?: string;
-          message?: string;
-          documentation_url?: string;
         };
       };
     };
@@ -80724,6 +81736,8 @@ export interface components {
     ghsa_id: string;
     /** @description Used for pagination: the starting delivery from which the page of deliveries is fetched. Refer to the `link` header for the next and previous page cursors. */
     cursor?: string;
+    /** @description Returns webhook deliveries filtered by delivery outcome classification based on `status_code` range. A `status` of `success` returns deliveries with a `status_code` in the 200-399 range (inclusive). A `status` of `failure` returns deliveries with a `status_code` in the 400-599 range (inclusive). */
+    "webhook-delivery-status"?: "success" | "failure";
     "delivery-id": number;
     /** @description Only show results that were last updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
     since?: string;
@@ -81057,12 +82071,6 @@ export interface components {
     "secret-scanning-pagination-before-org-repo"?: string;
     /** @description A cursor, as given in the [Link header](https://docs.github.com/enterprise-server@3.19/rest/guides/using-pagination-in-the-rest-api#using-link-headers). If specified, the query only searches for events after this cursor.  To receive an initial cursor on your first request, include an empty "after" query string. */
     "secret-scanning-pagination-after-org-repo"?: string;
-    /** @description The number that identifies the discussion. */
-    "discussion-number": number;
-    /** @description The number that identifies the comment. */
-    "comment-number": number;
-    /** @description The unique identifier of the reaction. */
-    "reaction-id": number;
     /** @description The security feature to enable or disable. */
     "security-product":
       | "dependency_graph"
@@ -81097,7 +82105,7 @@ export interface components {
     /** @description The unique identifier of the GitHub Actions cache. */
     "cache-id": number;
     /** @description The unique identifier of the job. */
-    "job-id": number;
+    "job-id": number | bigint;
     /** @description Returns someone's workflow runs. Use the login for the user who created the `push` associated with the check suite or workflow run. */
     actor?: string;
     /** @description Returns workflow runs associated with a branch. Use the name of the branch of the `push`. */
@@ -81125,7 +82133,7 @@ export interface components {
     /** @description If `true` pull requests are omitted from the response (empty array). */
     "exclude-pull-requests"?: boolean;
     /** @description Returns workflow runs with the `check_suite_id` that you specify. */
-    "workflow-run-check-suite-id"?: number;
+    "workflow-run-check-suite-id"?: number | bigint;
     /** @description Only returns workflow runs that are associated with the specified `head_sha`. */
     "workflow-run-head-sha"?: string;
     /** @description The unique identifier of the workflow run. */
@@ -81139,7 +82147,7 @@ export interface components {
     /** @description The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/enterprise-server@3.19/graphql). */
     branch: string;
     /** @description The unique identifier of the check run. */
-    "check-run-id": number;
+    "check-run-id": number | bigint;
     /** @description The unique identifier of the check suite. */
     "check-suite-id": number;
     /** @description Returns check runs with the specified `name`. */
@@ -81152,6 +82160,8 @@ export interface components {
     "pr-alias"?: number;
     /** @description The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation. */
     "alert-number": components["schemas"]["alert-number"];
+    /** @description The unique identifier of the reaction. */
+    "reaction-id": number;
     /** @description The SHA of the commit. */
     "commit-sha": string;
     /** @description The commit reference. Can be a commit SHA, branch name (`heads/BRANCH_NAME`), or tag name (`tags/TAG_NAME`). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation. */
@@ -81186,6 +82196,8 @@ export interface components {
     sort?: "created" | "updated";
     /** @description The number that identifies the issue. */
     "issue-number": number;
+    /** @description A comma-separated list of timeline event names to exclude from the response. */
+    "issue-timeline-exclude"?: string;
     /** @description The unique identifier of the key. */
     "key-id": number;
     /** @description The number that identifies the milestone. */
@@ -81221,6 +82233,16 @@ export interface components {
      * Example: `http://api.github.com/search/issues?q={query}&advanced_search=true`
      */
     "issues-advanced-search"?: string;
+    /**
+     * @description The type of search to perform on issues. When not specified, the default is lexical search.
+     *
+     * - `semantic` — performs a pure semantic (vector) search using embedding-based understanding.
+     * - `hybrid` — combines semantic search with lexical search for best results.
+     *
+     * Semantic and hybrid search require authentication and are rate limited to 10 requests per minute.
+     * Only applies to issue searches (`/search/issues`).
+     */
+    "search-type"?: "semantic" | "hybrid";
     /** @description The unique identifier of the GPG key. */
     "gpg-key-id": number;
     /** @description Only show repositories updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`. */
@@ -82285,6 +83307,7 @@ export interface operations {
       query?: {
         per_page?: components["parameters"]["per-page"];
         cursor?: components["parameters"]["cursor"];
+        status?: components["parameters"]["webhook-delivery-status"];
       };
     };
     responses: {
@@ -82847,6 +83870,9 @@ export interface operations {
   /**
    * Create an installation access token for an app
    * @description Creates an installation access token that enables a GitHub App to make authenticated API requests for the app's installation on an organization or individual account. Installation tokens expire one hour from the time you create them. Using an expired token produces a status code of `401 - Unauthorized`, and requires creating a new installation token. By default the installation token has access to all repositories that the installation can access.
+   *
+   * > [!NOTE]
+   * > Starting April 27, 2026, GitHub began a staged rollout of a stateless format (`ghs_APPID_JWT`) to all newly minted GitHub App installation tokens, making them more performant and improving the reliability of our API surface. If your application expects or relies on installation tokens being exactly 40 characters long, it may not handle this new token format correctly. You can now validate your apps and workflows using a temporary request header that lets you enable the token format on demand. For more information about the temporary header, see [the GitHub blog](https://github.blog/changelog/2026-05-15-github-app-installation-tokens-per-request-override-header).
    *
    * Optionally, you can use the `repositories` or `repository_ids` body parameters to specify individual repositories that the installation access token can access. If you don't use `repositories` or `repository_ids` to grant access to specific repositories, the installation access token will have access to all repositories that the installation was granted access to. The installation access token cannot be granted access to repositories that the installation was not granted access to. Up to 500 repositories can be listed in this manner.
    *
@@ -83571,31 +84597,6 @@ export interface operations {
     };
   };
   /**
-   * Revoke a list of credentials
-   * @description Submit a list of credentials to be revoked. This endpoint is intended to revoke credentials the caller does not own and may have found exposed on GitHub.com or elsewhere. Credential owners will be notified of the revocation.
-   *
-   * This endpoint currently accepts the following credential types:
-   * - classic personal access tokens
-   * - fine-grained personal access tokens
-   *
-   * To prevent abuse, this API is limited to 60 authenticated requests per hour and a max of 1000 tokens per API request.
-   */
-  "credentials/revoke": {
-    requestBody: {
-      content: {
-        "application/json": {
-          /** @description A list of credentials to be revoked, up to 1000 per request. */
-          credentials: string[];
-        };
-      };
-    };
-    responses: {
-      202: components["responses"]["accepted"];
-      422: components["responses"]["validation_failed_simple"];
-      500: components["responses"]["internal_error"];
-    };
-  };
-  /**
    * Get emojis
    * @description Lists all the emojis available to use on GitHub Enterprise Server.
    */
@@ -83655,6 +84656,520 @@ export interface operations {
           "application/json": components["schemas"]["announcement"];
         };
       };
+    };
+  };
+  /**
+   * List Enterprise Live Migrations
+   * @description List Enterprise Live Migrations (ELM) for the current GHES appliance.
+   */
+  "enterprise-admin/live-migration-list": {
+    parameters: {
+      query?: {
+        /** @description Number of results per page. */
+        page_size?: number;
+        /** @description Cursor for pagination. Use the value from `next_cursor` of a previous response. */
+        after?: string;
+        /** @description Optional filter by migration status. */
+        status?:
+          | "created"
+          | "queued"
+          | "in_progress"
+          | "paused"
+          | "completed"
+          | "failed"
+          | "terminated"
+          | "all";
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        content: {
+          "application/json": {
+            migrations: {
+              migration_id: string;
+              status: string | null;
+              source_organization_login: string;
+              target_organization_login: string;
+              source_repository_name: string;
+              target_repository_name: string;
+              target_visibility: string | null;
+              target_api_endpoint: string;
+              /** Format: int64 */
+              target_migration_id: number | bigint;
+              /** Format: date-time */
+              created_at: string | null;
+              /** Format: date-time */
+              started_at: string | null;
+              /** Format: date-time */
+              completed_at: string | null;
+              /** Format: date-time */
+              expires_at: string | null;
+              repositories: {
+                source_repository_url: string;
+                target_repository_url: string;
+                status: string | null;
+              }[];
+            }[];
+            total_count: number;
+            next_cursor?: string;
+          };
+        };
+      };
+      400: components["responses"]["bad_request"];
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      /** @description The migration service is missing the source or target credentials required to service this request. An organization administrator must configure the required secrets before retrying. */
+      422: {
+        content: never;
+      };
+      500: components["responses"]["internal_error"];
+      /** @description Not implemented. */
+      501: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Create an Enterprise Live Migration
+   * @description Create an Enterprise Live Migration (ELM) for a single repository on the current GHES appliance. The migration is created in a `created` state and is not started; run the start endpoint to launch backfill and live updates. Credentials are referenced by name (`pat_name`) rather than submitted inline, and are not echoed back in the response.
+   */
+  "enterprise-admin/live-migration-create": {
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @description Source organization login on the GHES appliance. */
+          source_organization_login: string;
+          /** @description Source repository name. */
+          source_repository_name: string;
+          /** @description Target organization login on the destination GitHub environment. */
+          target_organization_login: string;
+          /** @description Target repository name. */
+          target_repository_name: string;
+          /**
+           * Format: uri
+           * @description Migration target API endpoint URL. Must be a valid HTTPS URL.
+           */
+          target_api_endpoint: string;
+          /** @description Name of the organization-scoped migration credential set to use. The raw token is never submitted inline and is never returned in the response. */
+          pat_name: string;
+          /**
+           * @description Target repository visibility. Defaults to `internal` when omitted. A source repository with public visibility must set this explicitly.
+           * @enum {string}
+           */
+          target_visibility?: "private" | "internal";
+        };
+      };
+    };
+    responses: {
+      /** @description The migration was created. The response contains the new migration identifier and its expiration. No credentials are returned. */
+      201: {
+        content: {
+          "application/json": {
+            /** @description Unique identifier for the new migration (UUID). */
+            migration_id: string;
+            /**
+             * Format: date-time
+             * @description Timestamp when the migration expires, or null if not set.
+             */
+            expires_at: string | null;
+          };
+        };
+      };
+      400: components["responses"]["bad_request"];
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      /** @description Conflict. The request conflicts with the current state of the migration. */
+      409: {
+        content: never;
+      };
+      /** @description The migration service is missing the source or target credentials required to service this request. An organization administrator must configure the required secrets before retrying. */
+      422: {
+        content: never;
+      };
+      500: components["responses"]["internal_error"];
+    };
+  };
+  /**
+   * Get an Enterprise Live Migration
+   * @description Retrieve combined status, progress, cutover readiness, expiration, and timing for an Enterprise Live Migration (ELM) on the current GHES appliance.
+   */
+  "enterprise-admin/live-migration-get": {
+    parameters: {
+      path: {
+        /** @description The ID of the migration. */
+        migration_id: string;
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        content: {
+          "application/json": {
+            migration: {
+              migration_id: string;
+              status: string | null;
+              source_organization_login: string;
+              target_organization_login: string;
+              source_repository_name: string;
+              target_repository_name: string;
+              target_visibility: string | null;
+              target_api_endpoint: string;
+              /** Format: int64 */
+              target_migration_id: number | bigint;
+              /** Format: date-time */
+              created_at: string | null;
+              /** Format: date-time */
+              started_at: string | null;
+              /** Format: date-time */
+              completed_at: string | null;
+              /** Format: date-time */
+              expires_at: string | null;
+              repositories: {
+                source_repository_url: string;
+                target_repository_url: string;
+                status: string | null;
+              }[];
+            } | null;
+            /** @description State of the migration on the destination (ELM backend). Aggregate counts only; per-node detail is not included. */
+            target_state: {
+              status: string | null;
+              /** Format: date-time */
+              last_updated: string | null;
+              /** @description True when the destination was unreachable during this query. The combined status is reported as `degraded` in that case. */
+              target_unavailable: boolean;
+              repository_summaries: {
+                namespace: string;
+                repository: string;
+                /** Format: int64 */
+                total: number | bigint;
+                /** Format: int64 */
+                total_backfill: number | bigint;
+                /** Format: int64 */
+                total_live_update: number | bigint;
+                /** Format: int64 */
+                total_processed: number | bigint;
+                /** Format: int64 */
+                total_failed: number | bigint;
+                /** Format: int64 */
+                total_pending: number | bigint;
+                /** Format: int64 */
+                total_eligible: number | bigint;
+                /** Format: int64 */
+                total_acknowledged: number | bigint;
+                initial_git_push_complete: boolean;
+                backfill: {
+                  /** Format: int64 */
+                  total: number | bigint;
+                  /** Format: int64 */
+                  total_pending: number | bigint;
+                  /** Format: int64 */
+                  total_processed: number | bigint;
+                  /** Format: int64 */
+                  total_failed: number | bigint;
+                  /** Format: int64 */
+                  total_eligible: number | bigint;
+                  /** Format: int64 */
+                  total_acknowledged: number | bigint;
+                  breakdown: {
+                    state: string;
+                    kind: string;
+                    type: string;
+                    /** Format: int64 */
+                    count: number | bigint;
+                  }[];
+                } | null;
+                live_update: {
+                  /** Format: int64 */
+                  total: number | bigint;
+                  /** Format: int64 */
+                  total_pending: number | bigint;
+                  /** Format: int64 */
+                  total_processed: number | bigint;
+                  /** Format: int64 */
+                  total_failed: number | bigint;
+                  /** Format: int64 */
+                  total_eligible: number | bigint;
+                  /** Format: int64 */
+                  total_acknowledged: number | bigint;
+                  breakdown: {
+                    state: string;
+                    kind: string;
+                    type: string;
+                    /** Format: int64 */
+                    count: number | bigint;
+                  }[];
+                } | null;
+              }[];
+              repository_progress: {
+                repository_nwo: string;
+                /** Format: int64 */
+                backfill_resources_added: number | bigint;
+                /** Format: int64 */
+                backfill_resources_processed: number | bigint;
+                /** Format: int64 */
+                backfill_resources_failed: number | bigint;
+                /** Format: int64 */
+                backfill_resources_eligible: number | bigint;
+                /** Format: int64 */
+                backfill_resources_acknowledged: number | bigint;
+                /** Format: int64 */
+                live_update_resources_added: number | bigint;
+                /** Format: int64 */
+                live_update_resources_processed: number | bigint;
+                /** Format: int64 */
+                live_update_resources_eligible: number | bigint;
+                /** Format: int64 */
+                live_update_resources_acknowledged: number | bigint;
+                /** Format: int64 */
+                live_update_resources_failed: number | bigint;
+                all_resources_sent: boolean;
+                initial_git_push_complete: boolean;
+                repository_locked: boolean;
+              }[];
+            } | null;
+            /** @description Derived, user-facing status reconciled from the exporter and destination states, including cutover readiness. */
+            combined_state: {
+              status: string | null;
+              display_message: string;
+              ready_for_cutover: boolean;
+              cutover_blockers: string[];
+              repositories: {
+                repository_nwo: string;
+                phase: string | null;
+                display_status: string;
+              }[];
+            } | null;
+            /** @description Informational and error messages associated with the migration (for example, preflight results). */
+            messages: {
+              message_type: string;
+              message: string;
+              /** Format: date-time */
+              created_at: string | null;
+            }[];
+          };
+        };
+      };
+      400: components["responses"]["bad_request"];
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      /** @description The migration service is missing the source or target credentials required to service this request. An organization administrator must configure the required secrets before retrying. */
+      422: {
+        content: never;
+      };
+      500: components["responses"]["internal_error"];
+    };
+  };
+  /**
+   * Cancel an Enterprise Live Migration
+   * @description Cancel an Enterprise Live Migration (ELM) in progress. This terminates the migration: it is cancelled locally, aborted on the migration backend, and its work items are removed. This is a terminal action with no recovery — a subsequent status request reflects the terminated state.
+   */
+  "enterprise-admin/live-migration-cancel": {
+    parameters: {
+      path: {
+        /** @description The ID of the migration. */
+        migration_id: string;
+      };
+    };
+    responses: {
+      /** @description The migration was cancelled. No content is returned; query the migration status to observe the terminal state. */
+      204: {
+        content: never;
+      };
+      400: components["responses"]["bad_request"];
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      /** @description Conflict. The migration is not in a state that can be cancelled (for example, it has already completed or been terminated). */
+      409: {
+        content: never;
+      };
+      /** @description The migration service is missing the source or target credentials required to service this request. An organization administrator must configure the required secrets before retrying. */
+      422: {
+        content: never;
+      };
+      500: components["responses"]["internal_error"];
+    };
+  };
+  /**
+   * Cutover an Enterprise Live Migration
+   * @description Initiate cutover for an Enterprise Live Migration (ELM), archiving the source repository and draining remaining changes. Cutover is asynchronous; the migration transitions through cutover_pending and cutover_finalizing to completed. No content is returned — query the migration status to observe progress.
+   */
+  "enterprise-admin/live-migration-cutover": {
+    parameters: {
+      path: {
+        /** @description The ID of the migration. */
+        migration_id: string;
+      };
+    };
+    requestBody?: {
+      content: {
+        "application/json": {
+          /**
+           * @description Bypass the cutover readiness checks and initiate cutover even when the migration is not reported as ready. Defaults to `false`.
+           * @default false
+           */
+          force?: boolean;
+        };
+      };
+    };
+    responses: {
+      /** @description Cutover was initiated. No content is returned; query the migration status to observe the cutover progress. */
+      204: {
+        content: never;
+      };
+      400: components["responses"]["bad_request"];
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      /** @description Conflict. The migration is not ready for cutover (for example, backfill is still in progress, or the migration has already completed, been cancelled, or failed). */
+      409: {
+        content: never;
+      };
+      /** @description The migration service is missing the source or target credentials required to service this request. An organization administrator must configure the required secrets before retrying. */
+      422: {
+        content: never;
+      };
+      500: components["responses"]["internal_error"];
+    };
+  };
+  /**
+   * Pause an Enterprise Live Migration
+   * @description Pause source-load work for an active Enterprise Live Migration (ELM). Backfill and Git synchronization are paused while live event collection and delivery continue. The operation is idempotent for a migration that is already paused. No content is returned; query the migration status to observe the durable state.
+   */
+  "enterprise-admin/live-migration-pause": {
+    parameters: {
+      path: {
+        /** @description The unique identifier of the Enterprise Live Migration. */
+        migration_id: string;
+      };
+    };
+    responses: {
+      /** @description The migration was paused. No content is returned; query the migration status to confirm its current state. */
+      204: {
+        content: never;
+      };
+      400: components["responses"]["bad_request"];
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      /** @description Conflict. The migration is not in a state that can be paused, such as when it has not been started or has already completed. */
+      409: {
+        content: never;
+      };
+      /** @description The pause request was accepted by the migration service, but the migration did not complete the transition to paused. Query the migration status and retry. This status is also returned when the migration service is missing the source or target credentials required to service the request; an organization administrator must configure the required secrets before retrying. */
+      422: {
+        content: never;
+      };
+      500: components["responses"]["internal_error"];
+    };
+  };
+  /**
+   * Resume an Enterprise Live Migration
+   * @description Resume a paused Enterprise Live Migration (ELM). The migration is re-queued and resumes backfill and live updates. A subsequent status request reflects the resumed state.
+   */
+  "enterprise-admin/live-migration-resume": {
+    parameters: {
+      path: {
+        /** @description The ID of the migration. */
+        migration_id: string;
+      };
+    };
+    responses: {
+      /** @description The migration was resumed. No content is returned; query the migration status to observe the resumed state. */
+      204: {
+        content: never;
+      };
+      400: components["responses"]["bad_request"];
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      /** @description Conflict. The migration is not in a state that can be resumed (for example, it is not paused, or has completed or terminated). */
+      409: {
+        content: never;
+      };
+      /** @description The migration service is missing the source or target credentials required to service this request. An organization administrator must configure the required secrets before retrying. */
+      422: {
+        content: never;
+      };
+      500: components["responses"]["internal_error"];
+    };
+  };
+  /**
+   * Revert cutover for an Enterprise Live Migration
+   * @description Revert cutover for an Enterprise Live Migration (ELM). This unarchives the source repository and terminates any cutover or migration still in progress so the source repository can be migrated again.
+   */
+  "enterprise-admin/live-migration-revert-cutover": {
+    parameters: {
+      path: {
+        /** @description The ID of the migration. */
+        migration_id: string;
+      };
+    };
+    responses: {
+      /** @description The cutover was reverted. */
+      200: {
+        content: {
+          "application/json": {
+            /** @description Whether the cutover was successfully reverted. */
+            success: boolean;
+            /** @description Whether the source repository was unarchived. */
+            unarchived_source_repository: boolean;
+            /** @description Whether an in-progress cutover was terminated. */
+            in_progress_cutover_terminated: boolean;
+            /** @description Whether an in-progress migration was terminated. */
+            in_progress_migration_terminated: boolean;
+          };
+        };
+      };
+      400: components["responses"]["bad_request"];
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      /** @description Conflict. The migration is not in a state where cutover can be reverted. */
+      409: {
+        content: never;
+      };
+      /** @description The migration service is missing the source or target credentials required to service this request. An organization administrator must configure the required secrets before retrying. */
+      422: {
+        content: never;
+      };
+      500: components["responses"]["internal_error"];
+      503: components["responses"]["service_unavailable"];
+    };
+  };
+  /**
+   * Start an Enterprise Live Migration
+   * @description Start a created Enterprise Live Migration (ELM), launching backfill and enabling live updates. The migration must be in a startable state (for example, created, paused, or failed); preflight validation runs before the migration is queued unless it has been skipped.
+   */
+  "enterprise-admin/live-migration-start": {
+    parameters: {
+      path: {
+        /** @description The ID of the migration. */
+        migration_id: string;
+      };
+    };
+    responses: {
+      /** @description The migration was started (queued for execution). No content is returned; query the migration status to observe progress. */
+      204: {
+        content: never;
+      };
+      400: components["responses"]["bad_request"];
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      /** @description Conflict. The migration is not in a state that can be started (for example, it has already been started or has completed). */
+      409: {
+        content: never;
+      };
+      /** @description The migration could not be started because preflight validation did not pass. Query the migration status for details. This status is also returned when the migration service is missing the source or target credentials required to service the request; an organization administrator must configure the required secrets before retrying. */
+      422: {
+        content: never;
+      };
+      500: components["responses"]["internal_error"];
     };
   };
   /** Get license information */
@@ -85569,6 +87084,11 @@ export interface operations {
         state?: components["schemas"]["code-scanning-alert-state-query"];
         /** @description The property by which to sort the results. */
         sort?: "created" | "updated";
+        /**
+         * @description Filter alerts by assignees. Provide a comma-separated list of user handles (e.g., `octocat` or `octocat,hubot`).
+         * Use `*` to list alerts with at least one assignee or `none` to list alerts with no assignees.
+         */
+        assignees?: string;
       };
       path: {
         enterprise: components["parameters"]["enterprise"];
@@ -85909,7 +87429,10 @@ export interface operations {
            * @enum {string}
            */
           code_scanning_default_setup?: "enabled" | "disabled" | "not_set";
-          code_scanning_default_setup_options?: components["schemas"]["code-scanning-default-setup-options"];
+          code_scanning_default_setup_options?: components["schemas"]["code-scanning-default-setup-options"] & {
+            /** @description Whether to allow repos which use advanced setup */
+            allow_advanced?: boolean | null;
+          };
           /**
            * @description The enablement status of code scanning delegated alert dismissal
            * @default disabled
@@ -86812,7 +88335,6 @@ export interface operations {
    * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
    *
    * - **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
-   * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences.
    */
   "gists/get": {
     parameters: {
@@ -86908,7 +88430,6 @@ export interface operations {
    * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
    *
    * - **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
-   * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences.
    */
   "gists/list-comments": {
     parameters: {
@@ -86942,7 +88463,6 @@ export interface operations {
    * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
    *
    * - **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
-   * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences.
    */
   "gists/create-comment": {
     parameters: {
@@ -86984,7 +88504,6 @@ export interface operations {
    * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
    *
    * - **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
-   * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences.
    */
   "gists/get-comment": {
     parameters: {
@@ -87030,7 +88549,6 @@ export interface operations {
    * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
    *
    * - **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
-   * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences.
    */
   "gists/update-comment": {
     parameters: {
@@ -87203,7 +88721,6 @@ export interface operations {
    * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
    *
    * - **`application/vnd.github.raw+json`**: Returns the raw markdown. This is the default if you do not pass any specific media type.
-   * - **`application/vnd.github.base64+json`**: Returns the base64-encoded contents. This can be useful if your gist contains any invalid UTF-8 sequences.
    */
   "gists/get-revision": {
     parameters: {
@@ -88380,114 +89897,6 @@ export interface operations {
     };
   };
   /**
-   * Lists the repositories Dependabot can access in an organization
-   * @description Lists repositories that organization admins have allowed Dependabot to access when updating dependencies.
-   * > [!NOTE]
-   * >    This operation supports both server-to-server and user-to-server access.
-   * Unauthorized users will not see the existence of this endpoint.
-   */
-  "dependabot/repository-access-for-org": {
-    parameters: {
-      query?: {
-        /** @description The page number of results to fetch. */
-        page?: number;
-        /** @description Number of results per page. */
-        per_page?: number;
-      };
-      path: {
-        org: components["parameters"]["org"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["dependabot-repository-access-details"];
-        };
-      };
-      403: components["responses"]["forbidden"];
-      404: components["responses"]["not_found"];
-    };
-  };
-  /**
-   * Updates Dependabot's repository access list for an organization
-   * @description Updates repositories according to the list of repositories that organization admins have given Dependabot access to when they've updated dependencies.
-   *
-   * > [!NOTE]
-   * >    This operation supports both server-to-server and user-to-server access.
-   * Unauthorized users will not see the existence of this endpoint.
-   *
-   * **Example request body:**
-   * ```json
-   * {
-   *   "repository_ids_to_add": [123, 456],
-   *   "repository_ids_to_remove": [789]
-   * }
-   * ```
-   */
-  "dependabot/update-repository-access-for-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** @description List of repository IDs to add. */
-          repository_ids_to_add?: number[];
-          /** @description List of repository IDs to remove. */
-          repository_ids_to_remove?: number[];
-        };
-      };
-    };
-    responses: {
-      /** @description Response */
-      204: {
-        content: never;
-      };
-      403: components["responses"]["forbidden"];
-      404: components["responses"]["not_found"];
-    };
-  };
-  /**
-   * Set the default repository access level for Dependabot
-   * @description Sets the default level of repository access Dependabot will have while performing an update.  Available values are:
-   * - 'public' - Dependabot will only have access to public repositories, unless access is explicitly granted to non-public repositories.
-   * - 'internal' - Dependabot will only have access to public and internal repositories, unless access is explicitly granted to private repositories.
-   *
-   * Unauthorized users will not see the existence of this endpoint.
-   *
-   * This operation supports both server-to-server and user-to-server access.
-   */
-  "dependabot/set-repository-access-default-level": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /**
-           * @description The default repository access level for Dependabot updates.
-           * @example internal
-           * @enum {string}
-           */
-          default_level: "public" | "internal";
-        };
-      };
-    };
-    responses: {
-      /** @description Response */
-      204: {
-        content: never;
-      };
-      403: components["responses"]["forbidden"];
-      404: components["responses"]["not_found"];
-    };
-  };
-  /**
    * Get an organization
    * @description Gets information about an organization.
    *
@@ -88803,7 +90212,10 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["oidc-custom-sub"];
+        "application/json": {
+          /** @description Array of unique strings. Each claim key can only contain alphanumeric characters and underscores. */
+          include_claim_keys?: string[];
+        };
       };
     };
     responses: {
@@ -90891,6 +92303,11 @@ export interface operations {
         sort?: "created" | "updated";
         /** @description If specified, only code scanning alerts with this severity will be returned. */
         severity?: components["schemas"]["code-scanning-alert-severity"];
+        /**
+         * @description Filter alerts by assignees. Provide a comma-separated list of user handles (e.g., `octocat` or `octocat,hubot`).
+         * Use `*` to list alerts with at least one assignee or `none` to list alerts with no assignees.
+         */
+        assignees?: string;
       };
       path: {
         org: components["parameters"]["org"];
@@ -91007,6 +92424,15 @@ export interface operations {
            * @enum {string}
            */
           dependabot_security_updates?: "enabled" | "disabled" | "not_set";
+          /**
+           * @description The enablement status of Dependabot delegated alert dismissal. Requires Dependabot alerts to be enabled.
+           * @default disabled
+           * @enum {string}
+           */
+          dependabot_delegated_alert_dismissal?:
+            | "enabled"
+            | "disabled"
+            | "not_set";
           code_scanning_options?: components["schemas"]["code-scanning-options"];
           /**
            * @description The enablement status of code scanning default setup
@@ -91153,7 +92579,7 @@ export interface operations {
       content: {
         "application/json": {
           /** @description An array of repository IDs to detach from configurations. Up to 250 IDs can be provided. */
-          selected_repository_ids?: number[];
+          selected_repository_ids: number[];
         };
       };
     };
@@ -91279,11 +92705,22 @@ export interface operations {
            */
           dependabot_security_updates?: "enabled" | "disabled" | "not_set";
           /**
+           * @description The enablement status of Dependabot delegated alert dismissal. Requires Dependabot alerts to be enabled.
+           * @enum {string}
+           */
+          dependabot_delegated_alert_dismissal?:
+            | "enabled"
+            | "disabled"
+            | "not_set";
+          /**
            * @description The enablement status of code scanning default setup
            * @enum {string}
            */
           code_scanning_default_setup?: "enabled" | "disabled" | "not_set";
-          code_scanning_default_setup_options?: components["schemas"]["code-scanning-default-setup-options"];
+          code_scanning_default_setup_options?: components["schemas"]["code-scanning-default-setup-options"] & {
+            /** @description Whether to allow repos which use advanced setup */
+            allow_advanced?: boolean | null;
+          };
           /**
            * @description The enablement status of code scanning delegated alert dismissal
            * @default disabled
@@ -91694,6 +93131,114 @@ export interface operations {
     };
   };
   /**
+   * Lists the repositories Dependabot can access in an organization
+   * @description Lists repositories that organization admins have allowed Dependabot to access when updating dependencies.
+   * > [!NOTE]
+   * >    This operation supports both server-to-server and user-to-server access.
+   * Unauthorized users will not see the existence of this endpoint.
+   */
+  "dependabot/repository-access-for-org": {
+    parameters: {
+      query?: {
+        /** @description The page number of results to fetch. */
+        page?: number;
+        /** @description Number of results per page. */
+        per_page?: number;
+      };
+      path: {
+        org: components["parameters"]["org"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["dependabot-repository-access-details"];
+        };
+      };
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+    };
+  };
+  /**
+   * Updates Dependabot's repository access list for an organization
+   * @description Updates repositories according to the list of repositories that organization admins have given Dependabot access to when they've updated dependencies.
+   *
+   * > [!NOTE]
+   * >    This operation supports both server-to-server and user-to-server access.
+   * Unauthorized users will not see the existence of this endpoint.
+   *
+   * **Example request body:**
+   * ```json
+   * {
+   *   "repository_ids_to_add": [123, 456],
+   *   "repository_ids_to_remove": [789]
+   * }
+   * ```
+   */
+  "dependabot/update-repository-access-for-org": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @description List of repository IDs to add. */
+          repository_ids_to_add?: number[];
+          /** @description List of repository IDs to remove. */
+          repository_ids_to_remove?: number[];
+        };
+      };
+    };
+    responses: {
+      /** @description Response */
+      204: {
+        content: never;
+      };
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+    };
+  };
+  /**
+   * Set the default repository access level for Dependabot
+   * @description Sets the default level of repository access Dependabot will have while performing an update.  Available values are:
+   * - 'public' - Dependabot will only have access to public repositories, unless access is explicitly granted to non-public repositories.
+   * - 'internal' - Dependabot will only have access to public and internal repositories, unless access is explicitly granted to private repositories.
+   *
+   * Unauthorized users will not see the existence of this endpoint.
+   *
+   * This operation supports both server-to-server and user-to-server access.
+   */
+  "dependabot/set-repository-access-default-level": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /**
+           * @description The default repository access level for Dependabot updates.
+           * @example internal
+           * @enum {string}
+           */
+          default_level: "public" | "internal";
+        };
+      };
+    };
+    responses: {
+      /** @description Response */
+      204: {
+        content: never;
+      };
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+    };
+  };
+  /**
    * List organization secrets
    * @description Lists all secrets available in an organization without revealing their
    * encrypted values.
@@ -92050,6 +93595,41 @@ export interface operations {
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
       422: components["responses"]["validation_failed"];
+      500: components["responses"]["internal_error"];
+    };
+  };
+  /**
+   * List dismissal requests for Dependabot alerts for an organization
+   * @description Lists dismissal requests for Dependabot alerts in an organization.
+   *
+   * Delegated alert dismissal must be enabled on repositories in the org and the user must be an org admin, security manager,
+   * or have the appropriate permission to access this endpoint.
+   * Personal access tokens (classic) need the `security_events` scope to use this endpoint.
+   */
+  "dependabot/list-dismissal-requests-for-org": {
+    parameters: {
+      query?: {
+        repository_name?: components["parameters"]["repository-name-in-query"];
+        reviewer?: components["parameters"]["bypass-reviewer-name"];
+        requester?: components["parameters"]["bypass-requester-name"];
+        time_period?: components["parameters"]["time-period"];
+        request_status?: components["parameters"]["dismissal-request-status"];
+        per_page?: components["parameters"]["per-page"];
+        page?: components["parameters"]["page"];
+      };
+      path: {
+        org: components["parameters"]["org"];
+      };
+    };
+    responses: {
+      /** @description A list of alert dismissal requests. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["dependabot-alert-dismissal-request"][];
+        };
+      };
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
       500: components["responses"]["internal_error"];
     };
   };
@@ -92468,6 +94048,7 @@ export interface operations {
       query?: {
         per_page?: components["parameters"]["per-page"];
         cursor?: components["parameters"]["cursor"];
+        status?: components["parameters"]["webhook-delivery-status"];
       };
       path: {
         org: components["parameters"]["org"];
@@ -93071,7 +94652,7 @@ export interface operations {
    * To use this endpoint, the authenticated user must be one of:
    *
    * - An administrator for the organization.
-   * - A user, or a user on a team, with the fine-grained permissions of `read_organization_custom_org_role` in the organization.
+   * - An organization member (or a member of a team) assigned a custom organization role that includes the **View organization roles** (`read_organization_custom_org_role`) permission. For more information, see "[Permissions for organization access](https://docs.github.com/enterprise-server@3.19/organizations/managing-peoples-access-to-your-organization-with-roles/permissions-of-custom-organization-roles#permissions-for-organization-access)."
    *
    * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
    */
@@ -93099,7 +94680,7 @@ export interface operations {
    * To use this endpoint, the authenticated user must be one of:
    *
    * - An administrator for the organization.
-   * - A user, or a user on a team, with the fine-grained permissions of `read_organization_custom_org_role` in the organization.
+   * - An organization member (or a member of a team) assigned a custom organization role that includes the **View organization roles** (`read_organization_custom_org_role`) permission. For more information, see "[Permissions for organization access](https://docs.github.com/enterprise-server@3.19/organizations/managing-peoples-access-to-your-organization-with-roles/permissions-of-custom-organization-roles#permissions-for-organization-access)."
    *
    * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
    */
@@ -93143,7 +94724,7 @@ export interface operations {
    * To use this endpoint, the authenticated user must be one of:
    *
    * - An administrator for the organization.
-   * - A user, or a user on a team, with the fine-grained permissions of `write_organization_custom_org_role` in the organization.
+   * - An organization member (or a member of a team) assigned a custom organization role that includes the **Manage custom organization roles** (`write_organization_custom_org_role`) permission. For more information, see "[Permissions for organization access](https://docs.github.com/enterprise-server@3.19/organizations/managing-peoples-access-to-your-organization-with-roles/permissions-of-custom-organization-roles#permissions-for-organization-access)."
    *
    * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
    */
@@ -93329,7 +94910,7 @@ export interface operations {
    * To use this endpoint, the authenticated user must be one of:
    *
    * - An administrator for the organization.
-   * - A user, or a user on a team, with the fine-grained permissions of `read_organization_custom_org_role` in the organization.
+   * - An organization member (or a member of a team) assigned a custom organization role that includes the **View organization roles** (`read_organization_custom_org_role`) permission. For more information, see "[Permissions for organization access](https://docs.github.com/enterprise-server@3.19/organizations/managing-peoples-access-to-your-organization-with-roles/permissions-of-custom-organization-roles#permissions-for-organization-access)."
    *
    * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
    */
@@ -93358,7 +94939,7 @@ export interface operations {
    * To use this endpoint, the authenticated user must be one of:
    *
    * - An administrator for the organization.
-   * - A user, or a user on a team, with the fine-grained permissions of `write_organization_custom_org_role` in the organization.
+   * - An organization member (or a member of a team) assigned a custom organization role that includes the **Manage custom organization roles** (`write_organization_custom_org_role`) permission. For more information, see "[Permissions for organization access](https://docs.github.com/enterprise-server@3.19/organizations/managing-peoples-access-to-your-organization-with-roles/permissions-of-custom-organization-roles#permissions-for-organization-access)."
    *
    * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
    */
@@ -93388,7 +94969,7 @@ export interface operations {
    * To use this endpoint, the authenticated user must be one of:
    *
    * - An administrator for the organization.
-   * - A user, or a user on a team, with the fine-grained permissions of `write_organization_custom_org_role` in the organization.
+   * - An organization member (or a member of a team) assigned a custom organization role that includes the **Manage custom organization roles** (`write_organization_custom_org_role`) permission. For more information, see "[Permissions for organization access](https://docs.github.com/enterprise-server@3.19/organizations/managing-peoples-access-to-your-organization-with-roles/permissions-of-custom-organization-roles#permissions-for-organization-access)."
    *
    * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
    */
@@ -94238,6 +95819,7 @@ export interface operations {
    * Create a private registry for an organization
    * @description
    * Creates a private registry configuration with an encrypted value for an organization. Encrypt your secret using [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting secrets for the REST API](https://docs.github.com/enterprise-server@3.19/rest/guides/encrypting-secrets-for-the-rest-api)."
+   * For OIDC-based registries (`oidc_azure`, `oidc_aws`, `oidc_jfrog`, `oidc_cloudsmith`, or `oidc_gcp`), the `encrypted_value` and `key_id` fields should be omitted.
    *
    * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
    */
@@ -94282,10 +95864,10 @@ export interface operations {
            * @default false
            */
           replaces_base?: boolean;
-          /** @description The value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get private registries public key for an organization](https://docs.github.com/enterprise-server@3.19/rest/private-registries/organization-configurations#get-private-registries-public-key-for-an-organization) endpoint. */
-          encrypted_value: string;
-          /** @description The ID of the key you used to encrypt the secret. */
-          key_id: string;
+          /** @description The value for your secret, encrypted with [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages) using the public key retrieved from the [Get private registries public key for an organization](https://docs.github.com/enterprise-server@3.19/rest/private-registries/organization-configurations#get-private-registries-public-key-for-an-organization) endpoint. Required when `auth_type` is `token` or `username_password`. Should be omitted for OIDC auth types. */
+          encrypted_value?: string;
+          /** @description The ID of the key you used to encrypt the secret. Required when `auth_type` is `token` or `username_password`. Should be omitted for OIDC auth types. */
+          key_id?: string;
           /**
            * @description Which type of organization repositories have access to the private registry. `selected` means only the repositories specified by `selected_repository_ids` can access the private registry.
            * @enum {string}
@@ -94293,6 +95875,48 @@ export interface operations {
           visibility: "all" | "private" | "selected";
           /** @description An array of repository IDs that can access the organization private registry. You can only provide a list of repository IDs when `visibility` is set to `selected`. You can manage the list of selected repositories using the [Update a private registry for an organization](https://docs.github.com/enterprise-server@3.19/rest/private-registries/organization-configurations#update-a-private-registry-for-an-organization) endpoint. This field should be omitted if `visibility` is set to `all` or `private`. */
           selected_repository_ids?: number[];
+          /**
+           * @description The authentication type for the private registry. Defaults to `token` if not specified. Use `oidc_azure`, `oidc_aws`, `oidc_jfrog`, `oidc_cloudsmith`, or `oidc_gcp` for OIDC authentication.
+           * @enum {string}
+           */
+          auth_type?:
+            | "token"
+            | "username_password"
+            | "oidc_azure"
+            | "oidc_aws"
+            | "oidc_jfrog"
+            | "oidc_cloudsmith"
+            | "oidc_gcp";
+          /** @description The tenant ID of the Azure AD application. Required when `auth_type` is `oidc_azure`. */
+          tenant_id?: string;
+          /** @description The client ID of the Azure AD application. Required when `auth_type` is `oidc_azure`. */
+          client_id?: string;
+          /** @description The AWS region. Required when `auth_type` is `oidc_aws`. */
+          aws_region?: string;
+          /** @description The AWS account ID. Required when `auth_type` is `oidc_aws`. */
+          account_id?: string;
+          /** @description The AWS IAM role name. Required when `auth_type` is `oidc_aws`. */
+          role_name?: string;
+          /** @description The CodeArtifact domain. Required when `auth_type` is `oidc_aws`. */
+          domain?: string;
+          /** @description The CodeArtifact domain owner (AWS account ID). Required when `auth_type` is `oidc_aws`. */
+          domain_owner?: string;
+          /** @description The JFrog OIDC provider name. Required when `auth_type` is `oidc_jfrog`. */
+          jfrog_oidc_provider_name?: string;
+          /** @description The OIDC audience. Optional for `oidc_aws`, `oidc_jfrog`, and `oidc_gcp`, and required for `oidc_cloudsmith` auth types. */
+          audience?: string;
+          /** @description The JFrog identity mapping name. Optional for `oidc_jfrog` auth type. */
+          identity_mapping_name?: string;
+          /** @description The Cloudsmith organization namespace. Required when `auth_type` is `oidc_cloudsmith`. */
+          namespace?: string;
+          /** @description The Cloudsmith service account slug. Required when `auth_type` is `oidc_cloudsmith`. */
+          service_slug?: string;
+          /** @description The Cloudsmith API host. Optional for `oidc_cloudsmith` auth type. If omitted, `api.cloudsmith.io` is used by default. */
+          api_host?: string;
+          /** @description The full resource name of the GCP Workload Identity Provider (e.g. `projects/<NUM>/locations/global/workloadIdentityPools/<POOL>/providers/<PROVIDER>`). Required when `auth_type` is `oidc_gcp`. */
+          workload_identity_provider?: string;
+          /** @description The GCP service account email to impersonate. Optional for `oidc_gcp` auth type. If omitted, the federated token is used directly (direct WIF). */
+          service_account?: string;
         };
       };
     };
@@ -94395,6 +96019,7 @@ export interface operations {
    * Update a private registry for an organization
    * @description
    * Updates a private registry configuration with an encrypted value for an organization. Encrypt your secret using [LibSodium](https://libsodium.gitbook.io/doc/bindings_for_other_languages). For more information, see "[Encrypting secrets for the REST API](https://docs.github.com/enterprise-server@3.19/rest/guides/encrypting-secrets-for-the-rest-api)."
+   * For OIDC-based registries (`oidc_azure`, `oidc_aws`, `oidc_jfrog`, `oidc_cloudsmith`, or `oidc_gcp`), the `encrypted_value` and `key_id` fields should be omitted.
    *
    * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
    */
@@ -94451,6 +96076,48 @@ export interface operations {
           visibility?: "all" | "private" | "selected";
           /** @description An array of repository IDs that can access the organization private registry. You can only provide a list of repository IDs when `visibility` is set to `selected`. This field should be omitted if `visibility` is set to `all` or `private`. */
           selected_repository_ids?: number[];
+          /**
+           * @description The authentication type for the private registry. This field cannot be changed after creation. If provided, it must match the existing `auth_type` of the configuration. To change the authentication type, delete and recreate the configuration.
+           * @enum {string}
+           */
+          auth_type?:
+            | "token"
+            | "username_password"
+            | "oidc_azure"
+            | "oidc_aws"
+            | "oidc_jfrog"
+            | "oidc_cloudsmith"
+            | "oidc_gcp";
+          /** @description The tenant ID of the Azure AD application. Required when `auth_type` is `oidc_azure`. */
+          tenant_id?: string;
+          /** @description The client ID of the Azure AD application. Required when `auth_type` is `oidc_azure`. */
+          client_id?: string;
+          /** @description The AWS region. Required when `auth_type` is `oidc_aws`. */
+          aws_region?: string;
+          /** @description The AWS account ID. Required when `auth_type` is `oidc_aws`. */
+          account_id?: string;
+          /** @description The AWS IAM role name. Required when `auth_type` is `oidc_aws`. */
+          role_name?: string;
+          /** @description The CodeArtifact domain. Required when `auth_type` is `oidc_aws`. */
+          domain?: string;
+          /** @description The CodeArtifact domain owner (AWS account ID). Required when `auth_type` is `oidc_aws`. */
+          domain_owner?: string;
+          /** @description The JFrog OIDC provider name. Required when `auth_type` is `oidc_jfrog`. */
+          jfrog_oidc_provider_name?: string;
+          /** @description The OIDC audience. Optional for `oidc_aws`, `oidc_jfrog`, and `oidc_gcp`, and required for `oidc_cloudsmith` auth types. */
+          audience?: string;
+          /** @description The JFrog identity mapping name. Optional for `oidc_jfrog` auth type. */
+          identity_mapping_name?: string;
+          /** @description The Cloudsmith organization namespace. Required when `auth_type` is `oidc_cloudsmith`. */
+          namespace?: string;
+          /** @description The Cloudsmith service account slug. Required when `auth_type` is `oidc_cloudsmith`. */
+          service_slug?: string;
+          /** @description The Cloudsmith API host. Optional for `oidc_cloudsmith` auth type. If omitted, `api.cloudsmith.io` is used by default. */
+          api_host?: string;
+          /** @description The full resource name of the GCP Workload Identity Provider (e.g. `projects/<NUM>/locations/global/workloadIdentityPools/<POOL>/providers/<PROVIDER>`). Required when `auth_type` is `oidc_gcp`. */
+          workload_identity_provider?: string;
+          /** @description The GCP service account email to impersonate. Optional for `oidc_gcp` auth type. If omitted, the federated token is used directly (direct WIF). */
+          service_account?: string;
         };
       };
     };
@@ -95542,6 +97209,8 @@ export interface operations {
           permission?: "pull" | "push";
           /** @description The ID of a team to set as the parent team. */
           parent_team_id?: number;
+          /** @description The slug of a team to set as the parent team. Ignored when `parent_team_id` is also provided. */
+          parent_team_slug?: string;
           /** @description The [distinguished name](https://www.ldap.com/ldap-dns-and-rdns) (DN) of the LDAP entry to map to a team. LDAP synchronization must be enabled to map LDAP entries to a team. Use the "[Update LDAP mapping for a team](https://docs.github.com/enterprise-server@3.19/rest/enterprise-admin/ldap#update-ldap-mapping-for-a-team)" endpoint to change the LDAP DN. For more information, see "[Using LDAP](https://docs.github.com/enterprise-server@3.19/admin/identity-and-access-management/authenticating-users-for-your-github-enterprise-server-instance/using-ldap#enabling-ldap-sync)." */
           ldap_dn?: string;
         };
@@ -95653,6 +97322,8 @@ export interface operations {
           permission?: "pull" | "push" | "admin";
           /** @description The ID of a team to set as the parent team. */
           parent_team_id?: number | null;
+          /** @description The slug of a team to set as the parent team. Ignored when `parent_team_id` is also provided. */
+          parent_team_slug?: string | null;
         };
       };
     };
@@ -95672,571 +97343,6 @@ export interface operations {
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
       422: components["responses"]["validation_failed"];
-    };
-  };
-  /**
-   * List discussions
-   * @description List all discussions on a team's page.
-   *
-   * > [!NOTE]
-   * > You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions`.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
-   */
-  "teams/list-discussions-in-org": {
-    parameters: {
-      query?: {
-        direction?: components["parameters"]["direction"];
-        per_page?: components["parameters"]["per-page"];
-        page?: components["parameters"]["page"];
-        /** @description Pinned discussions only filter */
-        pinned?: string;
-      };
-      path: {
-        org: components["parameters"]["org"];
-        team_slug: components["parameters"]["team-slug"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      200: {
-        headers: {
-          Link: components["headers"]["link"];
-        };
-        content: {
-          "application/json": components["schemas"]["team-discussion"][];
-        };
-      };
-    };
-  };
-  /**
-   * Create a discussion
-   * @description Creates a new discussion post on a team's page.
-   *
-   * This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.19/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/enterprise-server@3.19/rest/guides/best-practices-for-using-the-rest-api)."
-   *
-   * > [!NOTE]
-   * > You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/{org_id}/team/{team_id}/discussions`.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-   */
-  "teams/create-discussion-in-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        team_slug: components["parameters"]["team-slug"];
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** @description The discussion post's title. */
-          title: string;
-          /** @description The discussion post's body text. */
-          body: string;
-          /**
-           * @description Private posts are only visible to team members, organization owners, and team maintainers. Public posts are visible to all members of the organization. Set to `true` to create a private post.
-           * @default false
-           */
-          private?: boolean;
-        };
-      };
-    };
-    responses: {
-      /** @description Response */
-      201: {
-        content: {
-          "application/json": components["schemas"]["team-discussion"];
-        };
-      };
-    };
-  };
-  /**
-   * Get a discussion
-   * @description Get a specific discussion on a team's page.
-   *
-   * > [!NOTE]
-   * > You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
-   */
-  "teams/get-discussion-in-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        team_slug: components["parameters"]["team-slug"];
-        discussion_number: components["parameters"]["discussion-number"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["team-discussion"];
-        };
-      };
-    };
-  };
-  /**
-   * Delete a discussion
-   * @description Delete a discussion from a team's page.
-   *
-   * > [!NOTE]
-   * > You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-   */
-  "teams/delete-discussion-in-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        team_slug: components["parameters"]["team-slug"];
-        discussion_number: components["parameters"]["discussion-number"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      204: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Update a discussion
-   * @description Edits the title and body text of a discussion post. Only the parameters you provide are updated.
-   *
-   * > [!NOTE]
-   * > You can also specify a team by `org_id` and `team_id` using the route `PATCH /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}`.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-   */
-  "teams/update-discussion-in-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        team_slug: components["parameters"]["team-slug"];
-        discussion_number: components["parameters"]["discussion-number"];
-      };
-    };
-    requestBody?: {
-      content: {
-        "application/json": {
-          /** @description The discussion post's title. */
-          title?: string;
-          /** @description The discussion post's body text. */
-          body?: string;
-        };
-      };
-    };
-    responses: {
-      /** @description Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["team-discussion"];
-        };
-      };
-    };
-  };
-  /**
-   * List discussion comments
-   * @description List all comments on a team discussion.
-   *
-   * > [!NOTE]
-   * > You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
-   */
-  "teams/list-discussion-comments-in-org": {
-    parameters: {
-      query?: {
-        direction?: components["parameters"]["direction"];
-        per_page?: components["parameters"]["per-page"];
-        page?: components["parameters"]["page"];
-      };
-      path: {
-        org: components["parameters"]["org"];
-        team_slug: components["parameters"]["team-slug"];
-        discussion_number: components["parameters"]["discussion-number"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      200: {
-        headers: {
-          Link: components["headers"]["link"];
-        };
-        content: {
-          "application/json": components["schemas"]["team-discussion-comment"][];
-        };
-      };
-    };
-  };
-  /**
-   * Create a discussion comment
-   * @description Creates a new comment on a team discussion.
-   *
-   * This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.19/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/enterprise-server@3.19/rest/guides/best-practices-for-using-the-rest-api)."
-   *
-   * > [!NOTE]
-   * > You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments`.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-   */
-  "teams/create-discussion-comment-in-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        team_slug: components["parameters"]["team-slug"];
-        discussion_number: components["parameters"]["discussion-number"];
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** @description The discussion comment's body text. */
-          body: string;
-        };
-      };
-    };
-    responses: {
-      /** @description Response */
-      201: {
-        content: {
-          "application/json": components["schemas"]["team-discussion-comment"];
-        };
-      };
-    };
-  };
-  /**
-   * Get a discussion comment
-   * @description Get a specific comment on a team discussion.
-   *
-   * > [!NOTE]
-   * > You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
-   */
-  "teams/get-discussion-comment-in-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        team_slug: components["parameters"]["team-slug"];
-        discussion_number: components["parameters"]["discussion-number"];
-        comment_number: components["parameters"]["comment-number"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["team-discussion-comment"];
-        };
-      };
-    };
-  };
-  /**
-   * Delete a discussion comment
-   * @description Deletes a comment on a team discussion.
-   *
-   * > [!NOTE]
-   * > You can also specify a team by `org_id` and `team_id` using the route `DELETE /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-   */
-  "teams/delete-discussion-comment-in-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        team_slug: components["parameters"]["team-slug"];
-        discussion_number: components["parameters"]["discussion-number"];
-        comment_number: components["parameters"]["comment-number"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      204: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Update a discussion comment
-   * @description Edits the body text of a discussion comment.
-   *
-   * > [!NOTE]
-   * > You can also specify a team by `org_id` and `team_id` using the route `PATCH /organizations/{org_id}/team/{team_id}/discussions/{discussion_number}/comments/{comment_number}`.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-   */
-  "teams/update-discussion-comment-in-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        team_slug: components["parameters"]["team-slug"];
-        discussion_number: components["parameters"]["discussion-number"];
-        comment_number: components["parameters"]["comment-number"];
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** @description The discussion comment's body text. */
-          body: string;
-        };
-      };
-    };
-    responses: {
-      /** @description Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["team-discussion-comment"];
-        };
-      };
-    };
-  };
-  /**
-   * List reactions for a team discussion comment
-   * @description List the reactions to a [team discussion comment](https://docs.github.com/enterprise-server@3.19/rest/teams/discussion-comments#get-a-discussion-comment).
-   *
-   * > [!NOTE]
-   * > You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions`.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
-   */
-  "reactions/list-for-team-discussion-comment-in-org": {
-    parameters: {
-      query?: {
-        /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.19/rest/reactions/reactions#about-reactions). Omit this parameter to list all reactions to a team discussion comment. */
-        content?:
-          | "+1"
-          | "-1"
-          | "laugh"
-          | "confused"
-          | "heart"
-          | "hooray"
-          | "rocket"
-          | "eyes";
-        per_page?: components["parameters"]["per-page"];
-        page?: components["parameters"]["page"];
-      };
-      path: {
-        org: components["parameters"]["org"];
-        team_slug: components["parameters"]["team-slug"];
-        discussion_number: components["parameters"]["discussion-number"];
-        comment_number: components["parameters"]["comment-number"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      200: {
-        headers: {
-          Link: components["headers"]["link"];
-        };
-        content: {
-          "application/json": components["schemas"]["reaction"][];
-        };
-      };
-    };
-  };
-  /**
-   * Create reaction for a team discussion comment
-   * @description Create a reaction to a [team discussion comment](https://docs.github.com/enterprise-server@3.19/rest/teams/discussion-comments#get-a-discussion-comment).
-   *
-   * A response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
-   *
-   * > [!NOTE]
-   * > You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions`.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-   */
-  "reactions/create-for-team-discussion-comment-in-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        team_slug: components["parameters"]["team-slug"];
-        discussion_number: components["parameters"]["discussion-number"];
-        comment_number: components["parameters"]["comment-number"];
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /**
-           * @description The [reaction type](https://docs.github.com/enterprise-server@3.19/rest/reactions/reactions#about-reactions) to add to the team discussion comment.
-           * @enum {string}
-           */
-          content:
-            | "+1"
-            | "-1"
-            | "laugh"
-            | "confused"
-            | "heart"
-            | "hooray"
-            | "rocket"
-            | "eyes";
-        };
-      };
-    };
-    responses: {
-      /** @description Response when the reaction type has already been added to this team discussion comment */
-      200: {
-        content: {
-          "application/json": components["schemas"]["reaction"];
-        };
-      };
-      /** @description Response */
-      201: {
-        content: {
-          "application/json": components["schemas"]["reaction"];
-        };
-      };
-    };
-  };
-  /**
-   * Delete team discussion comment reaction
-   * @description > [!NOTE]
-   * > You can also specify a team or organization with `team_id` and `org_id` using the route `DELETE /organizations/:org_id/team/:team_id/discussions/:discussion_number/comments/:comment_number/reactions/:reaction_id`.
-   *
-   * Delete a reaction to a [team discussion comment](https://docs.github.com/enterprise-server@3.19/rest/teams/discussion-comments#get-a-discussion-comment).
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-   */
-  "reactions/delete-for-team-discussion-comment": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        team_slug: components["parameters"]["team-slug"];
-        discussion_number: components["parameters"]["discussion-number"];
-        comment_number: components["parameters"]["comment-number"];
-        reaction_id: components["parameters"]["reaction-id"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      204: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * List reactions for a team discussion
-   * @description List the reactions to a [team discussion](https://docs.github.com/enterprise-server@3.19/rest/teams/discussions#get-a-discussion).
-   *
-   * > [!NOTE]
-   * > You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions`.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
-   */
-  "reactions/list-for-team-discussion-in-org": {
-    parameters: {
-      query?: {
-        /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.19/rest/reactions/reactions#about-reactions). Omit this parameter to list all reactions to a team discussion. */
-        content?:
-          | "+1"
-          | "-1"
-          | "laugh"
-          | "confused"
-          | "heart"
-          | "hooray"
-          | "rocket"
-          | "eyes";
-        per_page?: components["parameters"]["per-page"];
-        page?: components["parameters"]["page"];
-      };
-      path: {
-        org: components["parameters"]["org"];
-        team_slug: components["parameters"]["team-slug"];
-        discussion_number: components["parameters"]["discussion-number"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      200: {
-        headers: {
-          Link: components["headers"]["link"];
-        };
-        content: {
-          "application/json": components["schemas"]["reaction"][];
-        };
-      };
-    };
-  };
-  /**
-   * Create reaction for a team discussion
-   * @description Create a reaction to a [team discussion](https://docs.github.com/enterprise-server@3.19/rest/teams/discussions#get-a-discussion).
-   *
-   * A response with an HTTP `200` status means that you already added the reaction type to this team discussion.
-   *
-   * > [!NOTE]
-   * > You can also specify a team by `org_id` and `team_id` using the route `POST /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions`.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-   */
-  "reactions/create-for-team-discussion-in-org": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        team_slug: components["parameters"]["team-slug"];
-        discussion_number: components["parameters"]["discussion-number"];
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /**
-           * @description The [reaction type](https://docs.github.com/enterprise-server@3.19/rest/reactions/reactions#about-reactions) to add to the team discussion.
-           * @enum {string}
-           */
-          content:
-            | "+1"
-            | "-1"
-            | "laugh"
-            | "confused"
-            | "heart"
-            | "hooray"
-            | "rocket"
-            | "eyes";
-        };
-      };
-    };
-    responses: {
-      /** @description Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["reaction"];
-        };
-      };
-      /** @description Response */
-      201: {
-        content: {
-          "application/json": components["schemas"]["reaction"];
-        };
-      };
-    };
-  };
-  /**
-   * Delete team discussion reaction
-   * @description > [!NOTE]
-   * > You can also specify a team or organization with `team_id` and `org_id` using the route `DELETE /organizations/:org_id/team/:team_id/discussions/:discussion_number/reactions/:reaction_id`.
-   *
-   * Delete a reaction to a [team discussion](https://docs.github.com/enterprise-server@3.19/rest/teams/discussions#get-a-discussion).
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-   */
-  "reactions/delete-for-team-discussion": {
-    parameters: {
-      path: {
-        org: components["parameters"]["org"];
-        team_slug: components["parameters"]["team-slug"];
-        discussion_number: components["parameters"]["discussion-number"];
-        reaction_id: components["parameters"]["reaction-id"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      204: {
-        content: never;
-      };
     };
   };
   /**
@@ -96318,6 +97424,8 @@ export interface operations {
    * List team members
    * @description Team members will include the members of child teams.
    *
+   * Each member includes their `role` on the team (`member` or `maintainer`) and an `inherited` flag indicating whether the membership is inherited from a child team (`true`) or is a direct membership (`false`). These fields let you read a member's role and direct/inherited status without additional requests.
+   *
    * To list members in a team, the team must be visible to the authenticated user.
    */
   "teams/list-members-in-org": {
@@ -96340,7 +97448,7 @@ export interface operations {
           Link: components["headers"]["link"];
         };
         content: {
-          "application/json": components["schemas"]["simple-user"][];
+          "application/json": components["schemas"]["team-member"][];
         };
       };
     };
@@ -96467,6 +97575,8 @@ export interface operations {
   /**
    * List team repositories
    * @description Lists a team's repositories visible to the authenticated user.
+   *
+   * OAuth app tokens and personal access tokens (classic) need the `read:org` or `repo` scope to use this endpoint.
    *
    * > [!NOTE]
    * > You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/repos`.
@@ -96675,7 +97785,6 @@ export interface operations {
    * * The `integration_manifest` object provides your rate limit status for the `POST /app-manifests/{code}/conversions` operation. For more information, see "[Creating a GitHub App from a manifest](https://docs.github.com/enterprise-server@3.19/apps/creating-github-apps/setting-up-a-github-app/creating-a-github-app-from-a-manifest#3-you-exchange-the-temporary-code-to-retrieve-the-app-configuration)."
    * * The `dependency_snapshots` object provides your rate limit status for submitting snapshots to the dependency graph. For more information, see "[Dependency graph](https://docs.github.com/enterprise-server@3.19/rest/dependency-graph)."
    * * The `dependency_sbom` object provides your rate limit status for requesting SBOMs from the dependency graph. For more information, see "[Dependency graph](https://docs.github.com/enterprise-server@3.19/rest/dependency-graph)."
-   * * The `code_scanning_upload` object provides your rate limit status for uploading SARIF results to code scanning. For more information, see "[Uploading a SARIF file to GitHub](https://docs.github.com/enterprise-server@3.19/code-security/code-scanning/integrating-with-code-scanning/uploading-a-sarif-file-to-github)."
    * * The `actions_runner_registration` object provides your rate limit status for registering self-hosted runners in GitHub Actions. For more information, see "[Self-hosted runners](https://docs.github.com/enterprise-server@3.19/rest/actions/self-hosted-runners)."
    * * The `source_import` object is no longer in use for any API endpoints, and it will be removed in the next API version. For more information about API versions, see "[API Versions](https://docs.github.com/enterprise-server@3.19/rest/about-the-rest-api/api-versions)."
    *
@@ -96850,6 +97959,16 @@ export interface operations {
            * @default true
            */
           has_wiki?: boolean;
+          /**
+           * @description Either `true` to allow pull requests for this repository or `false` to prevent pull requests.
+           * @default true
+           */
+          has_pull_requests?: boolean;
+          /**
+           * @description The policy that controls who can create pull requests for this repository: `all` or `collaborators_only`.
+           * @enum {string}
+           */
+          pull_request_creation_policy?: "all" | "collaborators_only";
           /**
            * @description Either `true` to make this repo available as a template repository or `false` to prevent it.
            * @default false
@@ -97291,6 +98410,11 @@ export interface operations {
            * @default false
            */
           enable_debug_logging?: boolean;
+          /**
+           * @description Whether to enable the debugger for the re-run of this job.
+           * @default false
+           */
+          enable_debugger?: boolean;
         } | null;
       };
     };
@@ -98266,6 +99390,7 @@ export interface operations {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
         name?: components["parameters"]["artifact-name"];
+        direction?: components["parameters"]["direction"];
       };
       path: {
         owner: components["parameters"]["owner"];
@@ -101261,6 +102386,11 @@ export interface operations {
         state?: components["schemas"]["code-scanning-alert-state-query"];
         /** @description If specified, only code scanning alerts with this severity will be returned. */
         severity?: components["schemas"]["code-scanning-alert-severity"];
+        /**
+         * @description Filter alerts by assignees. Provide a comma-separated list of user handles (e.g., `octocat` or `octocat,hubot`).
+         * Use `*` to list alerts with at least one assignee or `none` to list alerts with no assignees.
+         */
+        assignees?: string;
       };
       path: {
         owner: components["parameters"]["owner"];
@@ -101327,6 +102457,7 @@ export interface operations {
           dismissed_reason?: components["schemas"]["code-scanning-alert-dismissed-reason"];
           dismissed_comment?: components["schemas"]["code-scanning-alert-dismissed-comment"];
           create_request?: components["schemas"]["code-scanning-alert-create-request"];
+          assignees?: components["schemas"]["code-scanning-alert-assignees"];
         };
       };
     };
@@ -101367,7 +102498,7 @@ export interface operations {
       /** @description Response */
       200: {
         content: {
-          "application/json": components["schemas"]["code-scanning-alert-instance"][];
+          "application/json": components["schemas"]["code-scanning-alert-instance-list"][];
         };
       };
       403: components["responses"]["code_scanning_forbidden_read"];
@@ -101460,7 +102591,7 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["code-scanning-analysis"];
-          "application/json+sarif": {
+          "application/sarif+json": {
             [key: string]: unknown;
           };
         };
@@ -102360,6 +103491,8 @@ export interface operations {
    * Create a commit comment
    * @description Create a comment for a commit using its `:commit_sha`.
    *
+   * Access to commit comments can be controlled by organization owners. For more information, see "[Managing commit comments for your organization](https://docs.github.com/enterprise-server@3.19/organizations/managing-organization-settings/managing-commit-comments-for-your-organization)".
+   *
    * This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.19/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/enterprise-server@3.19/rest/guides/best-practices-for-using-the-rest-api)."
    *
    * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
@@ -102497,6 +103630,9 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["commit"];
+          "application/vnd.github.diff": string;
+          "application/vnd.github.patch": string;
+          "application/vnd.github.sha": string;
         };
       };
       404: components["responses"]["not_found"];
@@ -102727,6 +103863,8 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["commit-comparison"];
+          "application/vnd.github.diff": string;
+          "application/vnd.github.patch": string;
         };
       };
       404: components["responses"]["not_found"];
@@ -102773,6 +103911,11 @@ export interface operations {
         repo: components["parameters"]["repo"];
         /** @description path parameter */
         path: string;
+      };
+    };
+    requestBody?: {
+      content: {
+        "application/json": unknown;
       };
     };
     responses: {
@@ -103063,7 +104206,7 @@ export interface operations {
            * A `dismissed_reason` must be provided when setting the state to `dismissed`.
            * @enum {string}
            */
-          state: "dismissed" | "open";
+          state?: "dismissed" | "open";
           /**
            * @description **Required when `state` is `dismissed`.** A reason for dismissing the alert.
            * @enum {string}
@@ -103076,6 +104219,25 @@ export interface operations {
             | "tolerable_risk";
           /** @description An optional comment associated with dismissing the alert. */
           dismissed_comment?: string;
+          /**
+           * @description Usernames to assign to this Dependabot Alert.
+           * Pass one or more user logins to _replace_ the set of assignees on this alert.
+           * Send an empty array (`[]`) to clear all assignees from the alert.
+           * To assign an AI agent, include the bot login (for example, `copilot-swe-agent[bot]`).
+           */
+          assignees?: string[];
+          /**
+           * @description Parameters for AI agent assignment. Only used when an agent bot login is
+           * included in `assignees`. Ignored when no agent is being assigned.
+           */
+          agent_assignment?: {
+            /** @description Custom instructions for the agent. */
+            custom_instructions?: string;
+            /** @description A custom agent identifier. */
+            custom_agent?: string;
+            /** @description The model to use for the agent. */
+            model?: string;
+          };
         };
       };
     };
@@ -103258,8 +104420,11 @@ export interface operations {
           "application/json": components["schemas"]["dependency-graph-diff"];
         };
       };
+      400: components["responses"]["bad_request"];
       403: components["responses"]["dependency_review_forbidden"];
       404: components["responses"]["not_found"];
+      500: components["responses"]["internal_error"];
+      503: components["responses"]["service_unavailable"];
     };
   };
   /**
@@ -103847,7 +105012,7 @@ export interface operations {
            * @enum {string}
            */
           status: "approve" | "deny";
-          /** @description A message to include with the review. Has a maximum character length of 2048. */
+          /** @description A message to include with the review. */
           message: string;
         };
       };
@@ -105716,6 +106881,7 @@ export interface operations {
       query?: {
         per_page?: components["parameters"]["per-page"];
         cursor?: components["parameters"]["cursor"];
+        status?: components["parameters"]["webhook-delivery-status"];
       };
       path: {
         owner: components["parameters"]["owner"];
@@ -105945,6 +107111,17 @@ export interface operations {
         creator?: string;
         /** @description A user that's mentioned in the issue. */
         mentioned?: string;
+        /**
+         * @description A comma-separated list of issue field filters in `field_slug:value` format.
+         * Only issues matching all specified field values are returned.
+         * Requires issue fields to be enabled for the repository. Issue fields are
+         * not available for user-owned repositories, and field availability for
+         * organization-owned public repositories depends on the organization's
+         * visibility settings. For example, `priority:Urgent,severity:High` filters
+         * issues where the `priority` field is `Urgent` AND the `severity` field is
+         * `High`.
+         */
+        issue_field_values?: string;
         labels?: components["parameters"]["labels"];
         /** @description What to sort results by. */
         sort?: "created" | "updated" | "comments";
@@ -106018,6 +107195,13 @@ export interface operations {
           >[];
           /** @description Logins for Users to assign to this issue. _NOTE: Only users with push access can set assignees for new issues. Assignees are silently dropped otherwise._ */
           assignees?: string[];
+          /** @description An array of issue field values to set on this issue. Each field value must include the field ID and the value to set. Issue fields are only available for organization-owned repositories with the feature enabled. Field values are silently dropped otherwise. */
+          issue_field_values?: {
+            /** @description The ID of the issue field to set */
+            field_id: number;
+            /** @description The value to set for the field. For multi-select fields, provide an array of option names. */
+            value: string | number | string[];
+          }[];
           /**
            * @description The name of the issue type to associate with this issue. _NOTE: Only users with push access can set the type for new issues. The type is silently dropped otherwise._
            * @example Epic
@@ -106417,6 +107601,8 @@ export interface operations {
             | "duplicate"
             | "reopened"
             | null;
+          /** @description The ID of the issue to mark as the canonical duplicate when `state_reason` is `duplicate`. The issue must exist and be accessible to the authenticated user. Ignored when `state_reason` is not `duplicate`. */
+          duplicate_issue_id?: number;
           milestone?: string | number | null;
           /** @description Labels to associate with this issue. Pass one or more labels to _replace_ the set of labels on this issue. Send an empty array (`[]`) to clear all labels from the issue. Only users with push access can set labels for issues. Without push access to the repository, label changes are silently dropped. */
           labels?: OneOf<
@@ -106427,16 +107613,75 @@ export interface operations {
                 name?: string;
                 description?: string | null;
                 color?: string | null;
+                /** @description Optional reasoning for selecting this label. */
+                rationale?: string;
+                /** @description If `true`, the change is stored as a pending suggestion for human review rather than applied directly. */
+                suggest?: boolean;
+                /**
+                 * @description The confidence level for this label choice.
+                 * @enum {string}
+                 */
+                confidence?: "low" | "medium" | "high";
               },
             ]
           >[];
           /** @description Usernames to assign to this issue. Pass one or more user logins to _replace_ the set of assignees on this issue. Send an empty array (`[]`) to clear all assignees from the issue. Only users with push access can set assignees for new issues. Without push access to the repository, assignee changes are silently dropped. */
-          assignees?: string[];
-          /**
-           * @description The name of the issue type to associate with this issue or use `null` to remove the current issue type. Only users with push access can set the type for issues. Without push access to the repository, type changes are silently dropped.
-           * @example Epic
-           */
-          type?: string | null;
+          assignees?: OneOf<
+            [
+              string,
+              {
+                login?: string;
+                /** @description Optional reasoning for selecting this assignee. */
+                rationale?: string;
+                /** @description If `true`, the change is stored as a pending suggestion for human review rather than applied directly. */
+                suggest?: boolean;
+                /**
+                 * @description The confidence level for this assignee choice.
+                 * @enum {string}
+                 */
+                confidence?: "low" | "medium" | "high";
+              },
+            ]
+          >[];
+          /** @description An array of issue field values to set on this issue. Each field value must include the field ID and the value to set. Only users with push access can set field values for issues */
+          issue_field_values?: {
+            /** @description The ID of the issue field to set */
+            field_id: number;
+            /** @description The value to set for the field. For multi-select fields, provide an array of option names. */
+            value: string | number | string[];
+            /** @description Optional reasoning for setting this field value. */
+            rationale?: string;
+            /** @description If `true`, the change is stored as a pending suggestion for human review rather than applied directly. */
+            suggest?: boolean;
+            /**
+             * @description The confidence level for this field value choice.
+             * @enum {string}
+             */
+            confidence?: "low" | "medium" | "high";
+          }[];
+          /** @description The issue type to associate with this issue. Only users with push access can set the type for issues. Without push access to the repository, type changes are silently dropped. */
+          type?: OneOf<
+            [
+              string,
+              {
+                /**
+                 * @description The name of the issue type to associate with this issue, or `null` to remove the current issue type.
+                 * @example Epic
+                 */
+                value?: string | null;
+                /** @description Optional reasoning for selecting this type. */
+                rationale?: string;
+                /** @description If `true`, the change is stored as a pending suggestion for human review rather than applied directly. */
+                suggest?: boolean;
+                /**
+                 * @description The confidence level for this type choice.
+                 * @enum {string}
+                 */
+                confidence?: "low" | "medium" | "high";
+              },
+              null,
+            ]
+          >;
         };
       };
     };
@@ -106444,7 +107689,71 @@ export interface operations {
       /** @description Response */
       200: {
         content: {
-          "application/json": components["schemas"]["issue"];
+          "application/json": components["schemas"]["issue"] & {
+            /**
+             * @description Pending suggestions for each suggestible field (`type`,
+             * `issue_field_values`, `labels`, `assignees`, `state`) the
+             * request touched. Omitted for fields not in the request or
+             * with no pending or ignored suggestions. Items tagged
+             * `ignored` are echoes of the current request's inputs that
+             * were not persisted as pending suggestions.
+             */
+            suggestions?: {
+              type?: {
+                value?: string;
+                rationale?: string;
+                suggest?: boolean;
+                /** @enum {string} */
+                confidence?: "low" | "medium" | "high";
+                ignored?: boolean;
+                /** @enum {string} */
+                ignored_reason?: "already_applied" | "issue_already_closed";
+              }[];
+              issue_field_values?: {
+                field_id?: number;
+                value?: string | number | string[];
+                rationale?: string;
+                suggest?: boolean;
+                /** @enum {string} */
+                confidence?: "low" | "medium" | "high";
+                ignored?: boolean;
+                /** @enum {string} */
+                ignored_reason?: "already_applied" | "issue_already_closed";
+              }[];
+              labels?: {
+                name?: string;
+                rationale?: string;
+                suggest?: boolean;
+                /** @enum {string} */
+                confidence?: "low" | "medium" | "high";
+                ignored?: boolean;
+                /** @enum {string} */
+                ignored_reason?: "already_applied" | "issue_already_closed";
+              }[];
+              assignees?: {
+                login?: string;
+                rationale?: string;
+                suggest?: boolean;
+                /** @enum {string} */
+                confidence?: "low" | "medium" | "high";
+                ignored?: boolean;
+                /** @enum {string} */
+                ignored_reason?: "already_applied" | "issue_already_closed";
+              }[];
+              state?: {
+                value?: string;
+                state_reason?: string;
+                duplicate_issue_id?: number;
+                rationale?: string;
+                suggest?: boolean;
+                /** @enum {string} */
+                confidence?: "low" | "medium" | "high";
+                ignored?: boolean;
+                /** @enum {string} */
+                ignored_reason?: "already_applied" | "issue_already_closed";
+              }[];
+            };
+          };
         };
       };
       301: components["responses"]["moved_permanently"];
@@ -106471,7 +107780,24 @@ export interface operations {
       content: {
         "application/json": {
           /** @description Usernames of people to assign this issue to. _NOTE: Only users with push access can add assignees to an issue. Assignees are silently ignored otherwise._ */
-          assignees?: string[];
+          assignees?: OneOf<
+            [
+              string,
+              {
+                /** @description The login of the user to assign. */
+                login: string;
+                /** @description Optional reasoning for adding this assignee. */
+                rationale?: string;
+                /** @description If `true`, the assignee is stored as a pending suggestion for human review rather than applied directly. */
+                suggest?: boolean;
+                /**
+                 * @description The confidence level for this assignee choice.
+                 * @enum {string}
+                 */
+                confidence?: "low" | "medium" | "high";
+              },
+            ]
+          >[];
         };
       };
     };
@@ -106826,6 +108152,37 @@ export interface operations {
     };
   };
   /**
+   * List issue field values for an issue
+   * @description Lists all issue field values for an issue.
+   */
+  "issues/list-issue-field-values-for-issue": {
+    parameters: {
+      query?: {
+        per_page?: components["parameters"]["per-page"];
+        page?: components["parameters"]["page"];
+      };
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        issue_number: components["parameters"]["issue-number"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        headers: {
+          Link: components["headers"]["link"];
+        };
+        content: {
+          "application/json": components["schemas"]["issue-field-value"][];
+        };
+      };
+      301: components["responses"]["moved_permanently"];
+      404: components["responses"]["not_found"];
+      410: components["responses"]["gone"];
+    };
+  };
+  /**
    * List labels for an issue
    * @description Lists all labels for an issue.
    */
@@ -106900,7 +108257,7 @@ export interface operations {
   };
   /**
    * Add labels to an issue
-   * @description Adds labels to an issue. If you provide an empty array of labels, all labels are removed from the issue.
+   * @description Adds labels to an issue.
    */
   "issues/add-labels": {
     parameters: {
@@ -106912,19 +108269,27 @@ export interface operations {
     };
     requestBody?: {
       content: {
-        "application/json": OneOf<
-          [
-            {
-              /** @description The names of the labels to add to the issue's existing labels. You can pass an empty array to remove all labels. Alternatively, you can pass a single label as a `string` or an `array` of labels directly, but GitHub recommends passing an object with the `labels` key. You can also replace all of the labels for an issue. For more information, see "[Set labels for an issue](https://docs.github.com/enterprise-server@3.19/rest/issues/labels#set-labels-for-an-issue)." */
-              labels?: string[];
-            },
-            {
-              labels?: {
+        "application/json": {
+          /** @description The labels to add to the issue's existing labels. You can also pass an `array` of labels directly, but GitHub recommends passing an object with the `labels` key. To replace all of the labels for an issue, use "[Set labels for an issue](https://docs.github.com/enterprise-server@3.19/rest/issues/labels#set-labels-for-an-issue)." */
+          labels?: OneOf<
+            [
+              string,
+              {
+                /** @description The name of the label to add. */
                 name: string;
-              }[];
-            },
-          ]
-        >;
+                /** @description Optional reasoning for adding this label. */
+                rationale?: string;
+                /** @description If `true`, the label is stored as a pending suggestion for human review rather than applied directly. */
+                suggest?: boolean;
+                /**
+                 * @description The confidence level for this label choice.
+                 * @enum {string}
+                 */
+                confidence?: "low" | "medium" | "high";
+              },
+            ]
+          >[];
+        };
       };
     };
     responses: {
@@ -107167,6 +108532,7 @@ export interface operations {
       query?: {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
+        exclude?: components["parameters"]["issue-timeline-exclude"];
       };
       path: {
         owner: components["parameters"]["owner"];
@@ -107184,6 +108550,7 @@ export interface operations {
           "application/json": components["schemas"]["timeline-issue-events"][];
         };
       };
+      400: components["responses"]["bad_request"];
       404: components["responses"]["not_found"];
       410: components["responses"]["gone"];
     };
@@ -107455,7 +108822,7 @@ export interface operations {
    * Enable Git LFS for a repository
    * @description Enables Git LFS for a repository.
    *
-   * OAuth app tokens and personal access tokens (classic) need the `admin:enterprise` scope to use this endpoint.
+   * OAuth app tokens and personal access tokens (classic) need the `site_admin` scope to use this endpoint.
    */
   "repos/enable-lfs-for-repo": {
     parameters: {
@@ -107482,7 +108849,7 @@ export interface operations {
    * Disable Git LFS for a repository
    * @description Disables Git LFS for a repository.
    *
-   * OAuth app tokens and personal access tokens (classic) need the `admin:enterprise` scope to use this endpoint.
+   * OAuth app tokens and personal access tokens (classic) need the `site_admin` scope to use this endpoint.
    */
   "repos/disable-lfs-for-repo": {
     parameters: {
@@ -109689,6 +111056,11 @@ export interface operations {
    * Create a release
    * @description Users with push access to the repository can create a release.
    *
+   * > [!NOTE]
+   * > If the commit identified by `target_commitish` (or, when `target_commitish` is omitted, the latest commit on the default branch) adds or modifies any file under `.github/workflows/` relative to the repository's default branch, the authenticating token must be authorized to modify workflows. Otherwise, this endpoint returns `404 Not Found`; some authentication paths surface `403 Resource not accessible by integration` instead.
+   *
+   * OAuth app tokens and personal access tokens (classic) need the `workflow` scope when the resolved target commit modifies workflow files. Fine-grained access tokens and GitHub App installation tokens also need the "Workflows" repository permission (write). The `GITHUB_TOKEN` available to GitHub Actions cannot be authorized for this; for more information, see "[Automatic token authentication](https://docs.github.com/enterprise-server@3.19/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token)".
+   *
    * This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.19/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/enterprise-server@3.19/rest/guides/best-practices-for-using-the-rest-api)."
    */
   "repos/create-release": {
@@ -109790,6 +111162,7 @@ export interface operations {
       204: {
         content: never;
       };
+      404: components["responses"]["not_found"];
     };
   };
   /**
@@ -109880,6 +111253,7 @@ export interface operations {
           "application/json": components["schemas"]["release"];
         };
       };
+      404: components["responses"]["not_found"];
     };
   };
   /**
@@ -109950,11 +111324,17 @@ export interface operations {
       204: {
         content: never;
       };
+      404: components["responses"]["not_found"];
     };
   };
   /**
    * Update a release
    * @description Users with push access to the repository can edit a release.
+   *
+   * > [!NOTE]
+   * > If the resolved target commit (the new value of `target_commitish` if you are changing it, otherwise the existing target) adds or modifies any file under `.github/workflows/` relative to the repository's default branch, the authenticating token must be authorized to modify workflows. Otherwise, this endpoint returns `404 Not Found`; some authentication paths surface `403 Resource not accessible by integration` instead.
+   *
+   * OAuth app tokens and personal access tokens (classic) need the `workflow` scope when the resolved target commit modifies workflow files. Fine-grained access tokens and GitHub App installation tokens also need the "Workflows" repository permission (write). The `GITHUB_TOKEN` available to GitHub Actions cannot be authorized for this; for more information, see "[Automatic token authentication](https://docs.github.com/enterprise-server@3.19/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token)".
    */
   "repos/update-release": {
     parameters: {
@@ -110578,7 +111958,7 @@ export interface operations {
       /** @description Response */
       200: {
         content: {
-          "application/json": components["schemas"]["secret-scanning-alert"];
+          "application/json": components["schemas"]["secret-scanning-alert-with-metadata"];
         };
       };
       304: components["responses"]["not_modified"];
@@ -110618,11 +111998,15 @@ export interface operations {
       /** @description Response */
       200: {
         content: {
-          "application/json": components["schemas"]["secret-scanning-alert"];
+          "application/json": components["schemas"]["secret-scanning-alert-with-metadata"];
         };
       };
       /** @description Bad request, resolution comment is invalid or the resolution was not changed. */
       400: {
+        content: never;
+      };
+      /** @description Delegated alert dismissal is enabled and the authenticated user is not a valid reviewer. */
+      403: {
         content: never;
       };
       /** @description Repository is public, or secret scanning is disabled for the repository, or the resource is not found */
@@ -110723,7 +112107,7 @@ export interface operations {
    * @description Lists the latest default incremental and backfill scans by type for a repository. Scans from Copilot Secret Scanning are not included.
    *
    * > [!NOTE]
-   * > This endpoint requires [GitHub Advanced Security](https://docs.github.com/enterprise-server@3.19/get-started/learning-about-github/about-github-advanced-security)."
+   * > This endpoint requires [GitHub Advanced Security](https://docs.github.com/enterprise-server@3.19/get-started/learning-about-github/about-github-advanced-security).
    *
    * OAuth app tokens and personal access tokens (classic) need the `repo` or `security_events` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead.
    */
@@ -112037,6 +113421,7 @@ export interface operations {
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
         advanced_search?: components["parameters"]["issues-advanced-search"];
+        search_type?: components["parameters"]["search-type"];
       };
     };
     responses: {
@@ -112047,10 +113432,27 @@ export interface operations {
             total_count: number;
             incomplete_results: boolean;
             items: components["schemas"]["issue-search-result-item"][];
+            /**
+             * @description The type of search that was performed. Possible values are `lexical`, `semantic`, or `hybrid`.
+             * @enum {string}
+             */
+            search_type: "lexical" | "semantic" | "hybrid";
+            /** @description When a semantic or hybrid search falls back to lexical search, this field contains the reasons for the fallback. Only present when a fallback occurred. */
+            lexical_fallback_reason?: (
+              | "no_text_terms"
+              | "quoted_text"
+              | "non_issue_target"
+              | "or_boolean_not_supported"
+              | "no_accessible_repos"
+              | "server_error"
+              | "only_non_semantic_fields_requested"
+              | "service_unavailable"
+            )[];
           };
         };
       };
       304: components["responses"]["not_modified"];
+      401: components["responses"]["requires_authentication"];
       403: components["responses"]["forbidden"];
       422: components["responses"]["validation_failed"];
       503: components["responses"]["service_unavailable"];
@@ -112314,6 +113716,8 @@ export interface operations {
           permission?: "pull" | "push" | "admin";
           /** @description The ID of a team to set as the parent team. */
           parent_team_id?: number | null;
+          /** @description The slug of a team to set as the parent team. Ignored when `parent_team_id` is also provided. */
+          parent_team_slug?: string | null;
         };
       };
     };
@@ -112336,512 +113740,14 @@ export interface operations {
     };
   };
   /**
-   * List discussions (Legacy)
-   * @deprecated
-   * @description > [!WARNING]
-   * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List discussions`](https://docs.github.com/enterprise-server@3.19/rest/teams/discussions#list-discussions) endpoint.
-   *
-   * List all discussions on a team's page.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
-   */
-  "teams/list-discussions-legacy": {
-    parameters: {
-      query?: {
-        direction?: components["parameters"]["direction"];
-        per_page?: components["parameters"]["per-page"];
-        page?: components["parameters"]["page"];
-      };
-      path: {
-        team_id: components["parameters"]["team-id"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      200: {
-        headers: {
-          Link: components["headers"]["link"];
-        };
-        content: {
-          "application/json": components["schemas"]["team-discussion"][];
-        };
-      };
-    };
-  };
-  /**
-   * Create a discussion (Legacy)
-   * @deprecated
-   * @description > [!WARNING]
-   * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create a discussion`](https://docs.github.com/enterprise-server@3.19/rest/teams/discussions#create-a-discussion) endpoint.
-   *
-   * Creates a new discussion post on a team's page.
-   *
-   * This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.19/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/enterprise-server@3.19/rest/guides/best-practices-for-using-the-rest-api)."
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-   */
-  "teams/create-discussion-legacy": {
-    parameters: {
-      path: {
-        team_id: components["parameters"]["team-id"];
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** @description The discussion post's title. */
-          title: string;
-          /** @description The discussion post's body text. */
-          body: string;
-          /**
-           * @description Private posts are only visible to team members, organization owners, and team maintainers. Public posts are visible to all members of the organization. Set to `true` to create a private post.
-           * @default false
-           */
-          private?: boolean;
-        };
-      };
-    };
-    responses: {
-      /** @description Response */
-      201: {
-        content: {
-          "application/json": components["schemas"]["team-discussion"];
-        };
-      };
-    };
-  };
-  /**
-   * Get a discussion (Legacy)
-   * @deprecated
-   * @description > [!WARNING]
-   * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion](https://docs.github.com/enterprise-server@3.19/rest/teams/discussions#get-a-discussion) endpoint.
-   *
-   * Get a specific discussion on a team's page.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
-   */
-  "teams/get-discussion-legacy": {
-    parameters: {
-      path: {
-        team_id: components["parameters"]["team-id"];
-        discussion_number: components["parameters"]["discussion-number"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["team-discussion"];
-        };
-      };
-    };
-  };
-  /**
-   * Delete a discussion (Legacy)
-   * @deprecated
-   * @description > [!WARNING]
-   * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Delete a discussion`](https://docs.github.com/enterprise-server@3.19/rest/teams/discussions#delete-a-discussion) endpoint.
-   *
-   * Delete a discussion from a team's page.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-   */
-  "teams/delete-discussion-legacy": {
-    parameters: {
-      path: {
-        team_id: components["parameters"]["team-id"];
-        discussion_number: components["parameters"]["discussion-number"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      204: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Update a discussion (Legacy)
-   * @deprecated
-   * @description > [!WARNING]
-   * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion](https://docs.github.com/enterprise-server@3.19/rest/teams/discussions#update-a-discussion) endpoint.
-   *
-   * Edits the title and body text of a discussion post. Only the parameters you provide are updated.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-   */
-  "teams/update-discussion-legacy": {
-    parameters: {
-      path: {
-        team_id: components["parameters"]["team-id"];
-        discussion_number: components["parameters"]["discussion-number"];
-      };
-    };
-    requestBody?: {
-      content: {
-        "application/json": {
-          /** @description The discussion post's title. */
-          title?: string;
-          /** @description The discussion post's body text. */
-          body?: string;
-        };
-      };
-    };
-    responses: {
-      /** @description Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["team-discussion"];
-        };
-      };
-    };
-  };
-  /**
-   * List discussion comments (Legacy)
-   * @deprecated
-   * @description > [!WARNING]
-   * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [List discussion comments](https://docs.github.com/enterprise-server@3.19/rest/teams/discussion-comments#list-discussion-comments) endpoint.
-   *
-   * List all comments on a team discussion.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
-   */
-  "teams/list-discussion-comments-legacy": {
-    parameters: {
-      query?: {
-        direction?: components["parameters"]["direction"];
-        per_page?: components["parameters"]["per-page"];
-        page?: components["parameters"]["page"];
-      };
-      path: {
-        team_id: components["parameters"]["team-id"];
-        discussion_number: components["parameters"]["discussion-number"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      200: {
-        headers: {
-          Link: components["headers"]["link"];
-        };
-        content: {
-          "application/json": components["schemas"]["team-discussion-comment"][];
-        };
-      };
-    };
-  };
-  /**
-   * Create a discussion comment (Legacy)
-   * @deprecated
-   * @description > [!WARNING]
-   * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Create a discussion comment](https://docs.github.com/enterprise-server@3.19/rest/teams/discussion-comments#create-a-discussion-comment) endpoint.
-   *
-   * Creates a new comment on a team discussion.
-   *
-   * This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.19/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/enterprise-server@3.19/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/enterprise-server@3.19/rest/guides/best-practices-for-using-the-rest-api)."
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-   */
-  "teams/create-discussion-comment-legacy": {
-    parameters: {
-      path: {
-        team_id: components["parameters"]["team-id"];
-        discussion_number: components["parameters"]["discussion-number"];
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** @description The discussion comment's body text. */
-          body: string;
-        };
-      };
-    };
-    responses: {
-      /** @description Response */
-      201: {
-        content: {
-          "application/json": components["schemas"]["team-discussion-comment"];
-        };
-      };
-    };
-  };
-  /**
-   * Get a discussion comment (Legacy)
-   * @deprecated
-   * @description > [!WARNING]
-   * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Get a discussion comment](https://docs.github.com/enterprise-server@3.19/rest/teams/discussion-comments#get-a-discussion-comment) endpoint.
-   *
-   * Get a specific comment on a team discussion.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
-   */
-  "teams/get-discussion-comment-legacy": {
-    parameters: {
-      path: {
-        team_id: components["parameters"]["team-id"];
-        discussion_number: components["parameters"]["discussion-number"];
-        comment_number: components["parameters"]["comment-number"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["team-discussion-comment"];
-        };
-      };
-    };
-  };
-  /**
-   * Delete a discussion comment (Legacy)
-   * @deprecated
-   * @description > [!WARNING]
-   * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Delete a discussion comment](https://docs.github.com/enterprise-server@3.19/rest/teams/discussion-comments#delete-a-discussion-comment) endpoint.
-   *
-   * Deletes a comment on a team discussion.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-   */
-  "teams/delete-discussion-comment-legacy": {
-    parameters: {
-      path: {
-        team_id: components["parameters"]["team-id"];
-        discussion_number: components["parameters"]["discussion-number"];
-        comment_number: components["parameters"]["comment-number"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      204: {
-        content: never;
-      };
-    };
-  };
-  /**
-   * Update a discussion comment (Legacy)
-   * @deprecated
-   * @description > [!WARNING]
-   * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [Update a discussion comment](https://docs.github.com/enterprise-server@3.19/rest/teams/discussion-comments#update-a-discussion-comment) endpoint.
-   *
-   * Edits the body text of a discussion comment.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-   */
-  "teams/update-discussion-comment-legacy": {
-    parameters: {
-      path: {
-        team_id: components["parameters"]["team-id"];
-        discussion_number: components["parameters"]["discussion-number"];
-        comment_number: components["parameters"]["comment-number"];
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /** @description The discussion comment's body text. */
-          body: string;
-        };
-      };
-    };
-    responses: {
-      /** @description Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["team-discussion-comment"];
-        };
-      };
-    };
-  };
-  /**
-   * List reactions for a team discussion comment (Legacy)
-   * @deprecated
-   * @description > [!WARNING]
-   * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion comment`](https://docs.github.com/enterprise-server@3.19/rest/reactions/reactions#list-reactions-for-a-team-discussion-comment) endpoint.
-   *
-   * List the reactions to a [team discussion comment](https://docs.github.com/enterprise-server@3.19/rest/teams/discussion-comments#get-a-discussion-comment).
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
-   */
-  "reactions/list-for-team-discussion-comment-legacy": {
-    parameters: {
-      query?: {
-        /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.19/rest/reactions/reactions#about-reactions). Omit this parameter to list all reactions to a team discussion comment. */
-        content?:
-          | "+1"
-          | "-1"
-          | "laugh"
-          | "confused"
-          | "heart"
-          | "hooray"
-          | "rocket"
-          | "eyes";
-        per_page?: components["parameters"]["per-page"];
-        page?: components["parameters"]["page"];
-      };
-      path: {
-        team_id: components["parameters"]["team-id"];
-        discussion_number: components["parameters"]["discussion-number"];
-        comment_number: components["parameters"]["comment-number"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      200: {
-        headers: {
-          Link: components["headers"]["link"];
-        };
-        content: {
-          "application/json": components["schemas"]["reaction"][];
-        };
-      };
-    };
-  };
-  /**
-   * Create reaction for a team discussion comment (Legacy)
-   * @deprecated
-   * @description > [!WARNING]
-   * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new "[Create reaction for a team discussion comment](https://docs.github.com/enterprise-server@3.19/rest/reactions/reactions#create-reaction-for-a-team-discussion-comment)" endpoint.
-   *
-   * Create a reaction to a [team discussion comment](https://docs.github.com/enterprise-server@3.19/rest/teams/discussion-comments#get-a-discussion-comment).
-   *
-   * A response with an HTTP `200` status means that you already added the reaction type to this team discussion comment.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-   */
-  "reactions/create-for-team-discussion-comment-legacy": {
-    parameters: {
-      path: {
-        team_id: components["parameters"]["team-id"];
-        discussion_number: components["parameters"]["discussion-number"];
-        comment_number: components["parameters"]["comment-number"];
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /**
-           * @description The [reaction type](https://docs.github.com/enterprise-server@3.19/rest/reactions/reactions#about-reactions) to add to the team discussion comment.
-           * @enum {string}
-           */
-          content:
-            | "+1"
-            | "-1"
-            | "laugh"
-            | "confused"
-            | "heart"
-            | "hooray"
-            | "rocket"
-            | "eyes";
-        };
-      };
-    };
-    responses: {
-      /** @description Response */
-      201: {
-        content: {
-          "application/json": components["schemas"]["reaction"];
-        };
-      };
-    };
-  };
-  /**
-   * List reactions for a team discussion (Legacy)
-   * @deprecated
-   * @description > [!WARNING]
-   * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List reactions for a team discussion`](https://docs.github.com/enterprise-server@3.19/rest/reactions/reactions#list-reactions-for-a-team-discussion) endpoint.
-   *
-   * List the reactions to a [team discussion](https://docs.github.com/enterprise-server@3.19/rest/teams/discussions#get-a-discussion).
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `read:discussion` scope to use this endpoint.
-   */
-  "reactions/list-for-team-discussion-legacy": {
-    parameters: {
-      query?: {
-        /** @description Returns a single [reaction type](https://docs.github.com/enterprise-server@3.19/rest/reactions/reactions#about-reactions). Omit this parameter to list all reactions to a team discussion. */
-        content?:
-          | "+1"
-          | "-1"
-          | "laugh"
-          | "confused"
-          | "heart"
-          | "hooray"
-          | "rocket"
-          | "eyes";
-        per_page?: components["parameters"]["per-page"];
-        page?: components["parameters"]["page"];
-      };
-      path: {
-        team_id: components["parameters"]["team-id"];
-        discussion_number: components["parameters"]["discussion-number"];
-      };
-    };
-    responses: {
-      /** @description Response */
-      200: {
-        headers: {
-          Link: components["headers"]["link"];
-        };
-        content: {
-          "application/json": components["schemas"]["reaction"][];
-        };
-      };
-    };
-  };
-  /**
-   * Create reaction for a team discussion (Legacy)
-   * @deprecated
-   * @description > [!WARNING]
-   * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [`Create reaction for a team discussion`](https://docs.github.com/enterprise-server@3.19/rest/reactions/reactions#create-reaction-for-a-team-discussion) endpoint.
-   *
-   * Create a reaction to a [team discussion](https://docs.github.com/enterprise-server@3.19/rest/teams/discussions#get-a-discussion).
-   *
-   * A response with an HTTP `200` status means that you already added the reaction type to this team discussion.
-   *
-   * OAuth app tokens and personal access tokens (classic) need the `write:discussion` scope to use this endpoint.
-   */
-  "reactions/create-for-team-discussion-legacy": {
-    parameters: {
-      path: {
-        team_id: components["parameters"]["team-id"];
-        discussion_number: components["parameters"]["discussion-number"];
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          /**
-           * @description The [reaction type](https://docs.github.com/enterprise-server@3.19/rest/reactions/reactions#about-reactions) to add to the team discussion.
-           * @enum {string}
-           */
-          content:
-            | "+1"
-            | "-1"
-            | "laugh"
-            | "confused"
-            | "heart"
-            | "hooray"
-            | "rocket"
-            | "eyes";
-        };
-      };
-    };
-    responses: {
-      /** @description Response */
-      201: {
-        content: {
-          "application/json": components["schemas"]["reaction"];
-        };
-      };
-    };
-  };
-  /**
    * List team members (Legacy)
    * @deprecated
    * @description > [!WARNING]
    * > **Endpoint closing down notice:** This endpoint route is closing down and will be removed from the Teams API. We recommend migrating your existing code to use the new [`List team members`](https://docs.github.com/enterprise-server@3.19/rest/teams/members#list-team-members) endpoint.
    *
    * Team members will include the members of child teams.
+   *
+   * Each member includes their `role` on the team (`member` or `maintainer`) and an `inherited` flag indicating whether the membership is inherited from a child team (`true`) or is a direct membership (`false`).
    */
   "teams/list-members-legacy": {
     parameters: {
@@ -112862,7 +113768,7 @@ export interface operations {
           Link: components["headers"]["link"];
         };
         content: {
-          "application/json": components["schemas"]["simple-user"][];
+          "application/json": components["schemas"]["team-member"][];
         };
       };
       404: components["responses"]["not_found"];
@@ -114001,8 +114907,14 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Response */
+      /** @description The user's organization invitation was accepted synchronously. */
       200: {
+        content: {
+          "application/json": components["schemas"]["org-membership"];
+        };
+      };
+      /** @description The acceptance of the user's organization invitation is being processed asynchronously. */
+      202: {
         content: {
           "application/json": components["schemas"]["org-membership"];
         };

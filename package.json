@@ -46,31 +46,13 @@
       [
         "@semantic-release/npm",
         {
-          "pkgRoot": "packages/openapi-types-ghes-3.14"
-        }
-      ],
-      [
-        "@semantic-release/npm",
-        {
-          "pkgRoot": "packages/openapi-types-ghes-3.15"
-        }
-      ],
-      [
-        "@semantic-release/npm",
-        {
-          "pkgRoot": "packages/openapi-types-ghes-3.16"
-        }
-      ],
-      [
-        "@semantic-release/npm",
-        {
-          "pkgRoot": "packages/openapi-types-ghes-3.17"
-        }
-      ],
-      [
-        "@semantic-release/npm",
-        {
           "pkgRoot": "packages/openapi-types-ghes-3.18"
+        }
+      ],
+      [
+        "@semantic-release/npm",
+        {
+          "pkgRoot": "packages/openapi-types-ghes-3.19"
         }
       ]
     ]
