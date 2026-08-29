@@ -101477,11 +101477,6 @@ export interface operations {
         path: string;
       };
     };
-    requestBody?: {
-      content: {
-        "application/json": unknown;
-      };
-    };
     responses: {
       /** @description Response */
       200: {
