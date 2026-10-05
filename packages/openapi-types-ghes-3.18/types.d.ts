@@ -2700,6 +2700,8 @@ export interface paths {
      * >    This operation supports both server-to-server and user-to-server access.
      * Unauthorized users will not see the existence of this endpoint.
      *
+     * OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint.
+     *
      * **Example request body:**
      * ```json
      * {
@@ -2720,6 +2722,8 @@ export interface paths {
      * Unauthorized users will not see the existence of this endpoint.
      *
      * This operation supports both server-to-server and user-to-server access.
+     *
+     * OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint.
      */
     put: operations["dependabot/set-repository-access-default-level"];
   };
@@ -3912,6 +3916,9 @@ export interface paths {
      * Each member includes their `role` on the team (`member` or `maintainer`) and an `inherited` flag indicating whether the membership is inherited from a child team (`true`) or is a direct membership (`false`). These fields let you read a member's role and direct/inherited status without additional requests.
      *
      * To list members in a team, the team must be visible to the authenticated user.
+     *
+     * > [!NOTE]
+     * > You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/members`.
      */
     get: operations["teams/list-members-in-org"];
   };
@@ -7647,7 +7654,10 @@ export interface paths {
     /**
      * Merge a pull request
      * @description Merges a pull request into the base branch.
-     * This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.18/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/enterprise-server@3.18/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/enterprise-server@3.18/rest/guides/best-practices-for-using-the-rest-api)."
+     *
+     * This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.18/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+     * Creating content too quickly using this endpoint may result in secondary rate limiting.
+     * For more information, see "[Rate limits for the API](https://docs.github.com/enterprise-server@3.18/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/enterprise-server@3.18/rest/guides/best-practices-for-using-the-rest-api)."
      */
     put: operations["pulls/merge"];
   };
@@ -8763,7 +8773,9 @@ export interface paths {
   "/user": {
     /**
      * Get the authenticated user
-     * @description OAuth app tokens and personal access tokens (classic) need the `user` scope in order for the response to include private profile information.
+     * @description OAuth app tokens and personal access tokens (classic) need the `read:user` scope, or the broader `user` scope, for this endpoint to return the private user response. The private user response includes additional fields such as `private_gists`, `total_private_repos`, `owned_private_repos`, `disk_usage`, `collaborators`, and `two_factor_authentication`. Tokens without these scopes receive the public user response.
+     *
+     * The private and public user response types are unrelated to the [private profile](https://docs.github.com/enterprise-server@3.18/account-and-profile/concepts/personal-profile#private-profiles) setting. A token without scopes still authenticates as the token's owner, so values subject to private profile visibility, such as `followers` and `following`, may differ from an unauthenticated response.
      */
     get: operations["users/get-authenticated"];
     /**
@@ -8889,15 +8901,13 @@ export interface paths {
     /**
      * Add a repository to an app installation
      * @description Add a single repository to an installation. The authenticated user must have admin access to the repository.
-     *
-     * This endpoint only works for PATs (classic) with the `repo` scope.
      */
     put: operations["apps/add-repo-to-installation-for-authenticated-user"];
     /**
      * Remove a repository from an app installation
      * @description Remove a single repository from an installation. The authenticated user must have admin access to the repository. The installation must have the `repository_selection` of `selected`.
      *
-     * This endpoint only works for PATs (classic) with the `repo` scope.
+     * To use a PAT (classic) with this endpoint, the `repo` scope is required
      */
     delete: operations["apps/remove-repo-from-installation-for-authenticated-user"];
   };
@@ -9270,6 +9280,10 @@ export interface paths {
      * Get a user
      * @description Provides publicly available information about someone with a GitHub account.
      *
+     * If the specified user has a [private profile](https://docs.github.com/enterprise-server@3.18/account-and-profile/concepts/personal-profile#private-profiles), the `followers` and `following` values are `0` unless the request is authenticated as that user. A request authenticated as the specified user returns the actual values even if the token has no OAuth scopes.
+     *
+     * The `events_url` value is a URI template. Replace `{/privacy}` with `/public` to retrieve only public events. Omit it to retrieve public events and, when authenticated as the user, private events. For more information, see "[List events for the authenticated user](https://docs.github.com/enterprise-server@3.18/rest/activity/events#list-events-for-the-authenticated-user)."
+     *
      * The `email` key in the following response is the publicly visible email address from your GitHub Enterprise Server [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be public which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub Enterprise Server. For more information, see [Authentication](https://docs.github.com/enterprise-server@3.18/rest/guides/getting-started-with-the-rest-api#authentication).
      *
      * The Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see [Emails API](https://docs.github.com/enterprise-server@3.18/rest/users/emails).
@@ -9317,6 +9331,8 @@ export interface paths {
     /**
      * List followers of a user
      * @description Lists the people following the specified user.
+     *
+     * If the specified user has a [private profile](https://docs.github.com/enterprise-server@3.18/account-and-profile/concepts/personal-profile#private-profiles), this endpoint returns an empty list unless the request is authenticated as that user. A request authenticated as the specified user returns the list even if the token has no OAuth scopes.
      */
     get: operations["users/list-followers-for-user"];
   };
@@ -9324,6 +9340,8 @@ export interface paths {
     /**
      * List the people a user follows
      * @description Lists the people who the specified user follows.
+     *
+     * If the specified user has a [private profile](https://docs.github.com/enterprise-server@3.18/account-and-profile/concepts/personal-profile#private-profiles), this endpoint returns an empty list unless the request is authenticated as that user. A request authenticated as the specified user returns the list even if the token has no OAuth scopes.
      */
     get: operations["users/list-following-for-user"];
   };
@@ -9521,6 +9539,8 @@ export interface paths {
     /**
      * List repositories starred by a user
      * @description Lists repositories a user has starred.
+     *
+     * If the specified user has a [private profile](https://docs.github.com/enterprise-server@3.18/account-and-profile/concepts/personal-profile#private-profiles), this endpoint returns an empty list unless the request is authenticated as that user. A request authenticated as the specified user returns starred repositories visible to the token even if the token has no OAuth scopes.
      *
      * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/enterprise-server@3.18/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
      *
@@ -10236,6 +10256,11 @@ export interface components {
        * @enum {string}
        */
       organization_copilot_agent_settings?: "read" | "write";
+      /**
+       * @description The level of permission to grant the access token for managing external custom properties for repositories in an organization.
+       * @enum {string}
+       */
+      organization_external_properties_for_repos?: "read" | "write" | "admin";
       /**
        * @description The level of permission to grant the access token to view and manage announcement banners for an organization.
        * @enum {string}
@@ -12988,7 +13013,7 @@ export interface components {
       /** @description Whether the property is required. */
       required?: boolean;
       /** @description Default value of the property */
-      default_value?: string | string[] | null;
+      default_value?: (string | null) | string[] | null;
       /** @description Short description of the property */
       description?: string | null;
       /**
@@ -13559,6 +13584,8 @@ export interface components {
             description?: string | null;
             color?: string | null;
             default?: boolean;
+            /** @description The user who archived the label, or `null` if it has not been archived. */
+            archived_by?: components["schemas"]["simple-user"] | null;
           },
         ]
       >[];
@@ -13646,6 +13673,14 @@ export interface components {
        * @example true
        */
       default: boolean;
+      /**
+       * Format: date-time
+       * @description Timestamp indicating when the label was archived, or `null` if it has not been archived.
+       * @example 2023-01-01T12:00:00Z
+       */
+      archived_at: string | null;
+      /** @description The user who archived the label, or `null` if it has not been archived. */
+      archived_by: components["schemas"]["simple-user"] | null;
     };
     /**
      * Issue Comment
@@ -13903,6 +13938,8 @@ export interface components {
         description: string | null;
         color: string;
         default: boolean;
+        /** @description The user who archived the label, or `null` if it has not been archived. */
+        archived_by: components["schemas"]["simple-user"] | null;
       }[];
       milestone: components["schemas"]["nullable-milestone"];
       /** @example too heated */
@@ -15395,19 +15432,19 @@ export interface components {
       /** @example github */
       name?: string;
       /** @example GitHub */
-      company?: string;
+      company?: string | null;
       /**
        * Format: uri
        * @example https://github.com/blog
        */
-      blog?: string;
+      blog?: string | null;
       /** @example San Francisco */
-      location?: string;
+      location?: string | null;
       /**
        * Format: email
        * @example octocat@github.com
        */
-      email?: string;
+      email?: string | null;
       /** @example github */
       twitter_username?: string | null;
       /** @example true */
@@ -17543,7 +17580,7 @@ export interface components {
       /** @description The name of the property */
       property_name: string;
       /** @description The value assigned to the property */
-      value: string | string[] | null;
+      value: (string | null) | string[] | null;
     };
     /**
      * Organization Repository Custom Property Values
@@ -18498,6 +18535,17 @@ export interface components {
       enabled: boolean;
     };
     /**
+     * ProofOfPresence
+     * @description Require a fresh authentication before a pull request can be merged.
+     */
+    "repository-rule-params-proof-of-presence": {
+      /**
+       * @description The level of authentication required before a pull request can be merged.
+       * @enum {string}
+       */
+      required_authentication_level: "reauth" | "mfa";
+    };
+    /**
      * Reviewer
      * @description A required reviewing team
      */
@@ -19178,19 +19226,19 @@ export interface components {
       /** @example github */
       name?: string;
       /** @example GitHub */
-      company?: string;
+      company?: string | null;
       /**
        * Format: uri
        * @example https://github.com/blog
        */
-      blog?: string;
+      blog?: string | null;
       /** @example San Francisco */
-      location?: string;
+      location?: string | null;
       /**
        * Format: email
        * @example octocat@github.com
        */
-      email?: string;
+      email?: string | null;
       /** @example github */
       twitter_username?: string | null;
       /** @example true */
@@ -21609,6 +21657,8 @@ export interface components {
         description: string;
         color: string;
         default: boolean;
+        /** @description The user who archived the label, or `null` if it has not been archived. */
+        archived_by: components["schemas"]["simple-user"] | null;
       }[];
       milestone: components["schemas"]["nullable-milestone"];
       /** @example too heated */
@@ -23501,7 +23551,8 @@ export interface components {
        * @example read
        * @enum {string}
        */
-      permissions: "read" | "write" | "admin" | "triage" | "maintain";
+      permissions:
+        "read" | "write" | "admin" | "triage" | "triage_plus" | "maintain";
       /**
        * Format: date-time
        * @example 2016-06-13T14:52:50-05:00
@@ -23589,6 +23640,8 @@ export interface components {
             description?: string | null;
             color?: string | null;
             default?: boolean;
+            /** @description The user who archived the label, or `null` if it has not been archived. */
+            archived_by?: components["schemas"]["simple-user"] | null;
           },
         ]
       >[];
@@ -24742,6 +24795,65 @@ export interface components {
       intent?: components["schemas"]["nullable-issue-event-intent"];
     };
     /**
+     * Issue Reference
+     * @description A minimal reference to an issue linked from a timeline event (e.g. sub-issue, parent-issue, or dependency events).
+     */
+    "issue-reference": {
+      /** @description The number of the referenced issue. */
+      number: number;
+      /** @description The title of the referenced issue. */
+      title: string;
+      /** @description The state of the referenced issue. */
+      state: string;
+      /** @description The reason for the referenced issue's state. */
+      state_reason?: string | null;
+      repository: components["schemas"]["simple-repository"];
+      /**
+       * Issue Type
+       * @description The type of the referenced issue.
+       */
+      issue_type: {
+        /** @description The unique identifier of the issue type. */
+        id: number;
+        /** @description The node identifier of the issue type. */
+        node_id: string;
+        /** @description The name of the issue type. */
+        name: string;
+        /** @description The color of the issue type. */
+        color?: string | null;
+      } | null;
+    } | null;
+    /**
+     * Timeline Connected Event
+     * @description Timeline Connected Event
+     */
+    "timeline-connected-event": {
+      id: number;
+      node_id: string;
+      url: string;
+      actor: components["schemas"]["simple-user"];
+      event: string;
+      commit_id: string | null;
+      commit_url: string | null;
+      created_at: string;
+      performed_via_github_app: components["schemas"]["nullable-integration"];
+    };
+    /**
+     * Timeline Disconnected Event
+     * @description Timeline Disconnected Event
+     */
+    "timeline-disconnected-event": {
+      id: number;
+      node_id: string;
+      url: string;
+      actor: components["schemas"]["simple-user"];
+      event: string;
+      commit_id: string | null;
+      commit_url: string | null;
+      created_at: string;
+      performed_via_github_app: components["schemas"]["nullable-integration"];
+    };
+    /**
      * Timeline Event
      * @description Timeline Event
      */
@@ -24778,7 +24890,9 @@ export interface components {
       | components["schemas"]["blocked-by-added-issue-event"]
       | components["schemas"]["blocked-by-removed-issue-event"]
       | components["schemas"]["blocking-added-issue-event"]
-      | components["schemas"]["blocking-removed-issue-event"];
+      | components["schemas"]["blocking-removed-issue-event"]
+      | components["schemas"]["timeline-connected-event"]
+      | components["schemas"]["timeline-disconnected-event"];
     /**
      * Deploy Key
      * @description An SSH key granting access to a single repository.
@@ -26331,6 +26445,13 @@ export interface components {
         color?: string;
         default?: boolean;
         description?: string | null;
+        /**
+         * Format: date-time
+         * @description Timestamp indicating when the label was archived, or `null` if it has not been archived.
+         */
+        archived_at?: string | null;
+        /** @description The user who archived the label, or `null` if it has not been archived. */
+        archived_by?: components["schemas"]["simple-user"] | null;
       }[];
       sub_issues_summary?: components["schemas"]["sub-issues-summary"];
       issue_dependencies_summary?: components["schemas"]["issue-dependencies-summary"];
@@ -26386,6 +26507,13 @@ export interface components {
       color: string;
       default: boolean;
       description: string | null;
+      /**
+       * Format: date-time
+       * @description Timestamp indicating when the label was archived, or `null` if it has not been archived.
+       */
+      archived_at: string | null;
+      /** @description The user who archived the label, or `null` if it has not been archived. */
+      archived_by: components["schemas"]["simple-user"] | null;
       score: number;
       text_matches?: components["schemas"]["search-result-text-matches"];
     };
@@ -27816,8 +27944,8 @@ export interface components {
     "exemption-request": {
       /** @description The ID of the exemption request. */
       id?: number;
-      /** @description The number uniquely identifying the exemption request within it's repository. */
-      number?: number | null;
+      /** @description The number uniquely identifying the exemption request within its repository. */
+      number?: number;
       /** @description The ID of the repository the exemption request is for. */
       repository_id?: number;
       /** @description The ID of the user who requested the exemption. */
@@ -28558,6 +28686,13 @@ export interface components {
       color: string;
       default: boolean;
       description: string | null;
+      /**
+       * Format: date-time
+       * @description Timestamp indicating when the label was archived, or `null` if it has not been archived.
+       */
+      archived_at: string | null;
+      /** @description The user who archived the label, or `null` if it has not been archived. */
+      archived_by: components["schemas"]["simple-user"] | null;
       id: number;
       /** @description The name of the label. */
       name: string;
@@ -42612,6 +42747,13 @@ export interface components {
           color: string;
           default: boolean;
           description: string | null;
+          /**
+           * Format: date-time
+           * @description Timestamp indicating when the label was archived, or `null` if it has not been archived.
+           */
+          archived_at: string | null;
+          /** @description The user who archived the label, or `null` if it has not been archived. */
+          archived_by: components["schemas"]["simple-user"] | null;
           id: number;
           /** @description The name of the label. */
           name: string;
@@ -49830,7 +49972,7 @@ export interface components {
       action: "auto_merge_disabled";
       enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      number: number;
+      number: components["schemas"]["webhooks_number"];
       organization?: components["schemas"]["organization-simple-webhooks"];
       /** Pull Request */
       pull_request: {
@@ -51075,7 +51217,7 @@ export interface components {
       action: "auto_merge_enabled";
       enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      number: number;
+      number: components["schemas"]["webhooks_number"];
       organization?: components["schemas"]["organization-simple-webhooks"];
       /** Pull Request */
       pull_request: {
@@ -52340,12 +52482,13 @@ export interface components {
       /** @enum {string} */
       action: "demilestoned";
       enterprise?: components["schemas"]["enterprise-webhooks"];
+      installation?: components["schemas"]["simple-installation"];
       milestone?: components["schemas"]["milestone"];
       number: components["schemas"]["webhooks_number"];
       organization?: components["schemas"]["organization-simple-webhooks"];
       pull_request: components["schemas"]["webhooks_pull_request_5"];
       repository: components["schemas"]["repository-webhooks"];
-      sender?: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user"];
     };
     /** pull_request edited event */
     "webhook-pull-request-edited": {
@@ -52376,7 +52519,7 @@ export interface components {
       organization?: components["schemas"]["organization-simple-webhooks"];
       pull_request: components["schemas"]["pull-request-webhook"];
       repository: components["schemas"]["repository-webhooks"];
-      sender?: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user"];
     };
     /** pull_request labeled event */
     "webhook-pull-request-labeled": {
@@ -53283,6 +53426,13 @@ export interface components {
           color: string;
           default: boolean;
           description: string | null;
+          /**
+           * Format: date-time
+           * @description Timestamp indicating when the label was archived, or `null` if it has not been archived.
+           */
+          archived_at: string | null;
+          /** @description The user who archived the label, or `null` if it has not been archived. */
+          archived_by: components["schemas"]["simple-user"] | null;
           id: number;
           /** @description The name of the label. */
           name: string;
@@ -54872,12 +55022,13 @@ export interface components {
       /** @enum {string} */
       action: "milestoned";
       enterprise?: components["schemas"]["enterprise-webhooks"];
+      installation?: components["schemas"]["simple-installation"];
       milestone?: components["schemas"]["milestone"];
       number: components["schemas"]["webhooks_number"];
       organization?: components["schemas"]["organization-simple-webhooks"];
       pull_request: components["schemas"]["webhooks_pull_request_5"];
       repository: components["schemas"]["repository-webhooks"];
-      sender?: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user"];
     };
     /** pull_request opened event */
     "webhook-pull-request-opened": {
@@ -72316,7 +72467,7 @@ export interface components {
         } | null;
       };
       repository: components["schemas"]["repository-webhooks"];
-      sender?: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user"];
     };
     /** pull_request unlabeled event */
     "webhook-pull-request-unlabeled": {
@@ -80300,6 +80451,12 @@ export interface components {
         "application/json": components["schemas"]["basic-error"];
       };
     };
+    /** @description The request could not be processed due to heavy server load. Please try again. */
+    server_load_try_again: {
+      content: {
+        "application/json": components["schemas"]["basic-error"];
+      };
+    };
     /** @description Found */
     found: {
       content: never;
@@ -83133,6 +83290,18 @@ export interface operations {
                 initial_git_push_complete: boolean;
                 repository_locked: boolean;
               }[];
+              /** @description Why the destination reached a terminal failure, as reported by the destination. `null` when the destination is unreachable or has not failed. */
+              terminal_failure: {
+                /** @description Stable, machine-readable failure category, such as `repository_policy` or `organization_settings`. New values may be added; clients should treat unrecognized values as an unknown cause. */
+                code: string;
+                /** @description Human-readable explanation of the failure category. */
+                summary: string;
+                /**
+                 * Format: date-time
+                 * @description When the failure occurred. `null` when no time was recorded.
+                 */
+                occurred_at: string | null;
+              } | null;
             } | null;
             /** @description Derived, user-facing status reconciled from the exporter and destination states, including cutover readiness. */
             combined_state: {
@@ -83145,6 +83314,18 @@ export interface operations {
                 phase: string | null;
                 display_status: string;
               }[];
+              /** @description Why the migration failed, for display to operators. Populated only when `status` is `failed`; `null` otherwise, including when the migration was terminated by a user. */
+              terminal_failure: {
+                /** @description Stable, machine-readable failure category, such as `repository_policy` or `organization_settings`. New values may be added; clients should treat unrecognized values as an unknown cause. */
+                code: string;
+                /** @description Human-readable explanation of the failure category. */
+                summary: string;
+                /**
+                 * Format: date-time
+                 * @description When the failure occurred. `null` when no time was recorded.
+                 */
+                occurred_at: string | null;
+              } | null;
             } | null;
             /** @description Informational and error messages associated with the migration (for example, preflight results). */
             messages: {
@@ -89960,6 +90141,7 @@ export interface operations {
     };
     responses: {
       202: components["responses"]["accepted"];
+      403: components["responses"]["forbidden"];
     };
   };
   /**
@@ -90275,6 +90457,8 @@ export interface operations {
    * >    This operation supports both server-to-server and user-to-server access.
    * Unauthorized users will not see the existence of this endpoint.
    *
+   * OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint.
+   *
    * **Example request body:**
    * ```json
    * {
@@ -90317,6 +90501,8 @@ export interface operations {
    * Unauthorized users will not see the existence of this endpoint.
    *
    * This operation supports both server-to-server and user-to-server access.
+   *
+   * OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint.
    */
   "dependabot/set-repository-access-default-level": {
     parameters: {
@@ -94320,6 +94506,9 @@ export interface operations {
    * Each member includes their `role` on the team (`member` or `maintainer`) and an `inherited` flag indicating whether the membership is inherited from a child team (`true`) or is a direct membership (`false`). These fields let you read a member's role and direct/inherited status without additional requests.
    *
    * To list members in a team, the team must be visible to the authenticated user.
+   *
+   * > [!NOTE]
+   * > You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/members`.
    */
   "teams/list-members-in-org": {
     parameters: {
@@ -99691,7 +99880,8 @@ export interface operations {
         /** @description Filter collaborators returned by their affiliation. `outside` means all outside collaborators of an organization-owned repository. `direct` means all collaborators with permissions to an organization-owned repository, regardless of organization membership status. `all` means all collaborators the authenticated user can see. */
         affiliation?: "outside" | "direct" | "all";
         /** @description Filter collaborators by the permissions they have on the repository. If not specified, all collaborators will be returned. */
-        permission?: "pull" | "triage" | "push" | "maintain" | "admin";
+        permission?:
+          "pull" | "triage" | "triage_plus" | "push" | "maintain" | "admin";
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -100164,6 +100354,8 @@ export interface operations {
       400: components["responses"]["bad_request"];
       404: components["responses"]["not_found"];
       409: components["responses"]["conflict"];
+      422: components["responses"]["validation_failed"];
+      429: components["responses"]["server_load_try_again"];
       500: components["responses"]["internal_error"];
     };
   };
@@ -100378,6 +100570,7 @@ export interface operations {
       404: components["responses"]["not_found"];
       409: components["responses"]["conflict"];
       422: components["responses"]["validation_failed"];
+      429: components["responses"]["server_load_try_again"];
       500: components["responses"]["internal_error"];
       503: components["responses"]["service_unavailable"];
     };
@@ -100608,6 +100801,7 @@ export interface operations {
         };
       };
       404: components["responses"]["not_found"];
+      422: components["responses"]["validation_failed"];
       500: components["responses"]["internal_error"];
       503: components["responses"]["service_unavailable"];
     };
@@ -103733,6 +103927,8 @@ export interface operations {
            * @example Epic
            */
           type?: string | null;
+          /** @description The id of the parent issue to add this issue to as a sub-issue. _NOTE: Only users with triage access to both the parent issue's repository and this repository can set the parent issue._ */
+          parent_issue_id?: number;
         };
       };
     };
@@ -105144,6 +105340,8 @@ export interface operations {
           color?: string;
           /** @description A short description of the label. Must be 100 characters or fewer. */
           description?: string;
+          /** @description Whether to archive or unarchive the label. Archived labels cannot be added to issues or pull requests. For more information, see "[Archiving labels](https://docs.github.com/enterprise-server@3.18/issues/organizing-your-work-with-labels/managing-labels)." */
+          archived?: boolean;
         };
       };
     };
@@ -106259,6 +106457,7 @@ export interface operations {
           "application/json": components["schemas"]["pull-request-review-comment"];
         };
       };
+      304: components["responses"]["not_modified"];
       404: components["responses"]["not_found"];
     };
   };
@@ -106471,6 +106670,7 @@ export interface operations {
       304: components["responses"]["not_modified"];
       404: components["responses"]["not_found"];
       406: components["responses"]["unacceptable"];
+      422: components["responses"]["validation_failed"];
       500: components["responses"]["internal_error"];
       503: components["responses"]["service_unavailable"];
     };
@@ -106797,7 +106997,10 @@ export interface operations {
   /**
    * Merge a pull request
    * @description Merges a pull request into the base branch.
-   * This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.18/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/enterprise-server@3.18/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/enterprise-server@3.18/rest/guides/best-practices-for-using-the-rest-api)."
+   *
+   * This endpoint triggers [notifications](https://docs.github.com/enterprise-server@3.18/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+   * Creating content too quickly using this endpoint may result in secondary rate limiting.
+   * For more information, see "[Rate limits for the API](https://docs.github.com/enterprise-server@3.18/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/enterprise-server@3.18/rest/guides/best-practices-for-using-the-rest-api)."
    */
   "pulls/merge": {
     parameters: {
@@ -110451,7 +110654,9 @@ export interface operations {
   };
   /**
    * Get the authenticated user
-   * @description OAuth app tokens and personal access tokens (classic) need the `user` scope in order for the response to include private profile information.
+   * @description OAuth app tokens and personal access tokens (classic) need the `read:user` scope, or the broader `user` scope, for this endpoint to return the private user response. The private user response includes additional fields such as `private_gists`, `total_private_repos`, `owned_private_repos`, `disk_usage`, `collaborators`, and `two_factor_authentication`. Tokens without these scopes receive the public user response.
+   *
+   * The private and public user response types are unrelated to the [private profile](https://docs.github.com/enterprise-server@3.18/account-and-profile/concepts/personal-profile#private-profiles) setting. A token without scopes still authenticates as the token's owner, so values subject to private profile visibility, such as `followers` and `following`, may differ from an unauthenticated response.
    */
   "users/get-authenticated": {
     responses: {
@@ -110930,8 +111135,6 @@ export interface operations {
   /**
    * Add a repository to an app installation
    * @description Add a single repository to an installation. The authenticated user must have admin access to the repository.
-   *
-   * This endpoint only works for PATs (classic) with the `repo` scope.
    */
   "apps/add-repo-to-installation-for-authenticated-user": {
     parameters: {
@@ -110954,7 +111157,7 @@ export interface operations {
    * Remove a repository from an app installation
    * @description Remove a single repository from an installation. The authenticated user must have admin access to the repository. The installation must have the `repository_selection` of `selected`.
    *
-   * This endpoint only works for PATs (classic) with the `repo` scope.
+   * To use a PAT (classic) with this endpoint, the `repo` scope is required
    */
   "apps/remove-repo-from-installation-for-authenticated-user": {
     parameters: {
@@ -112350,6 +112553,10 @@ export interface operations {
    * Get a user
    * @description Provides publicly available information about someone with a GitHub account.
    *
+   * If the specified user has a [private profile](https://docs.github.com/enterprise-server@3.18/account-and-profile/concepts/personal-profile#private-profiles), the `followers` and `following` values are `0` unless the request is authenticated as that user. A request authenticated as the specified user returns the actual values even if the token has no OAuth scopes.
+   *
+   * The `events_url` value is a URI template. Replace `{/privacy}` with `/public` to retrieve only public events. Omit it to retrieve public events and, when authenticated as the user, private events. For more information, see "[List events for the authenticated user](https://docs.github.com/enterprise-server@3.18/rest/activity/events#list-events-for-the-authenticated-user)."
+   *
    * The `email` key in the following response is the publicly visible email address from your GitHub Enterprise Server [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be public which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub Enterprise Server. For more information, see [Authentication](https://docs.github.com/enterprise-server@3.18/rest/guides/getting-started-with-the-rest-api#authentication).
    *
    * The Emails API enables you to list all of your email addresses, and toggle a primary email to be visible publicly. For more information, see [Emails API](https://docs.github.com/enterprise-server@3.18/rest/users/emails).
@@ -112475,6 +112682,8 @@ export interface operations {
   /**
    * List followers of a user
    * @description Lists the people following the specified user.
+   *
+   * If the specified user has a [private profile](https://docs.github.com/enterprise-server@3.18/account-and-profile/concepts/personal-profile#private-profiles), this endpoint returns an empty list unless the request is authenticated as that user. A request authenticated as the specified user returns the list even if the token has no OAuth scopes.
    */
   "users/list-followers-for-user": {
     parameters: {
@@ -112501,6 +112710,8 @@ export interface operations {
   /**
    * List the people a user follows
    * @description Lists the people who the specified user follows.
+   *
+   * If the specified user has a [private profile](https://docs.github.com/enterprise-server@3.18/account-and-profile/concepts/personal-profile#private-profiles), this endpoint returns an empty list unless the request is authenticated as that user. A request authenticated as the specified user returns the list even if the token has no OAuth scopes.
    */
   "users/list-following-for-user": {
     parameters: {
@@ -113098,6 +113309,8 @@ export interface operations {
   /**
    * List repositories starred by a user
    * @description Lists repositories a user has starred.
+   *
+   * If the specified user has a [private profile](https://docs.github.com/enterprise-server@3.18/account-and-profile/concepts/personal-profile#private-profiles), this endpoint returns an empty list unless the request is authenticated as that user. A request authenticated as the specified user returns starred repositories visible to the token even if the token has no OAuth scopes.
    *
    * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/enterprise-server@3.18/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
    *
