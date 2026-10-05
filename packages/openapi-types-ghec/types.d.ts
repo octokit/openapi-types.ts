@@ -3,6 +3,9 @@
  * Do not make direct changes to the file.
  */
 
+/** WithRequired type helpers */
+type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
+
 /** OneOf type helpers */
 type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 type XOR<T, U> = T | U extends object
@@ -222,9 +225,9 @@ export interface paths {
   "/app/installations": {
     /**
      * List installations for the authenticated app
-     * @description You must use a [JWT](https://docs.github.com/enterprise-server@3.9/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+     * @description The permissions the installation has are included under the `permissions` key.
      *
-     * The permissions the installation has are included under the `permissions` key.
+     * You must use a [JWT](https://docs.github.com/enterprise-cloud@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
      */
     get: operations["apps/list-installations"];
   };
@@ -321,73 +324,61 @@ export interface paths {
   };
   "/assignments/{assignment_id}": {
     /**
-     * Closing down - Get an assignment
+     * Closed - Get an assignment
      * @deprecated
      * @description > [!WARNING]
-     * > **Closing down notice:** This operation is closing down and will be removed on August 28, 2026.
+     * > **Closed notice:** This operation is no longer available as of August 28, 2026.
      * > For more information, see the [GitHub Classroom sunset notice](https://gh.io/classroom-sunset).
-     *
-     * Gets a GitHub Classroom assignment. Assignment will only be returned if the current user is an administrator of the GitHub Classroom for the assignment.
      */
     get: operations["classroom/get-an-assignment"];
   };
   "/assignments/{assignment_id}/accepted_assignments": {
     /**
-     * Closing down - List accepted assignments for an assignment
+     * Closed - List accepted assignments for an assignment
      * @deprecated
      * @description > [!WARNING]
-     * > **Closing down notice:** This operation is closing down and will be removed on August 28, 2026.
+     * > **Closed notice:** This operation is no longer available as of August 28, 2026.
      * > For more information, see the [GitHub Classroom sunset notice](https://gh.io/classroom-sunset).
-     *
-     * Lists any assignment repositories that have been created by students accepting a GitHub Classroom assignment. Accepted assignments will only be returned if the current user is an administrator of the GitHub Classroom for the assignment.
      */
     get: operations["classroom/list-accepted-assignments-for-an-assignment"];
   };
   "/assignments/{assignment_id}/grades": {
     /**
-     * Closing down - Get assignment grades
+     * Closed - Get assignment grades
      * @deprecated
      * @description > [!WARNING]
-     * > **Closing down notice:** This operation is closing down and will be removed on August 28, 2026.
+     * > **Closed notice:** This operation is no longer available as of August 28, 2026.
      * > For more information, see the [GitHub Classroom sunset notice](https://gh.io/classroom-sunset).
-     *
-     * Gets grades for a GitHub Classroom assignment. Grades will only be returned if the current user is an administrator of the GitHub Classroom for the assignment.
      */
     get: operations["classroom/get-assignment-grades"];
   };
   "/classrooms": {
     /**
-     * Closing down - List classrooms
+     * Closed - List classrooms
      * @deprecated
      * @description > [!WARNING]
-     * > **Closing down notice:** This operation is closing down and will be removed on August 28, 2026.
+     * > **Closed notice:** This operation is no longer available as of August 28, 2026.
      * > For more information, see the [GitHub Classroom sunset notice](https://gh.io/classroom-sunset).
-     *
-     * Lists GitHub Classroom classrooms for the current user. Classrooms will only be returned if the current user is an administrator of one or more GitHub Classrooms.
      */
     get: operations["classroom/list-classrooms"];
   };
   "/classrooms/{classroom_id}": {
     /**
-     * Closing down - Get a classroom
+     * Closed - Get a classroom
      * @deprecated
      * @description > [!WARNING]
-     * > **Closing down notice:** This operation is closing down and will be removed on August 28, 2026.
+     * > **Closed notice:** This operation is no longer available as of August 28, 2026.
      * > For more information, see the [GitHub Classroom sunset notice](https://gh.io/classroom-sunset).
-     *
-     * Gets a GitHub Classroom classroom for the current user. Classroom will only be returned if the current user is an administrator of the GitHub Classroom.
      */
     get: operations["classroom/get-a-classroom"];
   };
   "/classrooms/{classroom_id}/assignments": {
     /**
-     * Closing down - List assignments for a classroom
+     * Closed - List assignments for a classroom
      * @deprecated
      * @description > [!WARNING]
-     * > **Closing down notice:** This operation is closing down and will be removed on August 28, 2026.
+     * > **Closed notice:** This operation is no longer available as of August 28, 2026.
      * > For more information, see the [GitHub Classroom sunset notice](https://gh.io/classroom-sunset).
-     *
-     * Lists GitHub Classroom assignments for a classroom. Assignments will only be returned if the current user is an administrator of the GitHub Classroom.
      */
     get: operations["classroom/list-assignments-for-a-classroom"];
   };
@@ -681,12 +672,16 @@ export interface paths {
   "/enterprises/{enterprise}/actions/permissions/artifact-and-log-retention": {
     /**
      * Get artifact and log retention settings for an enterprise
-     * @description Gets artifact and log retention settings for an enterprise.
+     * @description Gets retention settings for checks, workflow runs, commit statuses, artifacts, and logs for an enterprise.
+     *
+     * Checks include check suites, check runs, and check annotations. These settings also apply to checks and commit statuses created by third-party integrations, and are not limited to data created by GitHub Actions.
      */
     get: operations["enterprise-admin/get-artifact-and-log-retention-settings"];
     /**
      * Set artifact and log retention settings for an enterprise
-     * @description Sets artifact and log retention settings for an enterprise.
+     * @description Sets retention settings for checks, workflow runs, commit statuses, artifacts, and logs for an enterprise.
+     *
+     * Checks include check suites, check runs, and check annotations. These settings also apply to checks and commit statuses created by third-party integrations, and are not limited to data created by GitHub Actions.
      */
     put: operations["enterprise-admin/set-artifact-and-log-retention-settings"];
   };
@@ -793,6 +788,37 @@ export interface paths {
      * OAuth app tokens and personal access tokens (classic) need the `admin:enterprise` scope to use this endpoint.
      */
     put: operations["actions/set-github-actions-default-workflow-permissions-enterprise"];
+  };
+  "/enterprises/{enterprise}/actions/policies": {
+    /**
+     * List enterprise Actions policies
+     * @description List all Actions policies for an enterprise.
+     */
+    get: operations["actions/get-enterprise-actions-policies"];
+    /**
+     * Create an enterprise Actions policy
+     * @description Create an Actions policy for an enterprise.
+     * Omitting `workflow_path` targets all workflows without storing an explicit condition.
+     */
+    post: operations["actions/create-enterprise-actions-policy"];
+  };
+  "/enterprises/{enterprise}/actions/policies/{policy_id}": {
+    /**
+     * Get an enterprise Actions policy
+     * @description Get a specific Actions policy for an enterprise.
+     */
+    get: operations["actions/get-enterprise-actions-policy"];
+    /**
+     * Update an enterprise Actions policy
+     * @description Update an Actions policy for an enterprise.
+     * Omitting `workflow_path` preserves the policy's existing workflow targeting.
+     */
+    put: operations["actions/update-enterprise-actions-policy"];
+    /**
+     * Delete an enterprise Actions policy
+     * @description Delete an Actions policy for an enterprise.
+     */
+    delete: operations["actions/delete-enterprise-actions-policy"];
   };
   "/enterprises/{enterprise}/actions/runner-groups": {
     /**
@@ -1162,6 +1188,8 @@ export interface paths {
      * Create an audit log streaming configuration for an enterprise
      * @description Creates an audit log streaming configuration for any of the supported streaming endpoints: Azure Blob Storage, Azure Event Hubs, Amazon S3, Splunk, Google Cloud Storage, Datadog.
      *
+     * Microsoft Agent365 and Microsoft Purview streams require Microsoft Entra authorization and cannot be created with this endpoint. Configure those destinations from the enterprise audit log streaming settings.
+     *
      * When using this endpoint, you must encrypt the credentials following the same encryption steps as outlined in the guide on encrypting secrets. See "[Encrypting secrets for the REST API](/rest/guides/encrypting-secrets-for-the-rest-api)."
      */
     post: operations["enterprise-admin/create-audit-log-stream"];
@@ -1177,6 +1205,8 @@ export interface paths {
     /**
      * Update an existing audit log stream configuration
      * @description Updates an existing audit log stream configuration for an enterprise.
+     *
+     * Microsoft Agent365 streams are configured through Microsoft Entra authorization. For those streams, this endpoint can only pause or resume the stream. Authorization-managed fields cannot be updated; delete and recreate the stream to change its Entra tenant or authorization.
      *
      * When using this endpoint, you must encrypt the credentials following the same encryption steps as outlined in the guide on encrypting secrets. See "[Encrypting secrets for the REST API](/rest/guides/encrypting-secrets-for-the-rest-api)."
      */
@@ -1674,6 +1704,30 @@ export interface paths {
      */
     get: operations["copilot/get-usage-records"];
   };
+  "/enterprises/{enterprise}/credential-authorizations": {
+    /**
+     * Grant credential authorizations for enterprise organizations
+     * @description Authorizes an existing user credential for selected organizations in an enterprise. Currently supports personal access tokens (classic)
+     * and user-owned SSH authentication keys.
+     * The authenticated GitHub App must be owned by the enterprise or an organization in the enterprise. The credential
+     * owner must be a member of every selected organization, and the enterprise must be configured with
+     * an enterprise-level SSO provider.
+     *
+     * Credential authorizations remain active if the GitHub App is uninstalled or loses permission. They
+     * remain active until explicitly revoked, the credential is revoked or deleted, or the credential
+     * owner loses organization membership.
+     */
+    post: operations["enterprise-admin/grant-credential-authorizations"];
+    /**
+     * Revoke enterprise-delegated credential authorizations
+     * @description Queues revocation of every active organization credential authorization created through enterprise
+     * delegation for the enterprise. Credential authorizations created through SAML or other flows are not affected.
+     *
+     * The authenticated GitHub App must be owned by the enterprise or one of its organizations,
+     * installed on the enterprise, and have the `enterprise_credentials:write` permission.
+     */
+    delete: operations["enterprise-admin/revoke-delegated-credential-authorizations"];
+  };
   "/enterprises/{enterprise}/credential-authorizations/revoke-all": {
     /**
      * Revoke all credential authorizations for an enterprise
@@ -1768,6 +1822,60 @@ export interface paths {
      * OAuth app tokens and personal access tokens (classic) need the `admin:enterprise` scope to use this endpoint.
      */
     post: operations["enterprise-admin/revoke-credential-type-for-user"];
+  };
+  "/enterprises/{enterprise}/credentials": {
+    /**
+     * List enterprise token inventory
+     * @deprecated
+     * @description > [!WARNING]
+     * > **Closing down notice:** This operation is closing down and will be removed on October 2, 2026. Please migrate to the asynchronous export: use "[Create an enterprise token inventory export](https://docs.github.com/enterprise-cloud@latest/rest/enterprise-admin/token-inventory#create-an-enterprise-token-inventory-export)", which accepts the same filters in its request body, to start a CSV export, then "[Get an enterprise token inventory export](https://docs.github.com/enterprise-cloud@latest/rest/enterprise-admin/token-inventory#get-an-enterprise-token-inventory-export)" to download it. For more information, see the [changelog](https://github.blog/changelog/2026-09-21-github-enterprise-adds-credential-inventory-exports/).
+     *
+     * Lists an enterprise's credential inventory: both credentials currently authorized to access the enterprise and credentials owned by enterprise members that have no current enterprise authorization. Covers personal access tokens (classic and fine-grained), OAuth App and GitHub App user tokens, SSH keys, GitHub App installations, and federated credentials, assembled on demand from the canonical sources. Results are paginated with an opaque cursor via the `Link` header; there is no total count.
+     *
+     * You must be an enterprise owner (or hold a role with the "View enterprise credentials" permission) to use this endpoint.
+     *
+     * OAuth app tokens and personal access tokens (classic) require the `read:enterprise` scope to access this endpoint.
+     */
+    get: operations["enterprise-admin/list-enterprise-token-inventory"];
+  };
+  "/enterprises/{enterprise}/credentials/exports": {
+    /**
+     * Create an enterprise token inventory export
+     * @description Starts an asynchronous CSV export of the enterprise token inventory and returns an opaque export id to poll. Limited to a small number of exports per enterprise per day.
+     *
+     * The generated file is UTF-8 CSV with a header row, using RFC 4180 field quoting and escaping and LF (`\n`) line endings. Timestamps are ISO-8601 in UTC (for example, `2026-09-15T12:00:00Z`). An empty cell means the value is null or unknown, never `false`. Multi-value cells join their entries with `; ` — this includes `scopes` and `permissions`, where each permission is encoded as a `resource:action` pair (for example, `contents:write; issues:read`). The file has one row per (credential, authorizing organization); the credential columns repeat while `organization_id` and `organization` vary, and a credential with no organization grant appears once with empty organization columns. `authorization_count` is the credential's total number of organization authorizations across the enterprise, plus one when `enterprise_authorized` is true, independent of any filters applied to the export. `credential_id` is a raw source-table id that can collide across credential types, so it is unique only together with `credential_type`, and only for the types that populate it (classic and fine-grained PATs, OAuth and GitHub App user tokens); SSH keys are keyed by `fingerprint`, while GitHub App installations and federated JTIs have no unique per-row column. `owner_type` (`user`, `oauth_application`, or `github_app`) disambiguates the id space of `owner_id`. `expiry_status` is `expires`, `never`, or `unknown` — `unknown` marks a credential whose expiration could not be determined, so a blank `expires_at` is never mistaken for one that never expires.
+     *
+     * You must be an enterprise owner (or hold a role with the "View enterprise credentials" permission) to use this endpoint.
+     *
+     * OAuth app tokens and personal access tokens (classic) require the `read:enterprise` scope to access this endpoint.
+     */
+    post: operations["enterprise-admin/create-enterprise-token-inventory-export"];
+  };
+  "/enterprises/{enterprise}/credentials/exports/{export_id}": {
+    /**
+     * Get an enterprise token inventory export
+     * @description Returns the status of an enterprise token inventory export. Once the export is ready this redirects to a short-lived URL to download the CSV.
+     *
+     * You must be an enterprise owner (or hold a role with the "View enterprise credentials" permission) to use this endpoint.
+     *
+     * OAuth app tokens and personal access tokens (classic) require the `read:enterprise` scope to access this endpoint.
+     */
+    get: operations["enterprise-admin/get-enterprise-token-inventory-export"];
+  };
+  "/enterprises/{enterprise}/credentials/{inventory_id}": {
+    /**
+     * Get an enterprise token inventory item
+     * @deprecated
+     * @description > [!WARNING]
+     * > **Closing down notice:** This operation is closing down and will be removed on October 2, 2026. Please migrate to the asynchronous export: use "[Create an enterprise token inventory export](https://docs.github.com/enterprise-cloud@latest/rest/enterprise-admin/token-inventory#create-an-enterprise-token-inventory-export)" to start a CSV export, optionally scoped with filters such as `owner` or `application`, then "[Get an enterprise token inventory export](https://docs.github.com/enterprise-cloud@latest/rest/enterprise-admin/token-inventory#get-an-enterprise-token-inventory-export)" to download it. For more information, see the [changelog](https://github.blog/changelog/2026-09-21-github-enterprise-adds-credential-inventory-exports/).
+     *
+     * Returns a single credential from the enterprise token inventory. Use the opaque `inventory_id` returned by the list endpoint for the same enterprise.
+     *
+     * You must be an enterprise owner (or hold a role with the "View enterprise credentials" permission) to use this endpoint.
+     *
+     * OAuth app tokens and personal access tokens (classic) require the `read:enterprise` scope to access this endpoint.
+     */
+    get: operations["enterprise-admin/get-enterprise-token-inventory-item"];
   };
   "/enterprises/{enterprise}/dependabot/alerts": {
     /**
@@ -2039,6 +2147,16 @@ export interface paths {
      * OAuth app tokens and personal access tokens (classic) need either the `manage_billing:copilot` or `read:org` scopes to use this endpoint.
      */
     get: operations["copilot/get-copilot-seat-details-for-enterprise-user"];
+  };
+  "/enterprises/{enterprise}/members/{username}/teams": {
+    /**
+     * List enterprise teams for a user
+     * @description Lists all enterprise teams that a user is a member of. This endpoint is available only for
+     * enterprises using the new enterprise teams experience.
+     *
+     * The authenticated user must be an enterprise owner or have the `enterprise_teams:read` permission.
+     */
+    get: operations["enterprise-team-memberships/list-teams-for-user"];
   };
   "/enterprises/{enterprise}/network-configurations": {
     /**
@@ -2318,7 +2436,7 @@ export interface paths {
   "/enterprises/{enterprise}/settings/billing/ai_credit/usage": {
     /**
      * Get billing AI credit usage report for an enterprise
-     * @description Gets a report of AI credit usage for an enterprise. To use this endpoint, you must be an administrator or billing manager of the enterprise, or a custom role holder with fine-grained read access to enterprise billing. An installation access token for a GitHub App installed on the enterprise with read access to enterprise billing can get this usage report.
+     * @description Gets a report of AI credit usage for an enterprise. To use this endpoint, you must be an administrator or billing manager of the enterprise, an organization owner in the enterprise, or a custom role holder with fine-grained read access to enterprise billing. An installation access token for a GitHub App installed on the enterprise with read access to enterprise billing can get this usage report.
      *
      * **Note:** Only data from the past 24 months is accessible via this endpoint.
      */
@@ -2327,7 +2445,7 @@ export interface paths {
   "/enterprises/{enterprise}/settings/billing/budgets": {
     /**
      * Get all budgets
-     * @description Gets budgets for an enterprise. Enterprise owners and billing managers can view all budgets, and organization administrators can view budgets scoped to organizations and repositories they administer. A custom role holder with fine-grained read access to enterprise billing can also view budgets. An installation access token for a GitHub App installed on the enterprise with read access to enterprise billing can list all budgets in the enterprise.
+     * @description Gets budgets for an enterprise. Enterprise owners and billing managers can view all budgets, and organization administrators can view budgets scoped to organizations and repositories they administer. A custom role holder with fine-grained read access to enterprise billing can view non-repository budgets; repository-scoped budgets require the organization administrator permissions described above. An installation access token for a GitHub App installed on the enterprise with read access to enterprise billing can list all budgets in the enterprise.
      * Each page returns up to 100 budgets.
      */
     get: operations["billing/get-all-budgets"];
@@ -2340,7 +2458,7 @@ export interface paths {
   "/enterprises/{enterprise}/settings/billing/budgets/{budget_id}": {
     /**
      * Get a budget by ID
-     * @description Gets a budget by ID. Enterprise owners and billing managers can view any budget in the enterprise, and organization administrators can view budgets scoped to organizations and repositories they administer. A custom role holder with fine-grained read access to enterprise billing can also view the budget. An installation access token for a GitHub App installed on the enterprise with read access to enterprise billing can get any budget in the enterprise.
+     * @description Gets a budget by ID. Enterprise owners and billing managers can view any budget in the enterprise, and organization administrators can view budgets scoped to organizations and repositories they administer. A custom role holder with fine-grained read access to enterprise billing can view the budget unless it is scoped to a repository; repository-scoped budgets require the organization administrator permissions described above. An installation access token for a GitHub App installed on the enterprise with read access to enterprise billing can get any budget in the enterprise.
      */
     get: operations["billing/get-budget"];
     /**
@@ -2395,21 +2513,21 @@ export interface paths {
      * Add resources to a cost center
      * @description Adds resources to a cost center.
      *
-     * The usage for the resources will be charged to the cost center's budget. Enterprise owners and billing managers can add any resource, and organization owners can add non-team resources to cost centers associated with resources they administer. A custom role holder with fine-grained write access to enterprise billing can also add resources. An installation access token for a GitHub App installed on the enterprise with write access to enterprise billing can add resources to any cost center in the enterprise.
+     * The usage for the resources will be charged to the cost center's budget. Enterprise owners and billing managers can add any resource, and organization owners can add non-team resources to cost centers associated with resources they administer. A custom role holder with fine-grained write access to enterprise billing can add users in the enterprise who are visible to them and organizations or repositories they administer, but cannot add enterprise teams. An installation access token for a GitHub App installed on the enterprise with write access to enterprise billing can add resources to any cost center in the enterprise.
      */
     post: operations["billing/add-resource-to-cost-center"];
     /**
      * Remove resources from a cost center
      * @description Remove resources from a cost center.
      *
-     * The usage for the resources will no longer be charged to the cost center's budget. Enterprise owners and billing managers can remove any resource, and organization owners can remove non-team resources from cost centers associated with resources they administer. A custom role holder with fine-grained write access to enterprise billing can also remove resources. An installation access token for a GitHub App installed on the enterprise with write access to enterprise billing can remove resources from any cost center in the enterprise.
+     * The usage for the resources will no longer be charged to the cost center's budget. Enterprise owners and billing managers can remove any resource, and organization owners can remove non-team resources from cost centers associated with resources they administer. A custom role holder with fine-grained write access to enterprise billing can remove users and any organizations or repositories they administer; only enterprise owners and billing managers can remove enterprise teams. An installation access token for a GitHub App installed on the enterprise with write access to enterprise billing can remove users from any cost center in the enterprise.
      */
     delete: operations["billing/remove-resource-from-cost-center"];
   };
   "/enterprises/{enterprise}/settings/billing/premium_request/usage": {
     /**
      * Get billing premium request usage report for an enterprise
-     * @description Gets a report of premium request usage for an enterprise. To use this endpoint, you must be an administrator or billing manager of the enterprise, or a custom role holder with fine-grained read access to enterprise billing. An installation access token for a GitHub App installed on the enterprise with read access to enterprise billing can get this usage report.
+     * @description Gets a report of premium request usage for an enterprise. To use this endpoint, you must be an administrator or billing manager of the enterprise, an organization owner in the enterprise, or a custom role holder with fine-grained read access to enterprise billing. An installation access token for a GitHub App installed on the enterprise with read access to enterprise billing can get this usage report.
      *
      * **Note:** Only data from the past 24 months is accessible via this endpoint.
      */
@@ -2418,7 +2536,7 @@ export interface paths {
   "/enterprises/{enterprise}/settings/billing/reports": {
     /**
      * List usage report exports
-     * @description Lists all usage report exports for an enterprise. The authenticated user must be an enterprise admin or billing manager, or a custom role holder with fine-grained read access to enterprise billing. An installation access token for a GitHub App installed on the enterprise with write access to enterprise administration, or with read access to enterprise billing, can also list usage report exports.
+     * @description Lists all usage report exports for an enterprise. Completed and failed report exports are available for 31 days after completion or failure. This retention period applies only to generated report records. New reports can include eligible usage data from up to 24 months ago, subject to the enterprise's creation or migration date and the report type's date-range limits. The authenticated user must be an enterprise admin or billing manager, or a custom role holder with fine-grained read access to enterprise billing. An installation access token for a GitHub App installed on the enterprise with write access to enterprise administration, or with read access to enterprise billing, can also list usage report exports.
      */
     get: operations["billing/list-usage-report-exports"];
     /**
@@ -2431,14 +2549,14 @@ export interface paths {
   "/enterprises/{enterprise}/settings/billing/reports/{report_id}": {
     /**
      * Get a usage report export
-     * @description Gets the status and details of a usage report export by ID. The authenticated user must be an enterprise admin or billing manager, or a custom role holder with fine-grained read access to enterprise billing. An installation access token for a GitHub App installed on the enterprise with write access to enterprise administration, or with read access to enterprise billing, can also get a usage report export.
+     * @description Gets the status and details of a usage report export by ID. Completed and failed report exports are available for 31 days after completion or failure. This retention period applies only to generated report records. New reports can include eligible usage data from up to 24 months ago, subject to the enterprise's creation or migration date and the report type's date-range limits. The authenticated user must be an enterprise admin or billing manager, or a custom role holder with fine-grained read access to enterprise billing. An installation access token for a GitHub App installed on the enterprise with write access to enterprise administration, or with read access to enterprise billing, can also get a usage report export.
      */
     get: operations["billing/get-usage-report-export"];
   };
   "/enterprises/{enterprise}/settings/billing/usage": {
     /**
      * Get billing usage report for an enterprise
-     * @description Gets a report of usage by cost center for an enterprise. To use this endpoint, you must be an administrator or billing manager of the enterprise, or a custom role holder with fine-grained read access to enterprise billing. By default this endpoint will return usage that does not have a cost center. An installation access token for a GitHub App installed on the enterprise with read access to enterprise billing can get this usage report.
+     * @description Gets a report of usage by cost center for an enterprise. To use this endpoint, you must be an administrator or billing manager of the enterprise, an organization owner in the enterprise, or a custom role holder with fine-grained read access to enterprise billing. By default this endpoint will return usage that does not have a cost center. An installation access token for a GitHub App installed on the enterprise with read access to enterprise billing can get this usage report.
      *
      * **Note:** This endpoint is only available to enterprises with access to the enhanced billing platform. For more information, see "[About the enhanced billing platform for enterprises](https://docs.github.com/enterprise-cloud@latest/billing/using-the-enhanced-billing-platform-for-enterprises/about-the-enhanced-billing-platform-for-enterprises#how-do-i-know-if-i-can-access-the-enhanced-billing-platform)."
      */
@@ -2447,7 +2565,7 @@ export interface paths {
   "/enterprises/{enterprise}/settings/billing/usage/summary": {
     /**
      * Get billing usage summary for an enterprise
-     * @description Gets a summary report of usage for an enterprise. To use this endpoint, you must be an administrator or billing manager of the enterprise, or a custom role holder with fine-grained read access to enterprise billing. By default, this endpoint will return usage across all cost centers in the enterprise. An installation access token for a GitHub App installed on the enterprise with read access to enterprise billing can get this usage summary report.
+     * @description Gets a summary report of usage for an enterprise. To use this endpoint, you must be an administrator or billing manager of the enterprise, an organization owner in the enterprise, or a custom role holder with fine-grained read access to enterprise billing. By default, this endpoint will return usage across all cost centers in the enterprise. An installation access token for a GitHub App installed on the enterprise with read access to enterprise billing can get this usage summary report.
      *
      * **Note:** Only data from the past 24 months is accessible via this endpoint.
      */
@@ -3292,14 +3410,18 @@ export interface paths {
   "/orgs/{org}/actions/permissions/artifact-and-log-retention": {
     /**
      * Get artifact and log retention settings for an organization
-     * @description Gets artifact and log retention settings for an organization.
+     * @description Gets retention settings for checks, workflow runs, commit statuses, artifacts, and logs for an organization.
+     *
+     * Checks include check suites, check runs, and check annotations. These settings also apply to checks and commit statuses created by third-party integrations, and are not limited to data created by GitHub Actions.
      *
      * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope or the "Actions policies" fine-grained permission to use this endpoint.
      */
     get: operations["actions/get-artifact-and-log-retention-settings-organization"];
     /**
      * Set artifact and log retention settings for an organization
-     * @description Sets artifact and log retention settings for an organization.
+     * @description Sets retention settings for checks, workflow runs, commit statuses, artifacts, and logs for an organization.
+     *
+     * Checks include check suites, check runs, and check annotations. These settings also apply to checks and commit statuses created by third-party integrations, and are not limited to data created by GitHub Actions.
      *
      * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope or the "Actions policies" fine-grained permission to use this endpoint.
      */
@@ -3453,6 +3575,37 @@ export interface paths {
      * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
      */
     put: operations["actions/set-github-actions-default-workflow-permissions-organization"];
+  };
+  "/orgs/{org}/actions/policies": {
+    /**
+     * List organization Actions policies
+     * @description List all Actions policies for an organization.
+     */
+    get: operations["actions/get-org-actions-policies"];
+    /**
+     * Create an organization Actions policy
+     * @description Create an Actions policy for an organization.
+     * Omitting `workflow_path` targets all workflows without storing an explicit condition.
+     */
+    post: operations["actions/create-org-actions-policy"];
+  };
+  "/orgs/{org}/actions/policies/{policy_id}": {
+    /**
+     * Get an organization Actions policy
+     * @description Get a specific Actions policy for an organization.
+     */
+    get: operations["actions/get-org-actions-policy"];
+    /**
+     * Update an organization Actions policy
+     * @description Update an Actions policy for an organization.
+     * Omitting `workflow_path` preserves the policy's existing workflow targeting.
+     */
+    put: operations["actions/update-org-actions-policy"];
+    /**
+     * Delete an organization Actions policy
+     * @description Delete an Actions policy for an organization.
+     */
+    delete: operations["actions/delete-org-actions-policy"];
   };
   "/orgs/{org}/actions/runner-groups": {
     /**
@@ -4437,6 +4590,28 @@ export interface paths {
      */
     patch: operations["campaigns/update-campaign"];
   };
+  "/orgs/{org}/code-scanning/ai-scan": {
+    /**
+     * Get the AI Scan setting for an organization
+     * @description Gets the AI Scan setting stored on an organization.
+     *
+     * The response reports the value stored on the organization. Organization respects enterprise policy.
+     *
+     * The authenticated user must be an owner or security manager for the organization to use this endpoint.
+     *
+     * OAuth app tokens and personal access tokens (classic) need the `admin:org`, `repo`, or `write:org` scope to use this endpoint. Organization owners can use `admin:org` or `repo`; security managers need `write:org`.
+     */
+    get: operations["code-scanning/get-ai-scan-enablement-for-org"];
+    /**
+     * Update the AI Scan setting for an organization
+     * @description Updates the AI Scan setting stored on an organization.
+     *
+     * The organization respects the enterprise policy, so enabling is rejected when the enterprise disallows AI Scan.
+     *
+     * OAuth app tokens and personal access tokens (classic) need the `admin:org`, `repo`, or `write:org` scope to use this endpoint. Organization owners can use `admin:org` or `repo`; security managers need `write:org`.
+     */
+    patch: operations["code-scanning/update-ai-scan-enablement-for-org"];
+  };
   "/orgs/{org}/code-scanning/alerts": {
     /**
      * List code scanning alerts for an organization
@@ -4487,7 +4662,9 @@ export interface paths {
      *
      * The authenticated user must be an administrator or security manager for the organization to use this endpoint.
      *
-     * OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint.
+     * Repositories with active enterprise-enforced attachments are skipped unless the authenticated user can manage the enterprise's code security settings; the rest are detached. Inactive enterprise-enforced attachments, such as failed attachments, are detached. The request still returns `204` if every repository is skipped.
+     *
+     * OAuth app tokens and classic PATs require the `write:org` scope. Managing enterprise-enforced configurations also requires `admin:enterprise` and is not supported by fine-grained PATs or GitHub App access tokens.
      */
     delete: operations["code-security/detach-configuration"];
   };
@@ -4531,7 +4708,11 @@ export interface paths {
      *
      * The authenticated user must be an administrator or security manager for the organization to use this endpoint.
      *
-     * OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint.
+     * Directly applying an enterprise-enforced configuration also requires permission to manage the enterprise's code security settings. Without it, the request returns `403` and no repositories change.
+     *
+     * When applying a different configuration, repositories with active enterprise-enforced attachments are skipped unless the authenticated user can manage the enterprise's code security settings; the remaining repositories are updated. The request still returns `202` if every repository is skipped.
+     *
+     * OAuth app tokens and classic PATs require the `write:org` scope. Directly applying an enterprise-enforced configuration also requires `admin:enterprise` and is not supported by fine-grained PATs or GitHub App access tokens.
      */
     post: operations["code-security/attach-configuration"];
   };
@@ -4542,9 +4723,11 @@ export interface paths {
      *
      * This configuration will be applied to the matching repository type (all, none, public, private and internal) by default when they are created.
      *
-     * The authenticated user must be an administrator or security manager for the organization to use this endpoint.
+     * The authenticated user must be an administrator or security manager for the organization to use this endpoint. Setting an enterprise-enforced configuration as the default also requires permission to manage the enterprise's code security settings.
      *
-     * OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint.
+     * A default set with this endpoint is an organization default, even if the configuration is owned or enforced by the enterprise. An enterprise-enforced configuration set as an enterprise-level default for the same repository visibility takes precedence.
+     *
+     * OAuth app tokens and classic PATs require the `write:org` scope; setting an enterprise-enforced configuration as the default also requires `admin:enterprise`. Fine-grained PATs and GitHub App access tokens cannot perform that action.
      */
     put: operations["code-security/set-configuration-as-default"];
   };
@@ -5402,6 +5585,8 @@ export interface paths {
      * >    This operation supports both server-to-server and user-to-server access.
      * Unauthorized users will not see the existence of this endpoint.
      *
+     * OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint.
+     *
      * **Example request body:**
      * ```json
      * {
@@ -5422,6 +5607,8 @@ export interface paths {
      * Unauthorized users will not see the existence of this endpoint.
      *
      * This operation supports both server-to-server and user-to-server access.
+     *
+     * OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint.
      */
     put: operations["dependabot/set-repository-access-default-level"];
   };
@@ -6689,6 +6876,75 @@ export interface paths {
      */
     get: operations["projects/list-view-items-for-org"];
   };
+  "/orgs/{org}/properties/installations": {
+    /**
+     * Get registered app installations for external custom properties
+     * @description Gets the registered GitHub App installations used to read and write external custom properties for an organization.
+     *
+     * A GitHub App installation token will only be able to see its own registration info, whereas an authenticated user will be able to see all registrations for the organization.
+     *
+     * To use this endpoint, the authenticated caller must have the `organization_external_properties_for_repos:admin` permission.
+     */
+    get: operations["orgs/external-properties-for-repos-get-organization-app-installations"];
+    /**
+     * Register an app installation for external custom properties
+     * @description Registers a GitHub App installation so it can read and write external custom properties for an organization, and assigns it a display name.
+     *
+     * The display name must be 1 to 15 characters and contain only letters and numbers. Capitalization is preserved as entered.
+     *
+     * An app installation can only be registered once, and its display name can't be changed afterward. Calling with an app installation that has already been registered returns a `422` response with an `already_exists` error code for `installation_id`. If the display name is already in use by another app installation in the organization, the response is `422` with an `already_exists` error code for `display_name`. An invalid display name also returns `422`.
+     *
+     * The app installation being registered must have write or admin permission for organization external custom properties for repositories. If it doesn't, the response is `422`. This is the permission of the installation being registered, which isn't necessarily the caller.
+     *
+     * Uninstalling the GitHub App unregisters it, and removes the external custom properties it created.
+     *
+     * To use this endpoint, the authenticated caller must have the `organization_external_properties_for_repos:admin` permission.
+     */
+    post: operations["orgs/external-properties-for-repos-register-organization-app-installation"];
+  };
+  "/orgs/{org}/properties/installations/schema": {
+    /**
+     * Get all external custom properties for a GitHub App installation in an organization
+     * @description Gets all external custom properties defined for the authenticated GitHub App installation on an organization.
+     *
+     * To use this endpoint, the authenticated GitHub App must have the `organization_external_properties_for_repos:read` permission.
+     */
+    get: operations["orgs/external-properties-for-repos-get-organization-definitions"];
+  };
+  "/orgs/{org}/properties/installations/values": {
+    /**
+     * Create or update external custom property values for organization repositories
+     * @description Create new or update existing external custom property values for repositories in a batch that belong to an organization.
+     * Each target repository will have its external custom property values updated to match the values provided in the request.
+     *
+     * A maximum of 30 repositories can be updated in a single request.
+     *
+     * Using a value of `null` for an external custom property will remove or 'unset' the property value from the repository.
+     *
+     * To use this endpoint, the authenticated GitHub App must have the `organization_external_properties_for_repos:write` permission.
+     */
+    patch: operations["orgs/external-properties-for-repos-create-or-update-organization-values"];
+  };
+  "/orgs/{org}/properties/installations/values/{property_name}": {
+    /**
+     * Remove all external custom property values for a property across all organization repositories
+     * @description Removes all external custom property values for a specified property name across all repositories that belong to an organization.
+     *
+     * To use this endpoint, the authenticated GitHub App must have the `organization_external_properties_for_repos:write` permission.
+     */
+    delete: operations["orgs/external-properties-for-repos-delete-organization-values"];
+    /**
+     * Create or update external custom property values for a property across organization repositories
+     * @description Create new or update existing external custom property values for a single named property across repositories that belong to an organization.
+     *
+     * Up to 100 repository values can be updated in a single request. Repositories not included in the request are left unchanged.
+     *
+     * Using a value of `null` for a repository will remove or 'unset' the property value for that repository. A request that only contains `null` values for a property that does not yet exist is a no-op.
+     *
+     * To use this endpoint, the authenticated GitHub App must have the `organization_external_properties_for_repos:write` permission.
+     */
+    patch: operations["orgs/external-properties-for-repos-create-or-update-values-for-organization-property"];
+  };
   "/orgs/{org}/properties/schema": {
     /**
      * Get all custom properties for an organization
@@ -7168,6 +7424,9 @@ export interface paths {
      * Each member includes their `role` on the team (`member` or `maintainer`) and an `inherited` flag indicating whether the membership is inherited from a child team (`true`) or is a direct membership (`false`). These fields let you read a member's role and direct/inherited status without additional requests.
      *
      * To list members in a team, the team must be visible to the authenticated user.
+     *
+     * > [!NOTE]
+     * > You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/members`.
      */
     get: operations["teams/list-members-in-org"];
   };
@@ -7531,6 +7790,21 @@ export interface paths {
      */
     post: operations["actions/re-run-job-for-workflow-run"];
   };
+  "/repos/{owner}/{repo}/actions/jobs/{job_id}/steps/{step_number}/logs": {
+    /**
+     * Download step logs for a workflow run job
+     * @description Gets a redirect URL to download a plain text file of logs for a specific step of a workflow job. This link expires after
+     * 1 minute. Look for `Location:` in the response header to find the URL for the download.
+     *
+     * This endpoint is intended for selective retrieval of one step. To download complete job logs, use the
+     * [job logs endpoint](https://docs.github.com/enterprise-cloud@latest/rest/actions/workflow-jobs#download-job-logs-for-a-workflow-run).
+     *
+     * Anyone with read access to the repository can use this endpoint.
+     *
+     * If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+     */
+    get: operations["actions/download-step-logs-for-workflow-run-job"];
+  };
   "/repos/{owner}/{repo}/actions/oidc/customization/sub": {
     /**
      * Get the customization template for an OIDC subject claim for a repository
@@ -7613,14 +7887,18 @@ export interface paths {
   "/repos/{owner}/{repo}/actions/permissions/artifact-and-log-retention": {
     /**
      * Get artifact and log retention settings for a repository
-     * @description Gets artifact and log retention settings for a repository.
+     * @description Gets retention settings for checks, workflow runs, commit statuses, artifacts, and logs for a repository.
+     *
+     * Checks include check suites, check runs, and check annotations. These settings also apply to checks and commit statuses created by third-party integrations, and are not limited to data created by GitHub Actions.
      *
      * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
      */
     get: operations["actions/get-artifact-and-log-retention-settings-repository"];
     /**
      * Set artifact and log retention settings for a repository
-     * @description Sets artifact and log retention settings for a repository.
+     * @description Sets retention settings for checks, workflow runs, commit statuses, artifacts, and logs for a repository.
+     *
+     * Checks include check suites, check runs, and check annotations. These settings also apply to checks and commit statuses created by third-party integrations, and are not limited to data created by GitHub Actions.
      *
      * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
      */
@@ -7697,6 +7975,37 @@ export interface paths {
      * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
      */
     put: operations["actions/set-github-actions-default-workflow-permissions-repository"];
+  };
+  "/repos/{owner}/{repo}/actions/policies": {
+    /**
+     * List repository Actions policies
+     * @description List all Actions policies for a repository.
+     */
+    get: operations["actions/get-repo-actions-policies"];
+    /**
+     * Create a repository Actions policy
+     * @description Create an Actions policy for a repository.
+     * Omitting `workflow_path` targets all workflows without storing an explicit condition.
+     */
+    post: operations["actions/create-repo-actions-policy"];
+  };
+  "/repos/{owner}/{repo}/actions/policies/{policy_id}": {
+    /**
+     * Get a repository Actions policy
+     * @description Get a specific Actions policy for a repository.
+     */
+    get: operations["actions/get-repo-actions-policy"];
+    /**
+     * Update a repository Actions policy
+     * @description Update an Actions policy for a repository.
+     * Omitting `workflow_path` preserves the policy's existing workflow targeting.
+     */
+    put: operations["actions/update-repo-actions-policy"];
+    /**
+     * Delete a repository Actions policy
+     * @description Delete an Actions policy for a repository.
+     */
+    delete: operations["actions/delete-repo-actions-policy"];
   };
   "/repos/{owner}/{repo}/actions/runners": {
     /**
@@ -8961,6 +9270,22 @@ export interface paths {
      */
     patch: operations["code-quality/update-setup"];
   };
+  "/repos/{owner}/{repo}/code-scanning/ai-scan": {
+    /**
+     * Get AI Scan enablement for a repository
+     * @description Gets whether AI Scan is enabled for a repository.
+     *
+     * OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories.
+     */
+    get: operations["code-scanning/get-ai-scan-enablement"];
+    /**
+     * Update AI Scan enablement for a repository
+     * @description Updates whether AI Scan is enabled for a repository.
+     *
+     * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories.
+     */
+    patch: operations["code-scanning/update-ai-scan-enablement"];
+  };
   "/repos/{owner}/{repo}/code-scanning/alerts": {
     /**
      * List code scanning alerts for a repository
@@ -9954,7 +10279,11 @@ export interface paths {
   "/repos/{owner}/{repo}/dependency-graph/sbom": {
     /**
      * Export a software bill of materials (SBOM) for a repository.
-     * @description Exports the software bill of materials (SBOM) for a repository in SPDX JSON format.
+     * @deprecated
+     * @description > [!WARNING]
+     * > **Closing down notice:** This operation is closing down and will not be accessible after November 13, 2026. Please migrate to the asynchronous flow. Use "[Request generation of a software bill of materials (SBOM) for a repository](https://docs.github.com/enterprise-cloud@latest/rest/dependency-graph/sboms#request-generation-of-a-software-bill-of-materials-sbom-for-a-repository)" to trigger the report, then "[Fetch a software bill of materials (SBOM) for a repository](https://docs.github.com/enterprise-cloud@latest/rest/dependency-graph/sboms#fetch-a-software-bill-of-materials-sbom-for-a-repository)" to retrieve it. For more information, see the [changelog](https://github.blog/changelog/2026-05-12-synchronous-sbom-api-deprecated/).
+     *
+     * Exports the software bill of materials (SBOM) for a repository in SPDX JSON format.
      */
     get: operations["dependency-graph/export-sbom"];
   };
@@ -11463,6 +11792,54 @@ export interface paths {
      */
     delete: operations["reactions/delete-for-issue"];
   };
+  "/repos/{owner}/{repo}/issues/{issue_number}/relates_to": {
+    /**
+     * List issues related to an issue
+     * @description You can use the REST API to list the issues that are related to an issue.
+     *
+     * This endpoint supports the following custom media types. For more information, see [Media types](https://docs.github.com/enterprise-cloud@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types).
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw Markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.text+json`**: Returns a text only representation of the Markdown body. Response will include `body_text`.
+     * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's Markdown. Response will include `body_html`.
+     * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+     */
+    get: operations["issues/list-relates-to"];
+    /**
+     * Add a related issue
+     * @description You can use the REST API to mark an issue as related to another issue.
+     *
+     * Creating content too quickly using this endpoint may result in secondary rate limiting.
+     * For more information, see [Rate limits for the API](https://docs.github.com/enterprise-cloud@latest/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)
+     * and [Best practices for using the REST API](https://docs.github.com/enterprise-cloud@latest/rest/guides/best-practices-for-using-the-rest-api).
+     *
+     * This endpoint supports the following custom media types. For more information, see [Media types](https://docs.github.com/enterprise-cloud@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types).
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw Markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.text+json`**: Returns a text only representation of the Markdown body. Response will include `body_text`.
+     * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's Markdown. Response will include `body_html`.
+     * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+     */
+    post: operations["issues/add-relates-to"];
+  };
+  "/repos/{owner}/{repo}/issues/{issue_number}/relates_to/{issue_id}": {
+    /**
+     * Remove a related issue
+     * @description You can use the REST API to remove a 'relates to' relationship between two issues.
+     *
+     * Removing content too quickly using this endpoint may result in secondary rate limiting.
+     * For more information, see [Rate limits for the API](https://docs.github.com/enterprise-cloud@latest/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)
+     * and [Best practices for using the REST API](https://docs.github.com/enterprise-cloud@latest/rest/guides/best-practices-for-using-the-rest-api).
+     *
+     * This endpoint supports the following custom media types. For more information, see [Media types](https://docs.github.com/enterprise-cloud@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types).
+     *
+     * - **`application/vnd.github.raw+json`**: Returns the raw Markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+     * - **`application/vnd.github.text+json`**: Returns a text only representation of the Markdown body. Response will include `body_text`.
+     * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's Markdown. Response will include `body_html`.
+     * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+     */
+    delete: operations["issues/remove-relates-to"];
+  };
   "/repos/{owner}/{repo}/issues/{issue_number}/sub_issue": {
     /**
      * Remove sub-issue
@@ -12082,23 +12459,29 @@ export interface paths {
     get: operations["pulls/check-if-merged"];
     /**
      * Merge a pull request
-     * @description Merges a pull request into the base branch.
-     * This endpoint triggers [notifications](https://docs.github.com/enterprise-cloud@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/enterprise-cloud@latest/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/enterprise-cloud@latest/rest/guides/best-practices-for-using-the-rest-api)."
+     * @description > [!NOTE]
+     * > We recommend using the [asynchronous merge API](https://docs.github.com/enterprise-cloud@latest/rest/pulls/pulls#merge-a-pull-request-asynchronously) instead. This endpoint does not support stacked pull requests or merging with a merge queue.
+     *
+     * Merges a pull request into the base branch.
+     *
+     * This endpoint triggers [notifications](https://docs.github.com/enterprise-cloud@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+     * Creating content too quickly using this endpoint may result in secondary rate limiting.
+     * For more information, see "[Rate limits for the API](https://docs.github.com/enterprise-cloud@latest/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/enterprise-cloud@latest/rest/guides/best-practices-for-using-the-rest-api)."
      */
     put: operations["pulls/merge"];
   };
   "/repos/{owner}/{repo}/pulls/{pull_number}/merge-async": {
     /**
      * Merge a pull request asynchronously
-     * @description Merges a pull request into the base branch in the background. Merging in this way allows certain types of errors to be retried, and avoids the risk of timeouts for particularly complex merges.
+     * @description Merges a pull request into the base branch in the background or adds it to a merge queue. Background processing allows certain types of errors to be retried and reduces the risk of timeouts for complex merges.
      *
-     * This is the required method for merging stacked PRs, but also supports unstacked PRs. When using this endpoint to merge a stacked pull request, all pull requests in the stack up to and including the requested PR will be merged into the base branch.
+     * This is the required API for merging stacked pull requests. For a stacked pull request, the operation includes all open downstack pull requests.
      *
-     * The response includes a UUID that can be used to fetch the result of the merge. If another asynchronous merge request has already been made for this pull request, the UUID of that request will be returned instead with a 409 response status to indicate that the merge options may be different from those that were requested. If there isn't an existing asynchronous merge request, a 202 response status is used.
+     * A new asynchronous merge request returns a `202` response with a UUID that can be used to [fetch the result of the merge](https://docs.github.com/enterprise-cloud@latest/rest/pulls/pulls#get-the-result-of-an-asynchronous-merge). If another asynchronous merge request is already pending for this pull request, a `409` response returns that request's UUID and merge options instead.
      *
-     * If the pull request is already merged, the merge commit OID will be returned immediately with a 200 status.
+     * If the pull request is already merged or already in a merge queue, a `200` response is returned immediately. A `merged` result includes the merge commit OID. An `enqueued` result means the pull request was added to the merge queue, not that it has merged.
      *
-     * If the pull request cannot be merged (e.g. because it is closed, or still a draft) this result will be returned immediately with a 400 response status. Branch protection rules and repository rules are not run at this stage, only basic pull request state checks are performed.
+     * If the pull request cannot be merged (e.g. because it is closed, or still a draft) this result will be returned immediately with a `400` response status. Branch protection rules and repository rules are not run at this stage, only basic pull request state checks are performed.
      */
     put: operations["pulls/merge-async"];
   };
@@ -12107,7 +12490,13 @@ export interface paths {
      * Get the result of an asynchronous merge
      * @description Fetches the current result of an asynchronous merge request, identified by the UUID that was returned when the merge was requested.
      *
-     * While the merge is still queued, the response includes the UUID, merge method, and expected head SHA of the request. Once the merge has completed, the response reports whether it was merged, including the merge commit OID on success or a message describing why it could not be merged on failure.
+     * While the request's status is `pending`, the response includes the UUID, merge method, merge action, and expected head SHA of the request. Once the asynchronous request completes, its status is one of:
+     *
+     * - `merged`: The pull request was merged into the base branch. The response includes the merge commit OID.
+     * - `enqueued`: The pull request was added to a merge queue.
+     * - `failed`: The request failed. The response includes a message describing the failure.
+     *
+     * An `enqueued` result is final for the merge queue requests and does not mean the pull request has merged. This result does not change when the merge queue later merges the pull request. To get the eventual merge status, [check if a pull request has been merged](https://docs.github.com/enterprise-cloud@latest/rest/pulls/pulls#check-if-a-pull-request-has-been-merged).
      *
      * The result of an asynchronous merge request is retained for 24 hours after its most recent update. After this window the request expires and this endpoint returns a `404` response for its UUID.
      */
@@ -12129,6 +12518,14 @@ export interface paths {
      * @description Removes review requests from a pull request for a given set of users and/or teams.
      */
     delete: operations["pulls/remove-requested-reviewers"];
+  };
+  "/repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers/rerequest": {
+    /**
+     * Rerequest reviewers for a pull request
+     * @description Rerequests reviews for a pull request from a given set of users and/or teams.
+     * This endpoint triggers [notifications](https://docs.github.com/enterprise-cloud@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/enterprise-cloud@latest/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/enterprise-cloud@latest/rest/guides/best-practices-for-using-the-rest-api)."
+     */
+    post: operations["pulls/rerequest-reviewers"];
   };
   "/repos/{owner}/{repo}/pulls/{pull_number}/reviews": {
     /**
@@ -12539,21 +12936,27 @@ export interface paths {
      * List repository custom patterns
      * @description Lists secret scanning custom patterns for a repository.
      *
-     * OAuth app tokens and personal access tokens (classic) need the `repo` or `security_events` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead.
+     * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead.
+     *
+     * Fine-grained access tokens require the `administration:write` repository permission.
      */
     get: operations["secret-scanning/list-repo-custom-patterns"];
     /**
      * Bulk create repository custom patterns
      * @description Bulk creates secret scanning custom patterns for a repository.
      *
-     * OAuth app tokens and personal access tokens (classic) need the `repo` or `security_events` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead.
+     * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead.
+     *
+     * Fine-grained access tokens require the `administration:write` repository permission.
      */
     post: operations["secret-scanning/bulk-create-repo-custom-patterns"];
     /**
      * Bulk delete repository custom patterns
      * @description Bulk deletes secret scanning custom patterns for a repository.
      *
-     * OAuth app tokens and personal access tokens (classic) need the `repo` or `security_events` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead.
+     * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead.
+     *
+     * Fine-grained access tokens require the `administration:write` repository permission.
      */
     delete: operations["secret-scanning/bulk-delete-repo-custom-patterns"];
   };
@@ -12562,7 +12965,9 @@ export interface paths {
      * Update a repository custom pattern
      * @description Updates a secret scanning custom pattern for a repository.
      *
-     * OAuth app tokens and personal access tokens (classic) need the `repo` or `security_events` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead.
+     * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead.
+     *
+     * Fine-grained access tokens require the `administration:write` repository permission.
      */
     patch: operations["secret-scanning/update-repo-custom-pattern"];
   };
@@ -12722,6 +13127,13 @@ export interface paths {
      * @description Gets the current number of users who have starred the repository. Users who previously starred the repository but later removed their star are not included.
      */
     get: operations["activity/get-stargazer-count-for-repo"];
+  };
+  "/repos/{owner}/{repo}/stargazers/history": {
+    /**
+     * Get repository star history
+     * @description Returns repository stars grouped by calendar weeks, most recent first. Pages move backward toward the repository's creation week, and weeks within a page are ordered newest to oldest, so concatenating pages produces one continuous series. Weeks without stars contain zero counts. Week and day boundaries are not guaranteed to align with UTC. The `days` array contains the number of stars created on each day of the week, starting on Sunday.
+     */
+    get: operations["activity/get-stargazer-history-for-repo"];
   };
   "/repos/{owner}/{repo}/stats/code_frequency": {
     /**
@@ -13484,7 +13896,9 @@ export interface paths {
   "/user": {
     /**
      * Get the authenticated user
-     * @description OAuth app tokens and personal access tokens (classic) need the `user` scope in order for the response to include private profile information.
+     * @description OAuth app tokens and personal access tokens (classic) need the `read:user` scope, or the broader `user` scope, for this endpoint to return the private user response. The private user response includes additional fields such as `private_gists`, `total_private_repos`, `owned_private_repos`, `disk_usage`, `collaborators`, and `two_factor_authentication`. Tokens without these scopes receive the public user response.
+     *
+     * The private and public user response types are unrelated to the [private profile](https://docs.github.com/enterprise-cloud@latest/account-and-profile/concepts/personal-profile#private-profiles) setting. A token without scopes still authenticates as the token's owner, so values subject to private profile visibility, such as `followers` and `following`, may differ from an unauthenticated response.
      */
     get: operations["users/get-authenticated"];
     /**
@@ -13837,15 +14251,13 @@ export interface paths {
     /**
      * Add a repository to an app installation
      * @description Add a single repository to an installation. The authenticated user must have admin access to the repository.
-     *
-     * This endpoint only works for PATs (classic) with the `repo` scope.
      */
     put: operations["apps/add-repo-to-installation-for-authenticated-user"];
     /**
      * Remove a repository from an app installation
      * @description Remove a single repository from an installation. The authenticated user must have admin access to the repository. The installation must have the `repository_selection` of `selected`.
      *
-     * This endpoint only works for PATs (classic) with the `repo` scope.
+     * To use a PAT (classic) with this endpoint, the `repo` scope is required
      */
     delete: operations["apps/remove-repo-from-installation-for-authenticated-user"];
   };
@@ -14291,6 +14703,10 @@ export interface paths {
      * Get a user
      * @description Provides publicly available information about someone with a GitHub account.
      *
+     * If the specified user has a [private profile](https://docs.github.com/enterprise-cloud@latest/account-and-profile/concepts/personal-profile#private-profiles), the `followers` and `following` values are `0` unless the request is authenticated as that user. A request authenticated as the specified user returns the actual values even if the token has no OAuth scopes.
+     *
+     * The `events_url` value is a URI template. Replace `{/privacy}` with `/public` to retrieve only public events. Omit it to retrieve public events and, when authenticated as the user, private events. For more information, see "[List events for the authenticated user](https://docs.github.com/enterprise-cloud@latest/rest/activity/events#list-events-for-the-authenticated-user)."
+     *
      * If you are requesting information about an [Enterprise Managed User](https://docs.github.com/enterprise-cloud@latest/enterprise-cloud@latest/admin/managing-iam/understanding-iam-for-enterprises/about-enterprise-managed-users), or a GitHub App bot that is installed in an organization that uses Enterprise Managed Users, your requests must be authenticated as a user or GitHub App that has access to the organization to view that account's information. If you are not authorized, the request will return a `404 Not Found` status.
      *
      * The `email` key in the following response is the publicly visible email address from your GitHub Enterprise Cloud [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be public which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub Enterprise Cloud. For more information, see [Authentication](https://docs.github.com/enterprise-cloud@latest/rest/guides/getting-started-with-the-rest-api#authentication).
@@ -14520,6 +14936,8 @@ export interface paths {
     /**
      * List followers of a user
      * @description Lists the people following the specified user.
+     *
+     * If the specified user has a [private profile](https://docs.github.com/enterprise-cloud@latest/account-and-profile/concepts/personal-profile#private-profiles), this endpoint returns an empty list unless the request is authenticated as that user. A request authenticated as the specified user returns the list even if the token has no OAuth scopes.
      */
     get: operations["users/list-followers-for-user"];
   };
@@ -14527,6 +14945,8 @@ export interface paths {
     /**
      * List the people a user follows
      * @description Lists the people who the specified user follows.
+     *
+     * If the specified user has a [private profile](https://docs.github.com/enterprise-cloud@latest/account-and-profile/concepts/personal-profile#private-profiles), this endpoint returns an empty list unless the request is authenticated as that user. A request authenticated as the specified user returns the list even if the token has no OAuth scopes.
      */
     get: operations["users/list-following-for-user"];
   };
@@ -14781,6 +15201,8 @@ export interface paths {
     /**
      * List repositories starred by a user
      * @description Lists repositories a user has starred.
+     *
+     * If the specified user has a [private profile](https://docs.github.com/enterprise-cloud@latest/account-and-profile/concepts/personal-profile#private-profiles), this endpoint returns an empty list unless the request is authenticated as that user. A request authenticated as the specified user returns starred repositories visible to the token even if the token has no OAuth scopes.
      *
      * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/enterprise-cloud@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
      *
@@ -15749,6 +16171,11 @@ export interface components {
        */
       organization_copilot_agent_settings?: "read" | "write";
       /**
+       * @description The level of permission to grant the access token for managing external custom properties for repositories in an organization.
+       * @enum {string}
+       */
+      organization_external_properties_for_repos?: "read" | "write" | "admin";
+      /**
        * @description The level of permission to grant the access token to view and manage announcement banners for an organization.
        * @enum {string}
        */
@@ -15945,10 +16372,8 @@ export interface components {
        */
       id: number;
       account:
-        | (
-            | components["schemas"]["simple-user"]
-            | components["schemas"]["enterprise"]
-          )
+        | (components["schemas"]["simple-user"] &
+            components["schemas"]["enterprise"])
         | null;
       /**
        * @description Describe whether all repositories have been selected or there's a selection involved. For enterprise installations this is `selected`.
@@ -16479,385 +16904,6 @@ export interface components {
       installation?: components["schemas"]["nullable-scoped-installation"];
       /** Format: date-time */
       expires_at: string | null;
-    };
-    /**
-     * Simple Classroom Repository
-     * @description A GitHub repository view for Classroom
-     */
-    "simple-classroom-repository": {
-      /**
-       * @description A unique identifier of the repository.
-       * @example 1296269
-       */
-      id: number;
-      /**
-       * @description The full, globally unique name of the repository.
-       * @example octocat/Hello-World
-       */
-      full_name: string;
-      /**
-       * Format: uri
-       * @description The URL to view the repository on GitHub.com.
-       * @example https://github.com/octocat/Hello-World
-       */
-      html_url: string;
-      /**
-       * @description The GraphQL identifier of the repository.
-       * @example MDEwOlJlcG9zaXRvcnkxMjk2MjY5
-       */
-      node_id: string;
-      /** @description Whether the repository is private. */
-      private: boolean;
-      /**
-       * @description The default branch for the repository.
-       * @example main
-       */
-      default_branch: string;
-    };
-    /**
-     * Organization Simple for Classroom
-     * @description A GitHub organization.
-     */
-    "simple-classroom-organization": {
-      /** @example 1 */
-      id: number;
-      /** @example github */
-      login: string;
-      /** @example MDEyOk9yZ2FuaXphdGlvbjE= */
-      node_id: string;
-      /**
-       * Format: uri
-       * @example https://github.com/github
-       */
-      html_url: string;
-      /** @example Github - Code thigns happen here */
-      name: string | null;
-      /** @example https://github.com/images/error/octocat_happy.gif */
-      avatar_url: string;
-    };
-    /**
-     * Classroom
-     * @description A GitHub Classroom classroom
-     */
-    classroom: {
-      /**
-       * @description Unique identifier of the classroom.
-       * @example 42
-       */
-      id: number;
-      /**
-       * @description The name of the classroom.
-       * @example Programming Elixir
-       */
-      name: string;
-      /**
-       * @description Whether classroom is archived.
-       * @example false
-       */
-      archived: boolean;
-      organization: components["schemas"]["simple-classroom-organization"];
-      /**
-       * @description The URL of the classroom on GitHub Classroom.
-       * @example https://classroom.github.com/classrooms/1-programming-elixir
-       */
-      url: string;
-    };
-    /**
-     * Classroom Assignment
-     * @description A GitHub Classroom assignment
-     */
-    "classroom-assignment": {
-      /**
-       * @description Unique identifier of the repository.
-       * @example 42
-       */
-      id: number;
-      /**
-       * @description Whether an accepted assignment creates a public repository.
-       * @example true
-       */
-      public_repo: boolean;
-      /**
-       * @description Assignment title.
-       * @example Intro to Binaries
-       */
-      title: string;
-      /**
-       * @description Whether it's a group assignment or individual assignment.
-       * @example individual
-       * @enum {string}
-       */
-      type: "individual" | "group";
-      /**
-       * @description The link that a student can use to accept the assignment.
-       * @example https://classroom.github.com/a/Lx7jiUgx
-       */
-      invite_link: string;
-      /**
-       * @description Whether the invitation link is enabled. Visiting an enabled invitation link will accept the assignment.
-       * @example true
-       */
-      invitations_enabled: boolean;
-      /**
-       * @description Sluggified name of the assignment.
-       * @example intro-to-binaries
-       */
-      slug: string;
-      /**
-       * @description Whether students are admins on created repository when a student accepts the assignment.
-       * @example true
-       */
-      students_are_repo_admins: boolean;
-      /**
-       * @description Whether feedback pull request will be created when a student accepts the assignment.
-       * @example true
-       */
-      feedback_pull_requests_enabled: boolean;
-      /**
-       * @description The maximum allowable teams for the assignment.
-       * @example 0
-       */
-      max_teams: number | null;
-      /**
-       * @description The maximum allowable members per team.
-       * @example 0
-       */
-      max_members: number | null;
-      /**
-       * @description The selected editor for the assignment.
-       * @example codespaces
-       */
-      editor: string;
-      /**
-       * @description The number of students that have accepted the assignment.
-       * @example 25
-       */
-      accepted: number;
-      /**
-       * @description The number of students that have submitted the assignment.
-       * @example 10
-       */
-      submitted: number;
-      /**
-       * @description The number of students that have passed the assignment.
-       * @example 10
-       */
-      passing: number;
-      /**
-       * @description The programming language used in the assignment.
-       * @example elixir
-       */
-      language: string;
-      /**
-       * Format: date-time
-       * @description The time at which the assignment is due.
-       * @example 2011-01-26T19:06:43Z
-       */
-      deadline: string | null;
-      starter_code_repository: components["schemas"]["simple-classroom-repository"];
-      classroom: components["schemas"]["classroom"];
-    };
-    /**
-     * Simple Classroom User
-     * @description A GitHub user simplified for Classroom.
-     */
-    "simple-classroom-user": {
-      /** @example 1 */
-      id: number;
-      /** @example octocat */
-      login: string;
-      /**
-       * Format: uri
-       * @example https://github.com/images/error/octocat_happy.gif
-       */
-      avatar_url: string;
-      /**
-       * Format: uri
-       * @example https://github.com/octocat
-       */
-      html_url: string;
-    };
-    /**
-     * Simple Classroom
-     * @description A GitHub Classroom classroom
-     */
-    "simple-classroom": {
-      /**
-       * @description Unique identifier of the classroom.
-       * @example 42
-       */
-      id: number;
-      /**
-       * @description The name of the classroom.
-       * @example Programming Elixir
-       */
-      name: string;
-      /**
-       * @description Returns whether classroom is archived or not.
-       * @example false
-       */
-      archived: boolean;
-      /**
-       * @description The url of the classroom on GitHub Classroom.
-       * @example https://classroom.github.com/classrooms/1-programming-elixir
-       */
-      url: string;
-    };
-    /**
-     * Simple Classroom Assignment
-     * @description A GitHub Classroom assignment
-     */
-    "simple-classroom-assignment": {
-      /**
-       * @description Unique identifier of the repository.
-       * @example 42
-       */
-      id: number;
-      /**
-       * @description Whether an accepted assignment creates a public repository.
-       * @example true
-       */
-      public_repo: boolean;
-      /**
-       * @description Assignment title.
-       * @example Intro to Binaries
-       */
-      title: string;
-      /**
-       * @description Whether it's a Group Assignment or Individual Assignment.
-       * @example individual
-       * @enum {string}
-       */
-      type: "individual" | "group";
-      /**
-       * @description The link that a student can use to accept the assignment.
-       * @example https://classroom.github.com/a/Lx7jiUgx
-       */
-      invite_link: string;
-      /**
-       * @description Whether the invitation link is enabled. Visiting an enabled invitation link will accept the assignment.
-       * @example true
-       */
-      invitations_enabled: boolean;
-      /**
-       * @description Sluggified name of the assignment.
-       * @example intro-to-binaries
-       */
-      slug: string;
-      /**
-       * @description Whether students are admins on created repository on accepted assignment.
-       * @example true
-       */
-      students_are_repo_admins: boolean;
-      /**
-       * @description Whether feedback pull request will be created on assignment acceptance.
-       * @example true
-       */
-      feedback_pull_requests_enabled: boolean;
-      /**
-       * @description The maximum allowable teams for the assignment.
-       * @example 0
-       */
-      max_teams?: number | null;
-      /**
-       * @description The maximum allowable members per team.
-       * @example 0
-       */
-      max_members?: number | null;
-      /**
-       * @description The selected editor for the assignment.
-       * @example codespaces
-       */
-      editor: string;
-      /**
-       * @description The number of students that have accepted the assignment.
-       * @example 25
-       */
-      accepted: number;
-      /**
-       * @description The number of students that have submitted the assignment.
-       * @example 10
-       */
-      submitted: number;
-      /**
-       * @description The number of students that have passed the assignment.
-       * @example 10
-       */
-      passing: number;
-      /**
-       * @description The programming language used in the assignment.
-       * @example elixir
-       */
-      language: string;
-      /**
-       * Format: date-time
-       * @description The time at which the assignment is due.
-       * @example 2011-01-26T19:06:43Z
-       */
-      deadline: string | null;
-      classroom: components["schemas"]["simple-classroom"];
-    };
-    /**
-     * Classroom Accepted Assignment
-     * @description A GitHub Classroom accepted assignment
-     */
-    "classroom-accepted-assignment": {
-      /**
-       * @description Unique identifier of the repository.
-       * @example 42
-       */
-      id: number;
-      /**
-       * @description Whether an accepted assignment has been submitted.
-       * @example true
-       */
-      submitted: boolean;
-      /**
-       * @description Whether a submission passed.
-       * @example true
-       */
-      passing: boolean;
-      /**
-       * @description Count of student commits.
-       * @example 5
-       */
-      commit_count: number;
-      /**
-       * @description Most recent grade.
-       * @example 10/10
-       */
-      grade: string;
-      students: components["schemas"]["simple-classroom-user"][];
-      repository: components["schemas"]["simple-classroom-repository"];
-      assignment: components["schemas"]["simple-classroom-assignment"];
-    };
-    /**
-     * Classroom Assignment Grade
-     * @description Grade for a student or groups GitHub Classroom assignment
-     */
-    "classroom-assignment-grade": {
-      /** @description Name of the assignment */
-      assignment_name: string;
-      /** @description URL of the assignment */
-      assignment_url: string;
-      /** @description URL of the starter code for the assignment */
-      starter_code_url: string;
-      /** @description GitHub username of the student */
-      github_username: string;
-      /** @description Roster identifier of the student */
-      roster_identifier: string;
-      /** @description Name of the student's assignment repository */
-      student_repository_name: string;
-      /** @description URL of the student's assignment repository */
-      student_repository_url: string;
-      /** @description Timestamp of the student's assignment submission */
-      submission_timestamp: string;
-      /** @description Number of points awarded to the student */
-      points_awarded: number;
-      /** @description Number of points available for the assignment */
-      points_available: number;
-      /** @description If a group assignment, name of the group the student is in */
-      group_name?: string;
     };
     /**
      * Code Of Conduct
@@ -17401,13 +17447,13 @@ export interface components {
       sha_pinning_required?: components["schemas"]["sha-pinning-required"];
     };
     "actions-artifact-and-log-retention-response": {
-      /** @description The number of days artifacts and logs are retained */
+      /** @description The number of days checks, workflow runs, commit statuses, artifacts, and logs are retained */
       days: number;
       /** @description The maximum number of days that can be configured */
       maximum_allowed_days: number;
     };
     "actions-artifact-and-log-retention": {
-      /** @description The number of days to retain artifacts and logs */
+      /** @description The number of days to retain checks, workflow runs, commit statuses, artifacts, and logs */
       days: number;
     };
     "actions-fork-pr-contributor-approval": {
@@ -17501,6 +17547,318 @@ export interface components {
     "actions-set-default-workflow-permissions": {
       default_workflow_permissions?: components["schemas"]["actions-default-workflow-permissions"];
       can_approve_pull_request_reviews?: components["schemas"]["actions-can-approve-pull-request-reviews"];
+    };
+    /**
+     * @description The enforcement level of the ruleset. `evaluate` allows admins to test rules before enforcing them. Admins can view insights on the Rule Insights page. `evaluate` is not available for the `repository` target.
+     * @enum {string}
+     */
+    "repository-rule-enforcement": "disabled" | "active" | "evaluate";
+    /**
+     * Actions policy workflow path condition
+     * @description Parameters for an Actions policy workflow path condition. Omitting `workflow_path` when creating
+     * a policy targets all workflows without storing an explicit condition. Omitting it when updating a
+     * policy preserves the existing workflow targeting. For new or changed workflow conditions, the API
+     * requires at least one included or excluded pattern. This is validated server-side rather than by
+     * this schema, which can also describe existing stored conditions.
+     */
+    "actions-policy-workflow-path-condition": {
+      workflow_path?: {
+        /**
+         * @description Array of workflow file paths or glob patterns to include. An empty array includes all
+         * workflows not matched by an excluded pattern. Use `~ALL` by itself to include all workflows.
+         * `~ALL` cannot be combined with other included patterns.
+         */
+        include: string[];
+        /**
+         * @description Array of workflow file paths or glob patterns to exclude. The condition will not pass
+         * if any of these patterns match. `~ALL` is not allowed in this array.
+         */
+        exclude: string[];
+      };
+    };
+    /**
+     * Repository Actions policy conditions
+     * @description Conditions for a repository Actions policy. The object may be empty to preserve or use the
+     * default workflow targeting, or contain only `workflow_path`.
+     */
+    "actions-policy-repo-conditions":
+      | Record<string, never>
+      | WithRequired<
+          components["schemas"]["actions-policy-workflow-path-condition"],
+          "workflow_path"
+        >;
+    /**
+     * Repository ruleset conditions for repository names
+     * @description Parameters for a repository name condition
+     */
+    "repository-ruleset-conditions-repository-name-target": {
+      repository_name: {
+        /** @description Array of repository names or patterns to include. One of these patterns must match for the condition to pass. Also accepts `~ALL` to include all repositories. */
+        include?: string[];
+        /** @description Array of repository names or patterns to exclude. The condition will not pass if any of these patterns match. */
+        exclude?: string[];
+        /** @description Whether renaming of target repositories is prevented. */
+        protected?: boolean;
+      };
+    };
+    /**
+     * Repository ruleset conditions for repository IDs
+     * @description Parameters for a repository ID condition
+     */
+    "repository-ruleset-conditions-repository-id-target": {
+      repository_id: {
+        /** @description The repository IDs that the ruleset applies to. One of these IDs must match for the condition to pass. */
+        repository_ids?: number[];
+      };
+    };
+    /**
+     * Repository ruleset property targeting definition
+     * @description Parameters for a targeting a repository property
+     */
+    "repository-ruleset-conditions-repository-property-spec": {
+      /** @description The name of the repository property to target */
+      name: string;
+      /** @description The values to match for the repository property */
+      property_values: string[];
+      /**
+       * @description The source of the repository property. Defaults to 'custom' if not specified.
+       * @enum {string}
+       */
+      source?: "custom" | "system";
+    };
+    /**
+     * Repository ruleset conditions for repository properties
+     * @description Parameters for a repository property condition
+     */
+    "repository-ruleset-conditions-repository-property-target": {
+      repository_property: {
+        /** @description The repository properties and values to include. All of these properties must match for the condition to pass. */
+        include?: components["schemas"]["repository-ruleset-conditions-repository-property-spec"][];
+        /** @description The repository properties and values to exclude. The condition will not pass if any of these properties match. */
+        exclude?: components["schemas"]["repository-ruleset-conditions-repository-property-spec"][];
+      };
+    };
+    /**
+     * Organization Actions policy conditions
+     * @description Conditions for an organization Actions policy. The conditions object should contain one of
+     * `repository_name`, `repository_id`, or `repository_property`, and may also contain `workflow_path`.
+     */
+    "actions-policy-org-conditions":
+      | (components["schemas"]["repository-ruleset-conditions-repository-name-target"] &
+          components["schemas"]["actions-policy-workflow-path-condition"])
+      | (components["schemas"]["repository-ruleset-conditions-repository-id-target"] &
+          components["schemas"]["actions-policy-workflow-path-condition"])
+      | (components["schemas"]["repository-ruleset-conditions-repository-property-target"] &
+          components["schemas"]["actions-policy-workflow-path-condition"]);
+    /**
+     * Repository ruleset conditions for organization names
+     * @description Parameters for an organization name condition
+     */
+    "enterprise-ruleset-conditions-organization-name-target": {
+      organization_name: {
+        /** @description Array of organization names or patterns to include. One of these patterns must match for the condition to pass. Also accepts `~ALL` to include all organizations and ~EMUS to target all enterprise managed user accounts. */
+        include?: string[];
+        /** @description Array of organization names or patterns to exclude. The condition will not pass if any of these patterns match. */
+        exclude?: string[];
+      };
+    };
+    /**
+     * Repository ruleset conditions for organization IDs
+     * @description Parameters for an organization ID condition
+     */
+    "enterprise-ruleset-conditions-organization-id-target": {
+      organization_id: {
+        /** @description The organization IDs that the ruleset applies to. One of these IDs must match for the condition to pass. */
+        organization_ids?: number[];
+      };
+    };
+    /**
+     * Repository ruleset property targeting definition
+     * @description Parameters for a targeting a organization property
+     */
+    "enterprise-ruleset-conditions-organization-property-spec": {
+      /** @description The name of the organization property to target */
+      name: string;
+      /** @description The values to match for the organization property */
+      property_values: string[];
+    };
+    /**
+     * Repository ruleset conditions for organization properties
+     * @description Parameters for a organization property condition
+     */
+    "enterprise-ruleset-conditions-organization-property-target": {
+      organization_property: {
+        /** @description The organization properties and values to include. All of these properties must match for the condition to pass. */
+        include?: components["schemas"]["enterprise-ruleset-conditions-organization-property-spec"][];
+        /** @description The organization properties and values to exclude. The condition will not pass if any of these properties match. */
+        exclude?: components["schemas"]["enterprise-ruleset-conditions-organization-property-spec"][];
+      };
+    };
+    /**
+     * Enterprise Actions policy conditions
+     * @description Conditions for an enterprise Actions policy. The conditions object supports one organization
+     * target (`organization_name`, `organization_id`, or `organization_property`) combined with one
+     * repository target (`repository_name` or `repository_property`), and may also contain `workflow_path`.
+     */
+    "actions-policy-enterprise-conditions":
+      | (components["schemas"]["enterprise-ruleset-conditions-organization-name-target"] &
+          components["schemas"]["repository-ruleset-conditions-repository-name-target"] &
+          components["schemas"]["actions-policy-workflow-path-condition"])
+      | (components["schemas"]["enterprise-ruleset-conditions-organization-name-target"] &
+          components["schemas"]["repository-ruleset-conditions-repository-property-target"] &
+          components["schemas"]["actions-policy-workflow-path-condition"])
+      | (components["schemas"]["enterprise-ruleset-conditions-organization-id-target"] &
+          components["schemas"]["repository-ruleset-conditions-repository-name-target"] &
+          components["schemas"]["actions-policy-workflow-path-condition"])
+      | (components["schemas"]["enterprise-ruleset-conditions-organization-id-target"] &
+          components["schemas"]["repository-ruleset-conditions-repository-property-target"] &
+          components["schemas"]["actions-policy-workflow-path-condition"])
+      | (components["schemas"]["enterprise-ruleset-conditions-organization-property-target"] &
+          components["schemas"]["repository-ruleset-conditions-repository-name-target"] &
+          components["schemas"]["actions-policy-workflow-path-condition"])
+      | (components["schemas"]["enterprise-ruleset-conditions-organization-property-target"] &
+          components["schemas"]["repository-ruleset-conditions-repository-property-target"] &
+          components["schemas"]["actions-policy-workflow-path-condition"]);
+    /**
+     * Actor
+     * @description An actor authorized to trigger Actions workflows
+     */
+    "actions-rule-params-actor": {
+      /** @description ID of the actor authorized to trigger Actions workflows. */
+      id: number;
+      /**
+       * @description The type of the actor
+       * @enum {string}
+       */
+      type:
+        | "User"
+        | "Bot"
+        | "Team"
+        | "BusinessTeam"
+        | "EnterpriseTeam"
+        | "IntegrationInstallation"
+        | "App"
+        | "RepositoryRole";
+    };
+    /**
+     * restrict_actions_actors
+     * @description Choose specific actors that are authorized to trigger Actions workflows.
+     */
+    "actions-rule-restrict-actions-actors": {
+      /** @enum {string} */
+      type: "restrict_actions_actors";
+      parameters?: {
+        /** @description Select the actors who can run Actions workflows. */
+        allowed_actors: components["schemas"]["actions-rule-params-actor"][];
+      };
+    };
+    /**
+     * restrict_action_events
+     * @description Choose specific GitHub events that will trigger Actions workflows.
+     */
+    "actions-rule-restrict-action-events": {
+      /** @enum {string} */
+      type: "restrict_action_events";
+      parameters?: {
+        /** @description Select the events that can trigger Actions workflows. */
+        allowed_events: (
+          | "branch_protection_rule"
+          | "check_run"
+          | "check_suite"
+          | "create"
+          | "delete"
+          | "deployment"
+          | "deployment_status"
+          | "discussion"
+          | "discussion_comment"
+          | "fork"
+          | "gollum"
+          | "image_version"
+          | "issue_comment"
+          | "issues"
+          | "label"
+          | "merge_group"
+          | "milestone"
+          | "page_build"
+          | "project"
+          | "project_card"
+          | "project_column"
+          | "public"
+          | "pull_request"
+          | "pull_request_review"
+          | "pull_request_review_comment"
+          | "pull_request_target"
+          | "push"
+          | "registry_package"
+          | "release"
+          | "repository_dispatch"
+          | "schedule"
+          | "status"
+          | "watch"
+          | "workflow_call"
+          | "workflow_dispatch"
+          | "workflow_run"
+        )[];
+      };
+    };
+    /**
+     * Actions Rule
+     * @description An actions rule.
+     */
+    "actions-rule":
+      | components["schemas"]["actions-rule-restrict-actions-actors"]
+      | components["schemas"]["actions-rule-restrict-action-events"];
+    /**
+     * Actions Policy
+     * @description An Actions policy defines rules for workflow execution protection.
+     */
+    "actions-policy": {
+      /** @description The ID of the policy */
+      id: number;
+      /** @description The name of the policy */
+      name: string;
+      /**
+       * @description The target of the policy
+       * @enum {string}
+       */
+      target: "actions";
+      /**
+       * @description The type of the source of the policy
+       * @enum {string}
+       */
+      source_type: "Repository" | "Organization" | "Enterprise";
+      /** @description The name of the source */
+      source: string;
+      enforcement: components["schemas"]["repository-rule-enforcement"];
+      /**
+       * @description When workflow path targeting is available, detailed responses represent an omitted stored
+       * workflow condition as `workflow_path` with `include` set to `["~ALL"]` and `exclude` set to `[]`.
+       * When workflow path targeting is unavailable, an omitted stored condition remains omitted.
+       */
+      conditions?:
+        | (
+            | components["schemas"]["actions-policy-repo-conditions"]
+            | components["schemas"]["actions-policy-org-conditions"]
+            | components["schemas"]["actions-policy-enterprise-conditions"]
+          )
+        | null;
+      /** @description An array of rules within the policy */
+      rules?: components["schemas"]["actions-rule"][];
+      node_id?: string;
+      _links?: {
+        self?: {
+          /** @description The URL of the policy */
+          href?: string;
+        };
+        html?: {
+          /** @description The html URL of the policy */
+          href?: string;
+        };
+      };
+      /** Format: date-time */
+      created_at?: string;
+      /** Format: date-time */
+      updated_at?: string;
     };
     "runner-groups-enterprise": {
       id: number;
@@ -18707,7 +19065,7 @@ export interface components {
        * @description The enforcement status for a security configuration
        * @enum {string}
        */
-      enforcement?: "enforced" | "unenforced";
+      enforcement?: "enforced" | "unenforced" | "enterprise_enforced";
       /**
        * Format: uri
        * @description The URL of the configuration
@@ -18761,7 +19119,8 @@ export interface components {
         | "enforced"
         | "failed"
         | "updating"
-        | "removed_by_enterprise";
+        | "removed_by_enterprise"
+        | "enterprise_enforced";
       repository?: components["schemas"]["simple-repository"];
     };
     /** Enterprise Security Analysis Settings */
@@ -19138,6 +19497,110 @@ export interface components {
        * @description The end date of the report period in `YYYY-MM-DD` format.
        */
       report_end_day: string;
+    };
+    /**
+     * Enterprise Token Inventory Item
+     * @description A credential or GitHub App installation in an enterprise's token inventory.
+     */
+    "enterprise-token-inventory-item": {
+      /** @description Opaque identifier for retrieving this item within the enterprise. Its value can differ between responses for the same credential. */
+      inventory_id: string;
+      /** @description The credential's ID for audit-log correlation, unique only within its `credential_type`. Null for SSH keys, GitHub App installations, and federated credentials. */
+      credential_id?: number | null;
+      /** @description Base64-encoded SHA-256 hash of the token, matching `hashed_token` in audit events. Null when not reported. */
+      hashed_token?: string | null;
+      /** @description The SSH key's SHA-256 fingerprint, matching audit events. Null for other credential types. */
+      fingerprint?: string | null;
+      /** @enum {string} */
+      item_type: "credential" | "token_issuer_principal";
+      /** @enum {string} */
+      credential_type:
+        | "classic_pat"
+        | "oauth_app_user_token"
+        | "github_app_user_token"
+        | "fine_grained_pat"
+        | "ssh_key"
+        | "github_app_installation"
+        | "federated_jti";
+      display_name?: string | null;
+      owner?: {
+        id?: number;
+        login?: string;
+        name?: string | null;
+      } | null;
+      /**
+       * @description The type of credential owner.
+       * @enum {string|null}
+       */
+      owner_type?: "user" | "oauth_application" | "github_app" | null;
+      application?: {
+        id?: number;
+        name?: string | null;
+      } | null;
+      /** @enum {string} */
+      credential_state: "active" | "expired" | "revoked" | "deleted";
+      /** @enum {string} */
+      authorization_state: "currently_authorized" | "member_owned_only";
+      /** @enum {string} */
+      effective_access_state: "effective" | "not_effective" | "unknown";
+      state_reason?: string | null;
+      /** Format: date-time */
+      created_at?: string | null;
+      /** Format: date-time */
+      last_used_at?: string | null;
+      /** Format: date-time */
+      expires_at?: string | null;
+      /** Format: date-time */
+      next_expires_at?: string | null;
+      credential_instance_count?: number | null;
+      /** @description Whether the item is authorized directly at the enterprise level. */
+      enterprise_authorized: boolean;
+      /** @description Number of authorizing organizations, plus one when `enterprise_authorized` is true. */
+      authorization_count: number;
+      authorized_organizations: {
+        id?: number;
+        login?: string;
+      }[];
+      /** @description Age of the credential in whole days at assembly time. */
+      age_days?: number | null;
+      /** @description Whether this is an active credential with no expiration. False for GitHub App installations and credentials with unknown expiration. */
+      never_expires?: boolean;
+      /** @description Whether the credential exceeds a configured lifetime limit or an advisory age baseline. Null when not evaluated. */
+      past_expiration_policy?: boolean | null;
+      /**
+       * @description The basis for `past_expiration_policy`: an enforced PAT lifetime limit or an advisory age baseline.
+       * @enum {string|null}
+       */
+      past_expiration_policy_basis?:
+        "enforced_limit" | "proposed_baseline" | null;
+      /** @description Whether the credential's expiration could not be determined. */
+      expiry_unknown?: boolean;
+      /** @description OAuth scopes recorded for the token. Null when not reported for the credential type. */
+      scopes?: string[] | null;
+      /** @description Permissions by resource for fine-grained PATs and GitHub App installations. Null when not reported; an empty object means no recorded permissions. */
+      permissions?: {
+        [key: string]: string;
+      } | null;
+      /**
+       * @description Repository selection for the credential. Null when not reported; `none` means no repositories are selected.
+       * @enum {string|null}
+       */
+      repository_selection?: "all" | "subset" | "none" | null;
+    };
+    /**
+     * Enterprise Token Inventory Export
+     * @description The status of an asynchronous enterprise token inventory CSV export.
+     */
+    "enterprise-token-inventory-export": {
+      /** @description Opaque id for the export, used to poll its status. */
+      export_id: string;
+      /**
+       * @description The state of the export job.
+       * @enum {string}
+       */
+      status: "pending" | "queued" | "started" | "success" | "error";
+      /** @description When the export was requested. */
+      as_of?: string | null;
     };
     /** @description Details for the vulnerable package. */
     readonly "dependabot-alert-package": {
@@ -20108,7 +20571,7 @@ export interface components {
       /** @description The name of the property */
       property_name: string;
       /** @description The value assigned to the property */
-      value: string | string[] | null;
+      value: (string | null) | string[] | null;
     };
     /**
      * Enterprise Organization Custom Property Values
@@ -20182,7 +20645,7 @@ export interface components {
       /** @description Whether the property is required. */
       required?: boolean;
       /** @description Default value of the property */
-      default_value?: string | string[] | null;
+      default_value?: (string | null) | string[] | null;
       /** @description Short description of the property */
       description?: string | null;
       /**
@@ -20199,11 +20662,6 @@ export interface components {
       /** @description Whether setting properties values is mandatory */
       require_explicit_values?: boolean;
     };
-    /**
-     * @description The enforcement level of the ruleset. `evaluate` allows admins to test rules before enforcing them. Admins can view insights on the Rule Insights page. `evaluate` is not available for the `repository` target.
-     * @enum {string}
-     */
-    "repository-rule-enforcement": "disabled" | "active" | "evaluate";
     /**
      * Repository Ruleset Bypass Actor
      * @description An actor that can bypass rules in a ruleset
@@ -20232,32 +20690,6 @@ export interface components {
       bypass_mode?: "always" | "pull_request" | "exempt";
     };
     /**
-     * Repository ruleset conditions for organization names
-     * @description Parameters for an organization name condition
-     */
-    "enterprise-ruleset-conditions-organization-name-target": {
-      organization_name: {
-        /** @description Array of organization names or patterns to include. One of these patterns must match for the condition to pass. Also accepts `~ALL` to include all organizations and ~EMUS to target all enterprise managed user accounts. */
-        include?: string[];
-        /** @description Array of organization names or patterns to exclude. The condition will not pass if any of these patterns match. */
-        exclude?: string[];
-      };
-    };
-    /**
-     * Repository ruleset conditions for repository names
-     * @description Parameters for a repository name condition
-     */
-    "repository-ruleset-conditions-repository-name-target": {
-      repository_name: {
-        /** @description Array of repository names or patterns to include. One of these patterns must match for the condition to pass. Also accepts `~ALL` to include all repositories. */
-        include?: string[];
-        /** @description Array of repository names or patterns to exclude. The condition will not pass if any of these patterns match. */
-        exclude?: string[];
-        /** @description Whether renaming of target repositories is prevented. */
-        protected?: boolean;
-      };
-    };
-    /**
      * Repository ruleset conditions for ref names
      * @description Parameters for a repository ruleset ref name condition
      */
@@ -20267,65 +20699,6 @@ export interface components {
         include?: string[];
         /** @description Array of ref names or patterns to exclude. The condition will not pass if any of these patterns match. */
         exclude?: string[];
-      };
-    };
-    /**
-     * Repository ruleset property targeting definition
-     * @description Parameters for a targeting a repository property
-     */
-    "repository-ruleset-conditions-repository-property-spec": {
-      /** @description The name of the repository property to target */
-      name: string;
-      /** @description The values to match for the repository property */
-      property_values: string[];
-      /**
-       * @description The source of the repository property. Defaults to 'custom' if not specified.
-       * @enum {string}
-       */
-      source?: "custom" | "system";
-    };
-    /**
-     * Repository ruleset conditions for repository properties
-     * @description Parameters for a repository property condition
-     */
-    "repository-ruleset-conditions-repository-property-target": {
-      repository_property: {
-        /** @description The repository properties and values to include. All of these properties must match for the condition to pass. */
-        include?: components["schemas"]["repository-ruleset-conditions-repository-property-spec"][];
-        /** @description The repository properties and values to exclude. The condition will not pass if any of these properties match. */
-        exclude?: components["schemas"]["repository-ruleset-conditions-repository-property-spec"][];
-      };
-    };
-    /**
-     * Repository ruleset conditions for organization IDs
-     * @description Parameters for an organization ID condition
-     */
-    "enterprise-ruleset-conditions-organization-id-target": {
-      organization_id: {
-        /** @description The organization IDs that the ruleset applies to. One of these IDs must match for the condition to pass. */
-        organization_ids?: number[];
-      };
-    };
-    /**
-     * Repository ruleset property targeting definition
-     * @description Parameters for a targeting a organization property
-     */
-    "enterprise-ruleset-conditions-organization-property-spec": {
-      /** @description The name of the organization property to target */
-      name: string;
-      /** @description The values to match for the organization property */
-      property_values: string[];
-    };
-    /**
-     * Repository ruleset conditions for organization properties
-     * @description Parameters for a organization property condition
-     */
-    "enterprise-ruleset-conditions-organization-property-target": {
-      organization_property: {
-        /** @description The organization properties and values to include. All of these properties must match for the condition to pass. */
-        include?: components["schemas"]["enterprise-ruleset-conditions-organization-property-spec"][];
-        /** @description The organization properties and values to exclude. The condition will not pass if any of these properties match. */
-        exclude?: components["schemas"]["enterprise-ruleset-conditions-organization-property-spec"][];
       };
     };
     /**
@@ -20431,6 +20804,17 @@ export interface components {
       allowed_actors?: components["schemas"]["repository-rule-params-actor"][];
       /** @description Whether to restrict review dismissal to specific actors. */
       enabled: boolean;
+    };
+    /**
+     * ProofOfPresence
+     * @description Require a fresh authentication before a pull request can be merged.
+     */
+    "repository-rule-params-proof-of-presence": {
+      /**
+       * @description The level of authentication required before a pull request can be merged.
+       * @enum {string}
+       */
+      required_authentication_level: "reauth" | "mfa";
     };
     /**
      * Reviewer
@@ -20783,16 +21167,6 @@ export interface components {
       | components["schemas"]["repository-rule-code-scanning"]
       | components["schemas"]["repository-rule-copilot-code-review"];
     /**
-     * Repository ruleset conditions for repository IDs
-     * @description Parameters for a repository ID condition
-     */
-    "repository-ruleset-conditions-repository-id-target": {
-      repository_id: {
-        /** @description The repository IDs that the ruleset applies to. One of these IDs must match for the condition to pass. */
-        repository_ids?: number[];
-      };
-    };
-    /**
      * Organization ruleset conditions
      * @description Conditions for an organization ruleset.
      * The branch and tag rulesets conditions object should contain both `repository_name` and `ref_name` properties, or both `repository_id` and `ref_name` properties, or both `repository_property` and `ref_name` properties.
@@ -20837,6 +21211,41 @@ export interface components {
       };
     };
     /**
+     * code_quality
+     * @description Choose which severity levels of code quality results should block pull request merges. When configured, a code quality analysis must be done on the pull request before the changes can be merged.
+     */
+    "repository-rule-code-quality": {
+      /** @enum {string} */
+      type: "code_quality";
+      parameters?: {
+        /**
+         * @description The lowest severity level at which code quality reviews need to be resolved before commits can be merged.
+         * @enum {string}
+         */
+        severity: "errors" | "warnings" | "notes" | "all";
+      };
+    };
+    /**
+     * code_coverage
+     * @description Enforce minimum line coverage thresholds on pull requests. When configured, uploaded coverage data must meet the specified criteria before changes can be merged.
+     */
+    "repository-rule-code-coverage": {
+      /** @enum {string} */
+      type: "code_coverage";
+      parameters?: {
+        /**
+         * Format: float
+         * @description The maximum percentage points that line coverage may drop relative to the default branch. Pull requests that reduce line coverage by more than this amount will be blocked.
+         */
+        max_coverage_drop?: number;
+        /**
+         * Format: float
+         * @description The absolute minimum line coverage percentage required. Pull requests with line coverage below this threshold will be blocked.
+         */
+        minimum_coverage?: number;
+      };
+    };
+    /**
      * license_compliance_scanning
      * @description Enforce any added or changed dependencies to comply with the organization's license policy.
      */
@@ -20866,6 +21275,8 @@ export interface components {
       | components["schemas"]["repository-rule-tag-name-pattern"]
       | components["schemas"]["repository-rule-workflows"]
       | components["schemas"]["repository-rule-code-scanning"]
+      | components["schemas"]["repository-rule-code-quality"]
+      | components["schemas"]["repository-rule-code-coverage"]
       | components["schemas"]["repository-rule-copilot-code-review"]
       | components["schemas"]["repository-rule-license-compliance-scanning"]
       | components["schemas"]["repository-rule-file-path-restriction"]
@@ -21572,6 +21983,15 @@ export interface components {
          */
         alert_recipients: string[];
       };
+      /**
+       * Format: date
+       * @description The date the budget will expire in `YYYY-MM-DD` format. Only dates in the future are accepted.
+       * If not provided, the budget will not expire.
+       *
+       * Only supported for budgets with `budget_scope` of `user`
+       * @example 2026-12-31
+       */
+      expires_at?: string;
     };
     get_all_budgets: {
       /** @description Array of budget objects for the enterprise */
@@ -21587,7 +22007,7 @@ export interface components {
         /** @description The consumed amount for the specified user within the effective budget. */
         consumed_amount: number;
       };
-      /** @description Indicates if there are more pages of results available (maps to hasNextPage from billing platform) */
+      /** @description Indicates if there are more pages of results available */
       has_next_page?: boolean;
       /** @description Total number of budgets matching the query */
       total_count?: number;
@@ -21651,6 +22071,15 @@ export interface components {
            */
           alert_recipients?: string[];
         };
+        /**
+         * Format: date
+         * @description The date the budget will expire in `YYYY-MM-DD` format. Only dates in the future are accepted.
+         * If not provided, the budget will not expire.
+         *
+         * Only supported for budgets with `budget_scope` of `user`
+         * @example 2026-12-31
+         */
+        expires_at?: string;
       };
     };
     "get-budget": {
@@ -21711,6 +22140,11 @@ export interface components {
          */
         alert_recipients?: string[];
       };
+      /**
+       * @description The current usage amount counted toward the budget. How usage is calculated may vary by budget type.
+       * @example 12.5
+       */
+      consumed_amount?: number;
     };
     "update-budget": {
       /** @description A message indicating the result of the update operation */
@@ -21781,6 +22215,15 @@ export interface components {
            */
           alert_recipients?: string[];
         };
+        /**
+         * Format: date
+         * @description The date the budget will expire in `YYYY-MM-DD` format. Only dates in the future are accepted.
+         * If not provided, the budget will not expire.
+         *
+         * Only supported for budgets with `budget_scope` of `user`
+         * @example 2026-12-31
+         */
+        expires_at?: string;
       };
     };
     "delete-budget": {
@@ -22131,6 +22574,54 @@ export interface components {
       }[];
     };
     /**
+     * Enterprise Team
+     * @description Group of enterprise owners and/or members
+     */
+    "enterprise-team-with-member-count": {
+      /** Format: int64 */
+      id: number | bigint;
+      name: string;
+      description?: string;
+      slug: string;
+      /** Format: uri */
+      url: string;
+      /**
+       * @description Retired: this field will not be returned with GHEC enterprise teams.
+       * @example disabled
+       */
+      sync_to_organizations?: string;
+      /** @example selected */
+      organization_selection_type?: string;
+      /** @example 62ab9291-fae2-468e-974b-7e45096d5021 */
+      group_id: string | null;
+      /**
+       * @description Retired: this field will not be returned with GHEC enterprise teams.
+       * @example Justice League
+       */
+      group_name?: string | null;
+      /**
+       * Format: uri
+       * @example https://github.com/enterprises/dc/teams/justice-league
+       */
+      html_url: string;
+      members_url: string;
+      /**
+       * @description The number of members in the enterprise team.
+       * @example 3
+       */
+      members_count: number;
+      /** Format: date-time */
+      created_at: string;
+      /** Format: date-time */
+      updated_at: string;
+      /**
+       * @description Whether team members will receive notifications when the team is mentioned.
+       * @example notifications_enabled
+       * @enum {string}
+       */
+      notification_setting?: "notifications_enabled" | "notifications_disabled";
+    };
+    /**
      * Visual Studio Subscription Assignment
      * @description Visual Studio Subscription Assignment
      */
@@ -22209,6 +22700,14 @@ export interface components {
        * @example true
        */
       default: boolean;
+      /**
+       * Format: date-time
+       * @description Timestamp indicating when the label was archived, or `null` if it has not been archived.
+       * @example 2023-01-01T12:00:00Z
+       */
+      archived_at: string | null;
+      /** @description The user who archived the label, or `null` if it has not been archived. */
+      archived_by: components["schemas"]["simple-user"] | null;
     };
     /**
      * Discussion
@@ -22801,6 +23300,8 @@ export interface components {
             description?: string | null;
             color?: string | null;
             default?: boolean;
+            /** @description The user who archived the label, or `null` if it has not been archived. */
+            archived_by?: components["schemas"]["simple-user"] | null;
           },
         ]
       >[];
@@ -24161,19 +24662,19 @@ export interface components {
       /** @example github */
       name?: string;
       /** @example GitHub */
-      company?: string;
+      company?: string | null;
       /**
        * Format: uri
        * @example https://github.com/blog
        */
-      blog?: string;
+      blog?: string | null;
       /** @example San Francisco */
-      location?: string;
+      location?: string | null;
       /**
        * Format: email
        * @example octocat@github.com
        */
-      email?: string;
+      email?: string | null;
       /** @example github */
       twitter_username?: string | null;
       /** @example true */
@@ -24625,6 +25126,30 @@ export interface components {
         /** @description The number of in-progress alerts */
         in_progress_count: number;
       };
+    };
+    /**
+     * Code scanning AI Scan organization settings
+     * @description The AI Scan organization setting
+     */
+    "code-scanning-ai-scan-org-settings": {
+      /**
+       * @description Whether AI Scan on pull requests is enabled for the organization. The organization setting respects enterprise policy, and repositories inherit it: when disabled, repositories cannot enable AI Scan; when enabled, repositories can still opt out.
+       * @example enabled
+       * @enum {string}
+       */
+      pr_scan: "enabled" | "disabled";
+    };
+    /**
+     * Code scanning AI Scan organization settings update
+     * @description The AI Scan organization setting to apply
+     */
+    "code-scanning-ai-scan-org-enablement-update": {
+      /**
+       * @description Whether AI Scan is enabled for the organization. Organization respects enterprise policy. Disabled organizations prevent repositories from enabling AI Scan. Enabled organizations enable AI Scan for their repositories, but individual repositories can opt out.
+       * @example enabled
+       * @enum {string}
+       */
+      pr_scan?: "enabled" | "disabled";
     };
     /**
      * @description Severity of a code scanning alert.
@@ -27264,6 +27789,8 @@ export interface components {
         description: string;
         color: string;
         default: boolean;
+        /** @description The user who archived the label, or `null` if it has not been archived. */
+        archived_by: components["schemas"]["simple-user"] | null;
       }[];
       milestone: components["schemas"]["nullable-milestone"];
       /** @example too heated */
@@ -27652,6 +28179,37 @@ export interface components {
       group_by: number[];
       /** @description The list of field IDs used for vertical grouping (board layout). */
       vertical_group_by: number[];
+    };
+    /**
+     * Organization External Custom Property Installation
+     * @description A GitHub App installation that has been registered to read and write an organization's external custom properties, together with the display name assigned to it.
+     */
+    "organization-external-property-installation": {
+      /** @description The display name assigned to the app installation's external custom properties in the organization. */
+      display_name: string;
+      /** @description The GitHub App installation that was registered. */
+      installation: {
+        /** @description The unique identifier of the GitHub App installation. */
+        id: number;
+      };
+    };
+    /**
+     * External Property
+     * @description External custom property defined for a GitHub App installation
+     */
+    "external-property": {
+      /** @description The name of the external property */
+      property_name: string;
+    };
+    /**
+     * Repository External Custom Property Value Payload
+     * @description Repository name and associated external custom property value
+     */
+    "repository-external-property-payload": {
+      /** @description The name of the repository */
+      repository_name: string;
+      /** @description The value assigned to the repository. Set to `null` to unset the value for this repository. */
+      value: string | null;
     };
     /**
      * Organization Repository Custom Property Values
@@ -28806,19 +29364,19 @@ export interface components {
       /** @example github */
       name?: string;
       /** @example GitHub */
-      company?: string;
+      company?: string | null;
       /**
        * Format: uri
        * @example https://github.com/blog
        */
-      blog?: string;
+      blog?: string | null;
       /** @example San Francisco */
-      location?: string;
+      location?: string | null;
       /**
        * Format: email
        * @example octocat@github.com
        */
-      email?: string;
+      email?: string | null;
       /** @example github */
       twitter_username?: string | null;
       /** @example true */
@@ -31469,6 +32027,22 @@ export interface components {
       /** @description URL of the corresponding run. */
       run_url?: string;
     };
+    /** @description AI Scan enablement for a repository. */
+    "code-scanning-ai-scan-enablement": {
+      /**
+       * @description Whether AI Scan is enabled for the repository.
+       * @enum {string}
+       */
+      pr_scan: "enabled" | "disabled";
+    };
+    /** @description AI Scan enablement update for a repository. */
+    "code-scanning-ai-scan-enablement-update": {
+      /**
+       * @description Whether to enable or disable AI Scan for the repository.
+       * @enum {string}
+       */
+      pr_scan?: "enabled" | "disabled";
+    };
     "code-scanning-alert-items": {
       number: components["schemas"]["alert-number"];
       created_at: components["schemas"]["alert-created-at"];
@@ -31983,7 +32557,8 @@ export interface components {
         | "enforced"
         | "failed"
         | "updating"
-        | "removed_by_enterprise";
+        | "removed_by_enterprise"
+        | "enterprise_enforced";
       configuration?: components["schemas"]["code-security-configuration"];
     };
     /**
@@ -32200,7 +32775,8 @@ export interface components {
        * @example read
        * @enum {string}
        */
-      permissions: "read" | "write" | "admin" | "triage" | "maintain";
+      permissions:
+        "read" | "write" | "admin" | "triage" | "triage_plus" | "maintain";
       /**
        * Format: date-time
        * @example 2016-06-13T14:52:50-05:00
@@ -33899,6 +34475,8 @@ export interface components {
             description?: string | null;
             color?: string | null;
             default?: boolean;
+            /** @description The user who archived the label, or `null` if it has not been archived. */
+            archived_by?: components["schemas"]["simple-user"] | null;
           },
         ]
       >[];
@@ -35106,6 +35684,65 @@ export interface components {
       intent?: components["schemas"]["nullable-issue-event-intent"];
     };
     /**
+     * Issue Reference
+     * @description A minimal reference to an issue linked from a timeline event (e.g. sub-issue, parent-issue, or dependency events).
+     */
+    "issue-reference": {
+      /** @description The number of the referenced issue. */
+      number: number;
+      /** @description The title of the referenced issue. */
+      title: string;
+      /** @description The state of the referenced issue. */
+      state: string;
+      /** @description The reason for the referenced issue's state. */
+      state_reason?: string | null;
+      repository: components["schemas"]["simple-repository"];
+      /**
+       * Issue Type
+       * @description The type of the referenced issue.
+       */
+      issue_type: {
+        /** @description The unique identifier of the issue type. */
+        id: number;
+        /** @description The node identifier of the issue type. */
+        node_id: string;
+        /** @description The name of the issue type. */
+        name: string;
+        /** @description The color of the issue type. */
+        color?: string | null;
+      } | null;
+    } | null;
+    /**
+     * Timeline Connected Event
+     * @description Timeline Connected Event
+     */
+    "timeline-connected-event": {
+      id: number;
+      node_id: string;
+      url: string;
+      actor: components["schemas"]["simple-user"];
+      event: string;
+      commit_id: string | null;
+      commit_url: string | null;
+      created_at: string;
+      performed_via_github_app: components["schemas"]["nullable-integration"];
+    };
+    /**
+     * Timeline Disconnected Event
+     * @description Timeline Disconnected Event
+     */
+    "timeline-disconnected-event": {
+      id: number;
+      node_id: string;
+      url: string;
+      actor: components["schemas"]["simple-user"];
+      event: string;
+      commit_id: string | null;
+      commit_url: string | null;
+      created_at: string;
+      performed_via_github_app: components["schemas"]["nullable-integration"];
+    };
+    /**
      * Timeline Event
      * @description Timeline Event
      */
@@ -35142,7 +35779,9 @@ export interface components {
       | components["schemas"]["blocked-by-added-issue-event"]
       | components["schemas"]["blocked-by-removed-issue-event"]
       | components["schemas"]["blocking-added-issue-event"]
-      | components["schemas"]["blocking-removed-issue-event"];
+      | components["schemas"]["blocking-removed-issue-event"]
+      | components["schemas"]["timeline-connected-event"]
+      | components["schemas"]["timeline-disconnected-event"];
     /**
      * Deploy Key
      * @description An SSH key granting access to a single repository.
@@ -35609,6 +36248,8 @@ export interface components {
         description: string | null;
         color: string;
         default: boolean;
+        /** @description The user who archived the label, or `null` if it has not been archived. */
+        archived_by: components["schemas"]["simple-user"] | null;
       }[];
       milestone: components["schemas"]["nullable-milestone"];
       /** @example too heated */
@@ -35713,9 +36354,8 @@ export interface components {
     "pull-request-merge-async-result": {
       /** @enum {string} */
       status: "pending" | "merged" | "enqueued" | "failed";
-      details: OneOf<
-        [
-          {
+      details:
+        | {
             message: string;
             uuid: string;
             /** @enum {string} */
@@ -35724,16 +36364,19 @@ export interface components {
             merge_action: "default" | "merge_queue" | "direct_merge";
             /** @description SHA that the pull request head must match for the enqueued merge to proceed. */
             expected_head_sha: string;
-          },
-          {
+            /**
+             * @description Whether the asynchronous merge request will attempt to bypass repository rules that the authenticated actor is permitted to bypass.
+             * @default false
+             */
+            bypass_rules?: boolean;
+          }
+        | {
             message: string;
-          },
-          {
+          }
+        | {
             message: string;
             sha: string;
-          },
-        ]
-      >;
+          };
     };
     /**
      * Pull Request Review Request
@@ -36268,6 +36911,27 @@ export interface components {
        */
       start_private_fork?: boolean;
     };
+    /**
+     * Repository Advisory Description Validation Error
+     * @description The description does not answer the repository's report template.
+     */
+    "repository-advisory-description-validation-error": {
+      message: string;
+      documentation_url: string;
+      errors?: {
+        resource?: string;
+        field?: string;
+        message?: string;
+        /** @description A machine-readable identifier for the problem. `missing_section`, `empty_section`, `unchecked_required_option`, and `sections_out_of_order` come from validating the description against the repository's report template; other codes are shared with other validation failures on this endpoint. */
+        code: string;
+        index?: number;
+        value?: (string | null) | (number | null) | (string[] | null);
+        /** @description The report template section the violation concerns. */
+        section?: string;
+        /** @description The checkbox option left unticked. Only present when `code` is `unchecked_required_option`. */
+        option?: string;
+      }[];
+    };
     "private-vulnerability-report-create": {
       /** @description A short summary of the advisory. */
       summary: string;
@@ -36402,6 +37066,35 @@ export interface components {
       /** Format: date-time */
       starred_at: string;
       user: components["schemas"]["nullable-simple-user"];
+    };
+    /**
+     * Stargazer History
+     * @description Stargazer History
+     */
+    "stargazer-history": {
+      /**
+       * @description The number of stars created on each day of the week, starting on Sunday.
+       * @example [
+       *   0,
+       *   12,
+       *   7,
+       *   0,
+       *   0,
+       *   0,
+       *   0
+       * ]
+       */
+      days: number[];
+      /**
+       * @description The number of stars created during the week.
+       * @example 19
+       */
+      total: number;
+      /**
+       * @description The start of the week, given as a Unix timestamp.
+       * @example 1754784000
+       */
+      week: number;
     };
     /**
      * Code Frequency Stat
@@ -36962,6 +37655,12 @@ export interface components {
        */
       userName?: string | null;
       /**
+       * Format: uri
+       * @description The URL of the linked GitHub user's profile.
+       * @example https://github.com/octocat
+       */
+      profileUrl?: string | null;
+      /**
        * @description The name of the user, suitable for display to end-users
        * @example Jon Doe
        */
@@ -37182,6 +37881,13 @@ export interface components {
         color?: string;
         default?: boolean;
         description?: string | null;
+        /**
+         * Format: date-time
+         * @description Timestamp indicating when the label was archived, or `null` if it has not been archived.
+         */
+        archived_at?: string | null;
+        /** @description The user who archived the label, or `null` if it has not been archived. */
+        archived_by?: components["schemas"]["simple-user"] | null;
       }[];
       sub_issues_summary?: components["schemas"]["sub-issues-summary"];
       issue_dependencies_summary?: components["schemas"]["issue-dependencies-summary"];
@@ -37237,6 +37943,13 @@ export interface components {
       color: string;
       default: boolean;
       description: string | null;
+      /**
+       * Format: date-time
+       * @description Timestamp indicating when the label was archived, or `null` if it has not been archived.
+       */
+      archived_at: string | null;
+      /** @description The user who archived the label, or `null` if it has not been archived. */
+      archived_by: components["schemas"]["simple-user"] | null;
       score: number;
       text_matches?: components["schemas"]["search-result-text-matches"];
     };
@@ -38967,8 +39680,8 @@ export interface components {
     "exemption-request": {
       /** @description The ID of the exemption request. */
       id?: number;
-      /** @description The number uniquely identifying the exemption request within it's repository. */
-      number?: number | null;
+      /** @description The number uniquely identifying the exemption request within its repository. */
+      number?: number;
       /** @description The ID of the repository the exemption request is for. */
       repository_id?: number;
       /** @description The ID of the user who requested the exemption. */
@@ -39554,6 +40267,13 @@ export interface components {
       color: string;
       default: boolean;
       description: string | null;
+      /**
+       * Format: date-time
+       * @description Timestamp indicating when the label was archived, or `null` if it has not been archived.
+       */
+      archived_at: string | null;
+      /** @description The user who archived the label, or `null` if it has not been archived. */
+      archived_by: components["schemas"]["simple-user"] | null;
       id: number;
       /** @description The name of the label. */
       name: string;
@@ -40755,6 +41475,26 @@ export interface components {
       url?: string;
       user_view_type?: string;
     } | null;
+    /** Archived label */
+    webhooks_label_archived: components["schemas"]["webhooks_label"] & {
+      /**
+       * Format: date-time
+       * @description Timestamp indicating when the label was archived.
+       */
+      archived_at: string;
+      /** @description The user who archived the label. */
+      archived_by: components["schemas"]["simple-user"];
+    };
+    /** Unarchived label */
+    webhooks_label_unarchived: components["schemas"]["webhooks_label"] & {
+      /**
+       * Format: date-time
+       * @description Timestamp indicating when the label was archived. This is `null` after the label is unarchived.
+       */
+      archived_at: string | null;
+      /** @description The user who archived the label. This is `null` after the label is unarchived. */
+      archived_by: components["schemas"]["simple-user"] | null;
+    };
     /** Marketplace Purchase */
     webhooks_marketplace_purchase: {
       account: {
@@ -52860,6 +53600,36 @@ export interface components {
       repository: components["schemas"]["repository-webhooks"];
       sender: components["schemas"]["simple-user"];
     };
+    /** relates to issue added event */
+    "webhook-issue-relates-to-added": {
+      /** @enum {string} */
+      action: "relates_to_added";
+      /** @description The ID of the issue the relationship was added to. */
+      issue_id?: number;
+      issue?: components["schemas"]["issue"];
+      /** @description The ID of the related issue. Only present when both issues belong to the same repository. */
+      related_issue_id?: number;
+      related_issue?: components["schemas"]["issue"];
+      installation?: components["schemas"]["simple-installation"];
+      organization: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user"];
+    };
+    /** relates to issue removed event */
+    "webhook-issue-relates-to-removed": {
+      /** @enum {string} */
+      action: "relates_to_removed";
+      /** @description The ID of the issue the relationship was removed from. */
+      issue_id?: number;
+      issue?: components["schemas"]["issue"];
+      /** @description The ID of the related issue. Only present when both issues belong to the same repository. */
+      related_issue_id?: number;
+      related_issue?: components["schemas"]["issue"];
+      installation?: components["schemas"]["simple-installation"];
+      organization: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user"];
+    };
     /** issues assigned event */
     "webhook-issues-assigned": {
       /**
@@ -55141,6 +55911,13 @@ export interface components {
           color: string;
           default: boolean;
           description: string | null;
+          /**
+           * Format: date-time
+           * @description Timestamp indicating when the label was archived, or `null` if it has not been archived.
+           */
+          archived_at: string | null;
+          /** @description The user who archived the label, or `null` if it has not been archived. */
+          archived_by: components["schemas"]["simple-user"] | null;
           id: number;
           /** @description The name of the label. */
           name: string;
@@ -59484,6 +60261,17 @@ export interface components {
       repository: components["schemas"]["repository-webhooks"];
       sender: components["schemas"]["simple-user"];
     };
+    /** label archived event */
+    "webhook-label-archived": {
+      /** @enum {string} */
+      action: "archived";
+      enterprise?: components["schemas"]["enterprise-webhooks"];
+      installation?: components["schemas"]["simple-installation"];
+      label: components["schemas"]["webhooks_label_archived"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user"];
+    };
     /** label created event */
     "webhook-label-created": {
       /** @enum {string} */
@@ -59528,6 +60316,17 @@ export interface components {
       enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
       label: components["schemas"]["webhooks_label"];
+      organization?: components["schemas"]["organization-simple-webhooks"];
+      repository: components["schemas"]["repository-webhooks"];
+      sender: components["schemas"]["simple-user"];
+    };
+    /** label unarchived event */
+    "webhook-label-unarchived": {
+      /** @enum {string} */
+      action: "unarchived";
+      enterprise?: components["schemas"]["enterprise-webhooks"];
+      installation?: components["schemas"]["simple-installation"];
+      label: components["schemas"]["webhooks_label_unarchived"];
       organization?: components["schemas"]["organization-simple-webhooks"];
       repository: components["schemas"]["repository-webhooks"];
       sender: components["schemas"]["simple-user"];
@@ -62676,7 +63475,7 @@ export interface components {
       action: "auto_merge_disabled";
       enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      number: number;
+      number: components["schemas"]["webhooks_number"];
       organization?: components["schemas"]["organization-simple-webhooks"];
       /** Pull Request */
       pull_request: {
@@ -63921,7 +64720,7 @@ export interface components {
       action: "auto_merge_enabled";
       enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      number: number;
+      number: components["schemas"]["webhooks_number"];
       organization?: components["schemas"]["organization-simple-webhooks"];
       /** Pull Request */
       pull_request: {
@@ -65186,12 +65985,13 @@ export interface components {
       /** @enum {string} */
       action: "demilestoned";
       enterprise?: components["schemas"]["enterprise-webhooks"];
+      installation?: components["schemas"]["simple-installation"];
       milestone?: components["schemas"]["milestone"];
       number: components["schemas"]["webhooks_number"];
       organization?: components["schemas"]["organization-simple-webhooks"];
       pull_request: components["schemas"]["webhooks_pull_request_5"];
       repository: components["schemas"]["repository-webhooks"];
-      sender?: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user"];
     };
     /** pull_request dequeued event */
     "webhook-pull-request-dequeued": {
@@ -65199,7 +65999,7 @@ export interface components {
       action: "dequeued";
       enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      number: number;
+      number: components["schemas"]["webhooks_number"];
       organization?: components["schemas"]["organization-simple-webhooks"];
       /** Pull Request */
       pull_request: {
@@ -66480,7 +67280,7 @@ export interface components {
       organization?: components["schemas"]["organization-simple-webhooks"];
       pull_request: components["schemas"]["pull-request-webhook"];
       repository: components["schemas"]["repository-webhooks"];
-      sender?: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user"];
     };
     /** pull_request enqueued event */
     "webhook-pull-request-enqueued": {
@@ -66488,7 +67288,7 @@ export interface components {
       action: "enqueued";
       enterprise?: components["schemas"]["enterprise-webhooks"];
       installation?: components["schemas"]["simple-installation"];
-      number: number;
+      number: components["schemas"]["webhooks_number"];
       organization?: components["schemas"]["organization-simple-webhooks"];
       /** Pull Request */
       pull_request: {
@@ -68631,6 +69431,13 @@ export interface components {
           color: string;
           default: boolean;
           description: string | null;
+          /**
+           * Format: date-time
+           * @description Timestamp indicating when the label was archived, or `null` if it has not been archived.
+           */
+          archived_at: string | null;
+          /** @description The user who archived the label, or `null` if it has not been archived. */
+          archived_by: components["schemas"]["simple-user"] | null;
           id: number;
           /** @description The name of the label. */
           name: string;
@@ -70220,12 +71027,13 @@ export interface components {
       /** @enum {string} */
       action: "milestoned";
       enterprise?: components["schemas"]["enterprise-webhooks"];
+      installation?: components["schemas"]["simple-installation"];
       milestone?: components["schemas"]["milestone"];
       number: components["schemas"]["webhooks_number"];
       organization?: components["schemas"]["organization-simple-webhooks"];
       pull_request: components["schemas"]["webhooks_pull_request_5"];
       repository: components["schemas"]["repository-webhooks"];
-      sender?: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user"];
     };
     /** pull_request opened event */
     "webhook-pull-request-opened": {
@@ -88909,7 +89717,7 @@ export interface components {
         } | null;
       };
       repository: components["schemas"]["repository-webhooks"];
-      sender?: components["schemas"]["simple-user"];
+      sender: components["schemas"]["simple-user"];
     };
     /** pull_request unlabeled event */
     "webhook-pull-request-unlabeled": {
@@ -97153,6 +97961,12 @@ export interface components {
         "application/json": components["schemas"]["basic-error"];
       };
     };
+    /** @description The request could not be processed due to heavy server load. Please try again. */
+    server_load_try_again: {
+      content: {
+        "application/json": components["schemas"]["basic-error"];
+      };
+    };
     /** @description Response for a private repository when GitHub Advanced Security is not enabled, or if used against a fork */
     dependency_review_forbidden: {
       content: {
@@ -97697,6 +98511,8 @@ export interface components {
     "item-id": number;
     /** @description The number that identifies the project view. */
     "view-number": number;
+    /** @description The name of the external custom property */
+    "external-property-name": string;
     /**
      * @description A comma-separated list of rule targets to filter by.
      * If provided, only rulesets that apply to the specified targets will be returned.
@@ -97764,6 +98580,8 @@ export interface components {
     "concurrency-group-name": string;
     /** @description The unique identifier of the job. */
     "job-id": number | bigint;
+    /** @description The zero-based position number of the step in the job. */
+    "step-number": number;
     /** @description Returns someone's workflow runs. Use the login for the user who created the `push` associated with the check suite or workflow run. */
     actor?: string;
     /** @description Returns workflow runs associated with a branch. Use the name of the branch of the `push`. */
@@ -99930,9 +100748,9 @@ export interface operations {
   };
   /**
    * List installations for the authenticated app
-   * @description You must use a [JWT](https://docs.github.com/enterprise-server@3.9/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
+   * @description The permissions the installation has are included under the `permissions` key.
    *
-   * The permissions the installation has are included under the `permissions` key.
+   * You must use a [JWT](https://docs.github.com/enterprise-cloud@latest/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app) to access this endpoint.
    */
   "apps/list-installations": {
     parameters: {
@@ -99950,421 +100768,7 @@ export interface operations {
           Link: components["headers"]["link"];
         };
         content: {
-          "application/json": {
-            /**
-             * @description The ID of the installation.
-             * @example 1
-             */
-            id: number;
-            account:
-              | ({
-                  name?: string | null;
-                  email?: string | null;
-                  /** @example octocat */
-                  login: string;
-                  /** @example 1 */
-                  id: number;
-                  /** @example MDQ6VXNlcjE= */
-                  node_id: string;
-                  /**
-                   * Format: uri
-                   * @example https://github.com/images/error/octocat_happy.gif
-                   */
-                  avatar_url: string;
-                  /** @example 41d064eb2195891e12d0413f63227ea7 */
-                  gravatar_id: string | null;
-                  /**
-                   * Format: uri
-                   * @example https://api.github.com/users/octocat
-                   */
-                  url: string;
-                  /**
-                   * Format: uri
-                   * @example https://github.com/octocat
-                   */
-                  html_url: string;
-                  /**
-                   * Format: uri
-                   * @example https://api.github.com/users/octocat/followers
-                   */
-                  followers_url: string;
-                  /** @example https://api.github.com/users/octocat/following{/other_user} */
-                  following_url: string;
-                  /** @example https://api.github.com/users/octocat/gists{/gist_id} */
-                  gists_url: string;
-                  /** @example https://api.github.com/users/octocat/starred{/owner}{/repo} */
-                  starred_url: string;
-                  /**
-                   * Format: uri
-                   * @example https://api.github.com/users/octocat/subscriptions
-                   */
-                  subscriptions_url: string;
-                  /**
-                   * Format: uri
-                   * @example https://api.github.com/users/octocat/orgs
-                   */
-                  organizations_url: string;
-                  /**
-                   * Format: uri
-                   * @example https://api.github.com/users/octocat/repos
-                   */
-                  repos_url: string;
-                  /** @example https://api.github.com/users/octocat/events{/privacy} */
-                  events_url: string;
-                  /**
-                   * Format: uri
-                   * @example https://api.github.com/users/octocat/received_events
-                   */
-                  received_events_url: string;
-                  /** @example User */
-                  type: string;
-                  site_admin: boolean;
-                  /** @example "2020-07-09T00:17:55Z" */
-                  starred_at?: string;
-                } & {
-                  /** @description A short description of the enterprise. */
-                  description?: string | null;
-                  /**
-                   * Format: uri
-                   * @example https://github.com/enterprises/octo-business
-                   */
-                  html_url: string;
-                  /**
-                   * Format: uri
-                   * @description The enterprise's website URL.
-                   */
-                  website_url?: string | null;
-                  /**
-                   * @description Unique identifier of the enterprise
-                   * @example 42
-                   */
-                  id: number;
-                  /** @example MDEwOlJlcG9zaXRvcnkxMjk2MjY5 */
-                  node_id: string;
-                  /**
-                   * @description The name of the enterprise.
-                   * @example Octo Business
-                   */
-                  name: string;
-                  /**
-                   * @description The slug url identifier for the enterprise.
-                   * @example octo-business
-                   */
-                  slug: string;
-                  /**
-                   * Format: date-time
-                   * @example 2019-01-26T19:01:12Z
-                   */
-                  created_at: string | null;
-                  /**
-                   * Format: date-time
-                   * @example 2019-01-26T19:14:43Z
-                   */
-                  updated_at: string | null;
-                  /** Format: uri */
-                  avatar_url: string;
-                })
-              | null;
-            /**
-             * @description Describe whether all repositories have been selected or there's a selection involved
-             * @enum {string}
-             */
-            repository_selection: "all" | "selected";
-            /**
-             * Format: uri
-             * @example https://api.github.com/installations/1/access_tokens
-             */
-            access_tokens_url: string;
-            /**
-             * Format: uri
-             * @example https://api.github.com/installation/repositories
-             */
-            repositories_url: string;
-            /**
-             * Format: uri
-             * @example https://github.com/organizations/github/settings/installations/1
-             */
-            html_url: string;
-            /** @example 1 */
-            app_id: number;
-            /** @description The ID of the user or organization this token is being scoped to. */
-            target_id: number;
-            /** @example Organization */
-            target_type: string;
-            /**
-             * App Permissions
-             * @description The permissions granted to the user access token.
-             * @example {
-             *   "contents": "read",
-             *   "issues": "read",
-             *   "deployments": "write",
-             *   "single_file": "read"
-             * }
-             */
-            permissions: {
-              /**
-               * @description The level of permission to grant the access token for GitHub Actions workflows, workflow runs, and artifacts.
-               * @enum {string}
-               */
-              actions?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token for repository creation, deletion, settings, teams, and collaborators creation.
-               * @enum {string}
-               */
-              administration?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token for checks on code.
-               * @enum {string}
-               */
-              checks?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token for repository contents, commits, branches, downloads, releases, and merges.
-               * @enum {string}
-               */
-              contents?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token for deployments and deployment statuses.
-               * @enum {string}
-               */
-              deployments?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token for managing repository environments.
-               * @enum {string}
-               */
-              environments?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token for issues and related comments, assignees, labels, and milestones.
-               * @enum {string}
-               */
-              issues?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token to search repositories, list collaborators, and access repository metadata.
-               * @enum {string}
-               */
-              metadata?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token for packages published to GitHub Packages.
-               * @enum {string}
-               */
-              packages?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token to retrieve Pages statuses, configuration, and builds, as well as create new builds.
-               * @enum {string}
-               */
-              pages?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token for pull requests and related comments, assignees, labels, milestones, and merges.
-               * @enum {string}
-               */
-              pull_requests?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token to manage the post-receive hooks for a repository.
-               * @enum {string}
-               */
-              repository_hooks?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token to manage repository projects, columns, and cards.
-               * @enum {string}
-               */
-              repository_projects?: "read" | "write" | "admin";
-              /**
-               * @description The level of permission to grant the access token to view and manage secret scanning alerts.
-               * @enum {string}
-               */
-              secret_scanning_alerts?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token to manage repository secrets.
-               * @enum {string}
-               */
-              secrets?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token to view and manage security events like code scanning alerts.
-               * @enum {string}
-               */
-              security_events?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token to manage just a single file.
-               * @enum {string}
-               */
-              single_file?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token for commit statuses.
-               * @enum {string}
-               */
-              statuses?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token to manage Dependabot alerts.
-               * @enum {string}
-               */
-              vulnerability_alerts?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token to update GitHub Actions workflow files.
-               * @enum {string}
-               */
-              workflows?: "write";
-              /**
-               * @description The level of permission to grant the access token for organization teams and members.
-               * @enum {string}
-               */
-              members?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token to manage access to an organization.
-               * @enum {string}
-               */
-              organization_administration?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token for custom repository roles management. This property is in beta and is subject to change.
-               * @enum {string}
-               */
-              organization_custom_roles?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token to view and manage announcement banners for an organization.
-               * @enum {string}
-               */
-              organization_announcement_banners?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token to manage the post-receive hooks for an organization.
-               * @enum {string}
-               */
-              organization_hooks?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token for viewing and managing fine-grained personal access token requests to an organization.
-               * @enum {string}
-               */
-              organization_personal_access_tokens?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token for viewing and managing fine-grained personal access tokens that have been approved by an organization.
-               * @enum {string}
-               */
-              organization_personal_access_token_requests?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token for viewing an organization's plan.
-               * @enum {string}
-               */
-              organization_plan?: "read";
-              /**
-               * @description The level of permission to grant the access token to manage organization projects and projects beta (where available).
-               * @enum {string}
-               */
-              organization_projects?: "read" | "write" | "admin";
-              /**
-               * @description The level of permission to grant the access token for organization packages published to GitHub Packages.
-               * @enum {string}
-               */
-              organization_packages?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token to manage organization secrets.
-               * @enum {string}
-               */
-              organization_secrets?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token to view and manage GitHub Actions self-hosted runners available to an organization.
-               * @enum {string}
-               */
-              organization_self_hosted_runners?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token to view and manage users blocked by the organization.
-               * @enum {string}
-               */
-              organization_user_blocking?: "read" | "write";
-              /**
-               * @description The level of permission to grant the access token to manage team discussions and related comments.
-               * @enum {string}
-               */
-              team_discussions?: "read" | "write";
-            };
-            events: string[];
-            /** Format: date-time */
-            created_at: string;
-            /** Format: date-time */
-            updated_at: string;
-            /** @example config.yaml */
-            single_file_name: string | null;
-            /** @example true */
-            has_multiple_single_files?: boolean;
-            /**
-             * @example [
-             *   "config.yml",
-             *   ".github/issue_TEMPLATE.md"
-             * ]
-             */
-            single_file_paths?: string[];
-            /** @example github-actions */
-            app_slug: string;
-            /**
-             * Simple User
-             * @description A GitHub user.
-             */
-            suspended_by: {
-              name?: string | null;
-              email?: string | null;
-              /** @example octocat */
-              login: string;
-              /** @example 1 */
-              id: number;
-              /** @example MDQ6VXNlcjE= */
-              node_id: string;
-              /**
-               * Format: uri
-               * @example https://github.com/images/error/octocat_happy.gif
-               */
-              avatar_url: string;
-              /** @example 41d064eb2195891e12d0413f63227ea7 */
-              gravatar_id: string | null;
-              /**
-               * Format: uri
-               * @example https://api.github.com/users/octocat
-               */
-              url: string;
-              /**
-               * Format: uri
-               * @example https://github.com/octocat
-               */
-              html_url: string;
-              /**
-               * Format: uri
-               * @example https://api.github.com/users/octocat/followers
-               */
-              followers_url: string;
-              /** @example https://api.github.com/users/octocat/following{/other_user} */
-              following_url: string;
-              /** @example https://api.github.com/users/octocat/gists{/gist_id} */
-              gists_url: string;
-              /** @example https://api.github.com/users/octocat/starred{/owner}{/repo} */
-              starred_url: string;
-              /**
-               * Format: uri
-               * @example https://api.github.com/users/octocat/subscriptions
-               */
-              subscriptions_url: string;
-              /**
-               * Format: uri
-               * @example https://api.github.com/users/octocat/orgs
-               */
-              organizations_url: string;
-              /**
-               * Format: uri
-               * @example https://api.github.com/users/octocat/repos
-               */
-              repos_url: string;
-              /** @example https://api.github.com/users/octocat/events{/privacy} */
-              events_url: string;
-              /**
-               * Format: uri
-               * @example https://api.github.com/users/octocat/received_events
-               */
-              received_events_url: string;
-              /** @example User */
-              type: string;
-              site_admin: boolean;
-              /** @example "2020-07-09T00:17:55Z" */
-              starred_at?: string;
-            } | null;
-            /** Format: date-time */
-            suspended_at: string | null;
-            /** @example "test_13f1e99741e3e004@d7e1eb0bc0a1ba12.com" */
-            contact_email?: string | null;
-          }[];
+          "application/json": components["schemas"]["installation"][];
         };
       };
     };
@@ -100689,13 +101093,11 @@ export interface operations {
     };
   };
   /**
-   * Closing down - Get an assignment
+   * Closed - Get an assignment
    * @deprecated
    * @description > [!WARNING]
-   * > **Closing down notice:** This operation is closing down and will be removed on August 28, 2026.
+   * > **Closed notice:** This operation is no longer available as of August 28, 2026.
    * > For more information, see the [GitHub Classroom sunset notice](https://gh.io/classroom-sunset).
-   *
-   * Gets a GitHub Classroom assignment. Assignment will only be returned if the current user is an administrator of the GitHub Classroom for the assignment.
    */
   "classroom/get-an-assignment": {
     parameters: {
@@ -100704,53 +101106,32 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["classroom-assignment"];
-        };
-      };
-      404: components["responses"]["not_found"];
       410: components["responses"]["gone"];
     };
   };
   /**
-   * Closing down - List accepted assignments for an assignment
+   * Closed - List accepted assignments for an assignment
    * @deprecated
    * @description > [!WARNING]
-   * > **Closing down notice:** This operation is closing down and will be removed on August 28, 2026.
+   * > **Closed notice:** This operation is no longer available as of August 28, 2026.
    * > For more information, see the [GitHub Classroom sunset notice](https://gh.io/classroom-sunset).
-   *
-   * Lists any assignment repositories that have been created by students accepting a GitHub Classroom assignment. Accepted assignments will only be returned if the current user is an administrator of the GitHub Classroom for the assignment.
    */
   "classroom/list-accepted-assignments-for-an-assignment": {
     parameters: {
-      query?: {
-        page?: components["parameters"]["page"];
-        per_page?: components["parameters"]["per-page"];
-      };
       path: {
         assignment_id: components["parameters"]["assignment-id"];
       };
     };
     responses: {
-      /** @description Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["classroom-accepted-assignment"][];
-        };
-      };
       410: components["responses"]["gone"];
     };
   };
   /**
-   * Closing down - Get assignment grades
+   * Closed - Get assignment grades
    * @deprecated
    * @description > [!WARNING]
-   * > **Closing down notice:** This operation is closing down and will be removed on August 28, 2026.
+   * > **Closed notice:** This operation is no longer available as of August 28, 2026.
    * > For more information, see the [GitHub Classroom sunset notice](https://gh.io/classroom-sunset).
-   *
-   * Gets grades for a GitHub Classroom assignment. Grades will only be returned if the current user is an administrator of the GitHub Classroom for the assignment.
    */
   "classroom/get-assignment-grades": {
     parameters: {
@@ -100759,50 +101140,27 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["classroom-assignment-grade"][];
-        };
-      };
-      404: components["responses"]["not_found"];
       410: components["responses"]["gone"];
     };
   };
   /**
-   * Closing down - List classrooms
+   * Closed - List classrooms
    * @deprecated
    * @description > [!WARNING]
-   * > **Closing down notice:** This operation is closing down and will be removed on August 28, 2026.
+   * > **Closed notice:** This operation is no longer available as of August 28, 2026.
    * > For more information, see the [GitHub Classroom sunset notice](https://gh.io/classroom-sunset).
-   *
-   * Lists GitHub Classroom classrooms for the current user. Classrooms will only be returned if the current user is an administrator of one or more GitHub Classrooms.
    */
   "classroom/list-classrooms": {
-    parameters: {
-      query?: {
-        page?: components["parameters"]["page"];
-        per_page?: components["parameters"]["per-page"];
-      };
-    };
     responses: {
-      /** @description Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["simple-classroom"][];
-        };
-      };
       410: components["responses"]["gone"];
     };
   };
   /**
-   * Closing down - Get a classroom
+   * Closed - Get a classroom
    * @deprecated
    * @description > [!WARNING]
-   * > **Closing down notice:** This operation is closing down and will be removed on August 28, 2026.
+   * > **Closed notice:** This operation is no longer available as of August 28, 2026.
    * > For more information, see the [GitHub Classroom sunset notice](https://gh.io/classroom-sunset).
-   *
-   * Gets a GitHub Classroom classroom for the current user. Classroom will only be returned if the current user is an administrator of the GitHub Classroom.
    */
   "classroom/get-a-classroom": {
     parameters: {
@@ -100811,42 +101169,23 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["classroom"];
-        };
-      };
-      404: components["responses"]["not_found"];
       410: components["responses"]["gone"];
     };
   };
   /**
-   * Closing down - List assignments for a classroom
+   * Closed - List assignments for a classroom
    * @deprecated
    * @description > [!WARNING]
-   * > **Closing down notice:** This operation is closing down and will be removed on August 28, 2026.
+   * > **Closed notice:** This operation is no longer available as of August 28, 2026.
    * > For more information, see the [GitHub Classroom sunset notice](https://gh.io/classroom-sunset).
-   *
-   * Lists GitHub Classroom assignments for a classroom. Assignments will only be returned if the current user is an administrator of the GitHub Classroom.
    */
   "classroom/list-assignments-for-a-classroom": {
     parameters: {
-      query?: {
-        page?: components["parameters"]["page"];
-        per_page?: components["parameters"]["per-page"];
-      };
       path: {
         classroom_id: components["parameters"]["classroom-id"];
       };
     };
     responses: {
-      /** @description Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["simple-classroom-assignment"][];
-        };
-      };
       410: components["responses"]["gone"];
     };
   };
@@ -101730,7 +102069,9 @@ export interface operations {
   };
   /**
    * Get artifact and log retention settings for an enterprise
-   * @description Gets artifact and log retention settings for an enterprise.
+   * @description Gets retention settings for checks, workflow runs, commit statuses, artifacts, and logs for an enterprise.
+   *
+   * Checks include check suites, check runs, and check annotations. These settings also apply to checks and commit statuses created by third-party integrations, and are not limited to data created by GitHub Actions.
    */
   "enterprise-admin/get-artifact-and-log-retention-settings": {
     parameters: {
@@ -101739,7 +102080,7 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Successfully retrieved the artifact and log retention settings */
+      /** @description Successfully retrieved the retention settings for checks, workflow runs, commit statuses, artifacts, and logs */
       200: {
         content: {
           "application/json": components["schemas"]["actions-artifact-and-log-retention-response"];
@@ -101751,7 +102092,9 @@ export interface operations {
   };
   /**
    * Set artifact and log retention settings for an enterprise
-   * @description Sets artifact and log retention settings for an enterprise.
+   * @description Sets retention settings for checks, workflow runs, commit statuses, artifacts, and logs for an enterprise.
+   *
+   * Checks include check suites, check runs, and check annotations. These settings also apply to checks and commit statuses created by third-party integrations, and are not limited to data created by GitHub Actions.
    */
   "enterprise-admin/set-artifact-and-log-retention-settings": {
     parameters: {
@@ -101765,7 +102108,7 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Successfully updated the artifact and log retention settings */
+      /** @description Successfully updated the retention settings for checks, workflow runs, commit statuses, artifacts, and logs */
       204: {
         content: never;
       };
@@ -102098,6 +102441,154 @@ export interface operations {
       204: {
         content: never;
       };
+    };
+  };
+  /**
+   * List enterprise Actions policies
+   * @description List all Actions policies for an enterprise.
+   */
+  "actions/get-enterprise-actions-policies": {
+    parameters: {
+      query?: {
+        per_page?: components["parameters"]["per-page"];
+        page?: components["parameters"]["page"];
+      };
+      path: {
+        enterprise: components["parameters"]["enterprise"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        content: {
+          "application/json": {
+            /** @description The total number of Actions policies. */
+            total_count: number;
+            /** @description An array of Actions policies. */
+            policies: components["schemas"]["actions-policy"][];
+          };
+        };
+      };
+      404: components["responses"]["not_found"];
+      500: components["responses"]["internal_error"];
+    };
+  };
+  /**
+   * Create an enterprise Actions policy
+   * @description Create an Actions policy for an enterprise.
+   * Omitting `workflow_path` targets all workflows without storing an explicit condition.
+   */
+  "actions/create-enterprise-actions-policy": {
+    parameters: {
+      path: {
+        enterprise: components["parameters"]["enterprise"];
+      };
+    };
+    /** @description Request body */
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @description The name of the policy. */
+          name: string;
+          enforcement: components["schemas"]["repository-rule-enforcement"];
+          conditions?: components["schemas"]["actions-policy-enterprise-conditions"];
+          /** @description An array of rules within the policy. */
+          rules?: components["schemas"]["actions-rule"][];
+        };
+      };
+    };
+    responses: {
+      /** @description Response */
+      201: {
+        content: {
+          "application/json": components["schemas"]["actions-policy"];
+        };
+      };
+      404: components["responses"]["not_found"];
+      422: components["responses"]["validation_failed"];
+      500: components["responses"]["internal_error"];
+    };
+  };
+  /**
+   * Get an enterprise Actions policy
+   * @description Get a specific Actions policy for an enterprise.
+   */
+  "actions/get-enterprise-actions-policy": {
+    parameters: {
+      path: {
+        enterprise: components["parameters"]["enterprise"];
+        /** @description The ID of the policy. */
+        policy_id: number;
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["actions-policy"];
+        };
+      };
+      404: components["responses"]["not_found"];
+      500: components["responses"]["internal_error"];
+    };
+  };
+  /**
+   * Update an enterprise Actions policy
+   * @description Update an Actions policy for an enterprise.
+   * Omitting `workflow_path` preserves the policy's existing workflow targeting.
+   */
+  "actions/update-enterprise-actions-policy": {
+    parameters: {
+      path: {
+        enterprise: components["parameters"]["enterprise"];
+        /** @description The ID of the policy. */
+        policy_id: number;
+      };
+    };
+    /** @description Request body */
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @description The name of the policy. */
+          name?: string;
+          enforcement?: components["schemas"]["repository-rule-enforcement"];
+          conditions?: components["schemas"]["actions-policy-enterprise-conditions"];
+          /** @description An array of rules within the policy. */
+          rules?: components["schemas"]["actions-rule"][];
+        };
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["actions-policy"];
+        };
+      };
+      404: components["responses"]["not_found"];
+      422: components["responses"]["validation_failed"];
+      500: components["responses"]["internal_error"];
+    };
+  };
+  /**
+   * Delete an enterprise Actions policy
+   * @description Delete an Actions policy for an enterprise.
+   */
+  "actions/delete-enterprise-actions-policy": {
+    parameters: {
+      path: {
+        enterprise: components["parameters"]["enterprise"];
+        /** @description The ID of the policy. */
+        policy_id: number;
+      };
+    };
+    responses: {
+      /** @description Response */
+      204: {
+        content: never;
+      };
+      404: components["responses"]["not_found"];
+      500: components["responses"]["internal_error"];
     };
   };
   /**
@@ -103249,6 +103740,8 @@ export interface operations {
    * Create an audit log streaming configuration for an enterprise
    * @description Creates an audit log streaming configuration for any of the supported streaming endpoints: Azure Blob Storage, Azure Event Hubs, Amazon S3, Splunk, Google Cloud Storage, Datadog.
    *
+   * Microsoft Agent365 and Microsoft Purview streams require Microsoft Entra authorization and cannot be created with this endpoint. Configure those destinations from the enterprise audit log streaming settings.
+   *
    * When using this endpoint, you must encrypt the credentials following the same encryption steps as outlined in the guide on encrypting secrets. See "[Encrypting secrets for the REST API](/rest/guides/encrypting-secrets-for-the-rest-api)."
    */
   "enterprise-admin/create-audit-log-stream": {
@@ -103321,6 +103814,8 @@ export interface operations {
    * Update an existing audit log stream configuration
    * @description Updates an existing audit log stream configuration for an enterprise.
    *
+   * Microsoft Agent365 streams are configured through Microsoft Entra authorization. For those streams, this endpoint can only pause or resume the stream. Authorization-managed fields cannot be updated; delete and recreate the stream to change its Entra tenant or authorization.
+   *
    * When using this endpoint, you must encrypt the credentials following the same encryption steps as outlined in the guide on encrypting secrets. See "[Encrypting secrets for the REST API](/rest/guides/encrypting-secrets-for-the-rest-api)."
    */
   "enterprise-admin/update-audit-log-stream": {
@@ -103346,7 +103841,8 @@ export interface operations {
             | "Splunk"
             | "HTTPS Event Collector"
             | "Google Cloud Storage"
-            | "Datadog";
+            | "Datadog"
+            | "Microsoft Agent365";
           vendor_specific:
             | components["schemas"]["azure-blob-config"]
             | components["schemas"]["azure-hub-config"]
@@ -103355,7 +103851,8 @@ export interface operations {
             | components["schemas"]["splunk-config"]
             | components["schemas"]["hec-config"]
             | components["schemas"]["google-cloud-config"]
-            | components["schemas"]["datadog-config"];
+            | components["schemas"]["datadog-config"]
+            | Record<string, never>;
         };
       };
     };
@@ -103682,7 +104179,7 @@ export interface operations {
            * @default enforced
            * @enum {string}
            */
-          enforcement?: "enforced" | "unenforced";
+          enforcement?: "enforced" | "unenforced" | "enterprise_enforced";
         };
       };
     };
@@ -103905,7 +104402,7 @@ export interface operations {
            * @description The enforcement status for a security configuration
            * @enum {string}
            */
-          enforcement?: "enforced" | "unenforced";
+          enforcement?: "enforced" | "unenforced" | "enterprise_enforced";
         };
       };
     };
@@ -104023,7 +104520,7 @@ export interface operations {
         /**
          * @description A comma-separated list of statuses. If specified, only repositories with these attachment statuses will be returned.
          *
-         * Can be: `all`, `attached`, `attaching`, `removed`, `enforced`, `failed`, `updating`, `removed_by_enterprise`
+         * Can be: `all`, `attached`, `attaching`, `removed`, `enforced`, `failed`, `updating`, `removed_by_enterprise`, `enterprise_enforced`
          */
         status?: string;
       };
@@ -105070,6 +105567,106 @@ export interface operations {
     };
   };
   /**
+   * Grant credential authorizations for enterprise organizations
+   * @description Authorizes an existing user credential for selected organizations in an enterprise. Currently supports personal access tokens (classic)
+   * and user-owned SSH authentication keys.
+   * The authenticated GitHub App must be owned by the enterprise or an organization in the enterprise. The credential
+   * owner must be a member of every selected organization, and the enterprise must be configured with
+   * an enterprise-level SSO provider.
+   *
+   * Credential authorizations remain active if the GitHub App is uninstalled or loses permission. They
+   * remain active until explicitly revoked, the credential is revoked or deleted, or the credential
+   * owner loses organization membership.
+   */
+  "enterprise-admin/grant-credential-authorizations": {
+    parameters: {
+      path: {
+        enterprise: components["parameters"]["enterprise"];
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          credential_id: number | string;
+          /**
+           * @description The type of credential to authorize.
+           * @enum {string}
+           */
+          credential_type: "classic_pat" | "ssh_key";
+          /** @description Organization slugs within the enterprise. A maximum of 50 organizations can be specified. */
+          organizations: string[];
+        };
+      };
+    };
+    responses: {
+      /** @description Credential authorizations were granted. */
+      201: {
+        content: {
+          "application/json":
+            | {
+                credential_id: number;
+                /** @enum {string} */
+                credential_type: "classic_pat";
+                organizations: string[];
+              }
+            | {
+                credential_id: number;
+                /** @enum {string} */
+                credential_type: "ssh_key";
+                /** @description The SHA-256 fingerprint of the authorized SSH key. */
+                fingerprint: string;
+                organizations: string[];
+              };
+        };
+      };
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      /** @description Conflict. Returned when credential authorizations are being modified by another request. */
+      409: {
+        content: {
+          "application/json": components["schemas"]["basic-error"];
+        };
+      };
+      422: components["responses"]["validation_failed"];
+    };
+  };
+  /**
+   * Revoke enterprise-delegated credential authorizations
+   * @description Queues revocation of every active organization credential authorization created through enterprise
+   * delegation for the enterprise. Credential authorizations created through SAML or other flows are not affected.
+   *
+   * The authenticated GitHub App must be owned by the enterprise or one of its organizations,
+   * installed on the enterprise, and have the `enterprise_credentials:write` permission.
+   */
+  "enterprise-admin/revoke-delegated-credential-authorizations": {
+    parameters: {
+      query?: {
+        /**
+         * @description The database ID of a GitHub App currently owned by the enterprise or one of its organizations,
+         * or a formerly owned GitHub App with delegation history for the enterprise.
+         * When provided, only credential authorizations delegated by that App are revoked. When omitted,
+         * all enterprise-delegated credential authorizations for the enterprise are revoked.
+         */
+        integration_id?: number;
+      };
+      path: {
+        enterprise: components["parameters"]["enterprise"];
+      };
+    };
+    responses: {
+      /** @description Delegated credential authorization revocation was queued. */
+      202: {
+        content: {
+          "application/json": {
+            message: string;
+          };
+        };
+      };
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+    };
+  };
+  /**
    * Revoke all credential authorizations for an enterprise
    * @description Revokes all credential authorizations for all organizations within the enterprise.
    * This includes any guest, outside, or repository collaborators.
@@ -105335,6 +105932,211 @@ export interface operations {
         content: {
           "application/json": components["schemas"]["basic-error"];
         };
+      };
+    };
+  };
+  /**
+   * List enterprise token inventory
+   * @deprecated
+   * @description > [!WARNING]
+   * > **Closing down notice:** This operation is closing down and will be removed on October 2, 2026. Please migrate to the asynchronous export: use "[Create an enterprise token inventory export](https://docs.github.com/enterprise-cloud@latest/rest/enterprise-admin/token-inventory#create-an-enterprise-token-inventory-export)", which accepts the same filters in its request body, to start a CSV export, then "[Get an enterprise token inventory export](https://docs.github.com/enterprise-cloud@latest/rest/enterprise-admin/token-inventory#get-an-enterprise-token-inventory-export)" to download it. For more information, see the [changelog](https://github.blog/changelog/2026-09-21-github-enterprise-adds-credential-inventory-exports/).
+   *
+   * Lists an enterprise's credential inventory: both credentials currently authorized to access the enterprise and credentials owned by enterprise members that have no current enterprise authorization. Covers personal access tokens (classic and fine-grained), OAuth App and GitHub App user tokens, SSH keys, GitHub App installations, and federated credentials, assembled on demand from the canonical sources. Results are paginated with an opaque cursor via the `Link` header; there is no total count.
+   *
+   * You must be an enterprise owner (or hold a role with the "View enterprise credentials" permission) to use this endpoint.
+   *
+   * OAuth app tokens and personal access tokens (classic) require the `read:enterprise` scope to access this endpoint.
+   */
+  "enterprise-admin/list-enterprise-token-inventory": {
+    parameters: {
+      query?: {
+        per_page?: components["parameters"]["per-page"];
+        /** @description A cursor, as given in the `Link` header, for the next page of results. */
+        after?: string;
+        /** @description A comma-separated list of credential types to filter by. */
+        token_types?: string;
+        /** @description Filter by enterprise-access status. */
+        authorization_state?: "currently_authorized" | "member_owned_only";
+        /** @description Filter to credentials owned by this user, given as a login. */
+        owner?: string;
+        /** @description Filter to credentials authorized to this organization in the enterprise, given as a login. */
+        organization?: string;
+        /** @description Filter to credentials for this application, given as a GitHub App slug or an OAuth App client id. */
+        application?: string;
+      };
+      path: {
+        enterprise: components["parameters"]["enterprise"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        headers: {
+          Link: components["headers"]["link"];
+          /** @description Present and set to `true` when the walk hit the safety ceiling or time budget, so the result is a partial page. Absent otherwise. */
+          "x-github-enterprise-credentials-truncated"?: string;
+          /** @description Present and set to `true` when the result is incomplete for any reason (truncated, or a source was omitted). A client must not read an absent `Link` next page as "complete" without also checking this header. Absent otherwise. */
+          "x-github-enterprise-credentials-incomplete-results"?: string;
+          /** @description The as-of assembly time of the result, in ISO 8601 format. The inventory is stitched from replica reads over the request, not a point-in-time snapshot. */
+          "x-github-enterprise-credentials-generated-at"?: string;
+          /** @description Present when one or more credential sources failed and were omitted; a comma-separated list of the affected token types (for example, `classic_pat,ssh_key`). Absent when all sources succeeded. */
+          "x-github-enterprise-credentials-sources-unavailable"?: string;
+          /** @description Present and set to `true` when best-effort per-credential metadata (scopes, permissions, repository selection, or expiration policy) could not be fully loaded for some rows; the rows are all present, but that metadata may be absent. Absent when all metadata loaded. */
+          "x-github-enterprise-credentials-metadata-incomplete"?: string;
+          /** @description Present and set to `true` when one or more fine-grained PAT expiry values could not be filled, so those rows carry `expiry_unknown` and their `never_expires` / `past_expiration_policy` are not asserted. Absent when all expiry was resolved. */
+          "x-github-enterprise-credentials-expiry-incomplete"?: string;
+        };
+        content: {
+          "application/json": components["schemas"]["enterprise-token-inventory-item"][];
+        };
+      };
+      /** @description Resource not found */
+      404: {
+        content: never;
+      };
+      /** @description Validation failed */
+      422: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Create an enterprise token inventory export
+   * @description Starts an asynchronous CSV export of the enterprise token inventory and returns an opaque export id to poll. Limited to a small number of exports per enterprise per day.
+   *
+   * The generated file is UTF-8 CSV with a header row, using RFC 4180 field quoting and escaping and LF (`\n`) line endings. Timestamps are ISO-8601 in UTC (for example, `2026-09-15T12:00:00Z`). An empty cell means the value is null or unknown, never `false`. Multi-value cells join their entries with `; ` — this includes `scopes` and `permissions`, where each permission is encoded as a `resource:action` pair (for example, `contents:write; issues:read`). The file has one row per (credential, authorizing organization); the credential columns repeat while `organization_id` and `organization` vary, and a credential with no organization grant appears once with empty organization columns. `authorization_count` is the credential's total number of organization authorizations across the enterprise, plus one when `enterprise_authorized` is true, independent of any filters applied to the export. `credential_id` is a raw source-table id that can collide across credential types, so it is unique only together with `credential_type`, and only for the types that populate it (classic and fine-grained PATs, OAuth and GitHub App user tokens); SSH keys are keyed by `fingerprint`, while GitHub App installations and federated JTIs have no unique per-row column. `owner_type` (`user`, `oauth_application`, or `github_app`) disambiguates the id space of `owner_id`. `expiry_status` is `expires`, `never`, or `unknown` — `unknown` marks a credential whose expiration could not be determined, so a blank `expires_at` is never mistaken for one that never expires.
+   *
+   * You must be an enterprise owner (or hold a role with the "View enterprise credentials" permission) to use this endpoint.
+   *
+   * OAuth app tokens and personal access tokens (classic) require the `read:enterprise` scope to access this endpoint.
+   */
+  "enterprise-admin/create-enterprise-token-inventory-export": {
+    parameters: {
+      path: {
+        enterprise: components["parameters"]["enterprise"];
+      };
+    };
+    requestBody?: {
+      content: {
+        "application/json": {
+          /** @description The credential types to include. */
+          token_types?: string[];
+          /**
+           * @description Filter by enterprise-access status.
+           * @enum {string}
+           */
+          authorization_state?: "currently_authorized" | "member_owned_only";
+          /** @description Filter to credentials owned by this user, given as a login. */
+          owner?: string;
+          /** @description Filter to credentials authorized to this organization in the enterprise, given as a login. */
+          organization?: string;
+          /** @description Filter to credentials for this application, given as a GitHub App slug or an OAuth App client id. */
+          application?: string;
+        };
+      };
+    };
+    responses: {
+      /** @description Accepted */
+      202: {
+        content: {
+          "application/json": components["schemas"]["enterprise-token-inventory-export"];
+        };
+      };
+      /** @description Resource not found */
+      404: {
+        content: never;
+      };
+      /** @description Validation failed */
+      422: {
+        content: never;
+      };
+      /** @description Too many requests */
+      429: {
+        content: never;
+      };
+      /** @description Internal error, for example the export job could not be enqueued. */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Get an enterprise token inventory export
+   * @description Returns the status of an enterprise token inventory export. Once the export is ready this redirects to a short-lived URL to download the CSV.
+   *
+   * You must be an enterprise owner (or hold a role with the "View enterprise credentials" permission) to use this endpoint.
+   *
+   * OAuth app tokens and personal access tokens (classic) require the `read:enterprise` scope to access this endpoint.
+   */
+  "enterprise-admin/get-enterprise-token-inventory-export": {
+    parameters: {
+      path: {
+        enterprise: components["parameters"]["enterprise"];
+        /** @description The opaque id of the export, as returned when it was created. */
+        export_id: string;
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["enterprise-token-inventory-export"];
+        };
+      };
+      /** @description The export is ready; redirects to a short-lived download URL. */
+      302: {
+        headers: {
+          /** @description Present and set to `true` when the export hit the safety ceiling, so the CSV is a partial inventory. Absent otherwise. */
+          "x-github-enterprise-credentials-truncated"?: string;
+          /** @description Present and set to `true` when the export is incomplete for any reason (truncated, or a source was omitted), so the CSV must not be treated as a complete inventory. Absent otherwise. */
+          "x-github-enterprise-credentials-incomplete-results"?: string;
+          /** @description The as-of assembly time of the export, in ISO 8601 format. */
+          "x-github-enterprise-credentials-generated-at"?: string;
+          /** @description Present when one or more credential sources failed and were omitted from the export; a comma-separated list of the affected token types. Absent when all sources succeeded. */
+          "x-github-enterprise-credentials-sources-unavailable"?: string;
+          /** @description Present and set to `true` when best-effort per-credential metadata (scopes, permissions, repository selection, or expiration policy) could not be fully loaded for some rows; the rows are all present in the export, but that metadata may be absent. Absent when all metadata loaded. */
+          "x-github-enterprise-credentials-metadata-incomplete"?: string;
+          /** @description Present and set to `true` when one or more fine-grained PAT expiry values could not be filled in the export, so those rows carry `expiry_status` = `unknown` and their `past_expiration_policy` is not asserted. Absent when all expiry was resolved. */
+          "x-github-enterprise-credentials-expiry-incomplete"?: string;
+        };
+        content: never;
+      };
+      /** @description Resource not found */
+      404: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Get an enterprise token inventory item
+   * @deprecated
+   * @description > [!WARNING]
+   * > **Closing down notice:** This operation is closing down and will be removed on October 2, 2026. Please migrate to the asynchronous export: use "[Create an enterprise token inventory export](https://docs.github.com/enterprise-cloud@latest/rest/enterprise-admin/token-inventory#create-an-enterprise-token-inventory-export)" to start a CSV export, optionally scoped with filters such as `owner` or `application`, then "[Get an enterprise token inventory export](https://docs.github.com/enterprise-cloud@latest/rest/enterprise-admin/token-inventory#get-an-enterprise-token-inventory-export)" to download it. For more information, see the [changelog](https://github.blog/changelog/2026-09-21-github-enterprise-adds-credential-inventory-exports/).
+   *
+   * Returns a single credential from the enterprise token inventory. Use the opaque `inventory_id` returned by the list endpoint for the same enterprise.
+   *
+   * You must be an enterprise owner (or hold a role with the "View enterprise credentials" permission) to use this endpoint.
+   *
+   * OAuth app tokens and personal access tokens (classic) require the `read:enterprise` scope to access this endpoint.
+   */
+  "enterprise-admin/get-enterprise-token-inventory-item": {
+    parameters: {
+      path: {
+        enterprise: components["parameters"]["enterprise"];
+        /** @description The opaque inventory_id returned by the list endpoint for this enterprise. Pass it unchanged. Its value can differ for the same credential between responses. */
+        inventory_id: string;
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["enterprise-token-inventory-item"];
+        };
+      };
+      /** @description Resource not found */
+      404: {
+        content: never;
       };
     };
   };
@@ -106033,6 +106835,39 @@ export interface operations {
         content: never;
       };
       500: components["responses"]["internal_error"];
+    };
+  };
+  /**
+   * List enterprise teams for a user
+   * @description Lists all enterprise teams that a user is a member of. This endpoint is available only for
+   * enterprises using the new enterprise teams experience.
+   *
+   * The authenticated user must be an enterprise owner or have the `enterprise_teams:read` permission.
+   */
+  "enterprise-team-memberships/list-teams-for-user": {
+    parameters: {
+      query?: {
+        per_page?: components["parameters"]["per-page"];
+        page?: components["parameters"]["page"];
+      };
+      path: {
+        enterprise: components["parameters"]["enterprise"];
+        username: components["parameters"]["username"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        headers: {
+          Link: components["headers"]["link"];
+        };
+        content: {
+          "application/json": components["schemas"]["enterprise-team"][];
+        };
+      };
+      401: components["responses"]["requires_authentication"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
     };
   };
   /**
@@ -106818,8 +107653,6 @@ export interface operations {
         push_protection?: components["parameters"]["secret-scanning-custom-pattern-push-protection"];
         sort?: components["parameters"]["secret-scanning-custom-pattern-sort"];
         direction?: components["parameters"]["direction"];
-        page?: components["parameters"]["page"];
-        per_page?: components["parameters"]["per-page"];
         before?: components["parameters"]["pagination-before"];
         after?: components["parameters"]["pagination-after"];
       };
@@ -106856,7 +107689,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** @description The list of custom patterns to create. */
+          /** @description The list of custom patterns to create (maximum 100). */
           patterns: components["schemas"]["secret-scanning-custom-pattern-to-create"][];
         };
       };
@@ -107075,7 +107908,7 @@ export interface operations {
   };
   /**
    * Get billing AI credit usage report for an enterprise
-   * @description Gets a report of AI credit usage for an enterprise. To use this endpoint, you must be an administrator or billing manager of the enterprise, or a custom role holder with fine-grained read access to enterprise billing. An installation access token for a GitHub App installed on the enterprise with read access to enterprise billing can get this usage report.
+   * @description Gets a report of AI credit usage for an enterprise. To use this endpoint, you must be an administrator or billing manager of the enterprise, an organization owner in the enterprise, or a custom role holder with fine-grained read access to enterprise billing. An installation access token for a GitHub App installed on the enterprise with read access to enterprise billing can get this usage report.
    *
    * **Note:** Only data from the past 24 months is accessible via this endpoint.
    */
@@ -107107,7 +107940,7 @@ export interface operations {
   };
   /**
    * Get all budgets
-   * @description Gets budgets for an enterprise. Enterprise owners and billing managers can view all budgets, and organization administrators can view budgets scoped to organizations and repositories they administer. A custom role holder with fine-grained read access to enterprise billing can also view budgets. An installation access token for a GitHub App installed on the enterprise with read access to enterprise billing can list all budgets in the enterprise.
+   * @description Gets budgets for an enterprise. Enterprise owners and billing managers can view all budgets, and organization administrators can view budgets scoped to organizations and repositories they administer. A custom role holder with fine-grained read access to enterprise billing can view non-repository budgets; repository-scoped budgets require the organization administrator permissions described above. An installation access token for a GitHub App installed on the enterprise with read access to enterprise billing can list all budgets in the enterprise.
    * Each page returns up to 100 budgets.
    */
   "billing/get-all-budgets": {
@@ -107211,6 +108044,14 @@ export interface operations {
           budget_product_sku?: string;
           /** @description The username of the user for `user` scope budgets. This field is required when `budget_scope` is `user`. */
           user?: string;
+          /**
+           * Format: date
+           * @description The date the budget will expire in `YYYY-MM-DD` format. Only dates in the future are accepted.
+           * If not provided, the budget will not expire.
+           *
+           * Only supported for budgets with `budget_scope` of `user`
+           */
+          expires_at?: string;
         };
       };
     };
@@ -107241,7 +108082,7 @@ export interface operations {
   };
   /**
    * Get a budget by ID
-   * @description Gets a budget by ID. Enterprise owners and billing managers can view any budget in the enterprise, and organization administrators can view budgets scoped to organizations and repositories they administer. A custom role holder with fine-grained read access to enterprise billing can also view the budget. An installation access token for a GitHub App installed on the enterprise with read access to enterprise billing can get any budget in the enterprise.
+   * @description Gets a budget by ID. Enterprise owners and billing managers can view any budget in the enterprise, and organization administrators can view budgets scoped to organizations and repositories they administer. A custom role holder with fine-grained read access to enterprise billing can view the budget unless it is scoped to a repository; repository-scoped budgets require the organization administrator permissions described above. An installation access token for a GitHub App installed on the enterprise with read access to enterprise billing can get any budget in the enterprise.
    */
   "billing/get-budget": {
     parameters: {
@@ -107306,39 +108147,12 @@ export interface operations {
             alert_recipients?: string[];
           };
           /**
-           * @description The scope of the budget.
+           * @description The date the budget will expire in `YYYY-MM-DD` format. Only dates in the future are accepted.
+           * If not set, the budget will not expire. Setting to `null` or `0` will remove the expiration date from a budget if set.
            *
-           * - `enterprise`: Apply the budget to the entire enterprise.
-           * - `organization`: Apply the budget to a specific organization in the enterprise.
-           * - `repository`: Apply the budget to a specific repository.
-           * - `cost_center`: Apply the budget to a specific cost center.
-           * - `multi_user_customer`: Apply a universal budget to all users in the enterprise.
-           * - `multi_user_cost_center`: Apply a universal budget to all users in a cost center.
-           * - `user`: Apply the budget to a single user.
-           * @enum {string}
+           * Only supported for existing user-scoped budgets.
            */
-          budget_scope?:
-            | "enterprise"
-            | "organization"
-            | "repository"
-            | "cost_center"
-            | "multi_user_customer"
-            | "multi_user_cost_center"
-            | "user";
-          /** @description The name of the entity to apply the budget to */
-          budget_entity_name?: string;
-          /**
-           * @description The type of pricing model used by the budget. Determines how `budget_product_sku` is interpreted.
-           *
-           * - `BundlePricing`: Covers all AI credit SKUs. Set `budget_product_sku` to `ai_credits`.
-           * - `ProductPricing`: Covers all SKUs that belong to a product. Set `budget_product_sku` to a product such as `actions` or `packages`.
-           * - `SkuPricing`: Covers a single, specific SKU. Set `budget_product_sku` to a SKU such as `actions_linux`.
-           */
-          budget_type?: "BundlePricing" | "ProductPricing" | "SkuPricing";
-          /** @description A single product or SKU that will be covered in the budget */
-          budget_product_sku?: string;
-          /** @description The username of the user for `user` scope budgets. */
-          user?: string;
+          expires_at?: (string | null) | 0;
         };
       };
     };
@@ -107388,9 +108202,9 @@ export interface operations {
         sort_order?: "0" | "1";
         /** @description Filter user states to a specific user login. */
         user?: string;
-        /** @description Filter user states whose threshold percentage is at or above this value. */
+        /** @description Filter user states whose threshold percentage is at or above this value. This filter is calculated using each user's consumption against the universal budget amount, even when the user has a user-scoped budget override. */
         threshold_lower_bound?: number;
-        /** @description Filter user states whose threshold percentage is at or below this value. */
+        /** @description Filter user states whose threshold percentage is at or below this value. This filter is calculated using each user's consumption against the universal budget amount, even when the user has a user-scoped budget override. */
         threshold_upper_bound?: number;
       };
       path: {
@@ -107400,6 +108214,7 @@ export interface operations {
     };
     responses: {
       200: components["responses"]["get-budget-user-states"];
+      400: components["responses"]["bad_request"];
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
       500: components["responses"]["internal_error"];
@@ -107597,7 +108412,7 @@ export interface operations {
    * Add resources to a cost center
    * @description Adds resources to a cost center.
    *
-   * The usage for the resources will be charged to the cost center's budget. Enterprise owners and billing managers can add any resource, and organization owners can add non-team resources to cost centers associated with resources they administer. A custom role holder with fine-grained write access to enterprise billing can also add resources. An installation access token for a GitHub App installed on the enterprise with write access to enterprise billing can add resources to any cost center in the enterprise.
+   * The usage for the resources will be charged to the cost center's budget. Enterprise owners and billing managers can add any resource, and organization owners can add non-team resources to cost centers associated with resources they administer. A custom role holder with fine-grained write access to enterprise billing can add users in the enterprise who are visible to them and organizations or repositories they administer, but cannot add enterprise teams. An installation access token for a GitHub App installed on the enterprise with write access to enterprise billing can add resources to any cost center in the enterprise.
    */
   "billing/add-resource-to-cost-center": {
     parameters: {
@@ -107633,7 +108448,7 @@ export interface operations {
    * Remove resources from a cost center
    * @description Remove resources from a cost center.
    *
-   * The usage for the resources will no longer be charged to the cost center's budget. Enterprise owners and billing managers can remove any resource, and organization owners can remove non-team resources from cost centers associated with resources they administer. A custom role holder with fine-grained write access to enterprise billing can also remove resources. An installation access token for a GitHub App installed on the enterprise with write access to enterprise billing can remove resources from any cost center in the enterprise.
+   * The usage for the resources will no longer be charged to the cost center's budget. Enterprise owners and billing managers can remove any resource, and organization owners can remove non-team resources from cost centers associated with resources they administer. A custom role holder with fine-grained write access to enterprise billing can remove users and any organizations or repositories they administer; only enterprise owners and billing managers can remove enterprise teams. An installation access token for a GitHub App installed on the enterprise with write access to enterprise billing can remove users from any cost center in the enterprise.
    */
   "billing/remove-resource-from-cost-center": {
     parameters: {
@@ -107666,7 +108481,7 @@ export interface operations {
   };
   /**
    * Get billing premium request usage report for an enterprise
-   * @description Gets a report of premium request usage for an enterprise. To use this endpoint, you must be an administrator or billing manager of the enterprise, or a custom role holder with fine-grained read access to enterprise billing. An installation access token for a GitHub App installed on the enterprise with read access to enterprise billing can get this usage report.
+   * @description Gets a report of premium request usage for an enterprise. To use this endpoint, you must be an administrator or billing manager of the enterprise, an organization owner in the enterprise, or a custom role holder with fine-grained read access to enterprise billing. An installation access token for a GitHub App installed on the enterprise with read access to enterprise billing can get this usage report.
    *
    * **Note:** Only data from the past 24 months is accessible via this endpoint.
    */
@@ -107698,7 +108513,7 @@ export interface operations {
   };
   /**
    * List usage report exports
-   * @description Lists all usage report exports for an enterprise. The authenticated user must be an enterprise admin or billing manager, or a custom role holder with fine-grained read access to enterprise billing. An installation access token for a GitHub App installed on the enterprise with write access to enterprise administration, or with read access to enterprise billing, can also list usage report exports.
+   * @description Lists all usage report exports for an enterprise. Completed and failed report exports are available for 31 days after completion or failure. This retention period applies only to generated report records. New reports can include eligible usage data from up to 24 months ago, subject to the enterprise's creation or migration date and the report type's date-range limits. The authenticated user must be an enterprise admin or billing manager, or a custom role holder with fine-grained read access to enterprise billing. An installation access token for a GitHub App installed on the enterprise with write access to enterprise administration, or with read access to enterprise billing, can also list usage report exports.
    */
   "billing/list-usage-report-exports": {
     parameters: {
@@ -107753,7 +108568,7 @@ export interface operations {
   };
   /**
    * Get a usage report export
-   * @description Gets the status and details of a usage report export by ID. The authenticated user must be an enterprise admin or billing manager, or a custom role holder with fine-grained read access to enterprise billing. An installation access token for a GitHub App installed on the enterprise with write access to enterprise administration, or with read access to enterprise billing, can also get a usage report export.
+   * @description Gets the status and details of a usage report export by ID. Completed and failed report exports are available for 31 days after completion or failure. This retention period applies only to generated report records. New reports can include eligible usage data from up to 24 months ago, subject to the enterprise's creation or migration date and the report type's date-range limits. The authenticated user must be an enterprise admin or billing manager, or a custom role holder with fine-grained read access to enterprise billing. An installation access token for a GitHub App installed on the enterprise with write access to enterprise administration, or with read access to enterprise billing, can also get a usage report export.
    */
   "billing/get-usage-report-export": {
     parameters: {
@@ -107778,7 +108593,7 @@ export interface operations {
   };
   /**
    * Get billing usage report for an enterprise
-   * @description Gets a report of usage by cost center for an enterprise. To use this endpoint, you must be an administrator or billing manager of the enterprise, or a custom role holder with fine-grained read access to enterprise billing. By default this endpoint will return usage that does not have a cost center. An installation access token for a GitHub App installed on the enterprise with read access to enterprise billing can get this usage report.
+   * @description Gets a report of usage by cost center for an enterprise. To use this endpoint, you must be an administrator or billing manager of the enterprise, an organization owner in the enterprise, or a custom role holder with fine-grained read access to enterprise billing. By default this endpoint will return usage that does not have a cost center. An installation access token for a GitHub App installed on the enterprise with read access to enterprise billing can get this usage report.
    *
    * **Note:** This endpoint is only available to enterprises with access to the enhanced billing platform. For more information, see "[About the enhanced billing platform for enterprises](https://docs.github.com/enterprise-cloud@latest/billing/using-the-enhanced-billing-platform-for-enterprises/about-the-enhanced-billing-platform-for-enterprises#how-do-i-know-if-i-can-access-the-enhanced-billing-platform)."
    */
@@ -107805,7 +108620,7 @@ export interface operations {
   };
   /**
    * Get billing usage summary for an enterprise
-   * @description Gets a summary report of usage for an enterprise. To use this endpoint, you must be an administrator or billing manager of the enterprise, or a custom role holder with fine-grained read access to enterprise billing. By default, this endpoint will return usage across all cost centers in the enterprise. An installation access token for a GitHub App installed on the enterprise with read access to enterprise billing can get this usage summary report.
+   * @description Gets a summary report of usage for an enterprise. To use this endpoint, you must be an administrator or billing manager of the enterprise, an organization owner in the enterprise, or a custom role holder with fine-grained read access to enterprise billing. By default, this endpoint will return usage across all cost centers in the enterprise. An installation access token for a GitHub App installed on the enterprise with read access to enterprise billing can get this usage summary report.
    *
    * **Note:** Only data from the past 24 months is accessible via this endpoint.
    */
@@ -108228,7 +109043,7 @@ export interface operations {
           Link: components["headers"]["link"];
         };
         content: {
-          "application/json": components["schemas"]["enterprise-team"];
+          "application/json": components["schemas"]["enterprise-team-with-member-count"];
         };
       };
       403: components["responses"]["forbidden"];
@@ -110876,7 +111691,9 @@ export interface operations {
   };
   /**
    * Get artifact and log retention settings for an organization
-   * @description Gets artifact and log retention settings for an organization.
+   * @description Gets retention settings for checks, workflow runs, commit statuses, artifacts, and logs for an organization.
+   *
+   * Checks include check suites, check runs, and check annotations. These settings also apply to checks and commit statuses created by third-party integrations, and are not limited to data created by GitHub Actions.
    *
    * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope or the "Actions policies" fine-grained permission to use this endpoint.
    */
@@ -110899,7 +111716,9 @@ export interface operations {
   };
   /**
    * Set artifact and log retention settings for an organization
-   * @description Sets artifact and log retention settings for an organization.
+   * @description Sets retention settings for checks, workflow runs, commit statuses, artifacts, and logs for an organization.
+   *
+   * Checks include check suites, check runs, and check annotations. These settings also apply to checks and commit statuses created by third-party integrations, and are not limited to data created by GitHub Actions.
    *
    * OAuth app tokens and personal access tokens (classic) need the `admin:org` scope or the "Actions policies" fine-grained permission to use this endpoint.
    */
@@ -111385,6 +112204,156 @@ export interface operations {
       409: {
         content: never;
       };
+    };
+  };
+  /**
+   * List organization Actions policies
+   * @description List all Actions policies for an organization.
+   */
+  "actions/get-org-actions-policies": {
+    parameters: {
+      query?: {
+        per_page?: components["parameters"]["per-page"];
+        page?: components["parameters"]["page"];
+        /** @description Include policies configured at higher levels that apply to this organization */
+        has_parents?: boolean;
+      };
+      path: {
+        org: components["parameters"]["org"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        content: {
+          "application/json": {
+            /** @description The total number of Actions policies. */
+            total_count: number;
+            /** @description An array of Actions policies. */
+            policies: components["schemas"]["actions-policy"][];
+          };
+        };
+      };
+      404: components["responses"]["not_found"];
+      500: components["responses"]["internal_error"];
+    };
+  };
+  /**
+   * Create an organization Actions policy
+   * @description Create an Actions policy for an organization.
+   * Omitting `workflow_path` targets all workflows without storing an explicit condition.
+   */
+  "actions/create-org-actions-policy": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+      };
+    };
+    /** @description Request body */
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @description The name of the policy. */
+          name: string;
+          enforcement: components["schemas"]["repository-rule-enforcement"];
+          conditions?: components["schemas"]["actions-policy-org-conditions"];
+          /** @description An array of rules within the policy. */
+          rules?: components["schemas"]["actions-rule"][];
+        };
+      };
+    };
+    responses: {
+      /** @description Response */
+      201: {
+        content: {
+          "application/json": components["schemas"]["actions-policy"];
+        };
+      };
+      404: components["responses"]["not_found"];
+      422: components["responses"]["validation_failed"];
+      500: components["responses"]["internal_error"];
+    };
+  };
+  /**
+   * Get an organization Actions policy
+   * @description Get a specific Actions policy for an organization.
+   */
+  "actions/get-org-actions-policy": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+        /** @description The ID of the policy. */
+        policy_id: number;
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["actions-policy"];
+        };
+      };
+      404: components["responses"]["not_found"];
+      500: components["responses"]["internal_error"];
+    };
+  };
+  /**
+   * Update an organization Actions policy
+   * @description Update an Actions policy for an organization.
+   * Omitting `workflow_path` preserves the policy's existing workflow targeting.
+   */
+  "actions/update-org-actions-policy": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+        /** @description The ID of the policy. */
+        policy_id: number;
+      };
+    };
+    /** @description Request body */
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @description The name of the policy. */
+          name?: string;
+          enforcement?: components["schemas"]["repository-rule-enforcement"];
+          conditions?: components["schemas"]["actions-policy-org-conditions"];
+          /** @description An array of rules within the policy. */
+          rules?: components["schemas"]["actions-rule"][];
+        };
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["actions-policy"];
+        };
+      };
+      404: components["responses"]["not_found"];
+      422: components["responses"]["validation_failed"];
+      500: components["responses"]["internal_error"];
+    };
+  };
+  /**
+   * Delete an organization Actions policy
+   * @description Delete an Actions policy for an organization.
+   */
+  "actions/delete-org-actions-policy": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+        /** @description The ID of the policy. */
+        policy_id: number;
+      };
+    };
+    responses: {
+      /** @description Response */
+      204: {
+        content: never;
+      };
+      404: components["responses"]["not_found"];
+      500: components["responses"]["internal_error"];
     };
   };
   /**
@@ -114665,6 +115634,64 @@ export interface operations {
     };
   };
   /**
+   * Get the AI Scan setting for an organization
+   * @description Gets the AI Scan setting stored on an organization.
+   *
+   * The response reports the value stored on the organization. Organization respects enterprise policy.
+   *
+   * The authenticated user must be an owner or security manager for the organization to use this endpoint.
+   *
+   * OAuth app tokens and personal access tokens (classic) need the `admin:org`, `repo`, or `write:org` scope to use this endpoint. Organization owners can use `admin:org` or `repo`; security managers need `write:org`.
+   */
+  "code-scanning/get-ai-scan-enablement-for-org": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["code-scanning-ai-scan-org-settings"];
+        };
+      };
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+    };
+  };
+  /**
+   * Update the AI Scan setting for an organization
+   * @description Updates the AI Scan setting stored on an organization.
+   *
+   * The organization respects the enterprise policy, so enabling is rejected when the enterprise disallows AI Scan.
+   *
+   * OAuth app tokens and personal access tokens (classic) need the `admin:org`, `repo`, or `write:org` scope to use this endpoint. Organization owners can use `admin:org` or `repo`; security managers need `write:org`.
+   */
+  "code-scanning/update-ai-scan-enablement-for-org": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["code-scanning-ai-scan-org-enablement-update"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["code-scanning-ai-scan-org-settings"];
+        };
+      };
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      422: components["responses"]["validation_failed"];
+    };
+  };
+  /**
    * List code scanning alerts for an organization
    * @description Lists code scanning alerts for the default branch for all eligible repositories in an organization. Eligible repositories are repositories that are owned by organizations that you own or for which you are a security manager. For more information, see "[Managing security managers in your organization](https://docs.github.com/enterprise-cloud@latest/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)."
    *
@@ -114967,7 +115994,9 @@ export interface operations {
    *
    * The authenticated user must be an administrator or security manager for the organization to use this endpoint.
    *
-   * OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint.
+   * Repositories with active enterprise-enforced attachments are skipped unless the authenticated user can manage the enterprise's code security settings; the rest are detached. Inactive enterprise-enforced attachments, such as failed attachments, are detached. The request still returns `204` if every repository is skipped.
+   *
+   * OAuth app tokens and classic PATs require the `write:org` scope. Managing enterprise-enforced configurations also requires `admin:enterprise` and is not supported by fine-grained PATs or GitHub App access tokens.
    */
   "code-security/detach-configuration": {
     parameters: {
@@ -115227,7 +116256,11 @@ export interface operations {
    *
    * The authenticated user must be an administrator or security manager for the organization to use this endpoint.
    *
-   * OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint.
+   * Directly applying an enterprise-enforced configuration also requires permission to manage the enterprise's code security settings. Without it, the request returns `403` and no repositories change.
+   *
+   * When applying a different configuration, repositories with active enterprise-enforced attachments are skipped unless the authenticated user can manage the enterprise's code security settings; the remaining repositories are updated. The request still returns `202` if every repository is skipped.
+   *
+   * OAuth app tokens and classic PATs require the `write:org` scope. Directly applying an enterprise-enforced configuration also requires `admin:enterprise` and is not supported by fine-grained PATs or GitHub App access tokens.
    */
   "code-security/attach-configuration": {
     parameters: {
@@ -115256,6 +116289,7 @@ export interface operations {
     };
     responses: {
       202: components["responses"]["accepted"];
+      403: components["responses"]["forbidden"];
     };
   };
   /**
@@ -115264,9 +116298,11 @@ export interface operations {
    *
    * This configuration will be applied to the matching repository type (all, none, public, private and internal) by default when they are created.
    *
-   * The authenticated user must be an administrator or security manager for the organization to use this endpoint.
+   * The authenticated user must be an administrator or security manager for the organization to use this endpoint. Setting an enterprise-enforced configuration as the default also requires permission to manage the enterprise's code security settings.
    *
-   * OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint.
+   * A default set with this endpoint is an organization default, even if the configuration is owned or enforced by the enterprise. An enterprise-enforced configuration set as an enterprise-level default for the same repository visibility takes precedence.
+   *
+   * OAuth app tokens and classic PATs require the `write:org` scope; setting an enterprise-enforced configuration as the default also requires `admin:enterprise`. Fine-grained PATs and GitHub App access tokens cannot perform that action.
    */
   "code-security/set-configuration-as-default": {
     parameters: {
@@ -115324,7 +116360,7 @@ export interface operations {
         /**
          * @description A comma-separated list of statuses. If specified, only repositories with these attachment statuses will be returned.
          *
-         * Can be: `all`, `attached`, `attaching`, `detached`, `removed`, `enforced`, `failed`, `updating`, `removed_by_enterprise`
+         * Can be: `all`, `attached`, `attaching`, `detached`, `removed`, `enforced`, `failed`, `updating`, `removed_by_enterprise`, `enterprise_enforced`
          */
         status?: string;
       };
@@ -117772,6 +118808,8 @@ export interface operations {
    * >    This operation supports both server-to-server and user-to-server access.
    * Unauthorized users will not see the existence of this endpoint.
    *
+   * OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint.
+   *
    * **Example request body:**
    * ```json
    * {
@@ -117814,6 +118852,8 @@ export interface operations {
    * Unauthorized users will not see the existence of this endpoint.
    *
    * This operation supports both server-to-server and user-to-server access.
+   *
+   * OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint.
    */
   "dependabot/set-repository-access-default-level": {
     parameters: {
@@ -119168,6 +120208,8 @@ export interface operations {
             enabled: boolean;
             /** @description The maximum number of open pull requests a user can have at one time */
             max_open_pull_requests: number;
+            /** @description Whether draft pull requests count toward the pull request creation cap */
+            include_drafts?: boolean;
           };
         };
       };
@@ -119202,6 +120244,8 @@ export interface operations {
           enabled: boolean;
           /** @description The maximum number of open pull requests a user can have at one time */
           max_open_pull_requests?: number;
+          /** @description Whether draft pull requests count toward the pull request creation cap */
+          include_drafts?: boolean;
         };
       };
     };
@@ -119214,6 +120258,8 @@ export interface operations {
             enabled: boolean;
             /** @description The maximum number of open pull requests a user can have at one time */
             max_open_pull_requests: number;
+            /** @description Whether draft pull requests count toward the pull request creation cap */
+            include_drafts?: boolean;
           };
         };
       };
@@ -122073,6 +123119,187 @@ export interface operations {
     };
   };
   /**
+   * Get registered app installations for external custom properties
+   * @description Gets the registered GitHub App installations used to read and write external custom properties for an organization.
+   *
+   * A GitHub App installation token will only be able to see its own registration info, whereas an authenticated user will be able to see all registrations for the organization.
+   *
+   * To use this endpoint, the authenticated caller must have the `organization_external_properties_for_repos:admin` permission.
+   */
+  "orgs/external-properties-for-repos-get-organization-app-installations": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["organization-external-property-installation"][];
+        };
+      };
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      422: components["responses"]["validation_failed"];
+    };
+  };
+  /**
+   * Register an app installation for external custom properties
+   * @description Registers a GitHub App installation so it can read and write external custom properties for an organization, and assigns it a display name.
+   *
+   * The display name must be 1 to 15 characters and contain only letters and numbers. Capitalization is preserved as entered.
+   *
+   * An app installation can only be registered once, and its display name can't be changed afterward. Calling with an app installation that has already been registered returns a `422` response with an `already_exists` error code for `installation_id`. If the display name is already in use by another app installation in the organization, the response is `422` with an `already_exists` error code for `display_name`. An invalid display name also returns `422`.
+   *
+   * The app installation being registered must have write or admin permission for organization external custom properties for repositories. If it doesn't, the response is `422`. This is the permission of the installation being registered, which isn't necessarily the caller.
+   *
+   * Uninstalling the GitHub App unregisters it, and removes the external custom properties it created.
+   *
+   * To use this endpoint, the authenticated caller must have the `organization_external_properties_for_repos:admin` permission.
+   */
+  "orgs/external-properties-for-repos-register-organization-app-installation": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @description The unique identifier of the GitHub App installation to register for managing external custom properties. When authenticating as a GitHub App installation, this defaults to the authenticated installation and can be omitted. It is required for all other callers (users and fine-grained personal access tokens). */
+          installation_id?: number;
+          /** @description The display name for this app installation's external custom properties in the organization. Must be 1 to 15 characters and contain only letters and numbers. Capitalization is preserved as entered. This can't be changed after the app installation is registered. */
+          display_name: string;
+        };
+      };
+    };
+    responses: {
+      /** @description Response */
+      201: {
+        content: {
+          "application/json": components["schemas"]["organization-external-property-installation"];
+        };
+      };
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      422: components["responses"]["validation_failed"];
+    };
+  };
+  /**
+   * Get all external custom properties for a GitHub App installation in an organization
+   * @description Gets all external custom properties defined for the authenticated GitHub App installation on an organization.
+   *
+   * To use this endpoint, the authenticated GitHub App must have the `organization_external_properties_for_repos:read` permission.
+   */
+  "orgs/external-properties-for-repos-get-organization-definitions": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["external-property"][];
+        };
+      };
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      422: components["responses"]["validation_failed"];
+    };
+  };
+  /**
+   * Create or update external custom property values for organization repositories
+   * @description Create new or update existing external custom property values for repositories in a batch that belong to an organization.
+   * Each target repository will have its external custom property values updated to match the values provided in the request.
+   *
+   * A maximum of 30 repositories can be updated in a single request.
+   *
+   * Using a value of `null` for an external custom property will remove or 'unset' the property value from the repository.
+   *
+   * To use this endpoint, the authenticated GitHub App must have the `organization_external_properties_for_repos:write` permission.
+   */
+  "orgs/external-properties-for-repos-create-or-update-organization-values": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @description The names of repositories that the external custom property values will be applied to. */
+          repository_names: string[];
+          /** @description List of external custom property names and associated values to apply to the repositories. */
+          properties: components["schemas"]["custom-property-value"][];
+        };
+      };
+    };
+    responses: {
+      /** @description No Content when external custom property values are successfully created or updated */
+      204: {
+        content: never;
+      };
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      422: components["responses"]["validation_failed"];
+    };
+  };
+  /**
+   * Remove all external custom property values for a property across all organization repositories
+   * @description Removes all external custom property values for a specified property name across all repositories that belong to an organization.
+   *
+   * To use this endpoint, the authenticated GitHub App must have the `organization_external_properties_for_repos:write` permission.
+   */
+  "orgs/external-properties-for-repos-delete-organization-values": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+        property_name: components["parameters"]["external-property-name"];
+      };
+    };
+    responses: {
+      204: components["responses"]["no_content"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      422: components["responses"]["validation_failed"];
+    };
+  };
+  /**
+   * Create or update external custom property values for a property across organization repositories
+   * @description Create new or update existing external custom property values for a single named property across repositories that belong to an organization.
+   *
+   * Up to 100 repository values can be updated in a single request. Repositories not included in the request are left unchanged.
+   *
+   * Using a value of `null` for a repository will remove or 'unset' the property value for that repository. A request that only contains `null` values for a property that does not yet exist is a no-op.
+   *
+   * To use this endpoint, the authenticated GitHub App must have the `organization_external_properties_for_repos:write` permission.
+   */
+  "orgs/external-properties-for-repos-create-or-update-values-for-organization-property": {
+    parameters: {
+      path: {
+        org: components["parameters"]["org"];
+        property_name: components["parameters"]["external-property-name"];
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @description The names of repositories and the values that the named external custom property will be set to. */
+          repository_values: components["schemas"]["repository-external-property-payload"][];
+        };
+      };
+    };
+    responses: {
+      204: components["responses"]["no_content"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      422: components["responses"]["validation_failed"];
+    };
+  };
+  /**
    * Get all custom properties for an organization
    * @description Gets all custom properties defined for an organization.
    * Organization members can read these properties.
@@ -122910,8 +124137,6 @@ export interface operations {
         push_protection?: components["parameters"]["secret-scanning-custom-pattern-push-protection"];
         sort?: components["parameters"]["secret-scanning-custom-pattern-sort"];
         direction?: components["parameters"]["direction"];
-        page?: components["parameters"]["page"];
-        per_page?: components["parameters"]["per-page"];
         before?: components["parameters"]["pagination-before"];
         after?: components["parameters"]["pagination-after"];
       };
@@ -122948,7 +124173,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** @description The list of custom patterns to create. */
+          /** @description The list of custom patterns to create (maximum 100). */
           patterns: components["schemas"]["secret-scanning-custom-pattern-to-create"][];
         };
       };
@@ -123955,6 +125180,9 @@ export interface operations {
    * Each member includes their `role` on the team (`member` or `maintainer`) and an `inherited` flag indicating whether the membership is inherited from a child team (`true`) or is a direct membership (`false`). These fields let you read a member's role and direct/inherited status without additional requests.
    *
    * To list members in a team, the team must be visible to the authenticated user.
+   *
+   * > [!NOTE]
+   * > You can also specify a team by `org_id` and `team_id` using the route `GET /organizations/{org_id}/team/{team_id}/members`.
    */
   "teams/list-members-in-org": {
     parameters: {
@@ -125216,6 +126444,38 @@ export interface operations {
     };
   };
   /**
+   * Download step logs for a workflow run job
+   * @description Gets a redirect URL to download a plain text file of logs for a specific step of a workflow job. This link expires after
+   * 1 minute. Look for `Location:` in the response header to find the URL for the download.
+   *
+   * This endpoint is intended for selective retrieval of one step. To download complete job logs, use the
+   * [job logs endpoint](https://docs.github.com/enterprise-cloud@latest/rest/actions/workflow-jobs#download-job-logs-for-a-workflow-run).
+   *
+   * Anyone with read access to the repository can use this endpoint.
+   *
+   * If the repository is private, OAuth tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+   */
+  "actions/download-step-logs-for-workflow-run-job": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        job_id: components["parameters"]["job-id"];
+        step_number: components["parameters"]["step-number"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      302: {
+        headers: {
+          /** @example https://pipelines.actions.githubusercontent.com/ab1f3cCFPB34Nd6imvFxpGZH5hNlDp2wijMwl2gDoO0bcrrlJj/_apis/pipelines/1/jobs/19/steps/1/signedlogcontent?urlExpires=2020-01-22T22%3A44%3A54.1389777Z&urlSigningMethod=HMACV1&urlSignature=2TUDfIg4fm36OJmfPy6km5QD5DLCOkBVzvhWZM8B%2BUY%3D */
+          Location?: string;
+        };
+        content: never;
+      };
+    };
+  };
+  /**
    * Get the customization template for an OIDC subject claim for a repository
    * @description Gets the customization template for an OpenID Connect (OIDC) subject claim.
    *
@@ -125453,7 +126713,9 @@ export interface operations {
   };
   /**
    * Get artifact and log retention settings for a repository
-   * @description Gets artifact and log retention settings for a repository.
+   * @description Gets retention settings for checks, workflow runs, commit statuses, artifacts, and logs for a repository.
+   *
+   * Checks include check suites, check runs, and check annotations. These settings also apply to checks and commit statuses created by third-party integrations, and are not limited to data created by GitHub Actions.
    *
    * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
    */
@@ -125476,7 +126738,9 @@ export interface operations {
   };
   /**
    * Set artifact and log retention settings for a repository
-   * @description Sets artifact and log retention settings for a repository.
+   * @description Sets retention settings for checks, workflow runs, commit statuses, artifacts, and logs for a repository.
+   *
+   * Checks include check suites, check runs, and check annotations. These settings also apply to checks and commit statuses created by third-party integrations, and are not limited to data created by GitHub Actions.
    *
    * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
    */
@@ -125706,6 +126970,161 @@ export interface operations {
       409: {
         content: never;
       };
+    };
+  };
+  /**
+   * List repository Actions policies
+   * @description List all Actions policies for a repository.
+   */
+  "actions/get-repo-actions-policies": {
+    parameters: {
+      query?: {
+        per_page?: components["parameters"]["per-page"];
+        page?: components["parameters"]["page"];
+        /** @description Include policies configured at higher levels that apply to this repository */
+        has_parents?: boolean;
+      };
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        content: {
+          "application/json": {
+            /** @description The total number of Actions policies. */
+            total_count: number;
+            /** @description An array of Actions policies. */
+            policies: components["schemas"]["actions-policy"][];
+          };
+        };
+      };
+      404: components["responses"]["not_found"];
+      500: components["responses"]["internal_error"];
+    };
+  };
+  /**
+   * Create a repository Actions policy
+   * @description Create an Actions policy for a repository.
+   * Omitting `workflow_path` targets all workflows without storing an explicit condition.
+   */
+  "actions/create-repo-actions-policy": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+      };
+    };
+    /** @description Request body */
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @description The name of the policy. */
+          name: string;
+          enforcement: components["schemas"]["repository-rule-enforcement"];
+          conditions?: components["schemas"]["actions-policy-repo-conditions"];
+          /** @description An array of rules within the policy. */
+          rules?: components["schemas"]["actions-rule"][];
+        };
+      };
+    };
+    responses: {
+      /** @description Response */
+      201: {
+        content: {
+          "application/json": components["schemas"]["actions-policy"];
+        };
+      };
+      404: components["responses"]["not_found"];
+      422: components["responses"]["validation_failed"];
+      500: components["responses"]["internal_error"];
+    };
+  };
+  /**
+   * Get a repository Actions policy
+   * @description Get a specific Actions policy for a repository.
+   */
+  "actions/get-repo-actions-policy": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        /** @description The ID of the policy. */
+        policy_id: number;
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["actions-policy"];
+        };
+      };
+      404: components["responses"]["not_found"];
+      500: components["responses"]["internal_error"];
+    };
+  };
+  /**
+   * Update a repository Actions policy
+   * @description Update an Actions policy for a repository.
+   * Omitting `workflow_path` preserves the policy's existing workflow targeting.
+   */
+  "actions/update-repo-actions-policy": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        /** @description The ID of the policy. */
+        policy_id: number;
+      };
+    };
+    /** @description Request body */
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @description The name of the policy. */
+          name?: string;
+          enforcement?: components["schemas"]["repository-rule-enforcement"];
+          conditions?: components["schemas"]["actions-policy-repo-conditions"];
+          /** @description An array of rules within the policy. */
+          rules?: components["schemas"]["actions-rule"][];
+        };
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["actions-policy"];
+        };
+      };
+      404: components["responses"]["not_found"];
+      422: components["responses"]["validation_failed"];
+      500: components["responses"]["internal_error"];
+    };
+  };
+  /**
+   * Delete a repository Actions policy
+   * @description Delete an Actions policy for a repository.
+   */
+  "actions/delete-repo-actions-policy": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        /** @description The ID of the policy. */
+        policy_id: number;
+      };
+    };
+    responses: {
+      /** @description Response */
+      204: {
+        content: never;
+      };
+      404: components["responses"]["not_found"];
+      500: components["responses"]["internal_error"];
     };
   };
   /**
@@ -129964,6 +131383,60 @@ export interface operations {
     };
   };
   /**
+   * Get AI Scan enablement for a repository
+   * @description Gets whether AI Scan is enabled for a repository.
+   *
+   * OAuth app tokens and personal access tokens (classic) need the `security_events` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories.
+   */
+  "code-scanning/get-ai-scan-enablement": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["code-scanning-ai-scan-enablement"];
+        };
+      };
+      403: components["responses"]["code_scanning_forbidden_read"];
+      404: components["responses"]["not_found"];
+    };
+  };
+  /**
+   * Update AI Scan enablement for a repository
+   * @description Updates whether AI Scan is enabled for a repository.
+   *
+   * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint with private or public repositories, or the `public_repo` scope to use this endpoint with only public repositories.
+   */
+  "code-scanning/update-ai-scan-enablement": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["code-scanning-ai-scan-enablement-update"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["code-scanning-ai-scan-enablement"];
+        };
+      };
+      403: components["responses"]["code_scanning_forbidden_write"];
+      404: components["responses"]["not_found"];
+      422: components["responses"]["validation_failed"];
+    };
+  };
+  /**
    * List code scanning alerts for a repository
    * @description Lists code scanning alerts.
    *
@@ -131240,7 +132713,8 @@ export interface operations {
         /** @description Filter collaborators returned by their affiliation. `outside` means all outside collaborators of an organization-owned repository. `direct` means all collaborators with permissions to an organization-owned repository, regardless of organization membership status. `all` means all collaborators the authenticated user can see. */
         affiliation?: "outside" | "direct" | "all";
         /** @description Filter collaborators by the permissions they have on the repository. If not specified, all collaborators will be returned. */
-        permission?: "pull" | "triage" | "push" | "maintain" | "admin";
+        permission?:
+          "pull" | "triage" | "triage_plus" | "push" | "maintain" | "admin";
         per_page?: components["parameters"]["per-page"];
         page?: components["parameters"]["page"];
       };
@@ -131331,7 +132805,7 @@ export interface operations {
       content: {
         "application/json": {
           /**
-           * @description The permission to grant the collaborator. **Only valid on organization-owned repositories.** We accept the following permissions to be set: `pull`, `triage`, `push`, `maintain`, `admin` and you can also specify a custom repository role name, if the owning organization has defined any.
+           * @description The permission to grant the collaborator. **Only valid on organization-owned repositories.** We accept the following permissions to be set: `pull`, `triage`, `triage_plus`, `push`, `maintain`, `admin` and you can also specify a custom repository role name, if the owning organization has defined any.
            * @default push
            */
           permission?: string;
@@ -131733,6 +133207,8 @@ export interface operations {
       400: components["responses"]["bad_request"];
       404: components["responses"]["not_found"];
       409: components["responses"]["conflict"];
+      422: components["responses"]["validation_failed"];
+      429: components["responses"]["server_load_try_again"];
       500: components["responses"]["internal_error"];
     };
   };
@@ -131947,6 +133423,7 @@ export interface operations {
       404: components["responses"]["not_found"];
       409: components["responses"]["conflict"];
       422: components["responses"]["validation_failed"];
+      429: components["responses"]["server_load_try_again"];
       500: components["responses"]["internal_error"];
       503: components["responses"]["service_unavailable"];
     };
@@ -132207,6 +133684,7 @@ export interface operations {
         };
       };
       404: components["responses"]["not_found"];
+      422: components["responses"]["validation_failed"];
       500: components["responses"]["internal_error"];
       503: components["responses"]["service_unavailable"];
     };
@@ -132571,6 +134049,7 @@ export interface operations {
       304: components["responses"]["not_modified"];
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
+      410: components["responses"]["gone"];
     };
   };
   /**
@@ -132641,6 +134120,7 @@ export interface operations {
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
       409: components["responses"]["conflict"];
+      410: components["responses"]["gone"];
       422: components["responses"]["validation_failed_simple"];
     };
   };
@@ -132818,7 +134298,11 @@ export interface operations {
   };
   /**
    * Export a software bill of materials (SBOM) for a repository.
-   * @description Exports the software bill of materials (SBOM) for a repository in SPDX JSON format.
+   * @deprecated
+   * @description > [!WARNING]
+   * > **Closing down notice:** This operation is closing down and will not be accessible after November 13, 2026. Please migrate to the asynchronous flow. Use "[Request generation of a software bill of materials (SBOM) for a repository](https://docs.github.com/enterprise-cloud@latest/rest/dependency-graph/sboms#request-generation-of-a-software-bill-of-materials-sbom-for-a-repository)" to trigger the report, then "[Fetch a software bill of materials (SBOM) for a repository](https://docs.github.com/enterprise-cloud@latest/rest/dependency-graph/sboms#fetch-a-software-bill-of-materials-sbom-for-a-repository)" to retrieve it. For more information, see the [changelog](https://github.blog/changelog/2026-05-12-synchronous-sbom-api-deprecated/).
+   *
+   * Exports the software bill of materials (SBOM) for a repository in SPDX JSON format.
    */
   "dependency-graph/export-sbom": {
     parameters: {
@@ -136114,6 +137598,8 @@ export interface operations {
             enabled: boolean;
             /** @description The maximum number of open pull requests a user can have at one time */
             max_open_pull_requests: number;
+            /** @description Whether draft pull requests count toward the pull request creation cap */
+            include_drafts?: boolean;
           };
         };
       };
@@ -136148,6 +137634,8 @@ export interface operations {
           enabled: boolean;
           /** @description The maximum number of open pull requests a user can have at one time */
           max_open_pull_requests?: number;
+          /** @description Whether draft pull requests count toward the pull request creation cap */
+          include_drafts?: boolean;
         };
       };
     };
@@ -136160,6 +137648,8 @@ export interface operations {
             enabled: boolean;
             /** @description The maximum number of open pull requests a user can have at one time */
             max_open_pull_requests: number;
+            /** @description Whether draft pull requests count toward the pull request creation cap */
+            include_drafts?: boolean;
           };
         };
       };
@@ -136394,6 +137884,8 @@ export interface operations {
            * @example Epic
            */
           type?: string | null;
+          /** @description The id of the parent issue to add this issue to as a sub-issue. _NOTE: Only users with triage access to both the parent issue's repository and this repository can set the parent issue._ */
+          parent_issue_id?: number;
         };
       };
     };
@@ -137950,6 +139442,132 @@ export interface operations {
     };
   };
   /**
+   * List issues related to an issue
+   * @description You can use the REST API to list the issues that are related to an issue.
+   *
+   * This endpoint supports the following custom media types. For more information, see [Media types](https://docs.github.com/enterprise-cloud@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types).
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw Markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.text+json`**: Returns a text only representation of the Markdown body. Response will include `body_text`.
+   * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's Markdown. Response will include `body_html`.
+   * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+   */
+  "issues/list-relates-to": {
+    parameters: {
+      query?: {
+        per_page?: components["parameters"]["per-page"];
+        page?: components["parameters"]["page"];
+      };
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        issue_number: components["parameters"]["issue-number"];
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        headers: {
+          Link: components["headers"]["link"];
+        };
+        content: {
+          "application/json": components["schemas"]["issue"][];
+        };
+      };
+      301: components["responses"]["moved_permanently"];
+      404: components["responses"]["not_found"];
+      410: components["responses"]["gone"];
+    };
+  };
+  /**
+   * Add a related issue
+   * @description You can use the REST API to mark an issue as related to another issue.
+   *
+   * Creating content too quickly using this endpoint may result in secondary rate limiting.
+   * For more information, see [Rate limits for the API](https://docs.github.com/enterprise-cloud@latest/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)
+   * and [Best practices for using the REST API](https://docs.github.com/enterprise-cloud@latest/rest/guides/best-practices-for-using-the-rest-api).
+   *
+   * This endpoint supports the following custom media types. For more information, see [Media types](https://docs.github.com/enterprise-cloud@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types).
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw Markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.text+json`**: Returns a text only representation of the Markdown body. Response will include `body_text`.
+   * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's Markdown. Response will include `body_html`.
+   * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+   */
+  "issues/add-relates-to": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        issue_number: components["parameters"]["issue-number"];
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @description The id of the issue to mark as related to the current issue */
+          issue_id: number;
+        };
+      };
+    };
+    responses: {
+      /** @description Response */
+      201: {
+        headers: {
+          /** @example https://api.github.com/repos/octocat/Hello-World/issues/1/relates_to */
+          Location?: string;
+        };
+        content: {
+          "application/json": components["schemas"]["issue"];
+        };
+      };
+      301: components["responses"]["moved_permanently"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      410: components["responses"]["gone"];
+      422: components["responses"]["validation_failed"];
+    };
+  };
+  /**
+   * Remove a related issue
+   * @description You can use the REST API to remove a 'relates to' relationship between two issues.
+   *
+   * Removing content too quickly using this endpoint may result in secondary rate limiting.
+   * For more information, see [Rate limits for the API](https://docs.github.com/enterprise-cloud@latest/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)
+   * and [Best practices for using the REST API](https://docs.github.com/enterprise-cloud@latest/rest/guides/best-practices-for-using-the-rest-api).
+   *
+   * This endpoint supports the following custom media types. For more information, see [Media types](https://docs.github.com/enterprise-cloud@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types).
+   *
+   * - **`application/vnd.github.raw+json`**: Returns the raw Markdown body. Response will include `body`. This is the default if you do not pass any specific media type.
+   * - **`application/vnd.github.text+json`**: Returns a text only representation of the Markdown body. Response will include `body_text`.
+   * - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's Markdown. Response will include `body_html`.
+   * - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+   */
+  "issues/remove-relates-to": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        issue_number: components["parameters"]["issue-number"];
+        /** @description The id of the related issue to remove */
+        issue_id: number;
+      };
+    };
+    responses: {
+      /** @description Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["issue"];
+        };
+      };
+      301: components["responses"]["moved_permanently"];
+      400: components["responses"]["bad_request"];
+      403: components["responses"]["forbidden"];
+      404: components["responses"]["not_found"];
+      410: components["responses"]["gone"];
+    };
+  };
+  /**
    * Remove sub-issue
    * @description You can use the REST API to remove a sub-issue from an issue.
    * Removing content too quickly using this endpoint may result in secondary rate limiting.
@@ -138488,6 +140106,8 @@ export interface operations {
           color?: string;
           /** @description A short description of the label. Must be 100 characters or fewer. */
           description?: string;
+          /** @description Whether to archive or unarchive the label. Archived labels cannot be added to issues or pull requests. For more information, see "[Archiving labels](https://docs.github.com/enterprise-cloud@latest/issues/organizing-your-work-with-labels/managing-labels)." */
+          archived?: boolean;
         };
       };
     };
@@ -139605,6 +141225,7 @@ export interface operations {
           "application/json": components["schemas"]["pull-request-review-comment"];
         };
       };
+      304: components["responses"]["not_modified"];
       404: components["responses"]["not_found"];
     };
   };
@@ -139817,6 +141438,7 @@ export interface operations {
       304: components["responses"]["not_modified"];
       404: components["responses"]["not_found"];
       406: components["responses"]["unacceptable"];
+      422: components["responses"]["validation_failed"];
       500: components["responses"]["internal_error"];
       503: components["responses"]["service_unavailable"];
     };
@@ -140204,8 +141826,14 @@ export interface operations {
   };
   /**
    * Merge a pull request
-   * @description Merges a pull request into the base branch.
-   * This endpoint triggers [notifications](https://docs.github.com/enterprise-cloud@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/enterprise-cloud@latest/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/enterprise-cloud@latest/rest/guides/best-practices-for-using-the-rest-api)."
+   * @description > [!NOTE]
+   * > We recommend using the [asynchronous merge API](https://docs.github.com/enterprise-cloud@latest/rest/pulls/pulls#merge-a-pull-request-asynchronously) instead. This endpoint does not support stacked pull requests or merging with a merge queue.
+   *
+   * Merges a pull request into the base branch.
+   *
+   * This endpoint triggers [notifications](https://docs.github.com/enterprise-cloud@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications).
+   * Creating content too quickly using this endpoint may result in secondary rate limiting.
+   * For more information, see "[Rate limits for the API](https://docs.github.com/enterprise-cloud@latest/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/enterprise-cloud@latest/rest/guides/best-practices-for-using-the-rest-api)."
    */
   "pulls/merge": {
     parameters: {
@@ -140264,15 +141892,15 @@ export interface operations {
   };
   /**
    * Merge a pull request asynchronously
-   * @description Merges a pull request into the base branch in the background. Merging in this way allows certain types of errors to be retried, and avoids the risk of timeouts for particularly complex merges.
+   * @description Merges a pull request into the base branch in the background or adds it to a merge queue. Background processing allows certain types of errors to be retried and reduces the risk of timeouts for complex merges.
    *
-   * This is the required method for merging stacked PRs, but also supports unstacked PRs. When using this endpoint to merge a stacked pull request, all pull requests in the stack up to and including the requested PR will be merged into the base branch.
+   * This is the required API for merging stacked pull requests. For a stacked pull request, the operation includes all open downstack pull requests.
    *
-   * The response includes a UUID that can be used to fetch the result of the merge. If another asynchronous merge request has already been made for this pull request, the UUID of that request will be returned instead with a 409 response status to indicate that the merge options may be different from those that were requested. If there isn't an existing asynchronous merge request, a 202 response status is used.
+   * A new asynchronous merge request returns a `202` response with a UUID that can be used to [fetch the result of the merge](https://docs.github.com/enterprise-cloud@latest/rest/pulls/pulls#get-the-result-of-an-asynchronous-merge). If another asynchronous merge request is already pending for this pull request, a `409` response returns that request's UUID and merge options instead.
    *
-   * If the pull request is already merged, the merge commit OID will be returned immediately with a 200 status.
+   * If the pull request is already merged or already in a merge queue, a `200` response is returned immediately. A `merged` result includes the merge commit OID. An `enqueued` result means the pull request was added to the merge queue, not that it has merged.
    *
-   * If the pull request cannot be merged (e.g. because it is closed, or still a draft) this result will be returned immediately with a 400 response status. Branch protection rules and repository rules are not run at this stage, only basic pull request state checks are performed.
+   * If the pull request cannot be merged (e.g. because it is closed, or still a draft) this result will be returned immediately with a `400` response status. Branch protection rules and repository rules are not run at this stage, only basic pull request state checks are performed.
    */
   "pulls/merge-async": {
     parameters: {
@@ -140285,22 +141913,27 @@ export interface operations {
     requestBody?: {
       content: {
         "application/json": {
-          /** @description Title for the automatic commit message. */
+          /** @description Title for the automatic commit message. Only supported for direct merges. */
           commit_title?: string;
-          /** @description Extra detail to append to automatic commit message. */
+          /** @description Extra detail to append to automatic commit message. Only supported for direct merges. */
           commit_message?: string;
           /** @description SHA that pull request head must match to allow merge. If not provided, the current head of the PR at the time of the request will be used; if the PR is pushed in between the merge being requested and being executed, the merge will be cancelled. */
           sha?: string;
           /**
-           * @description The merge method to use.
+           * @description The merge method to use for a direct merge. Only supported for direct merges.
            * @enum {string}
            */
           merge_method?: "merge" | "squash" | "rebase";
           /**
-           * @description The action that will be taken to merge the pull request. `direct_merge` merges the pull request directly without using a merge queue; `merge_queue` adds the pull request to a merge queue; `default` selects the most appropriate option.
+           * @description The action that will be taken to merge the pull request. `direct_merge` merges the pull request directly without using a merge queue; `merge_queue` adds the pull request to a merge queue; `default` uses a merge queue if one is configured for the target branch, or merges directly otherwise. If omitted, defaults to `default`.
            * @enum {string}
            */
           merge_action?: "default" | "direct_merge" | "merge_queue";
+          /**
+           * @description Whether to bypass repository rules that the authenticated actor is permitted to bypass.
+           * @default false
+           */
+          bypass_rules?: boolean;
         } | null;
       };
     };
@@ -140338,7 +141971,13 @@ export interface operations {
    * Get the result of an asynchronous merge
    * @description Fetches the current result of an asynchronous merge request, identified by the UUID that was returned when the merge was requested.
    *
-   * While the merge is still queued, the response includes the UUID, merge method, and expected head SHA of the request. Once the merge has completed, the response reports whether it was merged, including the merge commit OID on success or a message describing why it could not be merged on failure.
+   * While the request's status is `pending`, the response includes the UUID, merge method, merge action, and expected head SHA of the request. Once the asynchronous request completes, its status is one of:
+   *
+   * - `merged`: The pull request was merged into the base branch. The response includes the merge commit OID.
+   * - `enqueued`: The pull request was added to a merge queue.
+   * - `failed`: The request failed. The response includes a message describing the failure.
+   *
+   * An `enqueued` result is final for the merge queue requests and does not mean the pull request has merged. This result does not change when the merge queue later merges the pull request. To get the eventual merge status, [check if a pull request has been merged](https://docs.github.com/enterprise-cloud@latest/rest/pulls/pulls#check-if-a-pull-request-has-been-merged).
    *
    * The result of an asynchronous merge request is retained for 24 hours after its most recent update. After this window the request expires and this endpoint returns a `404` response for its UUID.
    */
@@ -140453,6 +142092,43 @@ export interface operations {
         };
       };
       422: components["responses"]["validation_failed"];
+    };
+  };
+  /**
+   * Rerequest reviewers for a pull request
+   * @description Rerequests reviews for a pull request from a given set of users and/or teams.
+   * This endpoint triggers [notifications](https://docs.github.com/enterprise-cloud@latest/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/enterprise-cloud@latest/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/enterprise-cloud@latest/rest/guides/best-practices-for-using-the-rest-api)."
+   */
+  "pulls/rerequest-reviewers": {
+    parameters: {
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+        pull_number: components["parameters"]["pull-number"];
+      };
+    };
+    requestBody?: {
+      content: {
+        "application/json": {
+          /** @description An array of user `login`s whose reviews will be rerequested. */
+          reviewers?: string[];
+          /** @description An array of team `slug`s whose reviews will be rerequested. */
+          team_reviewers?: string[];
+        };
+      };
+    };
+    responses: {
+      /** @description Response */
+      201: {
+        content: {
+          "application/json": components["schemas"]["pull-request-simple"];
+        };
+      };
+      403: components["responses"]["forbidden"];
+      /** @description Unprocessable Entity if user is not a collaborator */
+      422: {
+        content: never;
+      };
     };
   };
   /**
@@ -141924,7 +143600,9 @@ export interface operations {
    * List repository custom patterns
    * @description Lists secret scanning custom patterns for a repository.
    *
-   * OAuth app tokens and personal access tokens (classic) need the `repo` or `security_events` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead.
+   * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead.
+   *
+   * Fine-grained access tokens require the `administration:write` repository permission.
    */
   "secret-scanning/list-repo-custom-patterns": {
     parameters: {
@@ -141933,8 +143611,6 @@ export interface operations {
         push_protection?: components["parameters"]["secret-scanning-custom-pattern-push-protection"];
         sort?: components["parameters"]["secret-scanning-custom-pattern-sort"];
         direction?: components["parameters"]["direction"];
-        page?: components["parameters"]["page"];
-        per_page?: components["parameters"]["per-page"];
         before?: components["parameters"]["pagination-before"];
         after?: components["parameters"]["pagination-after"];
       };
@@ -141961,7 +143637,9 @@ export interface operations {
    * Bulk create repository custom patterns
    * @description Bulk creates secret scanning custom patterns for a repository.
    *
-   * OAuth app tokens and personal access tokens (classic) need the `repo` or `security_events` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead.
+   * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead.
+   *
+   * Fine-grained access tokens require the `administration:write` repository permission.
    */
   "secret-scanning/bulk-create-repo-custom-patterns": {
     parameters: {
@@ -141973,7 +143651,7 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          /** @description The list of custom patterns to create. */
+          /** @description The list of custom patterns to create (maximum 100). */
           patterns: components["schemas"]["secret-scanning-custom-pattern-to-create"][];
         };
       };
@@ -142013,7 +143691,9 @@ export interface operations {
    * Bulk delete repository custom patterns
    * @description Bulk deletes secret scanning custom patterns for a repository.
    *
-   * OAuth app tokens and personal access tokens (classic) need the `repo` or `security_events` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead.
+   * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead.
+   *
+   * Fine-grained access tokens require the `administration:write` repository permission.
    */
   "secret-scanning/bulk-delete-repo-custom-patterns": {
     parameters: {
@@ -142054,7 +143734,9 @@ export interface operations {
    * Update a repository custom pattern
    * @description Updates a secret scanning custom pattern for a repository.
    *
-   * OAuth app tokens and personal access tokens (classic) need the `repo` or `security_events` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead.
+   * OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint. If this endpoint is only used with public repositories, the token can use the `public_repo` scope instead.
+   *
+   * Fine-grained access tokens require the `administration:write` repository permission.
    */
   "secret-scanning/update-repo-custom-pattern": {
     parameters: {
@@ -142225,7 +143907,12 @@ export interface operations {
       };
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
-      422: components["responses"]["validation_failed"];
+      /** @description Validation failed. */
+      422: {
+        content: {
+          "application/json": components["schemas"]["repository-advisory-description-validation-error"];
+        };
+      };
     };
   };
   /**
@@ -142254,7 +143941,12 @@ export interface operations {
       };
       403: components["responses"]["forbidden"];
       404: components["responses"]["not_found"];
-      422: components["responses"]["validation_failed"];
+      /** @description Validation failed. */
+      422: {
+        content: {
+          "application/json": components["schemas"]["repository-advisory-description-validation-error"];
+        };
+      };
     };
   };
   /**
@@ -142704,6 +144396,36 @@ export interface operations {
         };
       };
       404: components["responses"]["not_found"];
+    };
+  };
+  /**
+   * Get repository star history
+   * @description Returns repository stars grouped by calendar weeks, most recent first. Pages move backward toward the repository's creation week, and weeks within a page are ordered newest to oldest, so concatenating pages produces one continuous series. Weeks without stars contain zero counts. Week and day boundaries are not guaranteed to align with UTC. The `days` array contains the number of stars created on each day of the week, starting on Sunday.
+   */
+  "activity/get-stargazer-history-for-repo": {
+    parameters: {
+      query?: {
+        /** @description The number of results per page (max 30). For more information, see "[Using pagination in the REST API](https://docs.github.com/enterprise-cloud@latest/rest/using-the-rest-api/using-pagination-in-the-rest-api)." */
+        per_page?: number;
+        /** @description The page number of the results to fetch (max 100). For more information, see "[Using pagination in the REST API](https://docs.github.com/enterprise-cloud@latest/rest/using-the-rest-api/using-pagination-in-the-rest-api)." */
+        page?: number;
+      };
+      path: {
+        owner: components["parameters"]["owner"];
+        repo: components["parameters"]["repo"];
+      };
+    };
+    responses: {
+      /** @description Repository star history */
+      200: {
+        headers: {
+          Link: components["headers"]["link"];
+        };
+        content: {
+          "application/json": components["schemas"]["stargazer-history"][];
+        };
+      };
+      422: components["responses"]["validation_failed"];
     };
   };
   /**
@@ -145135,7 +146857,9 @@ export interface operations {
   };
   /**
    * Get the authenticated user
-   * @description OAuth app tokens and personal access tokens (classic) need the `user` scope in order for the response to include private profile information.
+   * @description OAuth app tokens and personal access tokens (classic) need the `read:user` scope, or the broader `user` scope, for this endpoint to return the private user response. The private user response includes additional fields such as `private_gists`, `total_private_repos`, `owned_private_repos`, `disk_usage`, `collaborators`, and `two_factor_authentication`. Tokens without these scopes receive the public user response.
+   *
+   * The private and public user response types are unrelated to the [private profile](https://docs.github.com/enterprise-cloud@latest/account-and-profile/concepts/personal-profile#private-profiles) setting. A token without scopes still authenticates as the token's owner, so values subject to private profile visibility, such as `followers` and `following`, may differ from an unauthenticated response.
    */
   "users/get-authenticated": {
     responses: {
@@ -146378,8 +148102,6 @@ export interface operations {
   /**
    * Add a repository to an app installation
    * @description Add a single repository to an installation. The authenticated user must have admin access to the repository.
-   *
-   * This endpoint only works for PATs (classic) with the `repo` scope.
    */
   "apps/add-repo-to-installation-for-authenticated-user": {
     parameters: {
@@ -146402,7 +148124,7 @@ export interface operations {
    * Remove a repository from an app installation
    * @description Remove a single repository from an installation. The authenticated user must have admin access to the repository. The installation must have the `repository_selection` of `selected`.
    *
-   * This endpoint only works for PATs (classic) with the `repo` scope.
+   * To use a PAT (classic) with this endpoint, the `repo` scope is required
    */
   "apps/remove-repo-from-installation-for-authenticated-user": {
     parameters: {
@@ -148104,6 +149826,10 @@ export interface operations {
    * Get a user
    * @description Provides publicly available information about someone with a GitHub account.
    *
+   * If the specified user has a [private profile](https://docs.github.com/enterprise-cloud@latest/account-and-profile/concepts/personal-profile#private-profiles), the `followers` and `following` values are `0` unless the request is authenticated as that user. A request authenticated as the specified user returns the actual values even if the token has no OAuth scopes.
+   *
+   * The `events_url` value is a URI template. Replace `{/privacy}` with `/public` to retrieve only public events. Omit it to retrieve public events and, when authenticated as the user, private events. For more information, see "[List events for the authenticated user](https://docs.github.com/enterprise-cloud@latest/rest/activity/events#list-events-for-the-authenticated-user)."
+   *
    * If you are requesting information about an [Enterprise Managed User](https://docs.github.com/enterprise-cloud@latest/enterprise-cloud@latest/admin/managing-iam/understanding-iam-for-enterprises/about-enterprise-managed-users), or a GitHub App bot that is installed in an organization that uses Enterprise Managed Users, your requests must be authenticated as a user or GitHub App that has access to the organization to view that account's information. If you are not authorized, the request will return a `404 Not Found` status.
    *
    * The `email` key in the following response is the publicly visible email address from your GitHub Enterprise Cloud [profile page](https://github.com/settings/profile). When setting up your profile, you can select a primary email address to be public which provides an email entry for this endpoint. If you do not set a public email address for `email`, then it will have a value of `null`. You only see publicly visible email addresses when authenticated with GitHub Enterprise Cloud. For more information, see [Authentication](https://docs.github.com/enterprise-cloud@latest/rest/guides/getting-started-with-the-rest-api#authentication).
@@ -149044,6 +150770,8 @@ export interface operations {
   /**
    * List followers of a user
    * @description Lists the people following the specified user.
+   *
+   * If the specified user has a [private profile](https://docs.github.com/enterprise-cloud@latest/account-and-profile/concepts/personal-profile#private-profiles), this endpoint returns an empty list unless the request is authenticated as that user. A request authenticated as the specified user returns the list even if the token has no OAuth scopes.
    */
   "users/list-followers-for-user": {
     parameters: {
@@ -149070,6 +150798,8 @@ export interface operations {
   /**
    * List the people a user follows
    * @description Lists the people who the specified user follows.
+   *
+   * If the specified user has a [private profile](https://docs.github.com/enterprise-cloud@latest/account-and-profile/concepts/personal-profile#private-profiles), this endpoint returns an empty list unless the request is authenticated as that user. A request authenticated as the specified user returns the list even if the token has no OAuth scopes.
    */
   "users/list-following-for-user": {
     parameters: {
@@ -150033,6 +151763,8 @@ export interface operations {
   /**
    * List repositories starred by a user
    * @description Lists repositories a user has starred.
+   *
+   * If the specified user has a [private profile](https://docs.github.com/enterprise-cloud@latest/account-and-profile/concepts/personal-profile#private-profiles), this endpoint returns an empty list unless the request is authenticated as that user. A request authenticated as the specified user returns starred repositories visible to the token even if the token has no OAuth scopes.
    *
    * This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/enterprise-cloud@latest/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)."
    *
